@@ -161,8 +161,8 @@ These are left out on purpose, because they can run code, load another file or s
 | `feImage` | A filter step that loads a picture from a web address. | https://www.w3.org/TR/SVG2/eltindex.html |
 | `a` | A link that can open any address. | https://www.w3.org/TR/SVG2/linking.html#AElement |
 | `style` | Style sheets can load files; only the properties above are read from it. | https://www.w3.org/TR/SVG2/styling.html#StyleElement |
-| `animate` | Can change any attribute after cleaning. | https://www.w3.org/TR/SVG2/eltindex.html |
-| `set` | Can change any attribute after cleaning. | https://www.w3.org/TR/SVG2/eltindex.html |
+| `animate` | Can change any attribute after cleaning. The only exception is a path morph that the image editor wrote, described under Library image morphs. | https://www.w3.org/TR/SVG2/eltindex.html |
+| `set` | Can change any attribute after cleaning. Never kept, not even beside a morph. | https://www.w3.org/TR/SVG2/eltindex.html |
 | `animateMotion` | Animation from the drawing itself. | https://www.w3.org/TR/SVG2/eltindex.html |
 | `animateTransform` | Animation from the drawing itself. | https://www.w3.org/TR/SVG2/eltindex.html |
 | `filter` | Filter steps can load pictures. | https://www.w3.org/TR/SVG2/eltindex.html |
@@ -181,10 +181,54 @@ These are left out on purpose, because they can run code, load another file or s
 | `onclick` | Runs code. | https://www.w3.org/TR/SVG2/interact.html#EventAttributes |
 | `onerror` | Runs code. | https://www.w3.org/TR/SVG2/interact.html#EventAttributes |
 
+## Library image morphs
+
+A library image can carry one kind of animation: a path morph that the image editor wrote. It is an `animate` element, and it stays only when all of these hold. If any one fails, the whole `animate` element is removed. Nothing is repaired or blanked, and the Utils integration refuses to save the image.
+
+- The image comes from a saved record, not from an upload, a paste or a transfer. Those keep no animation at all.
+- The `animate` element is in the SVG namespace, is empty, and is a direct child of a `path`. A path holds at most one.
+- Its `id` is named by a morph in the record's animation, its `path` is that morph's target, and it carries only the attributes in the table below. Any other attribute, such as `href`, `from`, `to`, `by` or `end`, removes it.
+- The `set`, `animateMotion`, `animateTransform` and `discard` elements are removed in every case.
+
+| Attribute | What it must hold |
+| --- | --- |
+| `id` | A letter followed by up to 63 letters, digits, `_`, `.` or `-`. Required. |
+| `attributeName` | Exactly `d`. Required. |
+| `values` | 2 to 32 frames of path data separated by `;`. A frame uses only path commands, digits, `.`, `,`, `+`, `-`, `e`, `E` and spaces, and every frame uses the same commands. The frames match the morph's frames in the record. Required. |
+| `dur` | A number followed by `s` or `ms`. Required. |
+| `repeatCount` | A number or `indefinite`. |
+| `keyTimes` | One number per frame, from 0 to 1, never falling. Each is that frame's place in the record's morph (50 becomes 0.5). |
+| `keySplines` | Four numbers from 0 to 1 for each step between frames. Required when `calcMode` is `spline`. |
+| `calcMode` | `linear` or `spline`. |
+| `fill` | `freeze` or `remove`. |
+| `begin` | Exactly `indefinite`. Required. |
+
+### Morph frame structure
+
+Each frame of `values` is read after tab, line feed, form feed and carriage return become a space. It is read from left to right as tokens, each starting where the last one ended:
+
+- a command letter, one of `MmLlHhVvCcSsQqTtAaZz`;
+- a number, matching `[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?` as far as it can;
+- a run of spaces and commas.
+
+The structure of a frame is its command letters in order, each with the count of numbers that follow it up to the next letter or the end. A frame is not path data when some text is none of these tokens, when a number comes before the first letter, or when it holds no letter. Every frame of one morph must have the same structure: the same letters in the same order, with the same count of numbers after each.
+
+An implicit repeat and its written-out form differ. `L1 1 2 2` is one `L` with 4 numbers, and `L1 1 L2 2` is two `L`s with 2 numbers each. The image editor writes every frame the same way: a command letter before every segment, the numbers of a segment separated by one space, each arc flag as its own number (0 or 1), and `Z` with no numbers. Every frame it writes passes this rule in the card and in Magic Card Utils, which holds the same rule word for word.
+
+### Morph miss reasons
+
+When a morph `animate` element fails, the card removes it and Magic Card Utils refuses the save, naming the reason:
+
+- `unnamed`: no morph in the record names its `id`, or its parent path is not that morph's target.
+- `counts`: `keyTimes` does not hold one number per frame from 0 to 1 at each frame's place divided by 100, or, with `calcMode` `spline`, `keySplines` does not hold four numbers from 0 to 1 for each step.
+- `frames`: `values` differs from the morph's frames in the record, or the frames differ in structure.
+
+The record's frames are compared after tab, line feed, form feed and carriage return become a space and each frame is trimmed. `keyTimes` may differ from the record by at most 0.000001.
+
 ## Size limits
 
 - Own icons: at most 32 KiB and nested at most 64 levels deep.
-- Images: at most 256 KiB, at most 10,000 elements and nested at most 64 levels deep. An image file that holds a doctype, an entity declaration, a processing instruction or a CDATA section outside a style element is refused before it is read.
+- Images: at most 1 MiB, at most 10,000 elements and nested at most 64 levels deep. An image file that holds a doctype, an entity declaration, a processing instruction or a CDATA section outside a style element is refused before it is read.
 
 ## Sources
 

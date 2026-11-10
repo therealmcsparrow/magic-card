@@ -1,10 +1,12 @@
-// card-pause 2.0.0, the names magic-card.js needs at run time. They sit in this predicate file, not in
+// card-pause 2.1.0, the names magic-card.js needs at run time. They sit in this predicate file, not in
 // card-pause.ts, because the entry may import only *.needs.ts of a contract (see tools/check-entry-graph.mjs);
 // card-pause.ts re-exports them. Plain code, no imports.
 
 export const PAUSE_ATTRIBUTE = 'data-mc-paused';
 export const PAUSE_EVENT = 'mc-pause-change';
 export const PAUSE_STORAGE_PREFIX = 'mc-paused:';
+/** Set on a <magic-card> by a module that has motion, so the card offers the pause button without a pause_button key. */
+export const PAUSE_WANT_ATTRIBUTE = 'data-mc-pause-want';
 
 /** The card shows the Pause motion button (`pause_button` auto or always): the `pause` chunk draws and runs it. */
 export const wantsPause = (c: unknown): boolean => {

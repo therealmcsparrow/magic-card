@@ -249,7 +249,11 @@ export function safeCssValue(v: unknown, kind: keyof typeof CSS_FNS): string | u
 }
 
 /** A transform-origin: keywords, lengths and percentages. */
-export const ORIGIN_RE = /^(?:(?:left|right|top|bottom|center|-?\d*\.?\d+(?:px|%|em|rem)?)\s*){1,3}$/;
+const ORIGIN_TOKEN = String.raw`(?:left|right|top|bottom|center|-?(?:\d+(?:\.\d+)?|\.\d+)(?:px|%|em|rem)?)`;
+export const ORIGIN_RE = new RegExp(String.raw`^${ORIGIN_TOKEN}(?:\s+${ORIGIN_TOKEN}){0,2}\s*$`);
+export const ORIGIN_MAX = 64;
+/** Checks the length first so hostile input never reaches the pattern. */
+export const isOrigin = (s: string): boolean => s.length <= ORIGIN_MAX && ORIGIN_RE.test(s);
 export const PATH_RE = /^[MmLlHhVvCcSsQqTtAaZz0-9eE\s,.+-]+$/;
 export const ICON_RE = /^[a-z0-9_-]+:[a-z0-9_-]+$/i;
 const DIRECTIONS: AnimationDirection[] = ['normal', 'reverse', 'alternate', 'alternate-reverse'];
@@ -600,7 +604,7 @@ export function validateAnimationDoc(input: unknown, opts: ValidateOptions = {})
     else c.err('mirror', 'Use mirror or keep.');
   }
   if (o.origin !== undefined && o.origin !== '') {
-    if (typeof o.origin === 'string' && ORIGIN_RE.test(o.origin.trim())) doc.origin = o.origin.trim();
+    if (typeof o.origin === 'string' && isOrigin(o.origin.trim())) doc.origin = o.origin.trim();
     else c.err('origin', 'Use keywords, lengths or percentages, e.g. "50% 100%".');
   }
 

@@ -4,7 +4,7 @@ import { t } from './i18n';
 import { t as tp } from './pause-i18n';
 import { motionCount, setCardPaused } from '../icons/offscreen';
 import { reducedMotion } from '../utils/reduced-motion';
-import { PAUSE_ATTRIBUTE, PAUSE_EVENT } from '../contracts/card-pause.needs';
+import { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_WANT_ATTRIBUTE } from '../contracts/card-pause.needs';
 import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contracts/card-pause';
 
 /** The viewer's "Pause motion" button of one card: pause state, per-card memory and the button. */
@@ -58,7 +58,7 @@ export class CardPause {
 
   /** Start of a render: read the keys, apply the state to the host and the observer. True while paused. */
   begin(c: CardPauseKeys): boolean {
-    this._mode = MODES.includes(String(c.pause_button)) ? (c.pause_button as PauseButtonMode) : 'hidden';
+    this._mode = MODES.includes(String(c.pause_button)) ? (c.pause_button as PauseButtonMode) : this._host.hasAttribute(PAUSE_WANT_ATTRIBUTE) ? 'auto' : 'hidden';
     this._moves = false;
     return this._apply();
   }

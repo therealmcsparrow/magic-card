@@ -95,6 +95,14 @@
     "text": "and {n} more",
     "hash": "827ab950"
   },
+  "image-tools.mc-library-image-field.animate": {
+    "text": "Animate",
+    "hash": "fd4a5f3d"
+  },
+  "image-tools.mc-library-image-field.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animating needs a newer Magic Card Utils (the companion integration). Update it in HACS, then reload",
+    "hash": "781f85b4"
+  },
   "image-tools.mc-library-image-field.card-shape-set-to-shape": {
     "text": "Card shape set to {shape}.",
     "hash": "fc40aefb"
@@ -239,6 +247,10 @@
     "text": "That is the longest description (500 characters).",
     "hash": "51019adf"
   },
+  "image-tools.mc-library-image-field.the-animator-could-not-open-try-again": {
+    "text": "The animator could not open. Try again.",
+    "hash": "e6c013c8"
+  },
   "image-tools.mc-library-image-field.the-card-shape-card-differs-from-the": {
     "text": "The card shape ({card}) differs from the drawing ({drawing}).",
     "hash": "6a4ef02f"
@@ -282,5 +294,9 @@
   "image-tools.mc-library-image-field.will-read-now": {
     "text": "Will read now:",
     "hash": "06a7870c"
+  },
+  "image-tools.mc-library-image-field.you-need-permission-to-change-library-images": {
+    "text": "You need permission to change library images",
+    "hash": "339af34b"
   }
 }

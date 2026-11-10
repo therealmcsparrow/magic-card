@@ -1,0 +1,442 @@
+{
+  "image-animator.clips-panel.a-clip-name-can-be-64-characters-at": {
+    "text": "A clip name can be 64 characters at most.",
+    "hash": "05c8c94c"
+  },
+  "image-animator.clips-panel.a-clip-with-a-morph-can-only-play-forwards": {
+    "text": "A clip with a morph can only play forwards.",
+    "hash": "a4d9c2cb"
+  },
+  "image-animator.clips-panel.above": {
+    "text": "Above",
+    "hash": "80792346"
+  },
+  "image-animator.clips-panel.add-clip": {
+    "text": "Add clip",
+    "hash": "e235f103"
+  },
+  "image-animator.clips-panel.added-the-clip-name": {
+    "text": "Added the clip {name}.",
+    "hash": "f71365fb"
+  },
+  "image-animator.clips-panel.always": {
+    "text": "Always",
+    "hash": "de9f057a"
+  },
+  "image-animator.clips-panel.an-entity-reaches-a-state": {
+    "text": "An entity reaches a state",
+    "hash": "b13db3e7"
+  },
+  "image-animator.clips-panel.an-image-can-hold-16-clips-at-most": {
+    "text": "An image can hold 16 clips at most.",
+    "hash": "9db2ebba"
+  },
+  "image-animator.clips-panel.attribute-optional": {
+    "text": "Attribute (optional)",
+    "hash": "e891f285"
+  },
+  "image-animator.clips-panel.back-and-forth": {
+    "text": "Back and forth",
+    "hash": "c1c1cc53"
+  },
+  "image-animator.clips-panel.back-and-forth-starting-backwards": {
+    "text": "Back and forth, starting backwards",
+    "hash": "505f4b84"
+  },
+  "image-animator.clips-panel.backwards": {
+    "text": "Backwards",
+    "hash": "19483bcb"
+  },
+  "image-animator.clips-panel.below": {
+    "text": "Below",
+    "hash": "a53dffff"
+  },
+  "image-animator.clips-panel.choose-a-name-that-no-other-clip-has": {
+    "text": "Choose a name that no other clip has.",
+    "hash": "86f701a8"
+  },
+  "image-animator.clips-panel.clip-name": {
+    "text": "Clip name",
+    "hash": "7f1d3844"
+  },
+  "image-animator.clips-panel.clips": {
+    "text": "Clips",
+    "hash": "4b782ddc"
+  },
+  "image-animator.clips-panel.condition": {
+    "text": "Condition",
+    "hash": "39b36d38"
+  },
+  "image-animator.clips-panel.delete": {
+    "text": "Delete",
+    "hash": "e2d0a549"
+  },
+  "image-animator.clips-panel.deleted-the-clip-name": {
+    "text": "Deleted the clip {name}.",
+    "hash": "4fccb286"
+  },
+  "image-animator.clips-panel.direction": {
+    "text": "Direction",
+    "hash": "9c8a9579"
+  },
+  "image-animator.clips-panel.duplicate": {
+    "text": "Duplicate",
+    "hash": "02cdaabf"
+  },
+  "image-animator.clips-panel.duration-seconds": {
+    "text": "Duration (seconds)",
+    "hash": "e4a69a7c"
+  },
+  "image-animator.clips-panel.enter-a-name-for-the-clip": {
+    "text": "Enter a name for the clip.",
+    "hash": "1c55ddd0"
+  },
+  "image-animator.clips-panel.enter-an-entity-id-such-as-cover-garage-and": {
+    "text": "Enter an entity id such as cover.garage and a condition that fits.",
+    "hash": "42a7d6c9"
+  },
+  "image-animator.clips-panel.entity": {
+    "text": "Entity",
+    "hash": "2ed3bb60"
+  },
+  "image-animator.clips-panel.forwards": {
+    "text": "Forwards",
+    "hash": "e0786044"
+  },
+  "image-animator.clips-panel.hovering-over-the-image": {
+    "text": "Hovering over the image",
+    "hash": "c650ffed"
+  },
+  "image-animator.clips-panel.is-off": {
+    "text": "Is off",
+    "hash": "c49186a0"
+  },
+  "image-animator.clips-panel.is-on": {
+    "text": "Is on",
+    "hash": "1c9d815e"
+  },
+  "image-animator.clips-panel.move-down": {
+    "text": "Move down",
+    "hash": "40bb50da"
+  },
+  "image-animator.clips-panel.move-up": {
+    "text": "Move up",
+    "hash": "c66feb5e"
+  },
+  "image-animator.clips-panel.name-each-animation-and-choose-what-starts-it": {
+    "text": "Name each animation and choose what starts it.",
+    "hash": "6f036d15"
+  },
+  "image-animator.clips-panel.new-clip-name": {
+    "text": "New clip name",
+    "hash": "2db91011"
+  },
+  "image-animator.clips-panel.repeat-forever": {
+    "text": "Repeat forever",
+    "hash": "0f3abae6"
+  },
+  "image-animator.clips-panel.repeats": {
+    "text": "Repeats",
+    "hash": "92ee0233"
+  },
+  "image-animator.clips-panel.starts-when": {
+    "text": "Starts when",
+    "hash": "a69467bf"
+  },
+  "image-animator.clips-panel.state-is": {
+    "text": "State is",
+    "hash": "ce568a81"
+  },
+  "image-animator.clips-panel.state-is-not": {
+    "text": "State is not",
+    "hash": "e72eda16"
+  },
+  "image-animator.clips-panel.tapping-the-image": {
+    "text": "Tapping the image",
+    "hash": "6a406974"
+  },
+  "image-animator.clips-panel.the-duration-or-the-number-of-repeats-is": {
+    "text": "The duration or the number of repeats is out of range.",
+    "hash": "2f246ea6"
+  },
+  "image-animator.clips-panel.this-change-could-not-be-made": {
+    "text": "This change could not be made.",
+    "hash": "59f7d2d7"
+  },
+  "image-animator.clips-panel.this-name-cannot-be-used": {
+    "text": "This name cannot be used.",
+    "hash": "6655fae9"
+  },
+  "image-animator.clips-panel.updated-the-clip-name": {
+    "text": "Updated the clip {name}.",
+    "hash": "14b5e336"
+  },
+  "image-animator.clips-panel.use-this-trigger": {
+    "text": "Use this trigger",
+    "hash": "83c16c9f"
+  },
+  "image-animator.clips-panel.value": {
+    "text": "Value",
+    "hash": "8e37953d"
+  },
+  "image-animator.effects-panel.add-an-effect-to-name": {
+    "text": "Add an effect to {name}",
+    "hash": "56e219c4"
+  },
+  "image-animator.effects-panel.add-preset": {
+    "text": "Add preset",
+    "hash": "8b7ae8b0"
+  },
+  "image-animator.effects-panel.click-a-part-of-the-drawing-or-choose": {
+    "text": "Click a part of the drawing, or choose it from this list.",
+    "hash": "fdf8965c"
+  },
+  "image-animator.effects-panel.colour": {
+    "text": "Color",
+    "hash": "3a9dfa58"
+  },
+  "image-animator.effects-panel.draw-the-outline": {
+    "text": "Draw the outline",
+    "hash": "f70e84e9"
+  },
+  "image-animator.effects-panel.fade": {
+    "text": "Fade",
+    "hash": "9efb597c"
+  },
+  "image-animator.effects-panel.follow-a-path": {
+    "text": "Follow a path",
+    "hash": "598d6292"
+  },
+  "image-animator.effects-panel.glow": {
+    "text": "Glow",
+    "hash": "f534ed97"
+  },
+  "image-animator.effects-panel.group-id": {
+    "text": "Group {id}",
+    "hash": "ed2bc1fc"
+  },
+  "image-animator.effects-panel.move-and-turn": {
+    "text": "Move and turn",
+    "hash": "dcff6dd4"
+  },
+  "image-animator.effects-panel.nothing-here-has-an-outline-to-draw": {
+    "text": "Nothing here has an outline to draw.",
+    "hash": "8b869222"
+  },
+  "image-animator.effects-panel.parts-of-the-image": {
+    "text": "Parts of the image",
+    "hash": "8dbd4d5a"
+  },
+  "image-animator.effects-panel.path-data": {
+    "text": "Path data",
+    "hash": "d1b6f939"
+  },
+  "image-animator.effects-panel.preset": {
+    "text": "Preset",
+    "hash": "7252e7ce"
+  },
+  "image-animator.effects-panel.shape-id": {
+    "text": "Shape {id}",
+    "hash": "225f5929"
+  },
+  "image-animator.effects-panel.whole-image": {
+    "text": "Whole image",
+    "hash": "7b823236"
+  },
+  "image-animator.mc-image-animator.added-effect-to-name": {
+    "text": "Added {effect} to {name}.",
+    "hash": "0516ffbe"
+  },
+  "image-animator.mc-image-animator.animate-image": {
+    "text": "Animate image",
+    "hash": "8429059e"
+  },
+  "image-animator.mc-image-animator.animate-name": {
+    "text": "Animate {name}",
+    "hash": "7df16e74"
+  },
+  "image-animator.mc-image-animator.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animating needs a newer Magic Card Utils. Update it and try again.",
+    "hash": "dacc0e15"
+  },
+  "image-animator.mc-image-animator.animation-data-of-size-kib-over-limit-kib": {
+    "text": "Animation data of {size} KiB, over the limit of {limit} KiB",
+    "hash": "80f85c1e"
+  },
+  "image-animator.mc-image-animator.as-saved": {
+    "text": "As saved",
+    "hash": "6c49ff2f"
+  },
+  "image-animator.mc-image-animator.cancel": {
+    "text": "Cancel",
+    "hash": "19766ed6"
+  },
+  "image-animator.mc-image-animator.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
+  },
+  "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "hash": "3ba3f12b"
+  },
+  "image-animator.mc-image-animator.count-animated-shapes-over-limit": {
+    "text": "{count, plural, one {# animated shape} other {# animated shapes}}, over the limit of {limit}",
+    "hash": "4dd733c1"
+  },
+  "image-animator.mc-image-animator.count-animations": {
+    "text": "{count, plural, one {# animation} other {# animations}}",
+    "hash": "250a77b3"
+  },
+  "image-animator.mc-image-animator.count-morph-points-over-limit": {
+    "text": "{count, plural, one {# morph point} other {# morph points}}, over the limit of {limit}",
+    "hash": "562459cf"
+  },
+  "image-animator.mc-image-animator.count-shapes-with-a-blur-or-colour-filter-over": {
+    "text": "{count, plural, one {# shape with a blur or color filter} other {# shapes with a blur or color filter}}, over the limit of {limit}",
+    "hash": "6d912fb3"
+  },
+  "image-animator.mc-image-animator.discard": {
+    "text": "Discard",
+    "hash": "eb1a70e3"
+  },
+  "image-animator.mc-image-animator.discard-the-changes-you-have-not-saved": {
+    "text": "Discard the changes you have not saved?",
+    "hash": "96acf3e3"
+  },
+  "image-animator.mc-image-animator.discard-this-image-and-your-changes-it-is": {
+    "text": "Discard this image and your changes? It is not in the library yet.",
+    "hash": "493a2952"
+  },
+  "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
+    "text": "Enter path data, for example M0 0 L50 20.",
+    "hash": "3f998515"
+  },
+  "image-animator.mc-image-animator.keep-editing": {
+    "text": "Keep editing",
+    "hash": "e76fd2ad"
+  },
+  "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
+    "text": "Not in the library yet. Save adds it as {name}.",
+    "hash": "53da3716"
+  },
+  "image-animator.mc-image-animator.opening-the-image": {
+    "text": "Opening the image…",
+    "hash": "ea80ea6d"
+  },
+  "image-animator.mc-image-animator.save": {
+    "text": "Save",
+    "hash": "1509f561"
+  },
+  "image-animator.mc-image-animator.saved": {
+    "text": "Saved.",
+    "hash": "fca046cc"
+  },
+  "image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image": {
+    "text": "Saved. Magic Card could not check where this image is used.",
+    "hash": "e1319538"
+  },
+  "image-animator.mc-image-animator.saving": {
+    "text": "Saving…",
+    "hash": "23e39291"
+  },
+  "image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": {
+    "text": "Saving… The window closes when it is done.",
+    "hash": "1ca4d921"
+  },
+  "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
+    "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
+    "hash": "f59f0a7f"
+  },
+  "image-animator.mc-image-animator.this-animation-is-heavy-and-may-run-slowly-on": {
+    "text": "This animation is heavy and may run slowly on older devices. You can still save it.",
+    "hash": "752fc223"
+  },
+  "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
+    "text": "This drawing contains markup that cannot be used.",
+    "hash": "34eb1373"
+  },
+  "image-animator.mc-image-animator.this-effect-could-not-be-added": {
+    "text": "This effect could not be added to the animation.",
+    "hash": "c3cff040"
+  },
+  "image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": {
+    "text": "This file is not an SVG drawing.",
+    "hash": "713905bb"
+  },
+  "image-animator.mc-image-animator.this-image-has-no-animations-yet": {
+    "text": "This image has no animations yet.",
+    "hash": "de41160c"
+  },
+  "image-animator.mc-image-animator.this-image-is-larger-than-the-library-accepts": {
+    "text": "This image is larger than the library accepts.",
+    "hash": "a21f32a6"
+  },
+  "image-animator.mc-image-animator.this-image-is-not-in-the-library-any": {
+    "text": "This image is not in the library any more.",
+    "hash": "c5561195"
+  },
+  "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
+    "text": "This image was changed somewhere else. Close this window and open it again.",
+    "hash": "c8a63749"
+  },
+  "image-animator.mc-image-animator.used-on-at-least-count-cards-some-dashboards-could": {
+    "text": "Used on at least {count, plural, one {# card} other {# cards}}. Magic Card could not check every dashboard. Saving changes how the image looks there.",
+    "hash": "af183d96"
+  },
+  "image-animator.mc-image-animator.used-on-count-cards-saving-changes-all-of-them": {
+    "text": "Used on {count, plural, one {# card} other {# cards}}. Saving changes how the image looks there.",
+    "hash": "8ade21a3"
+  },
+  "image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": {
+    "text": "Your image library is over 50 MiB. A large library can slow down older devices. You can still save.",
+    "hash": "dd014dcf"
+  },
+  "image-animator.morph-panel.add-morph": {
+    "text": "Add morph",
+    "hash": "e0b56fd1"
+  },
+  "image-animator.morph-panel.changes-into": {
+    "text": "Changes into",
+    "hash": "b215034d"
+  },
+  "image-animator.morph-panel.choose-two-different-shapes-to-morph": {
+    "text": "Choose two different shapes to morph.",
+    "hash": "b2cf4dff"
+  },
+  "image-animator.morph-panel.go-back-to-the-first-shape": {
+    "text": "Go back to the first shape",
+    "hash": "d10e611f"
+  },
+  "image-animator.morph-panel.morph": {
+    "text": "Morph",
+    "hash": "61ce25d9"
+  },
+  "image-animator.morph-panel.morph-one-shape-into-another": {
+    "text": "Morph one shape into another",
+    "hash": "d277d38c"
+  },
+  "image-animator.morph-panel.shape-id": {
+    "text": "Shape {id}",
+    "hash": "225f5929"
+  },
+  "image-animator.morph-panel.shape-that-changes": {
+    "text": "Shape that changes",
+    "hash": "cdb4f7a8"
+  },
+  "image-animator.morph-panel.the-first-shape-changes-into-the-second": {
+    "text": "The first shape changes into the second. They do not need the same number of points.",
+    "hash": "bbeb5945"
+  },
+  "image-animator.morph-panel.this-morph-could-not-be-added": {
+    "text": "This morph could not be added.",
+    "hash": "91ccc32e"
+  },
+  "image-animator.source.image": {
+    "text": "Image",
+    "hash": "1aa4cb0b"
+  },
+  "image-animator.tracks.idle": {
+    "text": "Idle",
+    "hash": "ab0171ca"
+  }
+}

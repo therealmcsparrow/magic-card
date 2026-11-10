@@ -1,6 +1,26 @@
+import { IMAGE_MORPH_MAX_FRAMES, IMAGE_MORPH_MIN_FRAMES } from '../contracts/image-animation';
 import { IMAGE_FONT_FAMILIES, IMAGE_ID_RE, THEME_VAR_NAME_RE } from '../contracts/svg-image';
-import type { SvgPolicy, SvgValueKind } from '../contracts/svg-safety';
+import {
+  MORPH_ATTRIBUTES,
+  MORPH_CALC_MODES,
+  MORPH_DUR_RE,
+  MORPH_ELEMENT,
+  MORPH_FILLS,
+  MORPH_FIXED,
+  MORPH_NUMBER_LIST_RE,
+  MORPH_PARENT,
+  MORPH_REPEAT_RE,
+  MORPH_REQUIRED,
+  MORPH_VALUES_SEPARATOR,
+  type MorphMiss,
+  type MorphRef,
+  type SvgPolicy,
+  type SvgValueKind,
+} from '../contracts/svg-safety';
 import { classTokens, denied, isLetter, onlyFunctions } from './values';
+import { pathStructure, trimAnimWs } from '../contracts/svg-path-text';
+
+export { pathStructure, trimAnimWs };
 
 // The image policy value rules: one length-capped pattern per attribute kind, mirroring how the browser reads the attribute.
 
@@ -79,4 +99,90 @@ export function cleanImageValue(kind: SvgValueKind, raw: string, policy: SvgPoli
     default:
       return undefined;
   }
+}
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const NUMBER_RE = /^(?:\d+(?:\.\d*)?|\.\d+)$/;
+
+/** The numbers of a `;`-separated list, or undefined when any item is not a plain non-negative number. */
+function numberList(v: string, split: string): number[] | undefined {
+  if (!MORPH_NUMBER_LIST_RE.test(v)) return undefined;
+  const items = v.split(split).map(trimAnimWs);
+  return items.every((s) => NUMBER_RE.test(s)) ? items.map(Number) : undefined;
+}
+
+/** True when the numbers are 0..1 and never fall. */
+const risingUnit = (n: number[]): boolean => n.every((x, i) => x >= 0 && x <= 1 && (i === 0 || x >= n[i - 1]));
+
+/** The `keySplines` check: one control-point set of four numbers in 0..1 per segment. */
+function splinesMiss(v: string, segments: number): MorphMiss | undefined {
+  if (!MORPH_NUMBER_LIST_RE.test(v)) return 'value';
+  const sets = v.split(MORPH_VALUES_SEPARATOR).map((s) => numberList(trimAnimWs(s).replace(/ +/g, ';'), MORPH_VALUES_SEPARATOR));
+  if (sets.some((n) => !n)) return 'value';
+  return sets.length === segments && sets.every((n) => n!.length === 4 && n!.every((x) => x <= 1)) ? undefined : 'counts';
+}
+
+/** One frame's path data as the record and the `values` attribute are compared: other spaces as a space, trimmed. */
+const frameText = (d: string): string => trimAnimWs(d.replace(/[\t\n\r\f]/g, ' '));
+
+/**
+ * The morphs of a raw record by their `smil` id, for the sanitiser's `morphs` option. A morph without a string target
+ * and frames of `at` and `d` is left out, so its `<animate>` goes; the first of two with one id wins.
+ */
+export function morphTable(raw: unknown): ReadonlyMap<string, MorphRef> {
+  const table = new Map<string, MorphRef>();
+  const clips = (raw as { clips?: unknown } | null | undefined)?.clips;
+  if (!Array.isArray(clips)) return table;
+  for (const clip of clips) {
+    const morphs = (clip as { morphs?: unknown } | null)?.morphs;
+    if (!Array.isArray(morphs)) continue;
+    for (const m of morphs as { smil?: unknown; target?: unknown; frames?: unknown }[]) {
+      const frames = m?.frames;
+      if (typeof m?.smil !== 'string' || typeof m.target !== 'string' || !Array.isArray(frames) || table.has(m.smil)) continue;
+      if (!frames.every((f: { at?: unknown; d?: unknown } | null) => typeof f?.at === 'number' && typeof f.d === 'string')) continue;
+      table.set(m.smil, { target: m.target, frames: frames as MorphRef['frames'] });
+    }
+  }
+  return table;
+}
+
+/**
+ * The morph rule for one `<animate>` (svg-safety 1.4.0): why it must go, or undefined to keep it exactly as written.
+ * `siblings` is how many animate elements its parent holds; `ids` the animate ids the record's morphs name, and
+ * `table` (when given) those morphs, for the parent, frames and keyTimes cross-checks.
+ */
+export function morphMiss(el: Element, parent: Element, siblings: number, ids: ReadonlySet<string> | undefined, table?: ReadonlyMap<string, MorphRef>): MorphMiss | undefined {
+  if (el.namespaceURI !== SVG_NS || el.localName !== MORPH_ELEMENT) return 'namespace';
+  if (parent.namespaceURI !== SVG_NS || parent.localName !== MORPH_PARENT) return 'parent';
+  if (el.firstChild) return 'children';
+  if (siblings > 1) return 'second';
+  const a: Record<string, string> = Object.create(null);
+  for (const attr of Array.from(el.attributes)) {
+    if (attr.namespaceURI !== null || !(MORPH_ATTRIBUTES as readonly string[]).includes(attr.name)) return 'attribute';
+    a[attr.name] = attr.value;
+  }
+  if (MORPH_REQUIRED.some((k) => a[k] === undefined)) return 'attribute';
+  if (!IMAGE_ID_RE.test(a.id)) return 'value';
+  if (!ids || !ids.has(a.id)) return 'unnamed';
+  const ref = table?.get(a.id);
+  if (table && (!ref || parent.getAttribute('id') !== ref.target)) return 'unnamed';
+  for (const [k, v] of Object.entries(MORPH_FIXED)) if (a[k] !== v) return 'value';
+  if (!MORPH_DUR_RE.test(a.dur)) return 'value';
+  if (a.repeatCount !== undefined && !MORPH_REPEAT_RE.test(a.repeatCount)) return 'value';
+  if (a.fill !== undefined && !(MORPH_FILLS as readonly string[]).includes(a.fill)) return 'value';
+  if (a.calcMode !== undefined && !(MORPH_CALC_MODES as readonly string[]).includes(a.calcMode)) return 'value';
+  const frames = a.values.split(MORPH_VALUES_SEPARATOR);
+  if (frames.length < IMAGE_MORPH_MIN_FRAMES || frames.length > IMAGE_MORPH_MAX_FRAMES) return 'counts';
+  const shapes = frames.map(pathStructure);
+  if (shapes.some((s) => !s)) return 'value';
+  if (shapes.some((s) => s !== shapes[0])) return 'frames';
+  if (ref && (ref.frames.length !== frames.length || frames.some((f, i) => frameText(f) !== frameText(ref.frames[i].d)))) return 'frames';
+  if (a.keyTimes !== undefined) {
+    const times = numberList(a.keyTimes, MORPH_VALUES_SEPARATOR);
+    if (!times) return 'value';
+    if (times.length !== frames.length || times[0] !== 0 || times[times.length - 1] !== 1 || !risingUnit(times)) return 'counts';
+    if (ref && times.some((x, i) => Math.abs(x - ref.frames[i].at / 100) > 1e-6)) return 'counts';
+  }
+  if (a.calcMode === 'spline' && a.keySplines === undefined) return 'counts';
+  return a.keySplines === undefined ? undefined : splinesMiss(a.keySplines, frames.length - 1);
 }

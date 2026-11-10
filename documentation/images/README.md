@@ -13,13 +13,14 @@ Library images need two parts:
 - Trace over a photo or a floor plan with a reference picture. The picture is never saved. See [The image editor](editor.md#reference-picture).
 - Open an SVG file, or paste SVG markup, as a new image from the first window of the image editor, or import one into the open drawing, and keep what the editor can use. See [The image editor](editor.md#start-from-an-svg-file).
 - Add an SVG file straight to the library from the Images tab of the Magic Card Utils panel. See [Export and import](../presets/export-and-import.md#add-an-svg-file-as-an-image).
+- Make a library image move with the image animator: effects, shape morphs, and clips that start on hover, tap or an entity state. See [Animate a library image](animating-images.md).
 - Show a library image in an image module, or as a background behind the content. See [Use images in a card](using-images.md).
 - Refer to a library image in YAML with `mcu-image:<id>`. See [Use images in a card](using-images.md#yaml).
 
 ## Limits
 
-- An image can be up to 256 KiB.
-- The library holds up to 200 images.
+- An image can be up to 1 MiB with Magic Card Utils 2026.11.2-beta.1 or newer, and 256 KiB with an older version.
+- The library has no limit on the number of images. The editor warns when the library passes 50 MiB.
 
 The editor shows a size meter while you draw. See [The size meter](editor.md#the-size-meter).
 
@@ -34,5 +35,6 @@ Library images stay on your Home Assistant server. Read [Privacy and your images
 ## Pages in this folder
 
 - [The image editor](editor.md): canvas, tools, colours, text, reference picture, import, save, and the size meter.
+- [Animate a library image](animating-images.md): clips, effects, morphs, triggers, pause and reduced motion, and the warnings.
 - [Use images in a card](using-images.md): image modules, background layers, descriptions and missing pictures, and the YAML reference.
 - [Privacy and your images](privacy.md): what is stored, who can see it, and what is never sent.

@@ -125,7 +125,7 @@ describe('imported parts: Unlock', () => {
 });
 
 describe('imported parts: the size limit counts the last part', () => {
-  const BIG = `<defs><mask id="m">${'<rect x="1" y="1" width="2" height="2" fill="#fff"/>'.repeat(2400)}</mask></defs>`;
+  const BIG = `<defs><mask id="m">${'<rect x="1" y="1" width="2" height="2" fill="#fff"/>'.repeat(9600)}</mask></defs>`;
   const many = (n: number) => svg(`${BIG}${Array.from({ length: n }, (_, i) => `<path id="p${i}" d="M0 0H10V10Z"/><rect id="w${i}" width="5" height="5" mask="url(#m)"/>`).join('')}`);
 
   it('opens view-only when the fifth part is the one that goes over twice the size of an image', async () => {

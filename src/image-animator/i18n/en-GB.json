@@ -1,0 +1,608 @@
+{
+  "image-animator.clips-panel.a-clip-name-can-be-64-characters-at": {
+    "text": "A clip name can be 64 characters at most.",
+    "note": "Error when the clip name is too long.",
+    "max": 58
+  },
+  "image-animator.clips-panel.a-clip-with-a-morph-can-only-play-forwards": {
+    "text": "A clip with a morph can only play forwards.",
+    "note": "Error when a direction other than forwards is chosen for a clip that has a morph.",
+    "max": 79
+  },
+  "image-animator.clips-panel.above": {
+    "text": "Above",
+    "note": "Condition option: the number is above the value.",
+    "max": 20
+  },
+  "image-animator.clips-panel.add-clip": {
+    "text": "Add clip",
+    "note": "Button that adds a new clip.",
+    "max": 26
+  },
+  "image-animator.clips-panel.added-the-clip-name": {
+    "text": "Added the clip {name}.",
+    "note": "Confirmation after a clip is added.",
+    "max": 47,
+    "vars": {
+      "name": "Name of the clip."
+    }
+  },
+  "image-animator.clips-panel.always": {
+    "text": "Always",
+    "note": "Trigger option: the clip plays all the time.",
+    "max": 20
+  },
+  "image-animator.clips-panel.an-entity-reaches-a-state": {
+    "text": "An entity reaches a state",
+    "note": "Trigger option: the clip plays while a Home Assistant entity matches a condition.",
+    "max": 44
+  },
+  "image-animator.clips-panel.an-image-can-hold-16-clips-at-most": {
+    "text": "An image can hold 16 clips at most.",
+    "note": "Error when the image already has the most clips.",
+    "max": 69
+  },
+  "image-animator.clips-panel.attribute-optional": {
+    "text": "Attribute (optional)",
+    "note": "Label of the field for an entity attribute of a state trigger.",
+    "max": 30
+  },
+  "image-animator.clips-panel.back-and-forth": {
+    "text": "Back and forth",
+    "note": "Direction option: forwards, then backwards.",
+    "max": 20
+  },
+  "image-animator.clips-panel.back-and-forth-starting-backwards": {
+    "text": "Back and forth, starting backwards",
+    "note": "Direction option: backwards, then forwards.",
+    "max": 48
+  },
+  "image-animator.clips-panel.backwards": {
+    "text": "Backwards",
+    "note": "Direction option: from end to start.",
+    "max": 20
+  },
+  "image-animator.clips-panel.below": {
+    "text": "Below",
+    "note": "Condition option: the number is below the value.",
+    "max": 20
+  },
+  "image-animator.clips-panel.choose-a-name-that-no-other-clip-has": {
+    "text": "Choose a name that no other clip has.",
+    "note": "Error when another clip already has the name.",
+    "max": 58
+  },
+  "image-animator.clips-panel.clip-name": {
+    "text": "Clip name",
+    "note": "Label of the field that renames the chosen clip.",
+    "max": 28
+  },
+  "image-animator.clips-panel.clips": {
+    "text": "Clips",
+    "note": "Heading of the clip list in the image animator.",
+    "max": 20
+  },
+  "image-animator.clips-panel.condition": {
+    "text": "Condition",
+    "note": "Label of the list that chooses how the entity is compared.",
+    "max": 20
+  },
+  "image-animator.clips-panel.delete": {
+    "text": "Delete",
+    "note": "Button that deletes the clip.",
+    "max": 20
+  },
+  "image-animator.clips-panel.deleted-the-clip-name": {
+    "text": "Deleted the clip {name}.",
+    "note": "Confirmation after a clip is deleted.",
+    "max": 47,
+    "vars": {
+      "name": "Name of the clip."
+    }
+  },
+  "image-animator.clips-panel.direction": {
+    "text": "Direction",
+    "note": "Label of the list that chooses the play direction of the clip.",
+    "max": 20
+  },
+  "image-animator.clips-panel.duplicate": {
+    "text": "Duplicate",
+    "note": "Button that copies the clip.",
+    "max": 20
+  },
+  "image-animator.clips-panel.duration-seconds": {
+    "text": "Duration (seconds)",
+    "note": "Label of the field for how long one play of the clip takes.",
+    "max": 26
+  },
+  "image-animator.clips-panel.enter-a-name-for-the-clip": {
+    "text": "Enter a name for the clip.",
+    "note": "Error when the clip name is empty.",
+    "max": 37
+  },
+  "image-animator.clips-panel.enter-an-entity-id-such-as-cover-garage-and": {
+    "text": "Enter an entity id such as cover.garage and a condition that fits.",
+    "note": "Error when the state trigger is incomplete or malformed.",
+    "max": 97
+  },
+  "image-animator.clips-panel.entity": {
+    "text": "Entity",
+    "note": "Label of the field for the entity id of a state trigger.",
+    "max": 20
+  },
+  "image-animator.clips-panel.forwards": {
+    "text": "Forwards",
+    "note": "Direction option: from start to end.",
+    "max": 20
+  },
+  "image-animator.clips-panel.hovering-over-the-image": {
+    "text": "Hovering over the image",
+    "note": "Trigger option: the clip plays while the pointer is over the image.",
+    "max": 38
+  },
+  "image-animator.clips-panel.is-off": {
+    "text": "Is off",
+    "note": "Condition option: the entity is off.",
+    "max": 20
+  },
+  "image-animator.clips-panel.is-on": {
+    "text": "Is on",
+    "note": "Condition option: the entity is on.",
+    "max": 20
+  },
+  "image-animator.clips-panel.move-down": {
+    "text": "Move down",
+    "note": "Button that moves the clip down the list.",
+    "max": 20
+  },
+  "image-animator.clips-panel.move-up": {
+    "text": "Move up",
+    "note": "Button that moves the clip up the list; earlier clips win when several state triggers match.",
+    "max": 20
+  },
+  "image-animator.clips-panel.name-each-animation-and-choose-what-starts-it": {
+    "text": "Name each animation and choose what starts it.",
+    "note": "Hint under the clip heading.",
+    "max": 70
+  },
+  "image-animator.clips-panel.new-clip-name": {
+    "text": "New clip name",
+    "note": "Label of the field for the name of a new clip.",
+    "max": 38
+  },
+  "image-animator.clips-panel.repeat-forever": {
+    "text": "Repeat forever",
+    "note": "Label of the checkbox that makes the clip repeat without end.",
+    "max": 26
+  },
+  "image-animator.clips-panel.repeats": {
+    "text": "Repeats",
+    "note": "Label of the field for how many times the clip plays.",
+    "max": 20
+  },
+  "image-animator.clips-panel.starts-when": {
+    "text": "Starts when",
+    "note": "Label of the list that chooses what starts the clip.",
+    "max": 20
+  },
+  "image-animator.clips-panel.state-is": {
+    "text": "State is",
+    "note": "Condition option: the state equals the value.",
+    "max": 20
+  },
+  "image-animator.clips-panel.state-is-not": {
+    "text": "State is not",
+    "note": "Condition option: the state differs from the value.",
+    "max": 20
+  },
+  "image-animator.clips-panel.tapping-the-image": {
+    "text": "Tapping the image",
+    "note": "Trigger option: the clip plays when the image is tapped.",
+    "max": 33
+  },
+  "image-animator.clips-panel.the-duration-or-the-number-of-repeats-is": {
+    "text": "The duration or the number of repeats is out of range.",
+    "note": "Error when the duration or the repeat count is out of range.",
+    "max": 80
+  },
+  "image-animator.clips-panel.this-change-could-not-be-made": {
+    "text": "This change could not be made.",
+    "note": "Error for a clip change that failed for another reason.",
+    "max": 61
+  },
+  "image-animator.clips-panel.this-name-cannot-be-used": {
+    "text": "This name cannot be used.",
+    "note": "Error when the clip name holds characters that are not allowed.",
+    "max": 49
+  },
+  "image-animator.clips-panel.updated-the-clip-name": {
+    "text": "Updated the clip {name}.",
+    "note": "Confirmation after a clip is changed.",
+    "max": 47,
+    "vars": {
+      "name": "Name of the clip."
+    }
+  },
+  "image-animator.clips-panel.use-this-trigger": {
+    "text": "Use this trigger",
+    "note": "Button that saves the state trigger of the clip.",
+    "max": 28
+  },
+  "image-animator.clips-panel.value": {
+    "text": "Value",
+    "note": "Label of the field for the value the condition compares with.",
+    "max": 20
+  },
+  "image-animator.effects-panel.add-an-effect-to-name": {
+    "text": "Add an effect to {name}",
+    "note": "Heading of the effect buttons. {name} is the chosen part of the image.",
+    "max": 69,
+    "vars": {
+      "name": "Name of the chosen part, for example Group door."
+    }
+  },
+  "image-animator.effects-panel.add-preset": {
+    "text": "Add preset",
+    "note": "Button that adds the chosen ready-made animation to the chosen part of the image.",
+    "max": 30
+  },
+  "image-animator.effects-panel.click-a-part-of-the-drawing-or-choose": {
+    "text": "Click a part of the drawing, or choose it from this list.",
+    "note": "Hint above the list of parts of the image in the image animator.",
+    "max": 171
+  },
+  "image-animator.effects-panel.colour": {
+    "text": "Colour",
+    "note": "Button that adds a colour change effect to the chosen part of the image.",
+    "max": 18
+  },
+  "image-animator.effects-panel.draw-the-outline": {
+    "text": "Draw the outline",
+    "note": "Button that adds an effect that draws the outline of the chosen part of the image.",
+    "max": 48
+  },
+  "image-animator.effects-panel.fade": {
+    "text": "Fade",
+    "note": "Button that adds a fade effect to the chosen part of the image.",
+    "max": 12
+  },
+  "image-animator.effects-panel.follow-a-path": {
+    "text": "Follow a path",
+    "note": "Button that adds an effect that moves the chosen part along the path data typed above it.",
+    "max": 39
+  },
+  "image-animator.effects-panel.glow": {
+    "text": "Glow",
+    "note": "Button that adds a brightness glow effect to the chosen part of the image.",
+    "max": 12
+  },
+  "image-animator.effects-panel.group-id": {
+    "text": "Group {id}",
+    "note": "Item in the list of parts of the image for a group of shapes. {id} is the id of the group in the drawing.",
+    "max": 30,
+    "vars": {
+      "id": "Id of the group in the drawing."
+    }
+  },
+  "image-animator.effects-panel.move-and-turn": {
+    "text": "Move and turn",
+    "note": "Button that adds a movement and rotation effect to the chosen part of the image.",
+    "max": 39
+  },
+  "image-animator.effects-panel.nothing-here-has-an-outline-to-draw": {
+    "text": "Nothing here has an outline to draw.",
+    "note": "Reason shown when the draw the outline effect is off because the chosen part has no stroke.",
+    "max": 108
+  },
+  "image-animator.effects-panel.parts-of-the-image": {
+    "text": "Parts of the image",
+    "note": "Heading of the list of parts of the image an effect can be put on.",
+    "max": 54
+  },
+  "image-animator.effects-panel.path-data": {
+    "text": "Path data",
+    "note": "Label of the field for the path a part follows, written as SVG path data.",
+    "max": 27
+  },
+  "image-animator.effects-panel.preset": {
+    "text": "Preset",
+    "note": "Label of the list of ready-made animations, also used as the name of that kind of effect.",
+    "max": 18
+  },
+  "image-animator.effects-panel.shape-id": {
+    "text": "Shape {id}",
+    "note": "Item in the list of parts of the image for a single shape. {id} is the id of the shape in the drawing.",
+    "max": 30,
+    "vars": {
+      "id": "Id of the shape in the drawing."
+    }
+  },
+  "image-animator.effects-panel.whole-image": {
+    "text": "Whole image",
+    "note": "Item in the list of parts of the image that stands for the whole image.",
+    "max": 33
+  },
+  "image-animator.mc-image-animator.added-effect-to-name": {
+    "text": "Added {effect} to {name}.",
+    "note": "Status line after an effect was added. {effect} is the effect name, {name} the chosen part.",
+    "max": 75,
+    "vars": {
+      "effect": "Name of the effect, for example Fade.",
+      "name": "Name of the chosen part, for example Group door."
+    }
+  },
+  "image-animator.mc-image-animator.animate-image": {
+    "text": "Animate image",
+    "note": "Title of the window that animates a library image, shown while the image is still opening.",
+    "max": 25
+  },
+  "image-animator.mc-image-animator.animate-name": {
+    "text": "Animate {name}",
+    "note": "Title of the image animator window. {name} is the name of the library image.",
+    "max": 20,
+    "vars": {
+      "name": "Name of the library image."
+    }
+  },
+  "image-animator.mc-image-animator.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animating needs a newer Magic Card Utils. Update it and try again.",
+    "note": "Notice in the image animator when the installed Magic Card Utils is too old to store an animation.",
+    "max": 108
+  },
+  "image-animator.mc-image-animator.animation-data-of-size-kib-over-limit-kib": {
+    "text": "Animation data of {size} KiB, over the limit of {limit} KiB",
+    "note": "One line of the heavy-animation warning: the size of the animation data.",
+    "max": 84,
+    "vars": {
+      "limit": "The size in KiB above which it is heavy.",
+      "size": "Size of the animation data in KiB."
+    }
+  },
+  "image-animator.mc-image-animator.as-saved": {
+    "text": "As saved",
+    "note": "Label next to the small preview of the image as it is stored in the library.",
+    "max": 24
+  },
+  "image-animator.mc-image-animator.cancel": {
+    "text": "Cancel",
+    "note": "Button that leaves the question before saving without saving.",
+    "max": 13
+  },
+  "image-animator.mc-image-animator.close": {
+    "text": "Close",
+    "note": "Button that closes the image animator window.",
+    "max": 10
+  },
+  "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
+    "text": "Could not reach Magic Card Utils. Your work is safe.",
+    "note": "Error in the image animator when the image library does not answer or refuses a call.",
+    "max": 72
+  },
+  "image-animator.mc-image-animator.count-animated-shapes-over-limit": {
+    "text": "{count, plural, one {# animated shape} other {# animated shapes}}, over the limit of {limit}",
+    "note": "One line of the heavy-animation warning: how many animated shapes there are.",
+    "max": 64,
+    "vars": {
+      "count": "Number of animated shapes.",
+      "limit": "The number above which it is heavy."
+    }
+  },
+  "image-animator.mc-image-animator.count-animations": {
+    "text": "{count, plural, one {# animation} other {# animations}}",
+    "note": "Line under the preview in the image animator with the number of animations the image holds.",
+    "max": 72,
+    "vars": {
+      "count": "Number of animations of the image."
+    }
+  },
+  "image-animator.mc-image-animator.count-morph-points-over-limit": {
+    "text": "{count, plural, one {# morph point} other {# morph points}}, over the limit of {limit}",
+    "note": "One line of the heavy-animation warning: how many points the morphs hold.",
+    "max": 60,
+    "vars": {
+      "count": "Number of morph points.",
+      "limit": "The number above which it is heavy."
+    }
+  },
+  "image-animator.mc-image-animator.count-shapes-with-a-blur-or-colour-filter-over": {
+    "text": "{count, plural, one {# shape with a blur or colour filter} other {# shapes with a blur or colour filter}}, over the limit of {limit}",
+    "note": "One line of the heavy-animation warning: how many shapes use a blur or colour filter.",
+    "max": 91,
+    "vars": {
+      "count": "Number of shapes with a filter.",
+      "limit": "The number above which it is heavy."
+    }
+  },
+  "image-animator.mc-image-animator.discard": {
+    "text": "Discard",
+    "note": "Button that closes the animator and throws away the unsaved edits.",
+    "max": 14
+  },
+  "image-animator.mc-image-animator.discard-the-changes-you-have-not-saved": {
+    "text": "Discard the changes you have not saved?",
+    "note": "Question shown when the user closes the animator with unsaved edits.",
+    "max": 60
+  },
+  "image-animator.mc-image-animator.discard-this-image-and-your-changes-it-is": {
+    "text": "Discard this image and your changes? It is not in the library yet.",
+    "note": "Question shown when the user closes the animator with edits to an uploaded drawing that was never saved.",
+    "max": 96
+  },
+  "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
+    "text": "Enter path data, for example M0 0 L50 20.",
+    "note": "Error when the path field is empty or holds characters path data cannot have.",
+    "max": 123
+  },
+  "image-animator.mc-image-animator.keep-editing": {
+    "text": "Keep editing",
+    "note": "Button that leaves the discard question and returns to the animator.",
+    "max": 20
+  },
+  "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
+    "text": "Not in the library yet. Save adds it as {name}.",
+    "note": "Status line while an uploaded drawing is open but not saved. Saving adds it to the image library. {name} is the name it will get.",
+    "max": 64,
+    "vars": {
+      "name": "Name the new library image will get."
+    }
+  },
+  "image-animator.mc-image-animator.opening-the-image": {
+    "text": "Opening the image…",
+    "note": "Status line in the image animator while the image loads from the library.",
+    "max": 37
+  },
+  "image-animator.mc-image-animator.save": {
+    "text": "Save",
+    "note": "Button in the image animator that saves the image and its animations to the library.",
+    "max": 10
+  },
+  "image-animator.mc-image-animator.saved": {
+    "text": "Saved.",
+    "note": "Status line in the image animator after the image was saved to the library.",
+    "max": 15
+  },
+  "image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image": {
+    "text": "Saved. Magic Card could not check where this image is used.",
+    "note": "Status after a save when no dashboard could be read to count the cards.",
+    "max": 84
+  },
+  "image-animator.mc-image-animator.saving": {
+    "text": "Saving…",
+    "note": "Status line in the image animator while the save is running.",
+    "max": 24
+  },
+  "image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": {
+    "text": "Saving… The window closes when it is done.",
+    "note": "Status line while a save runs after the user asked to close; the window closes once the save is done.",
+    "max": 64
+  },
+  "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
+    "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
+    "note": "Error in the image animator when the animation stored with the image fails its checks.",
+    "max": 123
+  },
+  "image-animator.mc-image-animator.this-animation-is-heavy-and-may-run-slowly-on": {
+    "text": "This animation is heavy and may run slowly on older devices. You can still save it.",
+    "note": "Warning above the reasons when an animation is heavy; saving is not blocked.",
+    "max": 117
+  },
+  "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
+    "text": "This drawing contains markup that cannot be used.",
+    "note": "Error in the image animator when the drawing holds markup the card refuses.",
+    "max": 73
+  },
+  "image-animator.mc-image-animator.this-effect-could-not-be-added": {
+    "text": "This effect could not be added to the animation.",
+    "note": "Error when an effect cannot be added, for example because the clip has the most parts it can hold.",
+    "max": 144
+  },
+  "image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": {
+    "text": "This file is not an SVG drawing.",
+    "note": "Error in the image animator when an uploaded file is not an SVG.",
+    "max": 43
+  },
+  "image-animator.mc-image-animator.this-image-has-no-animations-yet": {
+    "text": "This image has no animations yet.",
+    "note": "Line under the preview in the image animator when the image holds no animation.",
+    "max": 54
+  },
+  "image-animator.mc-image-animator.this-image-is-larger-than-the-library-accepts": {
+    "text": "This image is larger than the library accepts.",
+    "note": "Error in the image animator when the image or upload is over the library size limit.",
+    "max": 73
+  },
+  "image-animator.mc-image-animator.this-image-is-not-in-the-library-any": {
+    "text": "This image is not in the library any more.",
+    "note": "Error in the image animator when the library no longer holds the image.",
+    "max": 65
+  },
+  "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
+    "text": "This image was changed somewhere else. Close this window and open it again.",
+    "note": "Error in the image animator when a save finds the image changed since it was opened.",
+    "max": 98
+  },
+  "image-animator.mc-image-animator.used-on-at-least-count-cards-some-dashboards-could": {
+    "text": "Used on at least {count, plural, one {# card} other {# cards}}. Magic Card could not check every dashboard. Saving changes how the image looks there.",
+    "note": "Same question when some dashboards could not be read, so the number is a minimum.",
+    "max": 154,
+    "vars": {
+      "count": "Number of cards found that show the image."
+    }
+  },
+  "image-animator.mc-image-animator.used-on-count-cards-saving-changes-all-of-them": {
+    "text": "Used on {count, plural, one {# card} other {# cards}}. Saving changes how the image looks there.",
+    "note": "Question before saving an image that Magic Cards show, with Save and Cancel.",
+    "max": 83,
+    "vars": {
+      "count": "Number of cards that show the image."
+    }
+  },
+  "image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": {
+    "text": "Your image library is over 50 MiB. A large library can slow down older devices. You can still save.",
+    "note": "Warning when the images in the library add up to 50 MiB or more; saving is not blocked.",
+    "max": 138
+  },
+  "image-animator.morph-panel.add-morph": {
+    "text": "Add morph",
+    "note": "Button that adds the chosen morph to the image.",
+    "max": 25
+  },
+  "image-animator.morph-panel.changes-into": {
+    "text": "Changes into",
+    "note": "Label of the list that picks the shape the first one turns into.",
+    "max": 30
+  },
+  "image-animator.morph-panel.choose-two-different-shapes-to-morph": {
+    "text": "Choose two different shapes to morph.",
+    "note": "Hint shown when fewer than two different shapes are chosen.",
+    "max": 80
+  },
+  "image-animator.morph-panel.go-back-to-the-first-shape": {
+    "text": "Go back to the first shape",
+    "note": "Label of the checkbox that makes a morph return to where it started.",
+    "max": 50
+  },
+  "image-animator.morph-panel.morph": {
+    "text": "Morph",
+    "note": "Name of the morph effect in the message that confirms it was added.",
+    "max": 20
+  },
+  "image-animator.morph-panel.morph-one-shape-into-another": {
+    "text": "Morph one shape into another",
+    "note": "Heading of the morph controls in the image animator.",
+    "max": 50
+  },
+  "image-animator.morph-panel.shape-id": {
+    "text": "Shape {id}",
+    "note": "Item in the lists of shapes for a morph. {id} is the id of the shape in the drawing.",
+    "max": 30,
+    "vars": {
+      "id": "Id of the shape in the drawing."
+    }
+  },
+  "image-animator.morph-panel.shape-that-changes": {
+    "text": "Shape that changes",
+    "note": "Label of the list that picks the shape which morphs.",
+    "max": 40
+  },
+  "image-animator.morph-panel.the-first-shape-changes-into-the-second": {
+    "text": "The first shape changes into the second. They do not need the same number of points.",
+    "note": "Hint under the morph heading in the image animator.",
+    "max": 200
+  },
+  "image-animator.morph-panel.this-morph-could-not-be-added": {
+    "text": "This morph could not be added.",
+    "note": "Message when a morph cannot be added to the image.",
+    "max": 80
+  },
+  "image-animator.source.image": {
+    "text": "Image",
+    "note": "Name an uploaded drawing gets in the library when its file name has no usable letters.",
+    "max": 24
+  },
+  "image-animator.tracks.idle": {
+    "text": "Idle",
+    "note": "Name of the first animation clip an image gets, which plays all the time.",
+    "max": 12
+  }
+}

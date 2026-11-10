@@ -1,5 +1,5 @@
 import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library.needs';
-import type { ImageSummary, SavedImage } from '../contracts/mcu-library-images';
+import { IMAGE_CAPS_ANIMATION, type ImageSummary, type SavedImage } from '../contracts/mcu-library-images';
 import { CMD_GET, CMD_LIST } from './model';
 
 // The card editor side of the image library (mcu-library 1.1.0, images part): the picker list and one image with its connections, cached for the page.
@@ -15,11 +15,18 @@ const code = (e: unknown): string => String((e as { code?: string })?.code ?? ''
 let listing: Promise<Listing> | undefined;
 const items = new Map<string, Promise<SavedImage | undefined>>();
 let missing = false;
+let animates = false;
+
+/** The last images_list reported `caps.animation`: Magic Card Utils can store an animation. */
+export const libraryAnimates = (): boolean => animates;
 
 export function listImages(hass: Hass | undefined): Promise<Listing> {
   if (missing || !hass?.callWS) return Promise.resolve({ state: 'missing', items: [] });
-  listing ??= hass.callWS<{ images?: ImageSummary[] }>({ type: CMD_LIST }).then(
-    (r): Listing => ({ state: 'ok', items: Array.isArray(r?.images) ? r.images : [] }),
+  listing ??= hass.callWS<{ images?: ImageSummary[]; caps?: { animation?: unknown } }>({ type: CMD_LIST }).then(
+    (r): Listing => {
+      animates = r?.caps?.animation === IMAGE_CAPS_ANIMATION;
+      return { state: 'ok', items: Array.isArray(r?.images) ? r.images : [] };
+    },
     (e: unknown): Listing => {
       listing = undefined;
       if (code(e) === 'unknown_command') {
@@ -54,6 +61,7 @@ export function resetImages(): void {
   listing = undefined;
   items.clear();
   missing = false;
+  animates = false;
 }
 
 if (typeof window !== 'undefined') {

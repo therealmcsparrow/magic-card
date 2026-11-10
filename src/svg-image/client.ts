@@ -2,7 +2,9 @@ import { IMAGE_MAX_GET_IDS, IMAGE_RETRY_MAX_MS, IMAGE_RETRY_MS, type SanitizedIm
 import { IMAGE_CMD, type SavedImage } from '../contracts/mcu-library-images';
 import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library.needs';
 import { heavyStep } from './frames';
-import { parseImage, serializeImage, templateOf } from './sanitize';
+import { parseImage, sanitizeImage, serializeImage, templateOf } from './sanitize';
+import { loadImageAnim } from './anim-loader';
+import type { ImageAnimation } from '../contracts/image-animation';
 
 // The image client, one copy per page: reads library images through the card websocket and keeps them in page memory only.
 
@@ -169,7 +171,7 @@ function accept(id: string, saved: SavedImage | undefined): void {
     settle(id, { missing: 'unknown' });
     return;
   }
-  const parsed = parseImage(saved.svg);
+  const parsed = parseImage(saved.svg, { animation: saved.animation });
   if ('error' in parsed) {
     startMiss(id, 'refused');
     settle(id, { missing: 'refused' });
@@ -268,11 +270,31 @@ export function invalidateImages(ids: string[]): void {
   drop(ids);
 }
 
-/** The editors' view of an item: the saved record and its sanitised markup. */
+/**
+ * A record's drawing and animation as editors may keep them: the animation checked against the drawing's ids, and the
+ * drawing sanitised with that animation's morphs. A failed check (or an image-anim chunk that does not load) gives no
+ * animation and a drawing without SMIL.
+ */
+export async function checkRecord(saved: Pick<SavedImage, 'svg' | 'animation'>): Promise<{ sanitized: SanitizedImage; animation?: ImageAnimation }> {
+  const raw = saved.animation;
+  if (raw === undefined) return { sanitized: sanitizeImage(saved.svg) };
+  const withMorphs = sanitizeImage(saved.svg, { animation: raw });
+  const m = withMorphs.error ? undefined : await loadImageAnim();
+  const animation = m?.checkImageAnimation(raw, new Set(withMorphs.ids));
+  return animation ? { sanitized: withMorphs, animation } : { sanitized: sanitizeImage(saved.svg) };
+}
+
+/** The editors' view of an item: the saved record and its sanitised markup, with the animation checked (checkRecord). */
 export async function getImage(id: string, ws: CallWS): Promise<(SavedImage & { sanitized: SanitizedImage }) | undefined> {
   const r = await loadImage(id, ws);
   if (!('entry' in r)) return undefined;
   const { saved, template, viewBox, ids, stripped, bytes } = r.entry;
+  if (saved.animation !== undefined) {
+    const { animation: _raw, ...rest } = saved;
+    void _raw;
+    const c = await checkRecord(saved);
+    return { ...rest, ...(c.animation ? { animation: c.animation } : {}), sanitized: c.sanitized };
+  }
   const root = template.content.firstElementChild;
   return { ...saved, sanitized: { markup: serializeImage(root), viewBox, ids, stripped, bytes } };
 }

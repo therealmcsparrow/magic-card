@@ -1,6 +1,6 @@
 import { html, nothing, svg, type TemplateResult } from 'lit';
 import { IMAGE_CANVAS_MIN, IMAGE_CANVAS_PRESETS } from '../contracts/image-editor';
-import { IMAGE_MAX_BYTES, MAX_IMAGE_BOX } from '../contracts/mcu-library-images';
+import { MAX_IMAGE_BOX } from '../contracts/mcu-library-images';
 import { glyph } from '../ui-kit/glyphs';
 import { button, field, notice, switchRow, tiles } from '../ui-kit/templates';
 import type { McSvgEditor } from '../svg-editor/mc-svg-editor';
@@ -21,11 +21,12 @@ const aria = (b: boolean): string => (b ? 'true' : 'false');
 function meter(x: ImageExt): TemplateResult {
   const o = x.shell.out;
   const bytes = o.error === 'empty' ? 0 : o.bytes;
-  const l = meterLevel(bytes);
-  const used = kibShown(bytes);
-  const pct = Math.min(100, (bytes / IMAGE_MAX_BYTES) * 100);
+  const l = meterLevel(bytes, x.cap);
+  const used = kibShown(bytes, x.cap);
+  const cap = x.cap / 1024;
+  const pct = Math.min(100, (bytes / x.cap) * 100);
   return html`<div class=${`img-meter is-${l}`}>
-    <div class="bar" role="meter" aria-label=${t('image-editor.ui.image-size')} aria-valuemin="0" aria-valuemax="256" aria-valuenow=${Math.min(used, 256)} aria-valuetext=${t('image-editor.ui.used-of-256-kib-word', { used, word: x.word(l) })}><span style=${`width:${pct}%`}></span></div>
+    <div class="bar" role="meter" aria-label=${t('image-editor.ui.image-size')} aria-valuemin="0" aria-valuemax=${cap} aria-valuenow=${Math.min(used, cap)} aria-valuetext=${t('image-editor.ui.used-of-256-kib-word', { used, cap, word: x.word(l) })}><span style=${`width:${pct}%`}></span></div>
     ${l === 'over'
       ? html`<p class="sentence" role="alert">${glyph('alertCircle', 18)} ${x.sentence(bytes)}${x.bindings().length ? html` ${t('image-editor.ui.includes-connections')}` : nothing}</p>`
       : html`<p class="sentence">${l === 'small' ? nothing : glyph(l === 'big' ? 'information' : 'alertCircle', 18)} ${x.sentence(bytes)}${x.bindings().length ? html` ${t('image-editor.ui.includes-connections')}` : nothing}</p>`}
@@ -34,9 +35,18 @@ function meter(x: ImageExt): TemplateResult {
   </div>`;
 }
 
+/** Animate in the top bar; when it is unavailable the reason stays visible next to it and is its accessible description. */
+function animateSlot(x: ImageExt, size: 'sm' | 'md'): TemplateResult {
+  const why = x.animateReason;
+  if (!why) return button({ label: t('image-editor.ui.animate'), variant: 'secondary', size, onClick: (e) => x.openAnimator(e.currentTarget as HTMLElement) });
+  return html`<button type="button" class=${`btn btn-secondary${size === 'sm' ? ' btn-sm' : ''}`} aria-disabled="true" aria-describedby="img-animate-why">${t('image-editor.ui.animate')}</button><span id="img-animate-why" class="help">${why}</span>`;
+}
+
 /** The image profile's own slots of the shell's top bar (the Save button and the rest are the shell's). */
-export function slotView(x: ImageExt, slot: 'canvas' | 'reference' | 'transfer' | 'more', size: 'sm' | 'md', tight: boolean): TemplateResult {
+export function slotView(x: ImageExt, slot: 'canvas' | 'reference' | 'transfer' | 'animate' | 'more', size: 'sm' | 'md', tight: boolean): TemplateResult {
   switch (slot) {
+    case 'animate':
+      return animateSlot(x, size);
     case 'canvas':
       return button({ label: t('image-editor.ui.canvas-size'), glyph: 'resizeCorner', variant: 'secondary', size, iconOnly: tight, haspopup: 'dialog', onClick: (e) => x.openSize(e.currentTarget as HTMLElement) });
     case 'reference':
@@ -137,6 +147,7 @@ export function detailsWin(x: ImageExt): TemplateResult {
       <p class="help id-line">${t('image-editor.ui.the-address-is-mcu-image-id-it-cannot-be', { id: x.idFor(d.name) })}</p>
       <p class="help">${t('image-editor.ui.name-is-the-only-thing-you-need')}</p>
       ${d.fault ? notice({ tone: 'error', text: d.fault }) : nothing}
+      ${x.libraryWarn ? notice({ tone: 'warn', text: t('image-editor.ui.the-library-holds-mib-mib-very-large-libraries', { mib: Math.round(x.libraryWarn.bytes / 1048576) }) }) : nothing}
       <details class="more" ?open=${d.more} @toggle=${(e: Event) => (d.more = (e.target as HTMLDetailsElement).open)}>
         <summary>${t('image-editor.ui.more-details')}</summary>
         ${input('img-keywords', t('image-editor.ui.keywords'), d.keywords, (v) => set({ keywords: v }))}
@@ -158,7 +169,7 @@ const hiddenOf = (d: Doc): Shape[] => d.shapes.filter((s) => K.isOff(d, s, 'hidd
 export function tooBigWin(x: ImageExt): TemplateResult {
   const sh = x.shell;
   const b = x.big!;
-  const used = kibShown(b.bytes);
+  const used = kibShown(b.bytes, x.cap);
   const close = (): void => {
     x.big = undefined;
     sh.requestUpdate();
@@ -167,7 +178,7 @@ export function tooBigWin(x: ImageExt): TemplateResult {
   const biggest = [...sh.base.shapes].sort((p, q) => weight(q) - weight(p))[0];
   return html`<mc-ui-window variant="alert" size="m" heading=${t('image-editor.ui.too-big-to-save')} closeLabel=${t('image-editor.ui.close')} @mc-window-close=${close}>
     <div class="confirm">
-      <p>${t('image-editor.ui.image-size-used-kib-of-256-kib-too-big', { used })}</p>
+      <p>${t('image-editor.ui.image-size-used-kib-of-256-kib-too-big', { used, cap: x.cap / 1024 })}</p>
       <p class="help">${t('image-editor.ui.select-the-biggest-layer-and-simplify-it')}</p>
     </div>
     <div slot="footer" class="foot">

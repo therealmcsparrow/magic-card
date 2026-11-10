@@ -8,7 +8,7 @@ import { animLibrary } from '../utils/anim-hooks';
 import { animationDocList } from '../utils/custom-animations';
 import { CMD, LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
 import type { ItemMeta, SavedIcon, SavedShape, SavedThemePreset } from '../contracts/mcu-library';
-import { IMAGES_MIN_CONTRACT_REVISION, MAX_IMAGES } from '../contracts/mcu-library-images';
+import { IMAGES_MIN_CONTRACT_REVISION } from '../contracts/mcu-library-images';
 import type { ImageSummary } from '../contracts/mcu-library-images';
 import type { ThemePresetStore } from '../contracts/theme-editor';
 import { HOST_KINDS, LIBRARY_OPEN_EVENT } from '../contracts/preset-transfer';
@@ -530,7 +530,6 @@ export class LibraryView extends LitElement {
           ${can || (this.inline && this._kind !== 'image') ? button({ label: t('transfer.library-view.import'), icon: 'mdi:import', onClick: ask('import') }) : nothing}
         </div>
         ${this.inline && this._source === 'card' ? html`<p class="help">${t('transfer.library-view.imported-items-are-saved-in-this-card')}</p>` : nothing}
-        ${this._kind === 'image' && this._status === 'ok' && this._rows.length >= MAX_IMAGES ? html`<p class="help">${t('transfer.library-view.the-library-is-full')}</p>` : nothing}
         ${this._msg ? notice({ tone: this._bad ? 'error' : 'success', text: this._msg, transient: true }) : nothing}
         <div role="status" aria-live="polite" class="help">${this._msg ? '' : this._status === 'ok' ? count(shown.length, this._kind) : ''}</div>
         ${this._body(shown, can)}
@@ -613,7 +612,6 @@ export class LibraryView extends LitElement {
     };
     const act = (label: string, icon: string, onClick: () => void, variant?: 'danger') => ({ label, icon, iconOnly: true as const, variant, onClick });
     const x = this.rowExtra?.(this._kind, r.id);
-    const full = this._rows.length >= MAX_IMAGES;
     const typed = (ev: Event): string => (ev.currentTarget as HTMLElement).closest('.row')!.querySelector<HTMLInputElement>('.input')!.value;
     const line = image && this._ix?.row(image);
     const thumb = line?.thumb ? html`<img class="thumb" src=${line.thumb} alt="" loading="lazy" />` : undefined;
@@ -640,7 +638,7 @@ export class LibraryView extends LitElement {
       actions: [
         ...(edit ? [act(image && !this._admin ? this._word('view', { name: r.name }) : t('transfer.library-view.edit-name', { name: r.name }), image && !this._admin ? 'mdi:eye-outline' : 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape' | 'image', r.id))] : []),
         ...(can && !e && image?.bindings ? [act(t('transfer.library-view.map-entities-for-name', { name: r.name }), 'mdi:link-variant', () => void this._mapOpen(r))] : []),
-        ...(can && !e && image ? [{ ...act(this._word('duplicate', { name: r.name }), 'mdi:content-copy', set('duplicate')), disabled: full }] : []),
+        ...(can && !e && image ? [act(this._word('duplicate', { name: r.name }), 'mdi:content-copy', set('duplicate'))] : []),
         ...(can && !e ? [act(t('transfer.library-view.rename-name', { name: r.name }), 'mdi:rename-box', set('rename')), act(t('transfer.library-view.delete-name', { name: r.name }), 'mdi:delete-outline', set('delete'), 'danger')] : []),
       ],
       trail:

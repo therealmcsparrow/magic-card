@@ -1,14 +1,17 @@
 import { LitElement, css, html, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { IMAGE_ANIMATOR_SAVED_EVENT } from '../contracts/image-animator';
 import type { ImageSummary, SavedImage, SavedImageInput } from '../contracts/mcu-library-images';
 import { editorSystem } from '../css/editor-stack';
+import { kitButtonExtras } from '../ui-kit/css/extras';
 import { cardStateOf } from '../editor/custom/bridge';
 import { copyText } from '../editor/components/copy-text';
 import type { HomeAssistant } from '../types';
 import { needSvgImage } from '../utils/svg-image-loader';
 import { addImageModuleBehind } from './card-module';
+import { openImageAnimator } from './animator-host';
 import { openImageEditor } from './editor-host';
-import { getImage, listImages, resetImages, type Listing } from './library';
+import { getImage, libraryAnimates, listImages, resetImages, type Listing } from './library';
 import { t } from './i18n';
 import { THUMB_RE, entitiesOf, isLibraryValue, pickKeys, refId, sameShape, shapeKeys, shapeOf, type FieldContext, type Shape } from './model';
 
@@ -29,6 +32,7 @@ const taken = new WeakSet<object>();
 export class McLibraryImageField extends LitElement {
   static styles = [
     editorSystem,
+    kitButtonExtras,
     css`
       :host {
         display: block;
@@ -171,7 +175,13 @@ export class McLibraryImageField extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    this.addEventListener(IMAGE_ANIMATOR_SAVED_EVENT, this._animated);
     void this._load();
+  }
+
+  disconnectedCallback(): void {
+    this.removeEventListener(IMAGE_ANIMATOR_SAVED_EVENT, this._animated);
+    super.disconnectedCallback();
   }
 
   protected willUpdate(changed: PropertyValues<this>): void {
@@ -335,11 +345,38 @@ export class McLibraryImageField extends LitElement {
         ${!this.compact && !missing && this._id
           ? html`<button type="button" class="btn btn-secondary btn-sm" data-act="edit" @click=${() => void this._openEditor({ kind: 'image', id: this._id! })}>${this._canWrite ? t('image-tools.mc-library-image-field.edit-image') : t('image-tools.mc-library-image-field.view-image')}</button>`
           : nothing}
+        ${!this.compact && !missing && this._id ? this._animateButton() : nothing}
         ${!this.compact && this._id ? html`<button type="button" class="btn btn-secondary btn-sm" data-act="copy" @click=${() => void this._copy()}>${t('image-tools.mc-library-image-field.copy-reference')}</button>` : nothing}
       </div>
+      ${!this.compact && !missing && this._id && this._animateReason ? html`<p class="help" id="animate-hint" data-hint="animate">${this._animateReason}</p>` : nothing}
       ${this.compact ? nothing : html`<p class="line"><code>${this.value}</code></p><p class="help">${t('image-tools.mc-library-image-field.this-is-the-address-cards-use-it-stays')}</p>`}
       ${bindings > 0 && !this.compact ? this._usesBlock() : nothing}`;
   }
+
+  /** Why Animate is blocked, or undefined when it opens: no permission, or a Magic Card Utils that cannot store an animation. */
+  private get _animateReason(): string | undefined {
+    if (!this._canWrite) return t('image-tools.mc-library-image-field.you-need-permission-to-change-library-images');
+    if (!libraryAnimates()) return t('image-tools.mc-library-image-field.animating-needs-a-newer-magic-card-utils');
+    return undefined;
+  }
+
+  private _animateButton(): TemplateResult {
+    const reason = this._animateReason;
+    return html`<button type="button" class="btn btn-secondary btn-sm" data-act="animate" aria-disabled=${reason ? 'true' : nothing} aria-describedby=${reason ? 'animate-hint' : nothing} @click=${() => {
+      if (!reason && this._id) void this._animate(this._id);
+    }}>${t('image-tools.mc-library-image-field.animate')}</button>`;
+  }
+
+  private async _animate(id: string): Promise<void> {
+    this._failed = false;
+    if (!(await openImageAnimator(this, { kind: 'image', id }))) this._say(t('image-tools.mc-library-image-field.the-animator-could-not-open-try-again'));
+  }
+
+  /** An animation was saved: the list is read again and the field keeps showing the image. */
+  private _animated = (): void => {
+    resetImages();
+    void this._load();
+  };
 
   private _usesBlock(): TemplateResult {
     const list = entitiesOf(this._img?.bindings);

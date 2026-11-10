@@ -1,10 +1,12 @@
 import { LitElement, css, html, nothing, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import type { HassEntity, HomeAssistant } from '../types';
+import type { ImageAnimHandle } from '../contracts/image-animation';
 import type { BackgroundLayerConfig, BgLayerStatus } from '../contracts/bg-stack';
 import { IMAGE_MAX_DESCRIPTION_CHARS, IMAGE_REF_PREFIX, IMAGE_REF_RE, IMAGE_SKELETON_MS, MAX_LAYER_PREFETCH, type ImagePoint } from '../contracts/svg-image';
 import { entityStateColor, isEntityColor } from '../utils/entity-color';
 import { safeColor } from '../utils/safe-css';
+import { loadImageAnim, loadPauseChunk, loadTrackCompiler, wantsTracks } from './anim-loader';
 import { loadImage, watchImage, type ImageEntry } from './client';
 import { drawStep, whenIdle } from './frames';
 import { layerPlacement, type ImageFit, type Placement } from './layer-box';
@@ -92,6 +94,8 @@ export class McSvgImage extends LitElement {
   private _skeletonTimer?: ReturnType<typeof setTimeout>;
   private _sent = '';
   private _prefetched?: string;
+  private _anim?: ImageAnimHandle;
+  private _animGen = 0;
 
   get hass(): HomeAssistant | undefined {
     return this._hass;
@@ -101,6 +105,7 @@ export class McSvgImage extends LitElement {
     this._hass = v;
     if (first && v) this._begin();
     else if (this._entityColours()) this.requestUpdate();
+    this._anim?.update({ hass: v, host: this });
   }
 
   get status(): ImageStatus {
@@ -129,6 +134,7 @@ export class McSvgImage extends LitElement {
     this._skeletonTimer = undefined;
     this._gen++;
     this._asked = false;
+    this._stopAnim();
     this._svg?.remove();
     this._svg = this._mounted = undefined;
   }
@@ -258,6 +264,7 @@ export class McSvgImage extends LitElement {
   protected updated(): void {
     const stage = this.renderRoot.querySelector('.stage');
     if (stage && this._entry !== this._mounted) {
+      this._stopAnim();
       this._svg?.remove();
       this._svg = undefined;
       this._mounted = this._entry;
@@ -265,6 +272,7 @@ export class McSvgImage extends LitElement {
       if (svg) {
         stage.insertBefore(svg, stage.firstChild);
         this._svg = svg;
+        this._startAnim(svg, this._entry);
         if (this.layer) whenIdle(() => this._prefetch());
       }
     }
@@ -283,6 +291,24 @@ export class McSvgImage extends LitElement {
       }
     }
     this._report();
+  }
+
+  /** A record with an animation loads the image-anim chunk and plays it on the mounted drawing; one without never does. */
+  private _startAnim(svg: SVGElement, entry: ImageEntry | undefined): void {
+    const raw = entry?.saved.animation;
+    if (!raw || !entry) return;
+    const gen = ++this._animGen;
+    void Promise.all([loadImageAnim(), wantsTracks(raw) ? loadTrackCompiler() : undefined, loadPauseChunk()]).then(([m, compile]) => {
+      if (!m || gen !== this._animGen || this._svg !== svg || !this.isConnected) return;
+      const anim = m.checkImageAnimation(raw, new Set(entry.ids));
+      if (anim) this._anim = m.api.play(svg as SVGSVGElement, anim, { hass: this._hass, host: this }, compile);
+    });
+  }
+
+  private _stopAnim(): void {
+    this._animGen++;
+    this._anim?.release();
+    this._anim = undefined;
   }
 
   /** Tells the stack (layer mode) and the view (attribute and event) what happened, once per change. */

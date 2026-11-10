@@ -2,11 +2,11 @@ import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
-/** Contract: lazy modules and lazy card chunks. Version 1.11.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
+/** Contract: lazy modules and lazy card chunks. Version 1.12.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
  * and the rarely used modules leave magic-card.js. A quiet chunk (lazyChunk option `silent`) shows no failure notice. */
 
-export const LAZY_MODULE_CONTRACT = '1.11.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 26;
+export const LAZY_MODULE_CONTRACT = '1.12.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 27;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -92,16 +92,19 @@ export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flow
 };
 
 /** Chunks only an editor loads. */
-export type EditorLazyChunkName = 'layer-editor';
+export type EditorLazyChunkName = 'layer-editor' | 'image-animator';
 
 export const EDITOR_LAZY_CHUNK_FILES: Record<EditorLazyChunkName, string> = {
   'layer-editor': 'magic-card-layer-editor.js',
+  'image-animator': 'magic-card-image-animator.js',
 };
 
 /** Same meaning as LAZY_CHUNK_CEILINGS; the cap is measured + 5 %. */
 export const EDITOR_LAZY_CHUNK_CEILINGS: Record<EditorLazyChunkName, number> = {
   /** Panels about 75 KB + layer-editor i18n tables (en-GB ids, en-US, nl) about 20 KB. */
   'layer-editor': 114_688,
+  /** The image animator dialog and its i18n tables; the same number as IMAGE_ANIMATOR_CHUNK_CEILING (contract image-animator). */
+  'image-animator': 131_072,
 };
 
 /** The svg-css chunk: the CSS paint resolver, loaded only where an SVG is opened. */
@@ -140,8 +143,9 @@ export interface SameBuildModule {
 /**
  * Chunks a render starts when it meets the need, with no needs() row (only the render knows whether a
  * document has a rig or a particle simulation): dist/magic-card-<name>.js. They load through lazyChunk() too.
+ * image-anim (contract image-animation) loads only when a shown library image record carries an animation.
  */
-export type OnDemandChunkName = 'anim-runtime' | 'particles' | 'shape-custom' | 'svg-image' | 'status';
+export type OnDemandChunkName = 'anim-runtime' | 'particles' | 'shape-custom' | 'svg-image' | 'image-anim' | 'status';
 
 /** Quiet chunks: each is built with lazyChunk(name, importer, { silent: true }), so a failure shows no notice. */
 export const SILENT_CHUNKS = ['status'] as const;

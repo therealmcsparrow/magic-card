@@ -1,4 +1,8 @@
 {
+  "image-editor.chunk.animating-needs-a-newer-magic-card-utils": {
+    "text": "Animeren vraagt een nieuwere Magic Card Utils (de companion-integratie). Werk die bij in HACS en laad daarna opnieuw",
+    "hash": "781f85b4"
+  },
   "image-editor.chunk.as-on-a-card": {
     "text": "Zoals op een kaart",
     "hash": "07d4854b"
@@ -48,20 +52,20 @@
     "hash": "52493eca"
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-fine": {
-    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Prima.",
-    "hash": "205cd2fd"
+    "text": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Prima.",
+    "hash": "fd754ee7"
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-getting": {
-    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Wordt groot. Grote afbeeldingen kunnen traag zijn op wandtablets.",
-    "hash": "3ae3152e"
+    "text": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Wordt groot. Grote afbeeldingen kunnen traag zijn op wandtablets.",
+    "hash": "13fd567d"
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": {
-    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Bijna vol. Je kunt er nog een beetje bij doen.",
-    "hash": "49e0cbaf"
+    "text": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Bijna vol. Je kunt er nog een beetje bij doen.",
+    "hash": "10dab68f"
   },
   "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": {
-    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
-    "hash": "7871f325"
+    "text": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Te groot om op te slaan.",
+    "hash": "5d914d2c"
   },
   "image-editor.chunk.images-need-magic-card-utils-it-is": {
     "text": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
@@ -107,6 +111,10 @@
     "text": "Sla de afbeelding eerst op.",
     "hash": "28b25b23"
   },
+  "image-editor.chunk.save-the-image-first-to-animate-it": {
+    "text": "Sla de afbeelding eerst op om hem te animeren",
+    "hash": "20a81a90"
+  },
   "image-editor.chunk.save-your-changes-first": {
     "text": "Sla eerst je wijzigingen op.",
     "hash": "7bed9d58"
@@ -144,8 +152,8 @@
     "hash": "408538c8"
   },
   "image-editor.chunk.that-drawing-is-over-256-kib": {
-    "text": "Die tekening is groter dan 256 KiB.",
-    "hash": "f4b05d33"
+    "text": "Die tekening is groter dan {cap} KiB.",
+    "hash": "222bfadc"
   },
   "image-editor.chunk.that-file-cannot-be-used-as-an-image": {
     "text": "Dat bestand kan niet als afbeelding worden gebruikt.",
@@ -158,6 +166,10 @@
   "image-editor.chunk.that-svg-is-too-big-to-open-over-8-mb": {
     "text": "Die SVG is te groot om te openen (meer dan 8 MB). Probeer een kleinere kopie.",
     "hash": "a4b2ade8"
+  },
+  "image-editor.chunk.the-animator-could-not-open-try-again": {
+    "text": "De animator kon niet openen. Probeer het opnieuw.",
+    "hash": "e6c013c8"
   },
   "image-editor.chunk.the-library-does-not-accept-the-text": {
     "text": "De bibliotheek accepteert de tekst \"{word}\" niet, in de laag \"{name}\". Pas die aan en sla daarna opnieuw op.",
@@ -212,8 +224,8 @@
     "hash": "4202b72f"
   },
   "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": {
-    "text": "Te groot om op te slaan: {used} KiB van 256 KiB.",
-    "hash": "d734caad"
+    "text": "Te groot om op te slaan: {used} KiB van {cap} KiB.",
+    "hash": "820995b8"
   },
   "image-editor.chunk.undo": {
     "text": "Ongedaan maken",
@@ -787,6 +799,10 @@
     "text": "Accent",
     "hash": "a5c6fb18"
   },
+  "image-editor.ui.animate": {
+    "text": "Animeren",
+    "hash": "fd4a5f3d"
+  },
   "image-editor.ui.apply": {
     "text": "Toepassen",
     "hash": "31e392d1"
@@ -876,8 +892,8 @@
     "hash": "80bb38dc"
   },
   "image-editor.ui.image-size-used-kib-of-256-kib-too-big": {
-    "text": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
-    "hash": "7871f325"
+    "text": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Te groot om op te slaan.",
+    "hash": "5d914d2c"
   },
   "image-editor.ui.includes-connections": {
     "text": "Inclusief koppelingen.",
@@ -896,8 +912,8 @@
     "hash": "8bfdb93c"
   },
   "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
-    "text": "KiB is een kibibyte, iets meer dan duizend tekens. 256 KiB is ongeveer een kwart megabyte.",
-    "hash": "f4bce566"
+    "text": "KiB is een kibibyte, iets meer dan duizend tekens. 1024 KiB is ongeveer een megabyte.",
+    "hash": "f2dfd951"
   },
   "image-editor.ui.layers": {
     "text": "Lagen",
@@ -995,6 +1011,10 @@
     "text": "Het adres is mcu-image:{id}. Het kan later niet meer worden gewijzigd.",
     "hash": "096fcf15"
   },
+  "image-editor.ui.the-library-holds-mib-mib-very-large-libraries": {
+    "text": "De bibliotheek is {mib} MiB groot. Zeer grote bibliotheken kunnen traag laden op wandtablets. Opslaan kan nog steeds.",
+    "hash": "ceb8e221"
+  },
   "image-editor.ui.this-image-was-changed-somewhere-else": {
     "text": "Deze afbeelding is ergens anders gewijzigd.",
     "hash": "b1bcbf44"
@@ -1012,8 +1032,8 @@
     "hash": "b84c37eb"
   },
   "image-editor.ui.used-of-256-kib-word": {
-    "text": "{used} van 256 KiB, {word}",
-    "hash": "77e49990"
+    "text": "{used} van {cap} KiB, {word}",
+    "hash": "4af38a2e"
   },
   "image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": {
     "text": "{w} x {h} eenheden. Kies een laag om de details te lezen.",

@@ -1,4 +1,4 @@
-import type { LazyChunkModule, LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
+import type { LazyChunkModule, LazyChunkName } from '../contracts/lazy-module';
 import { provideRuntimeChunk } from './anim-runtime-loader';
 import type * as AnimChunk from '../anim-studio/anim-chunk';
 import type * as FlowsChunk from '../card/flows-chunk';
@@ -103,8 +103,8 @@ provideSvgImageChunk(onDemandChunks['svg-image']);
 export const loadSeasonal = (): Promise<boolean> => lazyChunks.seasonal.load();
 
 /** Tests: replace one chunk import (undefined restores it) and forget its state. */
-export function __setLazyImporterForTests(name: LazyChunkName | OnDemandChunkName, importer: LazyImporter | undefined): void {
-  (name in lazyChunks ? lazyChunks[name as LazyChunkName] : onDemandChunks[name as OnDemandChunkName]).__reset(importer as never);
+export function __setLazyImporterForTests(name: LazyChunkName | keyof typeof onDemandChunks, importer: LazyImporter | undefined): void {
+  (name in lazyChunks ? lazyChunks[name as LazyChunkName] : onDemandChunks[name as keyof typeof onDemandChunks]).__reset(importer as never);
 }
 
 /** Tests (vitest setup): load and install every chunk so renderPreview output stays synchronous. */

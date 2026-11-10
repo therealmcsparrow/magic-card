@@ -94,7 +94,7 @@ import type { StatusController } from '../contracts/card-status';
 import { statusIfLoaded } from './status-seam';
 import { wantsStatus } from '../contracts/card-status.needs';
 import { setCardPaused } from '../icons/offscreen';
-import { PAUSE_ATTRIBUTE, pauseGap, wantsPause } from '../contracts/card-pause.needs';
+import { PAUSE_ATTRIBUTE, PAUSE_WANT_ATTRIBUTE, pauseGap, wantsPause } from '../contracts/card-pause.needs';
 import { pauseKey, rememberedPause } from './pause-memory';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
@@ -394,7 +394,7 @@ export class MagicCard extends LitElement {
    */
   private _pauseFor(c: MagicCardConfig): CardPause | undefined {
     if (this._pause) return this._pause;
-    if (!this._preview && !wantsPause(c)) return undefined;
+    if (!this._preview && !wantsPause(c) && !this.hasAttribute(PAUSE_WANT_ATTRIBUTE)) return undefined;
     const mod = pauseIfLoaded();
     if (!mod) {
       this._met.add('pause');

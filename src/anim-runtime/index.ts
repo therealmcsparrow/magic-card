@@ -9,6 +9,8 @@ import * as clips from './clips';
 import { applyMirror, mirrorOfRun } from './mirror';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 export { BUILD_VERSION as BUILD } from '../utils/build-version';
+/** The track compiler, handed to the library-image viewer so that chunk carries none of its own. */
+export { compileTracks } from '../anim-studio/compile-v2';
 
 /** LazyChunkModule (lazy-module 1.4.0): the loader (src/utils/anim-runtime-loader.ts) registers nothing here, evaluation did it. */
 export const install = (): void => {};

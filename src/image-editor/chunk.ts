@@ -1,12 +1,16 @@
 import { html, type TemplateResult } from 'lit';
 import { IMAGE_CANVAS_PRESETS, IMAGE_EDITOR_CONTRACT_REVISION, IMAGE_PART_DATA_MAX } from '../contracts/image-editor';
-import { IMAGE_MAX_BYTES, MAX_IMAGES, MAX_IMAGE_BOX, type ImageBinding, type SavedImage, type SavedImageInput } from '../contracts/mcu-library-images';
+import { IMAGE_LEGACY_MAX_BYTES, MAX_IMAGE_BOX, type ImageBinding, type SavedImage, type SavedImageInput } from '../contracts/mcu-library-images';
 import type { MenuEntry } from '../contracts/path-canvas';
 import type { KitButtonOptions } from '../contracts/ui-kit';
 import type { Pt } from '../contracts/path-model';
 import type { SvgEditorSource, SvgSaveDetail } from '../contracts/svg-editor';
-import type { SvgImageApi } from '../contracts/svg-image';
+import type { SanitizedImage, SvgImageApi } from '../contracts/svg-image';
+import type { ImageAnimation } from '../contracts/image-animation';
+import { animateIds, keepAnimation, liftMorphs, putMorphs, type MorphCopies } from './morphs';
 import type { SvgCssResolve } from '../contracts/svg-safety';
+import type { ImageAnimatorHost } from '../contracts/image-animator';
+import { loadImageAnimator } from '../image-animator/loader';
 import { loadSvgCss } from '../svg-safety/css-loader';
 import type { Out } from '../svg-editor/mc-svg-editor';
 import type { ImageShell, ImageUi } from '../svg-editor/image-seam';
@@ -17,6 +21,7 @@ import { t } from './i18n';
 import { ImageError, fetchImage, listImages, storeImage, type ImageHass } from './library';
 import { kibShown, meterLevel, savedBytes, type MeterLevel } from './meter';
 import { buildSave, type Built } from './save';
+import { readLibrary, type LibraryWarning } from './library-warning';
 import { freeImageId } from './ids';
 import { cssOf, dashText, layerPaint, paintOf, parseDash, readPaint, stroked, toneOf, type Flag, type Look, type Rich } from './paint';
 import { imageStyles } from './styles';
@@ -109,15 +114,17 @@ function lookOf(el: Element, s: Shape, xml: Document, f: Flag, texts: Map<string
 
 /**
  * A library image (already through the image sanitiser) as a document. Each run of adjacent elements the editor cannot edit
- * becomes one locked layer (see part.ts); `all` is false only when the markup did not parse as XML.
+ * becomes one locked layer (see part.ts); `all` is false only when the markup did not parse as XML. Morph `<animate>`
+ * copies come off their paths into `morphs`.
  */
-function readImage(markup: string, viewBox: string, name: string): { doc: Doc; all: boolean } {
+function readImage(markup: string, viewBox: string, name: string): { doc: Doc; all: boolean; morphs: MorphCopies } {
   const notes = K.emptyNotes();
   const xml = new DOMParser().parseFromString(markup, 'image/svg+xml');
   const flag: Flag = { v: false };
   const texts = new Map<string, TextData>();
   if (xml.querySelector('parsererror') && /<text[\s>]/i.test(markup)) flag.v = true;
   K.reserveIds([...xml.querySelectorAll('[id]')].map((e) => e.id));
+  const morphs = liftMorphs(xml);
   const held = lift(xml, (el) => !!readText(el, { v: false }));
   // each text becomes a rectangle with the same paint and place, carrying a number that finds its words again
   [...xml.querySelectorAll('text')].forEach((el, i) => {
@@ -138,7 +145,7 @@ function readImage(markup: string, viewBox: string, name: string): { doc: Doc; a
     el.replaceWith(box);
   });
   const runs = new Map<string, Held>();
-  const src = held.size || texts.size ? new XMLSerializer().serializeToString(xml) : markup;
+  const src = held.size || texts.size || morphs.size ? new XMLSerializer().serializeToString(xml) : markup;
   const doc = K.readMarkup(src, viewBox, notes, name, tone, (el, s) => {
     const lifted = held.get(el.getAttribute('data-mc-part') ?? '');
     const f: Flag = { v: false };
@@ -146,7 +153,7 @@ function readImage(markup: string, viewBox: string, name: string): { doc: Doc; a
     if (lifted || f.v) runs.set(s.id, lifted ?? { el, ctx: contextOf(el) });
     return r;
   });
-  if (!runs.size) return { doc, all: !flag.v };
+  if (!runs.size) return { doc, all: !flag.v, morphs };
   // adjacent parts in the same group, under groups with the same attributes, are one layer
   const shapes: Shape[] = [];
   let run: { at: Shape; held: Held[] } | undefined;
@@ -171,7 +178,7 @@ function readImage(markup: string, viewBox: string, name: string): { doc: Doc; a
     }
   }
   close();
-  return { doc: { ...doc, shapes }, all: !flag.v };
+  return { doc: { ...doc, shapes }, all: !flag.v, morphs };
 }
 
 export class ImageExt implements ImageUi {
@@ -182,6 +189,10 @@ export class ImageExt implements ImageUi {
   id?: string;
   updatedAt?: string;
   private stored: ImageBinding[] = [];
+  /** The checked animation of the stored image, its morph copies by path id, and what of it the last build still holds. */
+  private anim?: ImageAnimation;
+  private copies: MorphCopies = new Map();
+  private kept?: ImageAnimation;
   private meta: Pick<SavedImageInput, 'keywords' | 'author' | 'description'> = {};
   /** The CSS paint resolver for files the user opens; set by loadCss() and passed to the image sanitiser as `css`, nowhere else. */
   private css?: SvgCssResolve;
@@ -204,6 +215,11 @@ export class ImageExt implements ImageUi {
   level?: MeterLevel;
   /** Ids already in the library (loaded when a name dialog opens). */
   taken?: Set<string>;
+  /** The byte cap a save may use (the library's own, else the older 256 KiB) and the size warning, read from images_list. */
+  cap = IMAGE_LEGACY_MAX_BYTES;
+  libraryWarn?: LibraryWarning;
+  /** The library's Magic Card Utils can store an animation (its images_list reported `caps.animation`). */
+  animates = false;
   /** The reference picture (held in page memory only), its alignment, and what its panel shows. */
   ref?: Picture;
   shown = true;
@@ -276,8 +292,26 @@ export class ImageExt implements ImageUi {
 
   // ── opening ──
 
+  /** Reads the cap and the library size once; the meter is judged again when the cap differs from the one in use. */
+  private async loadLibrary(): Promise<void> {
+    try {
+      const lib = await readLibrary(this.hass);
+      if (!lib) return;
+      this.taken = new Set(lib.images.map((i) => i.id));
+      this.libraryWarn = lib.warning;
+      this.animates = lib.animates;
+      const changed = lib.cap !== this.cap;
+      this.cap = lib.cap;
+      if (changed && this.shell.base) this.shell.refresh();
+    } catch {
+      this.libraryWarn = undefined;
+    }
+    this.shell.requestUpdate();
+  }
+
   async open(src: SvgEditorSource): Promise<Doc | undefined> {
     this.problem = undefined;
+    void this.loadLibrary();
     if (src.kind === 'image-blank') {
       const w = src.width;
       const h = src.height;
@@ -302,7 +336,7 @@ export class ImageExt implements ImageUi {
         this.problem = t('image-editor.chunk.this-image-is-no-longer-in-the-library');
         return undefined;
       }
-      return this.fromStored(item);
+      return this.fromStored(item, await this.api.checkRecord(item));
     } catch (e) {
       this.problem = this.problemText(e);
       return undefined;
@@ -430,8 +464,8 @@ export class ImageExt implements ImageUi {
     this.setSize({ preset: 'custom', w: String(m.w), h: String(m.h), keep: true });
   }
 
-  private fromStored(item: SavedImage): Doc | undefined {
-    const s = this.api.sanitizeImage(item.svg);
+  private fromStored(item: SavedImage, checked: { sanitized: SanitizedImage; animation?: ImageAnimation }): Doc | undefined {
+    const s = checked.sanitized;
     if (s.error) {
       this.problem = this.sanitiseText(s.error);
       return undefined;
@@ -441,6 +475,8 @@ export class ImageExt implements ImageUi {
     this.id = item.id;
     this.updatedAt = item.updated_at;
     this.stored = item.bindings ?? [];
+    this.anim = checked.animation;
+    this.copies = r.morphs;
     this.meta = { keywords: item.keywords, author: item.author, description: item.description };
     this.lossy = !r.all;
     this.conflict = false;
@@ -518,7 +554,7 @@ export class ImageExt implements ImageUi {
   }
 
   private sanitiseText(e: string): string {
-    return e === 'too_large' ? t('image-editor.chunk.that-drawing-is-over-256-kib') : e === 'not_svg' ? t('image-editor.chunk.this-is-not-valid-svg-check-that-it') : e === 'empty' ? t('image-editor.chunk.that-file-has-no-shapes-an-image-can-use') : t('image-editor.chunk.that-file-cannot-be-used-as-an-image');
+    return e === 'too_large' ? t('image-editor.chunk.that-drawing-is-over-256-kib', { cap: this.cap / 1024 }) : e === 'not_svg' ? t('image-editor.chunk.this-is-not-valid-svg-check-that-it') : e === 'empty' ? t('image-editor.chunk.that-file-has-no-shapes-an-image-can-use') : t('image-editor.chunk.that-file-cannot-be-used-as-an-image');
   }
 
   // ── markup out ──
@@ -570,10 +606,12 @@ export class ImageExt implements ImageUi {
     const defs = [...this.gradients, ...partDefs(doc.shapes)];
     const raw = defs.length ? body.replace(/^(<svg[^>]*>)/, `$1<defs>${defs.join('')}</defs>`) : body;
     if (!/<(?:path|text)/.test(raw) && !doc.shapes.some((s) => s.look?.part && !s.hidden)) return { bytes: 0, error: 'empty', points, viewBox: vb };
-    const s = this.api.sanitizeImage(raw);
+    const m = this.anim ? putMorphs(raw, this.copies) : undefined;
+    const s = this.anim && m ? this.api.sanitizeImage(m.svg, { animation: this.anim }) : this.api.sanitizeImage(raw);
     if (s.error) return { bytes: s.bytes, error: s.error === 'too_large' ? 'over' : 'invalid', message: s.error, points, viewBox: vb };
-    const bytes = savedBytes(s.markup, this.stored);
-    return { svg: s.markup, bytes, error: bytes > IMAGE_MAX_BYTES ? 'over' : undefined, points, viewBox: s.viewBox };
+    this.kept = m && keepAnimation(this.anim, new Set(s.ids), animateIds(s.markup));
+    const bytes = savedBytes(s.markup, this.stored, this.kept);
+    return { svg: s.markup, bytes, error: bytes > this.cap ? 'over' : undefined, points, viewBox: s.viewBox };
   }
 
   /** The same change to every selected layer, each judged on its own (locked layers stay as they are). */
@@ -673,9 +711,10 @@ export class ImageExt implements ImageUi {
 
   /** The meter's sentence for a size. */
   sentence(bytes: number): string {
-    const used = kibShown(bytes);
-    const l = meterLevel(bytes);
-    return l === 'small' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-fine', { used }) : l === 'big' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-getting', { used }) : l === 'full' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-nearly', { used }) : t('image-editor.chunk.image-size-used-kib-of-256-kib-too-big', { used });
+    const used = kibShown(bytes, this.cap);
+    const l = meterLevel(bytes, this.cap);
+    const cap = this.cap / 1024;
+    return l === 'small' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-fine', { used, cap }) : l === 'big' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-getting', { used, cap }) : l === 'full' ? t('image-editor.chunk.image-size-used-kib-of-256-kib-nearly', { used, cap }) : t('image-editor.chunk.image-size-used-kib-of-256-kib-too-big', { used, cap });
   }
 
   word(l: MeterLevel): string {
@@ -684,7 +723,7 @@ export class ImageExt implements ImageUi {
 
   /** One polite announcement per crossing into Getting big or Nearly full (Too big is an alert in the meter itself). */
   changed(out: Out): void {
-    const l = out.error === 'empty' ? 'small' : meterLevel(out.bytes);
+    const l = out.error === 'empty' ? 'small' : meterLevel(out.bytes, this.cap);
     const was = this.level;
     this.level = l;
     if (was && was !== l && (l === 'big' || l === 'full')) this.shell.say(this.sentence(out.bytes));
@@ -811,7 +850,9 @@ export class ImageExt implements ImageUi {
 
   private async loadTaken(): Promise<void> {
     try {
-      this.taken = new Set((await listImages(this.hass)).map((i) => i.id));
+      const lib = await readLibrary(this.hass);
+      this.taken = lib ? new Set(lib.images.map((i) => i.id)) : undefined;
+      this.libraryWarn = lib?.warning;
     } catch {
       this.taken = undefined;
     }
@@ -840,7 +881,6 @@ export class ImageExt implements ImageUi {
     try {
       const taken = new Set((await listImages(this.hass)).map((i) => i.id));
       this.taken = taken;
-      if (taken.size >= MAX_IMAGES) return this.setDetails({ error: t('image-editor.chunk.the-library-is-full-200-images-delete') });
       const id = freeImageId(name, taken);
       if (d.mode === 'duplicate') await this.duplicate(id, meta);
       else await this.write({ id, ...meta }, d.mode === 'copy');
@@ -856,7 +896,7 @@ export class ImageExt implements ImageUi {
   async buildSave(meta: { id: string; name: string }): Promise<{ ok: true; input: SavedImageInput } | { ok: false; reason: 'too_large' | 'full' | 'invalid'; bytes?: number }> {
     const out = this.shell.out;
     if (!out.svg) return { ok: false, reason: 'invalid' };
-    const r: Built = await buildSave(this.api, out.svg, this.stored, { ...this.meta, ...meta });
+    const r: Built = await buildSave(this.api, out.svg, this.stored, { ...this.meta, ...meta }, this.cap, this.kept);
     return r.ok ? { ok: true, input: r.input } : { ok: false, reason: r.reason === 'too_large' ? 'too_large' : 'invalid', bytes: r.bytes };
   }
 
@@ -919,7 +959,8 @@ export class ImageExt implements ImageUi {
     const input: SavedImageInput = { ...rest, id: newId, name: meta.name };
     const sum = await storeImage(this.hass, input);
     this.details = undefined;
-    const doc = this.fromStored({ ...src, ...input, created_at: sum.updated_at, updated_at: sum.updated_at });
+    const copy: SavedImage = { ...src, ...input, created_at: sum.updated_at, updated_at: sum.updated_at };
+    const doc = this.fromStored(copy, await this.api.checkRecord(copy));
     if (doc) {
       sh.begin(doc);
       this.ready();
@@ -940,7 +981,7 @@ export class ImageExt implements ImageUi {
         : p === 'full'
           ? t('image-editor.chunk.the-library-is-full-200-images-delete')
           : p === 'too_large'
-            ? t('image-editor.chunk.too-big-to-save-used-kib-of-256-kib', { used: kibShown(err?.bytes ?? this.shell.out.bytes) })
+            ? t('image-editor.chunk.too-big-to-save-used-kib-of-256-kib', { used: kibShown(err?.bytes ?? this.shell.out.bytes, this.cap), cap: this.cap / 1024 })
             : p === 'invalid'
               ? err?.word
                 ? t('image-editor.chunk.the-library-does-not-accept-the-text-2', { word: err.word })
@@ -986,7 +1027,7 @@ export class ImageExt implements ImageUi {
     if (!this.id) return;
     try {
       const item = await fetchImage(this.hass, this.id);
-      const doc = item && this.fromStored(item);
+      const doc = item && this.fromStored(item, await this.api.checkRecord(item));
       if (doc) {
         this.shell.begin(doc);
         this.ready();
@@ -1012,6 +1053,25 @@ export class ImageExt implements ImageUi {
     a.download = `${K.slug(this.name || t('image-editor.chunk.my-image'))}.svg`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  /** Why Animate is blocked, or undefined when it opens: view-only, a Utils that cannot store an animation, or changes the library does not hold yet. */
+  get animateReason(): string | undefined {
+    if (this.readOnly) return this.readReason;
+    if (!this.animates) return t('image-editor.chunk.animating-needs-a-newer-magic-card-utils');
+    if (!this.id) return t('image-editor.chunk.save-the-image-first-to-animate-it');
+    if (this.shell.dirty) return t('image-editor.chunk.save-your-changes-first');
+    return undefined;
+  }
+
+  /** Opens the image animator on the saved image; the window mounts in the root of `from`, inside the editor's layer. */
+  openAnimator(from: HTMLElement): void {
+    const id = this.id;
+    if (!id || this.animateReason) return;
+    Object.assign(from, { hass: this.shell.hass });
+    void loadImageAnimator().then(async (api) => {
+      if (!(api && (await api.openImageAnimator(from as ImageAnimatorHost, { kind: 'image', id })))) this.shell.say(t('image-editor.chunk.the-animator-could-not-open-try-again'));
+    });
   }
 
   /** The More menu under its button; a pick comes back to pick(). */
@@ -1056,7 +1116,7 @@ export class ImageExt implements ImageUi {
   }
 
   slot(slot: Parameters<ImageUi['slot']>[0], size: 'sm' | 'md', tight: boolean): TemplateResult {
-    return slotView(this, slot, size, tight);
+    return slot === 'transfer' ? html`${slotView(this, 'animate', size, tight)}${slotView(this, slot, size, tight)}` : slotView(this, slot, size, tight);
   }
 
   barTail(): TemplateResult {

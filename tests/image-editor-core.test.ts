@@ -9,7 +9,7 @@ import { gridFor, keepRatio, outsideCount, presetOf, readSize } from '../src/ima
 import { buildSave } from '../src/image-editor/save';
 import { ImageError, fetchImage, listImages, storeImage } from '../src/image-editor/library';
 import { api } from '../src/svg-image/chunk';
-import { IMAGE_MAX_BYTES } from '../src/contracts/mcu-library-images';
+import { IMAGE_LEGACY_MAX_BYTES, IMAGE_MAX_BYTES } from '../src/contracts/mcu-library-images';
 import { blankDoc, newShape } from '../src/svg-editor/model';
 
 beforeAll(() => {
@@ -41,19 +41,29 @@ describe('image ids', () => {
 });
 
 describe('size meter', () => {
-  it('has four levels at 96, 224 and 256 KiB', () => {
+  it('has four levels at 96, 224 and 256 KiB for a Utils without caps', () => {
     expect(meterLevel(0)).toBe('small');
     expect(meterLevel(96 * 1024 - 1)).toBe('small');
     expect(meterLevel(96 * 1024)).toBe('big');
     expect(meterLevel(224 * 1024 - 1)).toBe('big');
     expect(meterLevel(224 * 1024)).toBe('full');
-    expect(meterLevel(IMAGE_MAX_BYTES)).toBe('full');
-    expect(meterLevel(IMAGE_MAX_BYTES + 1)).toBe('over');
+    expect(meterLevel(IMAGE_LEGACY_MAX_BYTES)).toBe('full');
+    expect(meterLevel(IMAGE_LEGACY_MAX_BYTES + 1)).toBe('over');
   });
-  it('never shows an over-size image as 256', () => {
-    expect(kibShown(IMAGE_MAX_BYTES)).toBe(256);
-    expect(kibShown(IMAGE_MAX_BYTES + 1)).toBe(257);
+  it('scales the levels to a 1 MiB cap', () => {
+    expect(meterLevel(384 * 1024 - 1, IMAGE_MAX_BYTES)).toBe('small');
+    expect(meterLevel(384 * 1024, IMAGE_MAX_BYTES)).toBe('big');
+    expect(meterLevel(896 * 1024, IMAGE_MAX_BYTES)).toBe('full');
+    expect(meterLevel(IMAGE_MAX_BYTES, IMAGE_MAX_BYTES)).toBe('full');
+    expect(meterLevel(IMAGE_MAX_BYTES + 1, IMAGE_MAX_BYTES)).toBe('over');
+    expect(meterLevel(IMAGE_LEGACY_MAX_BYTES + 1, IMAGE_MAX_BYTES)).toBe('small');
+  });
+  it('never shows an over-size image as the cap', () => {
+    expect(kibShown(IMAGE_LEGACY_MAX_BYTES)).toBe(256);
+    expect(kibShown(IMAGE_LEGACY_MAX_BYTES + 1)).toBe(257);
     expect(kibShown(150 * 1024)).toBe(150);
+    expect(kibShown(IMAGE_MAX_BYTES, IMAGE_MAX_BYTES)).toBe(1024);
+    expect(kibShown(IMAGE_MAX_BYTES + 1, IMAGE_MAX_BYTES)).toBe(1025);
   });
   it('counts the connections only when there are some', () => {
     expect(savedBytes('abc', [])).toBe(3);
@@ -112,7 +122,7 @@ describe('save payload', () => {
     expect(r.ok && r.input.bindings).toEqual(b);
     expect(fake.thumbnail).toHaveBeenCalledWith(expect.stringContaining('<svg'), 320, 16 * 1024);
   });
-  it('refuses over 256 KiB before sending and says the size', async () => {
+  it('refuses over the effective cap before sending and says the size', async () => {
     const tiny = '<svg viewBox="0 0 10 10"><path d="M0 0H1V1Z"/></svg>';
     const fake = { ...api, sanitizeImage: () => ({ markup: tiny, viewBox: '0 0 10 10', ids: [], stripped: [], bytes: 1 }) };
     const bindings = Array.from({ length: 4000 }, (_, i) => ({ target: `t${i}`, entity: 'light.a_very_long_entity_name_for_size', set: 'fill' as const, rules: [{ state: 'on', value: '#ff00ff' }, { state: 'off', value: '#00ff00' }] }));
@@ -120,8 +130,12 @@ describe('save payload', () => {
     expect(r.ok).toBe(false);
     if (!r.ok) {
       expect(r.reason).toBe('too_large');
-      expect(r.bytes).toBeGreaterThan(IMAGE_MAX_BYTES);
+      expect(r.bytes).toBeGreaterThan(IMAGE_LEGACY_MAX_BYTES);
     }
+    const big = await buildSave(fake, tiny, bindings, { id: 'a', name: 'A' }, IMAGE_MAX_BYTES);
+    expect(big.ok).toBe(true);
+    const small = await buildSave(fake, tiny, bindings, { id: 'a', name: 'A' }, 100 * 1024);
+    expect(small.ok).toBe(false);
   });
   it('reports unusable markup', async () => {
     const r = await buildSave(api, '<svg viewBox="0 0 10 10"></svg>', [], { id: 'a', name: 'A' });

@@ -6,6 +6,7 @@ import tseslint from 'typescript-eslint';
 // Add a file here only with a Contract change; moving a loader onto lazyChunk() shrinks the list.
 const REGISTERED_IMPORT_SITES = [
   'src/utils/lazy-chunks.ts',
+  'src/svg-image/anim-loader.ts',
   'src/modules/lazy/controls-chunk.ts',
   'src/anim-studio/anim-chunk.ts',
   'src/card/flows-chunk.ts',
@@ -20,6 +21,8 @@ const REGISTERED_IMPORT_SITES = [
   'src/editor/look-editor-loader.ts',
   'src/editor/transfer-loader.ts',
   'src/i18n/labels/index.ts',
+  'src/image-animator/image-loader.ts',
+  'src/image-animator/loader.ts',
   'src/icon-anim/library/i18n/index.ts',
   'src/path-booleans/loader.ts',
   'src/path-canvas/loader.ts',

@@ -1,14 +1,15 @@
 import type { CardModule, HomeAssistant } from '../types';
 import type { BackgroundLayerConfig } from './bg-stack';
+import type { ImageAnimation } from './image-animation';
 import type { ImageBinding, SavedImage } from './mcu-library-images';
-import type { SvgCssOption } from './svg-safety';
+import type { SvgCssOption, SvgMorphOption } from './svg-safety';
 import type { SanitisedImageMarkup } from './svg-reader';
 
-/** Contract: library images on cards. Version 1.0.0. A library image is a full drawing saved in Magic Card Utils
- * (mcu-library 1.1.0, kind `images`). */
+/** Contract: library images on cards. Version 1.2.0. A library image is a full drawing saved in Magic Card Utils
+ * (mcu-library 1.2.0, kind `images`). */
 
-export const SVG_IMAGE_CONTRACT = '1.0.0';
-export const SVG_IMAGE_CONTRACT_REVISION = 7;
+export const SVG_IMAGE_CONTRACT = '1.2.0';
+export const SVG_IMAGE_CONTRACT_REVISION = 9;
 
 export const IMAGE_REF_PREFIX = 'mcu-image:';
 export const IMAGE_REF_RE = /^mcu-image:([a-z0-9][a-z0-9_-]{0,63})$/;
@@ -20,14 +21,18 @@ export const SVG_IMAGE_TAG = 'mc-svg-image';
 export const SVG_IMAGE_STATUS_EVENT = 'mc-svg-image-status';
 
 /** The only editor-side files that import() the svg-image chunk entry; each reads `api` only. */
-export const SVG_IMAGE_EDITOR_IMPORT_SITES: readonly string[] = ['src/svg-editor/image-loader.ts', 'src/transfer/image-transfer-loader.ts'];
+export const SVG_IMAGE_EDITOR_IMPORT_SITES: readonly string[] = [
+  'src/svg-editor/image-loader.ts',
+  'src/transfer/image-transfer-loader.ts',
+  'src/image-animator/image-loader.ts',
+];
 
 /**
- * Most the whole magic-card.js change for this contract may add (bytes after gzip level 9 / Brotli quality 11, Linux
- * build). The entry caps themselves are in tools/size-caps.json.
+ * Most magic-card.js may grow for this version of the contract (bytes after gzip level 9 / Brotli quality 11, Linux
+ * build): animated images load entirely from chunks. The entry caps themselves are in tools/size-caps.json.
  */
-export const ENTRY_DELTA_MAX_GZIP = 224;
-export const ENTRY_DELTA_MAX_BR = 384;
+export const ENTRY_DELTA_MAX_GZIP = 0;
+export const ENTRY_DELTA_MAX_BR = 0;
 
 export const IMAGE_MAX_GET_IDS = 8;
 export const IMAGE_RETRY_MS = 60_000;
@@ -42,8 +47,12 @@ export const COLD_FIRST_P95_MAX_MS = 300;
 export const CACHE_HIT_MEDIAN_MAX_MS = 100;
 export const BINDING_APPLY_MEDIAN_MAX_MS = 4;
 
-/** Same numbers as mcu-library-images IMAGE_MAX_BYTES and MAX_IMAGE_BOX. */
-export const IMAGE_MAX_BYTES = 256 * 1024;
+/**
+ * Same numbers as mcu-library-images IMAGE_MAX_BYTES, IMAGE_LEGACY_MAX_BYTES and MAX_IMAGE_BOX. The cap a save uses
+ * is imageMaxBytes() of the images_list reply: `caps.image_max_bytes`, else the legacy 256 KiB.
+ */
+export const IMAGE_MAX_BYTES = 1024 * 1024;
+export const IMAGE_LEGACY_MAX_BYTES = 256 * 1024;
 export const MAX_IMAGE_BOX = 4096;
 export const IMAGE_MAX_NODES = 10_000;
 export const IMAGE_MAX_DEPTH = 64;
@@ -78,8 +87,8 @@ export const MAX_BINDING_RULES = 16;
 export const IMAGE_OVERLAY_TYPES: readonly string[] = ['icon', 'info', 'button'];
 export const MAX_IMAGE_OVERLAYS = 32;
 
-export interface SanitizeOptions extends SvgCssOption {
-  /** A .svg file the user opened or imported: a leading prolog may be removed first. */
+export interface SanitizeOptions extends SvgCssOption, SvgMorphOption {
+  /** A .svg file the user opened or imported: a leading prolog may be removed first, and `animation` and `morphIds` are ignored. */
   file?: boolean;
 }
 
@@ -153,8 +162,16 @@ type CallWS = (msg: Record<string, unknown>) => Promise<unknown>;
 export interface SvgImageApi {
   /** `options.css` only from an open site, and only with { file: true }. */
   sanitizeImage(markup: string, options?: SanitizeOptions): SanitizedImage;
-  /** The library item, sanitised; undefined when missing. Shares the page cache. */
+  /**
+   * The library item, sanitised; undefined when missing. Shares the page cache. `animation` is the checked one, or
+   * absent when it failed; its morph ids are the only SMIL kept. With one, <mc-svg-image> loads the image-anim chunk.
+   */
   getImage(id: string, callWS: CallWS): Promise<(SavedImage & { sanitized: SanitizedImage }) | undefined>;
+  /**
+   * A record read straight from Utils as getImage gives it: the animation checked against the sanitised drawing's ids
+   * (undefined when it failed or the image-anim chunk did not load), the drawing keeping only that animation's morphs.
+   */
+  checkRecord(saved: Pick<SavedImage, 'svg' | 'animation'>): Promise<{ sanitized: SanitizedImage; animation?: ImageAnimation }>;
   /** Sanitised nodes for an editor canvas (imported parts, previews); undefined when nothing is drawable. */
   fragment(markup: string): DocumentFragment | undefined;
   /** Raster thumbnail (data:image/webp, else png) of sanitised markup, longest side `side`, at most `maxBytes`. */

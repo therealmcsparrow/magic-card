@@ -1,8 +1,61 @@
-// Contract: SVG value rules shared by the two sanitisers. Version 1.2.0 (SVG_SAFETY_CONTRACT). One set of value
+// Contract: SVG value rules shared by the two sanitisers. Version 1.4.0 (SVG_SAFETY_CONTRACT). One set of value
 // rules behind src/icons/svg-sanitize.ts (own icons) and src/svg-image/sanitize.ts (library images). The
 // allow-lists stay two: each sanitiser passes its own policy, and the rules only read it.
 
-export const SVG_SAFETY_CONTRACT = '1.2.0';
+export const SVG_SAFETY_CONTRACT = '1.4.0';
+
+/**
+ * The one SMIL a library image keeps: an editor-written path morph. Element `animate` in the SVG namespace with no
+ * prefix (exact, case-sensitive local name), a direct child of `<path>` with no child nodes, at most one per path,
+ * and its id named by a checked animation's `morphs[].smil`. Import (upload, paste, transfer) keeps no SMIL.
+ */
+export const MORPH_ELEMENT = 'animate';
+export const MORPH_PARENT = 'path';
+/** Every attribute it may carry: no namespace, exact case; any other attribute (href, from, to, by included) is a miss. */
+export const MORPH_ATTRIBUTES = ['id', 'attributeName', 'values', 'dur', 'repeatCount', 'keyTimes', 'keySplines', 'calcMode', 'fill', 'begin'] as const;
+export type MorphAttribute = (typeof MORPH_ATTRIBUTES)[number];
+/** Attributes that must be present, with the one value each may hold. */
+export const MORPH_FIXED = { attributeName: 'd', begin: 'indefinite' } as const;
+export const MORPH_REQUIRED: readonly MorphAttribute[] = ['id', 'attributeName', 'values', 'dur', 'begin'];
+export const MORPH_CALC_MODES = ['linear', 'spline'] as const;
+export const MORPH_FILLS = ['freeze', 'remove'] as const;
+/** `dur`: a clock value in seconds or milliseconds. */
+export const MORPH_DUR_RE = /^(?:\d{1,6}(?:\.\d{1,6})?|\.\d{1,6})(?:s|ms)$/;
+/** `repeatCount`: a positive number or indefinite. */
+export const MORPH_REPEAT_RE = /^(?:indefinite|\d{1,6}(?:\.\d{1,6})?|\.\d{1,6})$/;
+/** keyTimes and keySplines: numbers, spaces and `;`; counts and ranges are checked after splitting. */
+export const MORPH_NUMBER_LIST_RE = /^[0-9. ;]+$/;
+/**
+ * Each `;`-separated frame of `values` passes the path-data allow-list (MORPH_PATH_DATA_RE), then the command
+ * structure rule: all frames of one morph hold the same command letters in order, with the same count of numbers
+ * after each. Full rule: documentation/sharing-safety/svg-allowlist.md, "Morph frame structure"; Utils holds the same.
+ */
+export const MORPH_VALUES_SEPARATOR = ';';
+/** SMIL elements never kept, whatever the policy. */
+export const SMIL_NEVER: readonly string[] = ['set', 'animateMotion', 'animateTransform', 'discard'];
+
+/** What a record's morph says about its `<animate>`: the path it sits on and its frames. */
+export interface MorphRef {
+  target: string;
+  frames: readonly { at: number; d: string }[];
+}
+
+/**
+ * The morph rule as a sanitiser option. `animation` (the record's raw animation, morphs read by `smil` id) is the full
+ * rule: target path, `values` equal to the frames' `d`, keyTimes equal to each `at` / 100 (within 1e-6). `morphIds`
+ * names ids only and skips those checks; `animation` wins. Absent or empty: every SMIL element goes.
+ */
+export interface SvgMorphOption {
+  animation?: unknown;
+  morphIds?: ReadonlySet<string>;
+}
+
+/**
+ * Why a morph `<animate>` failed; the card strips it, Utils refuses the save. `unnamed`: no morph names its id or
+ * path. `counts`: keyTimes or keySplines do not fit the frames. `frames`: `values` differs from the morph's frames,
+ * or the frames differ in command structure. See documentation/sharing-safety/svg-allowlist.md, "Morph miss reasons".
+ */
+export type MorphMiss = 'namespace' | 'parent' | 'children' | 'second' | 'attribute' | 'value' | 'unnamed' | 'counts' | 'frames';
 
 /**
  * The only files that may call loadSvgCss (value-import src/svg-safety/css-loader.ts): the places where a user opens

@@ -27789,6 +27789,807 @@
     "x-max-length": 15,
     "x-source-hash": "3a432dbe"
   },
+  "image-animator.clips-panel.a-clip-name-can-be-64-characters-at": "Een naam mag hoogstens 64 tekens hebben.",
+  "@image-animator.clips-panel.a-clip-name-can-be-64-characters-at": {
+    "description": "Error when the clip name is too long. Max 58 characters.",
+    "source_text": "A clip name can be 64 characters at most.",
+    "x-max-length": 58,
+    "x-source-hash": "05c8c94c"
+  },
+  "image-animator.clips-panel.a-clip-with-a-morph-can-only-play-forwards": "Een animatie met een overgang kan alleen vooruit spelen.",
+  "@image-animator.clips-panel.a-clip-with-a-morph-can-only-play-forwards": {
+    "description": "Error when a direction other than forwards is chosen for a clip that has a morph. Max 79 characters.",
+    "source_text": "A clip with a morph can only play forwards.",
+    "x-max-length": 79,
+    "x-source-hash": "a4d9c2cb"
+  },
+  "image-animator.clips-panel.above": "Boven",
+  "@image-animator.clips-panel.above": {
+    "description": "Condition option: the number is above the value. Max 20 characters.",
+    "source_text": "Above",
+    "x-max-length": 20,
+    "x-source-hash": "80792346"
+  },
+  "image-animator.clips-panel.add-clip": "Animatie toevoegen",
+  "@image-animator.clips-panel.add-clip": {
+    "description": "Button that adds a new clip. Max 26 characters.",
+    "source_text": "Add clip",
+    "x-max-length": 26,
+    "x-source-hash": "e235f103"
+  },
+  "image-animator.clips-panel.added-the-clip-name": "De animatie {name} is toegevoegd.",
+  "@image-animator.clips-panel.added-the-clip-name": {
+    "description": "Confirmation after a clip is added. {name}: Name of the clip. Max 47 characters.",
+    "source_text": "Added the clip {name}.",
+    "x-max-length": 47,
+    "x-source-hash": "f71365fb"
+  },
+  "image-animator.clips-panel.always": "Altijd",
+  "@image-animator.clips-panel.always": {
+    "description": "Trigger option: the clip plays all the time. Max 20 characters.",
+    "source_text": "Always",
+    "x-max-length": 20,
+    "x-source-hash": "de9f057a"
+  },
+  "image-animator.clips-panel.an-entity-reaches-a-state": "Een entiteit bereikt een status",
+  "@image-animator.clips-panel.an-entity-reaches-a-state": {
+    "description": "Trigger option: the clip plays while a Home Assistant entity matches a condition. Max 44 characters.",
+    "source_text": "An entity reaches a state",
+    "x-max-length": 44,
+    "x-source-hash": "b13db3e7"
+  },
+  "image-animator.clips-panel.an-image-can-hold-16-clips-at-most": "Een afbeelding kan hoogstens 16 animaties hebben.",
+  "@image-animator.clips-panel.an-image-can-hold-16-clips-at-most": {
+    "description": "Error when the image already has the most clips. Max 69 characters.",
+    "source_text": "An image can hold 16 clips at most.",
+    "x-max-length": 69,
+    "x-source-hash": "9db2ebba"
+  },
+  "image-animator.clips-panel.attribute-optional": "Attribuut (optioneel)",
+  "@image-animator.clips-panel.attribute-optional": {
+    "description": "Label of the field for an entity attribute of a state trigger. Max 30 characters.",
+    "source_text": "Attribute (optional)",
+    "x-max-length": 30,
+    "x-source-hash": "e891f285"
+  },
+  "image-animator.clips-panel.back-and-forth": "Heen en weer",
+  "@image-animator.clips-panel.back-and-forth": {
+    "description": "Direction option: forwards, then backwards. Max 20 characters.",
+    "source_text": "Back and forth",
+    "x-max-length": 20,
+    "x-source-hash": "c1c1cc53"
+  },
+  "image-animator.clips-panel.back-and-forth-starting-backwards": "Heen en weer, beginnend achteruit",
+  "@image-animator.clips-panel.back-and-forth-starting-backwards": {
+    "description": "Direction option: backwards, then forwards. Max 48 characters.",
+    "source_text": "Back and forth, starting backwards",
+    "x-max-length": 48,
+    "x-source-hash": "505f4b84"
+  },
+  "image-animator.clips-panel.backwards": "Achteruit",
+  "@image-animator.clips-panel.backwards": {
+    "description": "Direction option: from end to start. Max 20 characters.",
+    "source_text": "Backwards",
+    "x-max-length": 20,
+    "x-source-hash": "19483bcb"
+  },
+  "image-animator.clips-panel.below": "Onder",
+  "@image-animator.clips-panel.below": {
+    "description": "Condition option: the number is below the value. Max 20 characters.",
+    "source_text": "Below",
+    "x-max-length": 20,
+    "x-source-hash": "a53dffff"
+  },
+  "image-animator.clips-panel.choose-a-name-that-no-other-clip-has": "Kies een naam die nog niet in gebruik is.",
+  "@image-animator.clips-panel.choose-a-name-that-no-other-clip-has": {
+    "description": "Error when another clip already has the name. Max 58 characters.",
+    "source_text": "Choose a name that no other clip has.",
+    "x-max-length": 58,
+    "x-source-hash": "86f701a8"
+  },
+  "image-animator.clips-panel.clip-name": "Naam van de animatie",
+  "@image-animator.clips-panel.clip-name": {
+    "description": "Label of the field that renames the chosen clip. Max 28 characters.",
+    "source_text": "Clip name",
+    "x-max-length": 28,
+    "x-source-hash": "7f1d3844"
+  },
+  "image-animator.clips-panel.clips": "Animaties",
+  "@image-animator.clips-panel.clips": {
+    "description": "Heading of the clip list in the image animator. Max 20 characters.",
+    "source_text": "Clips",
+    "x-max-length": 20,
+    "x-source-hash": "4b782ddc"
+  },
+  "image-animator.clips-panel.condition": "Voorwaarde",
+  "@image-animator.clips-panel.condition": {
+    "description": "Label of the list that chooses how the entity is compared. Max 20 characters.",
+    "source_text": "Condition",
+    "x-max-length": 20,
+    "x-source-hash": "39b36d38"
+  },
+  "image-animator.clips-panel.delete": "Verwijderen",
+  "@image-animator.clips-panel.delete": {
+    "description": "Button that deletes the clip. Max 20 characters.",
+    "source_text": "Delete",
+    "x-max-length": 20,
+    "x-source-hash": "e2d0a549"
+  },
+  "image-animator.clips-panel.deleted-the-clip-name": "De animatie {name} is verwijderd.",
+  "@image-animator.clips-panel.deleted-the-clip-name": {
+    "description": "Confirmation after a clip is deleted. {name}: Name of the clip. Max 47 characters.",
+    "source_text": "Deleted the clip {name}.",
+    "x-max-length": 47,
+    "x-source-hash": "4fccb286"
+  },
+  "image-animator.clips-panel.direction": "Richting",
+  "@image-animator.clips-panel.direction": {
+    "description": "Label of the list that chooses the play direction of the clip. Max 20 characters.",
+    "source_text": "Direction",
+    "x-max-length": 20,
+    "x-source-hash": "9c8a9579"
+  },
+  "image-animator.clips-panel.duplicate": "Dupliceren",
+  "@image-animator.clips-panel.duplicate": {
+    "description": "Button that copies the clip. Max 20 characters.",
+    "source_text": "Duplicate",
+    "x-max-length": 20,
+    "x-source-hash": "02cdaabf"
+  },
+  "image-animator.clips-panel.duration-seconds": "Duur (seconden)",
+  "@image-animator.clips-panel.duration-seconds": {
+    "description": "Label of the field for how long one play of the clip takes. Max 26 characters.",
+    "source_text": "Duration (seconds)",
+    "x-max-length": 26,
+    "x-source-hash": "e4a69a7c"
+  },
+  "image-animator.clips-panel.enter-a-name-for-the-clip": "Geef de animatie een naam.",
+  "@image-animator.clips-panel.enter-a-name-for-the-clip": {
+    "description": "Error when the clip name is empty. Max 37 characters.",
+    "source_text": "Enter a name for the clip.",
+    "x-max-length": 37,
+    "x-source-hash": "1c55ddd0"
+  },
+  "image-animator.clips-panel.enter-an-entity-id-such-as-cover-garage-and": "Geef een entiteit op, zoals cover.garage, en een passende voorwaarde.",
+  "@image-animator.clips-panel.enter-an-entity-id-such-as-cover-garage-and": {
+    "description": "Error when the state trigger is incomplete or malformed. Max 97 characters.",
+    "source_text": "Enter an entity id such as cover.garage and a condition that fits.",
+    "x-max-length": 97,
+    "x-source-hash": "42a7d6c9"
+  },
+  "image-animator.clips-panel.entity": "Entiteit",
+  "@image-animator.clips-panel.entity": {
+    "description": "Label of the field for the entity id of a state trigger. Max 20 characters.",
+    "source_text": "Entity",
+    "x-max-length": 20,
+    "x-source-hash": "2ed3bb60"
+  },
+  "image-animator.clips-panel.forwards": "Vooruit",
+  "@image-animator.clips-panel.forwards": {
+    "description": "Direction option: from start to end. Max 20 characters.",
+    "source_text": "Forwards",
+    "x-max-length": 20,
+    "x-source-hash": "e0786044"
+  },
+  "image-animator.clips-panel.hovering-over-the-image": "Aanwijzen van de afbeelding",
+  "@image-animator.clips-panel.hovering-over-the-image": {
+    "description": "Trigger option: the clip plays while the pointer is over the image. Max 38 characters.",
+    "source_text": "Hovering over the image",
+    "x-max-length": 38,
+    "x-source-hash": "c650ffed"
+  },
+  "image-animator.clips-panel.is-off": "Staat uit",
+  "@image-animator.clips-panel.is-off": {
+    "description": "Condition option: the entity is off. Max 20 characters.",
+    "source_text": "Is off",
+    "x-max-length": 20,
+    "x-source-hash": "c49186a0"
+  },
+  "image-animator.clips-panel.is-on": "Staat aan",
+  "@image-animator.clips-panel.is-on": {
+    "description": "Condition option: the entity is on. Max 20 characters.",
+    "source_text": "Is on",
+    "x-max-length": 20,
+    "x-source-hash": "1c9d815e"
+  },
+  "image-animator.clips-panel.move-down": "Omlaag",
+  "@image-animator.clips-panel.move-down": {
+    "description": "Button that moves the clip down the list. Max 20 characters.",
+    "source_text": "Move down",
+    "x-max-length": 20,
+    "x-source-hash": "40bb50da"
+  },
+  "image-animator.clips-panel.move-up": "Omhoog",
+  "@image-animator.clips-panel.move-up": {
+    "description": "Button that moves the clip up the list; earlier clips win when several state triggers match. Max 20 characters.",
+    "source_text": "Move up",
+    "x-max-length": 20,
+    "x-source-hash": "c66feb5e"
+  },
+  "image-animator.clips-panel.name-each-animation-and-choose-what-starts-it": "Geef elke animatie een naam en kies wat hem start.",
+  "@image-animator.clips-panel.name-each-animation-and-choose-what-starts-it": {
+    "description": "Hint under the clip heading. Max 70 characters.",
+    "source_text": "Name each animation and choose what starts it.",
+    "x-max-length": 70,
+    "x-source-hash": "6f036d15"
+  },
+  "image-animator.clips-panel.new-clip-name": "Naam van de nieuwe animatie",
+  "@image-animator.clips-panel.new-clip-name": {
+    "description": "Label of the field for the name of a new clip. Max 38 characters.",
+    "source_text": "New clip name",
+    "x-max-length": 38,
+    "x-source-hash": "2db91011"
+  },
+  "image-animator.clips-panel.repeat-forever": "Eindeloos herhalen",
+  "@image-animator.clips-panel.repeat-forever": {
+    "description": "Label of the checkbox that makes the clip repeat without end. Max 26 characters.",
+    "source_text": "Repeat forever",
+    "x-max-length": 26,
+    "x-source-hash": "0f3abae6"
+  },
+  "image-animator.clips-panel.repeats": "Herhalingen",
+  "@image-animator.clips-panel.repeats": {
+    "description": "Label of the field for how many times the clip plays. Max 20 characters.",
+    "source_text": "Repeats",
+    "x-max-length": 20,
+    "x-source-hash": "92ee0233"
+  },
+  "image-animator.clips-panel.starts-when": "Start bij",
+  "@image-animator.clips-panel.starts-when": {
+    "description": "Label of the list that chooses what starts the clip. Max 20 characters.",
+    "source_text": "Starts when",
+    "x-max-length": 20,
+    "x-source-hash": "a69467bf"
+  },
+  "image-animator.clips-panel.state-is": "Status is",
+  "@image-animator.clips-panel.state-is": {
+    "description": "Condition option: the state equals the value. Max 20 characters.",
+    "source_text": "State is",
+    "x-max-length": 20,
+    "x-source-hash": "ce568a81"
+  },
+  "image-animator.clips-panel.state-is-not": "Status is niet",
+  "@image-animator.clips-panel.state-is-not": {
+    "description": "Condition option: the state differs from the value. Max 20 characters.",
+    "source_text": "State is not",
+    "x-max-length": 20,
+    "x-source-hash": "e72eda16"
+  },
+  "image-animator.clips-panel.tapping-the-image": "Tikken op de afbeelding",
+  "@image-animator.clips-panel.tapping-the-image": {
+    "description": "Trigger option: the clip plays when the image is tapped. Max 33 characters.",
+    "source_text": "Tapping the image",
+    "x-max-length": 33,
+    "x-source-hash": "6a406974"
+  },
+  "image-animator.clips-panel.the-duration-or-the-number-of-repeats-is": "De duur of het aantal herhalingen valt buiten het bereik.",
+  "@image-animator.clips-panel.the-duration-or-the-number-of-repeats-is": {
+    "description": "Error when the duration or the repeat count is out of range. Max 80 characters.",
+    "source_text": "The duration or the number of repeats is out of range.",
+    "x-max-length": 80,
+    "x-source-hash": "2f246ea6"
+  },
+  "image-animator.clips-panel.this-change-could-not-be-made": "Deze wijziging kon niet worden doorgevoerd.",
+  "@image-animator.clips-panel.this-change-could-not-be-made": {
+    "description": "Error for a clip change that failed for another reason. Max 61 characters.",
+    "source_text": "This change could not be made.",
+    "x-max-length": 61,
+    "x-source-hash": "59f7d2d7"
+  },
+  "image-animator.clips-panel.this-name-cannot-be-used": "Deze naam kan niet worden gebruikt.",
+  "@image-animator.clips-panel.this-name-cannot-be-used": {
+    "description": "Error when the clip name holds characters that are not allowed. Max 49 characters.",
+    "source_text": "This name cannot be used.",
+    "x-max-length": 49,
+    "x-source-hash": "6655fae9"
+  },
+  "image-animator.clips-panel.updated-the-clip-name": "De animatie {name} is bijgewerkt.",
+  "@image-animator.clips-panel.updated-the-clip-name": {
+    "description": "Confirmation after a clip is changed. {name}: Name of the clip. Max 47 characters.",
+    "source_text": "Updated the clip {name}.",
+    "x-max-length": 47,
+    "x-source-hash": "14b5e336"
+  },
+  "image-animator.clips-panel.use-this-trigger": "Deze start gebruiken",
+  "@image-animator.clips-panel.use-this-trigger": {
+    "description": "Button that saves the state trigger of the clip. Max 28 characters.",
+    "source_text": "Use this trigger",
+    "x-max-length": 28,
+    "x-source-hash": "83c16c9f"
+  },
+  "image-animator.clips-panel.value": "Waarde",
+  "@image-animator.clips-panel.value": {
+    "description": "Label of the field for the value the condition compares with. Max 20 characters.",
+    "source_text": "Value",
+    "x-max-length": 20,
+    "x-source-hash": "8e37953d"
+  },
+  "image-animator.effects-panel.add-an-effect-to-name": "Effect toevoegen aan {name}",
+  "@image-animator.effects-panel.add-an-effect-to-name": {
+    "description": "Heading of the effect buttons. {name} is the chosen part of the image. {name}: Name of the chosen part, for example Group door. Max 69 characters.",
+    "source_text": "Add an effect to {name}",
+    "x-max-length": 69,
+    "x-source-hash": "56e219c4"
+  },
+  "image-animator.effects-panel.add-preset": "Voorinstelling toevoegen",
+  "@image-animator.effects-panel.add-preset": {
+    "description": "Button that adds the chosen ready-made animation to the chosen part of the image. Max 30 characters.",
+    "source_text": "Add preset",
+    "x-max-length": 30,
+    "x-source-hash": "8b7ae8b0"
+  },
+  "image-animator.effects-panel.click-a-part-of-the-drawing-or-choose": "Klik op een onderdeel van de tekening of kies het in deze lijst.",
+  "@image-animator.effects-panel.click-a-part-of-the-drawing-or-choose": {
+    "description": "Hint above the list of parts of the image in the image animator. Max 171 characters.",
+    "source_text": "Click a part of the drawing, or choose it from this list.",
+    "x-max-length": 171,
+    "x-source-hash": "fdf8965c"
+  },
+  "image-animator.effects-panel.colour": "Kleur",
+  "@image-animator.effects-panel.colour": {
+    "description": "Button that adds a colour change effect to the chosen part of the image. Max 18 characters.",
+    "source_text": "Colour",
+    "x-max-length": 18,
+    "x-source-hash": "3a9dfa58"
+  },
+  "image-animator.effects-panel.draw-the-outline": "Contour tekenen",
+  "@image-animator.effects-panel.draw-the-outline": {
+    "description": "Button that adds an effect that draws the outline of the chosen part of the image. Max 48 characters.",
+    "source_text": "Draw the outline",
+    "x-max-length": 48,
+    "x-source-hash": "f70e84e9"
+  },
+  "image-animator.effects-panel.fade": "Vervagen",
+  "@image-animator.effects-panel.fade": {
+    "description": "Button that adds a fade effect to the chosen part of the image. Max 12 characters.",
+    "source_text": "Fade",
+    "x-max-length": 12,
+    "x-source-hash": "9efb597c"
+  },
+  "image-animator.effects-panel.follow-a-path": "Een pad volgen",
+  "@image-animator.effects-panel.follow-a-path": {
+    "description": "Button that adds an effect that moves the chosen part along the path data typed above it. Max 39 characters.",
+    "source_text": "Follow a path",
+    "x-max-length": 39,
+    "x-source-hash": "598d6292"
+  },
+  "image-animator.effects-panel.glow": "Gloed",
+  "@image-animator.effects-panel.glow": {
+    "description": "Button that adds a brightness glow effect to the chosen part of the image. Max 12 characters.",
+    "source_text": "Glow",
+    "x-max-length": 12,
+    "x-source-hash": "f534ed97"
+  },
+  "image-animator.effects-panel.group-id": "Groep {id}",
+  "@image-animator.effects-panel.group-id": {
+    "description": "Item in the list of parts of the image for a group of shapes. {id} is the id of the group in the drawing. {id}: Id of the group in the drawing. Max 30 characters.",
+    "source_text": "Group {id}",
+    "x-max-length": 30,
+    "x-source-hash": "ed2bc1fc"
+  },
+  "image-animator.effects-panel.move-and-turn": "Verplaatsen en draaien",
+  "@image-animator.effects-panel.move-and-turn": {
+    "description": "Button that adds a movement and rotation effect to the chosen part of the image. Max 39 characters.",
+    "source_text": "Move and turn",
+    "x-max-length": 39,
+    "x-source-hash": "dcff6dd4"
+  },
+  "image-animator.effects-panel.nothing-here-has-an-outline-to-draw": "Hier is geen contour om te tekenen.",
+  "@image-animator.effects-panel.nothing-here-has-an-outline-to-draw": {
+    "description": "Reason shown when the draw the outline effect is off because the chosen part has no stroke. Max 108 characters.",
+    "source_text": "Nothing here has an outline to draw.",
+    "x-max-length": 108,
+    "x-source-hash": "8b869222"
+  },
+  "image-animator.effects-panel.parts-of-the-image": "Onderdelen van de afbeelding",
+  "@image-animator.effects-panel.parts-of-the-image": {
+    "description": "Heading of the list of parts of the image an effect can be put on. Max 54 characters.",
+    "source_text": "Parts of the image",
+    "x-max-length": 54,
+    "x-source-hash": "8dbd4d5a"
+  },
+  "image-animator.effects-panel.path-data": "Padgegevens",
+  "@image-animator.effects-panel.path-data": {
+    "description": "Label of the field for the path a part follows, written as SVG path data. Max 27 characters.",
+    "source_text": "Path data",
+    "x-max-length": 27,
+    "x-source-hash": "d1b6f939"
+  },
+  "image-animator.effects-panel.preset": "Voorinstelling",
+  "@image-animator.effects-panel.preset": {
+    "description": "Label of the list of ready-made animations, also used as the name of that kind of effect. Max 18 characters.",
+    "source_text": "Preset",
+    "x-max-length": 18,
+    "x-source-hash": "7252e7ce"
+  },
+  "image-animator.effects-panel.shape-id": "Vorm {id}",
+  "@image-animator.effects-panel.shape-id": {
+    "description": "Item in the list of parts of the image for a single shape. {id} is the id of the shape in the drawing. {id}: Id of the shape in the drawing. Max 30 characters.",
+    "source_text": "Shape {id}",
+    "x-max-length": 30,
+    "x-source-hash": "225f5929"
+  },
+  "image-animator.effects-panel.whole-image": "Hele afbeelding",
+  "@image-animator.effects-panel.whole-image": {
+    "description": "Item in the list of parts of the image that stands for the whole image. Max 33 characters.",
+    "source_text": "Whole image",
+    "x-max-length": 33,
+    "x-source-hash": "7b823236"
+  },
+  "image-animator.mc-image-animator.added-effect-to-name": "{effect} toegevoegd aan {name}.",
+  "@image-animator.mc-image-animator.added-effect-to-name": {
+    "description": "Status line after an effect was added. {effect} is the effect name, {name} the chosen part. {effect}: Name of the effect, for example Fade. {name}: Name of the chosen part, for example Group door. Max 75 characters.",
+    "source_text": "Added {effect} to {name}.",
+    "x-max-length": 75,
+    "x-source-hash": "0516ffbe"
+  },
+  "image-animator.mc-image-animator.animate-image": "Afbeelding animeren",
+  "@image-animator.mc-image-animator.animate-image": {
+    "description": "Title of the window that animates a library image, shown while the image is still opening. Max 25 characters.",
+    "source_text": "Animate image",
+    "x-max-length": 25,
+    "x-source-hash": "8429059e"
+  },
+  "image-animator.mc-image-animator.animate-name": "{name} animeren",
+  "@image-animator.mc-image-animator.animate-name": {
+    "description": "Title of the image animator window. {name} is the name of the library image. {name}: Name of the library image. Max 20 characters.",
+    "source_text": "Animate {name}",
+    "x-max-length": 20,
+    "x-source-hash": "7df16e74"
+  },
+  "image-animator.mc-image-animator.animating-needs-a-newer-magic-card-utils": "Animeren vraagt een nieuwere Magic Card Utils. Werk die bij en probeer het opnieuw.",
+  "@image-animator.mc-image-animator.animating-needs-a-newer-magic-card-utils": {
+    "description": "Notice in the image animator when the installed Magic Card Utils is too old to store an animation. Max 108 characters.",
+    "source_text": "Animating needs a newer Magic Card Utils. Update it and try again.",
+    "x-max-length": 108,
+    "x-source-hash": "dacc0e15"
+  },
+  "image-animator.mc-image-animator.animation-data-of-size-kib-over-limit-kib": "Animatiegegevens van {size} KiB, meer dan de grens van {limit} KiB",
+  "@image-animator.mc-image-animator.animation-data-of-size-kib-over-limit-kib": {
+    "description": "One line of the heavy-animation warning: the size of the animation data. {limit}: The size in KiB above which it is heavy. {size}: Size of the animation data in KiB. Max 84 characters.",
+    "source_text": "Animation data of {size} KiB, over the limit of {limit} KiB",
+    "x-max-length": 84,
+    "x-source-hash": "80f85c1e"
+  },
+  "image-animator.mc-image-animator.as-saved": "Zoals opgeslagen",
+  "@image-animator.mc-image-animator.as-saved": {
+    "description": "Label next to the small preview of the image as it is stored in the library. Max 24 characters.",
+    "source_text": "As saved",
+    "x-max-length": 24,
+    "x-source-hash": "6c49ff2f"
+  },
+  "image-animator.mc-image-animator.cancel": "Annuleren",
+  "@image-animator.mc-image-animator.cancel": {
+    "description": "Button that leaves the question before saving without saving. Max 13 characters.",
+    "source_text": "Cancel",
+    "x-max-length": 13,
+    "x-source-hash": "19766ed6"
+  },
+  "image-animator.mc-image-animator.close": "Sluiten",
+  "@image-animator.mc-image-animator.close": {
+    "description": "Button that closes the image animator window. Max 10 characters.",
+    "source_text": "Close",
+    "x-max-length": 10,
+    "x-source-hash": "7d9eb7ac"
+  },
+  "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
+  "@image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
+    "description": "Error in the image animator when the image library does not answer or refuses a call. Max 72 characters.",
+    "source_text": "Could not reach Magic Card Utils. Your work is safe.",
+    "x-max-length": 72,
+    "x-source-hash": "3ba3f12b"
+  },
+  "image-animator.mc-image-animator.count-animated-shapes-over-limit": "{count, plural, one {# geanimeerde vorm} other {# geanimeerde vormen}}, meer dan de grens van {limit}",
+  "@image-animator.mc-image-animator.count-animated-shapes-over-limit": {
+    "description": "One line of the heavy-animation warning: how many animated shapes there are. {count}: Number of animated shapes. {limit}: The number above which it is heavy. Max 64 characters.",
+    "source_text": "{count, plural, one {# animated shape} other {# animated shapes}}, over the limit of {limit}",
+    "x-max-length": 64,
+    "x-source-hash": "4dd733c1",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "image-animator.mc-image-animator.count-animations": "{count, plural, one {# animatie} other {# animaties}}",
+  "@image-animator.mc-image-animator.count-animations": {
+    "description": "Line under the preview in the image animator with the number of animations the image holds. {count}: Number of animations of the image. Max 72 characters.",
+    "source_text": "{count, plural, one {# animation} other {# animations}}",
+    "x-max-length": 72,
+    "x-source-hash": "250a77b3",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "image-animator.mc-image-animator.count-morph-points-over-limit": "{count, plural, one {# morphpunt} other {# morphpunten}}, meer dan de grens van {limit}",
+  "@image-animator.mc-image-animator.count-morph-points-over-limit": {
+    "description": "One line of the heavy-animation warning: how many points the morphs hold. {count}: Number of morph points. {limit}: The number above which it is heavy. Max 60 characters.",
+    "source_text": "{count, plural, one {# morph point} other {# morph points}}, over the limit of {limit}",
+    "x-max-length": 60,
+    "x-source-hash": "562459cf",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "image-animator.mc-image-animator.count-shapes-with-a-blur-or-colour-filter-over": "{count, plural, one {# vorm met een vervagings- of kleurfilter} other {# vormen met een vervagings- of kleurfilter}}, meer dan de grens van {limit}",
+  "@image-animator.mc-image-animator.count-shapes-with-a-blur-or-colour-filter-over": {
+    "description": "One line of the heavy-animation warning: how many shapes use a blur or colour filter. {count}: Number of shapes with a filter. {limit}: The number above which it is heavy. Max 91 characters.",
+    "source_text": "{count, plural, one {# shape with a blur or colour filter} other {# shapes with a blur or colour filter}}, over the limit of {limit}",
+    "x-max-length": 91,
+    "x-source-hash": "6d912fb3",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "image-animator.mc-image-animator.discard": "Weggooien",
+  "@image-animator.mc-image-animator.discard": {
+    "description": "Button that closes the animator and throws away the unsaved edits. Max 14 characters.",
+    "source_text": "Discard",
+    "x-max-length": 14,
+    "x-source-hash": "eb1a70e3"
+  },
+  "image-animator.mc-image-animator.discard-the-changes-you-have-not-saved": "Wijzigingen die niet zijn opgeslagen weggooien?",
+  "@image-animator.mc-image-animator.discard-the-changes-you-have-not-saved": {
+    "description": "Question shown when the user closes the animator with unsaved edits. Max 60 characters.",
+    "source_text": "Discard the changes you have not saved?",
+    "x-max-length": 60,
+    "x-source-hash": "96acf3e3"
+  },
+  "image-animator.mc-image-animator.discard-this-image-and-your-changes-it-is": "Deze afbeelding en je wijzigingen weggooien? Ze staat nog niet in de bibliotheek.",
+  "@image-animator.mc-image-animator.discard-this-image-and-your-changes-it-is": {
+    "description": "Question shown when the user closes the animator with edits to an uploaded drawing that was never saved. Max 96 characters.",
+    "source_text": "Discard this image and your changes? It is not in the library yet.",
+    "x-max-length": 96,
+    "x-source-hash": "493a2952"
+  },
+  "image-animator.mc-image-animator.enter-path-data-for-example-m0-0": "Voer padgegevens in, bijvoorbeeld M0 0 L50 20.",
+  "@image-animator.mc-image-animator.enter-path-data-for-example-m0-0": {
+    "description": "Error when the path field is empty or holds characters path data cannot have. Max 123 characters.",
+    "source_text": "Enter path data, for example M0 0 L50 20.",
+    "x-max-length": 123,
+    "x-source-hash": "3f998515"
+  },
+  "image-animator.mc-image-animator.keep-editing": "Verder bewerken",
+  "@image-animator.mc-image-animator.keep-editing": {
+    "description": "Button that leaves the discard question and returns to the animator. Max 20 characters.",
+    "source_text": "Keep editing",
+    "x-max-length": 20,
+    "x-source-hash": "e76fd2ad"
+  },
+  "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": "Nog niet in de bibliotheek. Opslaan voegt het toe als {name}.",
+  "@image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
+    "description": "Status line while an uploaded drawing is open but not saved. Saving adds it to the image library. {name} is the name it will get. {name}: Name the new library image will get. Max 64 characters.",
+    "source_text": "Not in the library yet. Save adds it as {name}.",
+    "x-max-length": 64,
+    "x-source-hash": "53da3716"
+  },
+  "image-animator.mc-image-animator.opening-the-image": "De afbeelding wordt geopend…",
+  "@image-animator.mc-image-animator.opening-the-image": {
+    "description": "Status line in the image animator while the image loads from the library. Max 37 characters.",
+    "source_text": "Opening the image…",
+    "x-max-length": 37,
+    "x-source-hash": "ea80ea6d"
+  },
+  "image-animator.mc-image-animator.save": "Opslaan",
+  "@image-animator.mc-image-animator.save": {
+    "description": "Button in the image animator that saves the image and its animations to the library. Max 10 characters.",
+    "source_text": "Save",
+    "x-max-length": 10,
+    "x-source-hash": "1509f561"
+  },
+  "image-animator.mc-image-animator.saved": "Opgeslagen.",
+  "@image-animator.mc-image-animator.saved": {
+    "description": "Status line in the image animator after the image was saved to the library. Max 15 characters.",
+    "source_text": "Saved.",
+    "x-max-length": 15,
+    "x-source-hash": "fca046cc"
+  },
+  "image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image": "Opgeslagen. Magic Card kon niet controleren waar deze afbeelding wordt gebruikt.",
+  "@image-animator.mc-image-animator.saved-magic-card-could-not-check-where-this-image": {
+    "description": "Status after a save when no dashboard could be read to count the cards. Max 84 characters.",
+    "source_text": "Saved. Magic Card could not check where this image is used.",
+    "x-max-length": 84,
+    "x-source-hash": "e1319538"
+  },
+  "image-animator.mc-image-animator.saving": "Bezig met opslaan…",
+  "@image-animator.mc-image-animator.saving": {
+    "description": "Status line in the image animator while the save is running. Max 24 characters.",
+    "source_text": "Saving…",
+    "x-max-length": 24,
+    "x-source-hash": "23e39291"
+  },
+  "image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": "Bezig met opslaan… Het venster sluit zodra dat klaar is.",
+  "@image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": {
+    "description": "Status line while a save runs after the user asked to close; the window closes once the save is done. Max 64 characters.",
+    "source_text": "Saving… The window closes when it is done.",
+    "x-max-length": 64,
+    "x-source-hash": "1ca4d921"
+  },
+  "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": "De opgeslagen animatie van deze afbeelding is niet geldig, dus je kunt hem hier niet animeren.",
+  "@image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
+    "description": "Error in the image animator when the animation stored with the image fails its checks. Max 123 characters.",
+    "source_text": "The saved animation of this image is not valid, so the image cannot be animated here.",
+    "x-max-length": 123,
+    "x-source-hash": "f59f0a7f"
+  },
+  "image-animator.mc-image-animator.this-animation-is-heavy-and-may-run-slowly-on": "Deze animatie is zwaar en kan op oudere apparaten langzaam draaien. Je kunt hem nog steeds opslaan.",
+  "@image-animator.mc-image-animator.this-animation-is-heavy-and-may-run-slowly-on": {
+    "description": "Warning above the reasons when an animation is heavy; saving is not blocked. Max 117 characters.",
+    "source_text": "This animation is heavy and may run slowly on older devices. You can still save it.",
+    "x-max-length": 117,
+    "x-source-hash": "752fc223"
+  },
+  "image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": "Deze tekening bevat opmaak die niet gebruikt kan worden.",
+  "@image-animator.mc-image-animator.this-drawing-contains-markup-that-cannot-be": {
+    "description": "Error in the image animator when the drawing holds markup the card refuses. Max 73 characters.",
+    "source_text": "This drawing contains markup that cannot be used.",
+    "x-max-length": 73,
+    "x-source-hash": "34eb1373"
+  },
+  "image-animator.mc-image-animator.this-effect-could-not-be-added": "Dit effect kon niet aan de animatie worden toegevoegd.",
+  "@image-animator.mc-image-animator.this-effect-could-not-be-added": {
+    "description": "Error when an effect cannot be added, for example because the clip has the most parts it can hold. Max 144 characters.",
+    "source_text": "This effect could not be added to the animation.",
+    "x-max-length": 144,
+    "x-source-hash": "c3cff040"
+  },
+  "image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": "Dit bestand is geen SVG-tekening.",
+  "@image-animator.mc-image-animator.this-file-is-not-an-svg-drawing": {
+    "description": "Error in the image animator when an uploaded file is not an SVG. Max 43 characters.",
+    "source_text": "This file is not an SVG drawing.",
+    "x-max-length": 43,
+    "x-source-hash": "713905bb"
+  },
+  "image-animator.mc-image-animator.this-image-has-no-animations-yet": "Deze afbeelding heeft nog geen animaties.",
+  "@image-animator.mc-image-animator.this-image-has-no-animations-yet": {
+    "description": "Line under the preview in the image animator when the image holds no animation. Max 54 characters.",
+    "source_text": "This image has no animations yet.",
+    "x-max-length": 54,
+    "x-source-hash": "de41160c"
+  },
+  "image-animator.mc-image-animator.this-image-is-larger-than-the-library-accepts": "Deze afbeelding is groter dan de bibliotheek accepteert.",
+  "@image-animator.mc-image-animator.this-image-is-larger-than-the-library-accepts": {
+    "description": "Error in the image animator when the image or upload is over the library size limit. Max 73 characters.",
+    "source_text": "This image is larger than the library accepts.",
+    "x-max-length": 73,
+    "x-source-hash": "a21f32a6"
+  },
+  "image-animator.mc-image-animator.this-image-is-not-in-the-library-any": "Deze afbeelding staat niet meer in de bibliotheek.",
+  "@image-animator.mc-image-animator.this-image-is-not-in-the-library-any": {
+    "description": "Error in the image animator when the library no longer holds the image. Max 65 characters.",
+    "source_text": "This image is not in the library any more.",
+    "x-max-length": 65,
+    "x-source-hash": "c5561195"
+  },
+  "image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": "Deze afbeelding is elders gewijzigd. Sluit dit venster en open het opnieuw.",
+  "@image-animator.mc-image-animator.this-image-was-changed-somewhere-else-close-this": {
+    "description": "Error in the image animator when a save finds the image changed since it was opened. Max 98 characters.",
+    "source_text": "This image was changed somewhere else. Close this window and open it again.",
+    "x-max-length": 98,
+    "x-source-hash": "c8a63749"
+  },
+  "image-animator.mc-image-animator.used-on-at-least-count-cards-some-dashboards-could": "Gebruikt op minstens {count, plural, one {# kaart} other {# kaarten}}. Magic Card kon niet controleren of alle dashboards gelezen zijn. Opslaan verandert hoe de afbeelding daar eruitziet.",
+  "@image-animator.mc-image-animator.used-on-at-least-count-cards-some-dashboards-could": {
+    "description": "Same question when some dashboards could not be read, so the number is a minimum. {count}: Number of cards found that show the image. Max 154 characters.",
+    "source_text": "Used on at least {count, plural, one {# card} other {# cards}}. Magic Card could not check every dashboard. Saving changes how the image looks there.",
+    "x-max-length": 154,
+    "x-source-hash": "af183d96",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "image-animator.mc-image-animator.used-on-count-cards-saving-changes-all-of-them": "Gebruikt op {count, plural, one {# kaart} other {# kaarten}}. Opslaan verandert hoe de afbeelding daar eruitziet.",
+  "@image-animator.mc-image-animator.used-on-count-cards-saving-changes-all-of-them": {
+    "description": "Question before saving an image that Magic Cards show, with Save and Cancel. {count}: Number of cards that show the image. Max 83 characters.",
+    "source_text": "Used on {count, plural, one {# card} other {# cards}}. Saving changes how the image looks there.",
+    "x-max-length": 83,
+    "x-source-hash": "8ade21a3",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": "Je afbeeldingenbibliotheek is groter dan 50 MiB. Een grote bibliotheek kan oudere apparaten vertragen. Je kunt nog steeds opslaan.",
+  "@image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": {
+    "description": "Warning when the images in the library add up to 50 MiB or more; saving is not blocked. Max 138 characters.",
+    "source_text": "Your image library is over 50 MiB. A large library can slow down older devices. You can still save.",
+    "x-max-length": 138,
+    "x-source-hash": "dd014dcf"
+  },
+  "image-animator.morph-panel.add-morph": "Overgang toevoegen",
+  "@image-animator.morph-panel.add-morph": {
+    "description": "Button that adds the chosen morph to the image. Max 25 characters.",
+    "source_text": "Add morph",
+    "x-max-length": 25,
+    "x-source-hash": "e0b56fd1"
+  },
+  "image-animator.morph-panel.changes-into": "Verandert in",
+  "@image-animator.morph-panel.changes-into": {
+    "description": "Label of the list that picks the shape the first one turns into. Max 30 characters.",
+    "source_text": "Changes into",
+    "x-max-length": 30,
+    "x-source-hash": "b215034d"
+  },
+  "image-animator.morph-panel.choose-two-different-shapes-to-morph": "Kies twee verschillende vormen voor de overgang.",
+  "@image-animator.morph-panel.choose-two-different-shapes-to-morph": {
+    "description": "Hint shown when fewer than two different shapes are chosen. Max 80 characters.",
+    "source_text": "Choose two different shapes to morph.",
+    "x-max-length": 80,
+    "x-source-hash": "b2cf4dff"
+  },
+  "image-animator.morph-panel.go-back-to-the-first-shape": "Terug naar de eerste vorm",
+  "@image-animator.morph-panel.go-back-to-the-first-shape": {
+    "description": "Label of the checkbox that makes a morph return to where it started. Max 50 characters.",
+    "source_text": "Go back to the first shape",
+    "x-max-length": 50,
+    "x-source-hash": "d10e611f"
+  },
+  "image-animator.morph-panel.morph": "Overgang",
+  "@image-animator.morph-panel.morph": {
+    "description": "Name of the morph effect in the message that confirms it was added. Max 20 characters.",
+    "source_text": "Morph",
+    "x-max-length": 20,
+    "x-source-hash": "61ce25d9"
+  },
+  "image-animator.morph-panel.morph-one-shape-into-another": "Een vorm in een andere laten overgaan",
+  "@image-animator.morph-panel.morph-one-shape-into-another": {
+    "description": "Heading of the morph controls in the image animator. Max 50 characters.",
+    "source_text": "Morph one shape into another",
+    "x-max-length": 50,
+    "x-source-hash": "d277d38c"
+  },
+  "image-animator.morph-panel.shape-id": "Vorm {id}",
+  "@image-animator.morph-panel.shape-id": {
+    "description": "Item in the lists of shapes for a morph. {id} is the id of the shape in the drawing. {id}: Id of the shape in the drawing. Max 30 characters.",
+    "source_text": "Shape {id}",
+    "x-max-length": 30,
+    "x-source-hash": "225f5929"
+  },
+  "image-animator.morph-panel.shape-that-changes": "Vorm die verandert",
+  "@image-animator.morph-panel.shape-that-changes": {
+    "description": "Label of the list that picks the shape which morphs. Max 40 characters.",
+    "source_text": "Shape that changes",
+    "x-max-length": 40,
+    "x-source-hash": "cdb4f7a8"
+  },
+  "image-animator.morph-panel.the-first-shape-changes-into-the-second": "De eerste vorm gaat over in de tweede. Ze hoeven niet evenveel punten te hebben.",
+  "@image-animator.morph-panel.the-first-shape-changes-into-the-second": {
+    "description": "Hint under the morph heading in the image animator. Max 200 characters.",
+    "source_text": "The first shape changes into the second. They do not need the same number of points.",
+    "x-max-length": 200,
+    "x-source-hash": "bbeb5945"
+  },
+  "image-animator.morph-panel.this-morph-could-not-be-added": "Deze overgang kon niet worden toegevoegd.",
+  "@image-animator.morph-panel.this-morph-could-not-be-added": {
+    "description": "Message when a morph cannot be added to the image. Max 80 characters.",
+    "source_text": "This morph could not be added.",
+    "x-max-length": 80,
+    "x-source-hash": "91ccc32e"
+  },
+  "image-animator.source.image": "Afbeelding",
+  "@image-animator.source.image": {
+    "description": "Name an uploaded drawing gets in the library when its file name has no usable letters. Max 24 characters.",
+    "source_text": "Image",
+    "x-max-length": 24,
+    "x-source-hash": "1aa4cb0b"
+  },
+  "image-animator.tracks.idle": "Rust",
+  "@image-animator.tracks.idle": {
+    "description": "Name of the first animation clip an image gets, which plays all the time. Max 12 characters.",
+    "source_text": "Idle",
+    "x-max-length": 12,
+    "x-source-hash": "ab0171ca"
+  },
+  "image-editor.chunk.animating-needs-a-newer-magic-card-utils": "Animeren vraagt een nieuwere Magic Card Utils (de companion-integratie). Werk die bij in HACS en laad daarna opnieuw",
+  "@image-editor.chunk.animating-needs-a-newer-magic-card-utils": {
+    "description": "Reason shown on the disabled Animate button when Magic Card Utils is too old to store animations. Utils is the companion integration, installed through HACS. Max 140 characters.",
+    "source_text": "Animating needs a newer Magic Card Utils (the companion integration). Update it in HACS, then reload",
+    "x-max-length": 140,
+    "x-source-hash": "781f85b4"
+  },
   "image-editor.chunk.as-on-a-card": "Zoals op een kaart",
   "@image-editor.chunk.as-on-a-card": {
     "description": "Button that previews the drawing as it looks on a card. Max 20 characters.",
@@ -27873,33 +28674,33 @@
     "x-max-length": 25,
     "x-source-hash": "52493eca"
   },
-  "image-editor.chunk.image-size-used-kib-of-256-kib-fine": "Grootte van de afbeelding: {used} KiB van 256 KiB. Prima.",
+  "image-editor.chunk.image-size-used-kib-of-256-kib-fine": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Prima.",
   "@image-editor.chunk.image-size-used-kib-of-256-kib-fine": {
-    "description": "Size message for a small image. {used} is the size so far in KiB, a number. Same wording family as the getting big, nearly full and too big variants. {used}: The value that replaces used in the text. Max 65 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Fine.",
+    "description": "Size message for a small image. {used} is the size so far in KiB, a number. Same wording family as the getting big, nearly full and too big variants. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 65 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Fine.",
     "x-max-length": 65,
-    "x-source-hash": "205cd2fd"
+    "x-source-hash": "fd754ee7"
   },
-  "image-editor.chunk.image-size-used-kib-of-256-kib-getting": "Grootte van de afbeelding: {used} KiB van 256 KiB. Wordt groot. Grote afbeeldingen kunnen traag zijn op wandtablets.",
+  "image-editor.chunk.image-size-used-kib-of-256-kib-getting": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Wordt groot. Grote afbeeldingen kunnen traag zijn op wandtablets.",
   "@image-editor.chunk.image-size-used-kib-of-256-kib-getting": {
-    "description": "Size message when the image nears the limit. {used} is the size so far in KiB, a number. {used}: The value that replaces used in the text. Max 145 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Getting big. Large images can be slow on wall tablets.",
+    "description": "Size message when the image nears the limit. {used} is the size so far in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 145 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Getting big. Large images can be slow on wall tablets.",
     "x-max-length": 145,
-    "x-source-hash": "3ae3152e"
+    "x-source-hash": "13fd567d"
   },
-  "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": "Grootte van de afbeelding: {used} KiB van 256 KiB. Bijna vol. Je kunt er nog een beetje bij doen.",
+  "image-editor.chunk.image-size-used-kib-of-256-kib-nearly": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Bijna vol. Je kunt er nog een beetje bij doen.",
   "@image-editor.chunk.image-size-used-kib-of-256-kib-nearly": {
-    "description": "Size message when the image is close to the limit but still saves. {used} is the size so far in KiB, a number. {used}: The value that replaces used in the text. Max 120 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Nearly full. You can add a little more.",
+    "description": "Size message when the image is close to the limit but still saves. {used} is the size so far in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 120 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Nearly full. You can add a little more.",
     "x-max-length": 120,
-    "x-source-hash": "49e0cbaf"
+    "x-source-hash": "10dab68f"
   },
-  "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
+  "image-editor.chunk.image-size-used-kib-of-256-kib-too-big": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Te groot om op te slaan.",
   "@image-editor.chunk.image-size-used-kib-of-256-kib-too-big": {
-    "description": "Size message when the image is over the limit and cannot be saved. {used} is the size so far in KiB, a number. {used}: The value that replaces used in the text. Max 85 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Too big to save.",
+    "description": "Size message when the image is over the limit and cannot be saved. {used} is the size so far in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 85 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Too big to save.",
     "x-max-length": 85,
-    "x-source-hash": "7871f325"
+    "x-source-hash": "5d914d2c"
   },
   "image-editor.chunk.images-need-magic-card-utils-it-is": "Afbeeldingen hebben Magic Card Utils nodig. Installeer het op dezelfde manier als Magic Card.",
   "@image-editor.chunk.images-need-magic-card-utils-it-is": {
@@ -27978,6 +28779,13 @@
     "x-max-length": 35,
     "x-source-hash": "28b25b23"
   },
+  "image-editor.chunk.save-the-image-first-to-animate-it": "Sla de afbeelding eerst op om hem te animeren",
+  "@image-editor.chunk.save-the-image-first-to-animate-it": {
+    "description": "Reason shown on the disabled Animate button while the image is not in the library yet. Max 50 characters.",
+    "source_text": "Save the image first to animate it",
+    "x-max-length": 50,
+    "x-source-hash": "20a81a90"
+  },
   "image-editor.chunk.save-your-changes-first": "Sla eerst je wijzigingen op.",
   "@image-editor.chunk.save-your-changes-first": {
     "description": "Tooltip on a disabled action that needs the saved version, shown while there are unsaved edits. It tells the user to save first. Max 40 characters.",
@@ -28041,12 +28849,12 @@
     "x-max-length": 185,
     "x-source-hash": "408538c8"
   },
-  "image-editor.chunk.that-drawing-is-over-256-kib": "Die tekening is groter dan 256 KiB.",
+  "image-editor.chunk.that-drawing-is-over-256-kib": "Die tekening is groter dan {cap} KiB.",
   "@image-editor.chunk.that-drawing-is-over-256-kib": {
-    "description": "Error when the library refuses a save because the drawing is too large. It tells the user the size limit. Max 50 characters.",
-    "source_text": "That drawing is over 256 KiB.",
+    "description": "Error when the library refuses a save because the drawing is too large. It tells the user the size limit. {cap}: The value that replaces cap in the text. Max 50 characters.",
+    "source_text": "That drawing is over {cap} KiB.",
     "x-max-length": 50,
-    "x-source-hash": "f4b05d33"
+    "x-source-hash": "222bfadc"
   },
   "image-editor.chunk.that-file-cannot-be-used-as-an-image": "Dat bestand kan niet als afbeelding worden gebruikt.",
   "@image-editor.chunk.that-file-cannot-be-used-as-an-image": {
@@ -28068,6 +28876,13 @@
     "source_text": "That SVG is too big to open (over 8 MB). Try a smaller copy.",
     "x-max-length": 100,
     "x-source-hash": "a4b2ade8"
+  },
+  "image-editor.chunk.the-animator-could-not-open-try-again": "De animator kon niet openen. Probeer het opnieuw.",
+  "@image-editor.chunk.the-animator-could-not-open-try-again": {
+    "description": "Status message when the image animator window did not load after pressing Animate. Max 70 characters.",
+    "source_text": "The animator could not open. Try again.",
+    "x-max-length": 70,
+    "x-source-hash": "e6c013c8"
   },
   "image-editor.chunk.the-library-does-not-accept-the-text": "De bibliotheek accepteert de tekst \"{word}\" niet, in de laag \"{name}\". Pas die aan en sla daarna opnieuw op.",
   "@image-editor.chunk.the-library-does-not-accept-the-text": {
@@ -28160,12 +28975,12 @@
     "x-max-length": 25,
     "x-source-hash": "4202b72f"
   },
-  "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": "Te groot om op te slaan: {used} KiB van 256 KiB.",
+  "image-editor.chunk.too-big-to-save-used-kib-of-256-kib": "Te groot om op te slaan: {used} KiB van {cap} KiB.",
   "@image-editor.chunk.too-big-to-save-used-kib-of-256-kib": {
-    "description": "Error message when saving is refused for size. {used} is the current size in KiB, a number. {used}: The value that replaces used in the text. Max 65 characters.",
-    "source_text": "Too big to save: {used} KiB of 256 KiB.",
+    "description": "Error message when saving is refused for size. {used} is the current size in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 65 characters.",
+    "source_text": "Too big to save: {used} KiB of {cap} KiB.",
     "x-max-length": 65,
-    "x-source-hash": "d734caad"
+    "x-source-hash": "820995b8"
   },
   "image-editor.chunk.undo": "Ongedaan maken",
   "@image-editor.chunk.undo": {
@@ -29168,6 +29983,13 @@
     "x-max-length": 10,
     "x-source-hash": "a5c6fb18"
   },
+  "image-editor.ui.animate": "Animeren",
+  "@image-editor.ui.animate": {
+    "description": "Toolbar button in the image editor that opens the image animator on the saved image. A verb. Max 20 characters.",
+    "source_text": "Animate",
+    "x-max-length": 20,
+    "x-source-hash": "fd4a5f3d"
+  },
   "image-editor.ui.apply": "Toepassen",
   "@image-editor.ui.apply": {
     "description": "Button in the canvas size dialog that confirms the new size. A verb. Max 10 characters.",
@@ -29334,12 +30156,12 @@
     "x-max-length": 25,
     "x-source-hash": "80bb38dc"
   },
-  "image-editor.ui.image-size-used-kib-of-256-kib-too-big": "Grootte van de afbeelding: {used} KiB van 256 KiB. Te groot om op te slaan.",
+  "image-editor.ui.image-size-used-kib-of-256-kib-too-big": "Grootte van de afbeelding: {used} KiB van {cap} KiB. Te groot om op te slaan.",
   "@image-editor.ui.image-size-used-kib-of-256-kib-too-big": {
-    "description": "Accessible description of the size meter when the image is over the limit. {used} is the size in KiB, a number. {used}: The value that replaces used in the text. Max 85 characters.",
-    "source_text": "Image size: {used} KiB of 256 KiB. Too big to save.",
+    "description": "Accessible description of the size meter when the image is over the limit. {used} is the size in KiB, a number. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. Max 85 characters.",
+    "source_text": "Image size: {used} KiB of {cap} KiB. Too big to save.",
     "x-max-length": 85,
-    "x-source-hash": "7871f325"
+    "x-source-hash": "5d914d2c"
   },
   "image-editor.ui.includes-connections": "Inclusief koppelingen.",
   "@image-editor.ui.includes-connections": {
@@ -29369,12 +30191,12 @@
     "x-max-length": 15,
     "x-source-hash": "8bfdb93c"
   },
-  "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": "KiB is een kibibyte, iets meer dan duizend tekens. 256 KiB is ongeveer een kwart megabyte.",
+  "image-editor.ui.kib-is-a-kibibyte-a-little-over-a": "KiB is een kibibyte, iets meer dan duizend tekens. 1024 KiB is ongeveer een megabyte.",
   "@image-editor.ui.kib-is-a-kibibyte-a-little-over-a": {
     "description": "Explanation under the image size line. It tells the user what the KiB unit means and how big the limit is. Max 160 characters.",
-    "source_text": "KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.",
+    "source_text": "KiB is a kibibyte, a little over a thousand characters. 1,024 KiB is about a megabyte.",
     "x-max-length": 160,
-    "x-source-hash": "f4bce566"
+    "x-source-hash": "f2dfd951"
   },
   "image-editor.ui.layers": "Lagen",
   "@image-editor.ui.layers": {
@@ -29544,6 +30366,13 @@
     "x-max-length": 95,
     "x-source-hash": "096fcf15"
   },
+  "image-editor.ui.the-library-holds-mib-mib-very-large-libraries": "De bibliotheek is {mib} MiB groot. Zeer grote bibliotheken kunnen traag laden op wandtablets. Opslaan kan nog steeds.",
+  "@image-editor.ui.the-library-holds-mib-mib-very-large-libraries": {
+    "description": "Notice in the save dialog when the whole image library is very large. {mib} is its size in mebibytes, a whole number. It informs and never blocks saving. {mib}: The value that replaces mib in the text. Max 120 characters.",
+    "source_text": "The library holds {mib} MiB. Very large libraries can load slowly on wall tablets. You can still save.",
+    "x-max-length": 120,
+    "x-source-hash": "ceb8e221"
+  },
   "image-editor.ui.this-image-was-changed-somewhere-else": "Deze afbeelding is ergens anders gewijzigd.",
   "@image-editor.ui.this-image-was-changed-somewhere-else": {
     "description": "Notice in the inspector with a Reload button. Same English as the save message. Max 65 characters.",
@@ -29572,12 +30401,12 @@
     "x-max-length": 55,
     "x-source-hash": "b84c37eb"
   },
-  "image-editor.ui.used-of-256-kib-word": "{used} van 256 KiB, {word}",
+  "image-editor.ui.used-of-256-kib-word": "{used} van {cap} KiB, {word}",
   "@image-editor.ui.used-of-256-kib-word": {
-    "description": "Size meter caption. {used} is the size in KiB, a number. {word} is a lower-case status word such as fine or nearly full. {used}: The value that replaces used in the text. {word}: The value that replaces word in the text. Max 40 characters.",
-    "source_text": "{used} of 256 KiB, {word}",
+    "description": "Size meter caption. {used} is the size in KiB, a number. {word} is a lower-case status word such as fine or nearly full. {cap}: The value that replaces cap in the text. {used}: The value that replaces used in the text. {word}: The value that replaces word in the text. Max 40 characters.",
+    "source_text": "{used} of {cap} KiB, {word}",
     "x-max-length": 40,
-    "x-source-hash": "77e49990"
+    "x-source-hash": "4af38a2e"
   },
   "image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": "{w} x {h} eenheden. Kies een laag om de details te lezen.",
   "@image-editor.ui.w-x-h-units-pick-a-layer-to-read-its": {
@@ -29789,6 +30618,20 @@
     "source_text": "and {n} more",
     "x-max-length": 20,
     "x-source-hash": "827ab950"
+  },
+  "image-tools.mc-library-image-field.animate": "Animeren",
+  "@image-tools.mc-library-image-field.animate": {
+    "description": "Button in the image field that opens the image animator on the chosen image. A verb. Same word as the Animate button in the image editor. Max 20 characters.",
+    "source_text": "Animate",
+    "x-max-length": 20,
+    "x-source-hash": "fd4a5f3d"
+  },
+  "image-tools.mc-library-image-field.animating-needs-a-newer-magic-card-utils": "Animeren vraagt een nieuwere Magic Card Utils (de companion-integratie). Werk die bij in HACS en laad daarna opnieuw",
+  "@image-tools.mc-library-image-field.animating-needs-a-newer-magic-card-utils": {
+    "description": "Line under the disabled Animate button when Magic Card Utils is too old to store animations. Utils is the companion integration, installed through HACS. Max 140 characters.",
+    "source_text": "Animating needs a newer Magic Card Utils (the companion integration). Update it in HACS, then reload",
+    "x-max-length": 140,
+    "x-source-hash": "781f85b4"
   },
   "image-tools.mc-library-image-field.card-shape-set-to-shape": "Kaartvorm ingesteld op {shape}.",
   "@image-tools.mc-library-image-field.card-shape-set-to-shape": {
@@ -30046,6 +30889,13 @@
     "x-max-length": 80,
     "x-source-hash": "51019adf"
   },
+  "image-tools.mc-library-image-field.the-animator-could-not-open-try-again": "De animator kon niet openen. Probeer het opnieuw.",
+  "@image-tools.mc-library-image-field.the-animator-could-not-open-try-again": {
+    "description": "Status message when the image animator window did not load after pressing Animate. Max 70 characters.",
+    "source_text": "The animator could not open. Try again.",
+    "x-max-length": 70,
+    "x-source-hash": "e6c013c8"
+  },
   "image-tools.mc-library-image-field.the-card-shape-card-differs-from-the": "De kaartvorm ({card}) wijkt af van de tekening ({drawing}).",
   "@image-tools.mc-library-image-field.the-card-shape-card-differs-from-the": {
     "description": "Warning. {card} is the card's current aspect ratio, such as 16/9. {drawing} is the shape of the image, such as 4/3 or Square. Followed by a button to match them. {card}: The value that replaces card in the text. {drawing}: The value that replaces drawing in the text. Max 100 characters.",
@@ -30122,6 +30972,13 @@
     "source_text": "Will read now:",
     "x-max-length": 25,
     "x-source-hash": "06a7870c"
+  },
+  "image-tools.mc-library-image-field.you-need-permission-to-change-library-images": "Je hebt toestemming nodig om bibliotheekafbeeldingen te wijzigen",
+  "@image-tools.mc-library-image-field.you-need-permission-to-change-library-images": {
+    "description": "Line under the disabled Animate button for a user who is not an administrator. Max 70 characters.",
+    "source_text": "You need permission to change library images",
+    "x-max-length": 70,
+    "x-source-hash": "339af34b"
   },
   "image-transfer.chunk.create-copy": "Kopie maken",
   "@image-transfer.chunk.create-copy": {

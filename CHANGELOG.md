@@ -4,6 +4,28 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.11.03-beta.1 (2026-11-09)
+
+A pre-release. Install Magic Card Utils 2026.11.2-beta.1 (or newer) first, then update Magic Card. Without it, the Animate buttons are greyed out and images stay at 256 KiB.
+
+### New
+-   **Image animator.** Choose Animate in the image editor, or next to a library image field, to make an image move. Pick a part of the drawing and add an effect: move and turn, fade, colour, glow, draw the outline, follow a path, or a preset. Morph one shape into another.
+-   **Clips.** Give each animation a name, a duration, repeats and a direction. A clip starts always, on hover, on a tap, or while an entity is in a state. Up to 16 clips per image, one plays at a time.
+-   **Used on N cards.** Before you save, the animator tells you how many cards use the image.
+-   **Heavy animation warnings.** The animator warns about animations that may run slowly on older devices, and about a library over 50 MiB. Neither stops a save.
+
+### Improved
+-   **Bigger images.** An image can be up to 1 MiB, and the library no longer limits the number of images.
+-   **Pause.** A card with an animated library image shows the pause button automatically when `pause_button` is not set. Choosing Hidden in the editor now writes `pause_button: hidden`.
+-   Animated images stand still when the device asks for reduced motion, when the card is paused, and when they are off screen.
+
+### Notes
+-   Older Magic Card versions show an animated image as a still picture.
+-   Share codes do not carry animations yet.
+-   The animation studio now needs a space between the two parts of a transform origin. A saved origin written without one, such as `50%50%` or `lefttop`, is no longer read; set it again as `50% 50%` or `left top`.
+
+See [Animate a library image](documentation/images/animating-images.md).
+
 ## Unreleased
 
 ### Documentation

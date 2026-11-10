@@ -5,7 +5,7 @@ import {
   ANIMATION_CAPS,
   ANIMATION_ID_RE,
   ICON_RE,
-  ORIGIN_RE,
+  isOrigin,
   PATH_RE,
   checkKeyframe,
   customRefId,
@@ -243,7 +243,7 @@ function checkTracks(c: Checker, raw: unknown, rig: Rig | undefined): Track[] {
       .sort((a, b) => a.at - b.at);
     const t: Track = { target: target ?? 'element', keyframes };
     if (o.origin !== undefined && o.origin !== '') {
-      if (typeof o.origin === 'string' && ORIGIN_RE.test(o.origin.trim())) t.origin = o.origin.trim();
+      if (typeof o.origin === 'string' && isOrigin(o.origin.trim())) t.origin = o.origin.trim();
       else c.err(`${p}.origin`, 'Use keywords, lengths or percentages, e.g. "50% 100%".');
     }
     if (o.path !== undefined && o.path !== null) {
