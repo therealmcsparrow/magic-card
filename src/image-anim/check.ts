@@ -22,11 +22,14 @@ import {
   type ImageTrack,
 } from '../contracts/image-animation';
 import { IMAGE_ID_RE, IMAGE_MAX_BYTES } from '../contracts/svg-image';
-import { EASING_LANE_IDS, type ClipWhen } from '../anim-studio/model-v2-core';
+import type { ClipWhen, EASING_LANE_IDS } from '../anim-studio/model-v2-core';
 import type { AnimationKeyframe, KeyframeTransform } from '../anim-studio/model';
 import { pathStructure, trimAnimWs } from '../contracts/svg-path-text';
 
 // Checks the animation of a library image record on allow-lists, field by field; a record with any miss is dropped whole.
+
+/** The studio's EASING_LANE_IDS as a copy, so this chunk bundles no studio module; the type fails tsc when the lists differ. */
+const LANES: typeof EASING_LANE_IDS = ['x', 'y', 'scale', 'scale_x', 'scale_y', 'rotate', 'skew', 'opacity', 'color', 'background', 'shadow', 'blur', 'radius', 'filter', 'draw', 'stroke'];
 
 type Dict = Record<string, unknown>;
 class Miss extends Error {}
@@ -157,7 +160,7 @@ function keyframe(v: unknown): AnimationKeyframe {
   if (lanes !== undefined) {
     const src = dict(lanes);
     const out: NonNullable<AnimationKeyframe['easings']> = {};
-    for (const lane of EASING_LANE_IDS) if (own(src, lane) !== undefined) out[lane] = easing(own(src, lane));
+    for (const lane of LANES) if (own(src, lane) !== undefined) out[lane] = easing(own(src, lane));
     k.easings = out;
   }
   return k;
