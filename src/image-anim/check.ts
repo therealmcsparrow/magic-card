@@ -89,8 +89,7 @@ function num(v: unknown, min: number, max: number): number {
 }
 
 function easing(v: unknown): string {
-  const s = trimAnimWs(text(v));
-  if (s.length > REGEX_INPUT_MAX) throw new Miss();
+  const s = trimAnimWs(text(v, REGEX_INPUT_MAX));
   if (!EASING_WORD_RE.test(s) && !EASING_BEZIER_RE.test(s) && !EASING_STEPS_RE.test(s)) throw new Miss();
   return s;
 }
