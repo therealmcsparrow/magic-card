@@ -12,7 +12,7 @@ import { t } from './i18n';
 import { loadImageTools } from './image-loader';
 import { renderMorph, type MorphPanelProps } from './morph/morph-panel';
 import { addMorph } from './morph/writer';
-import { startPreview, type Preview } from './preview';
+import { startPreview, type Preview, type PreviewKit } from './preview';
 import { openSource, type FailReason, type Opened, type Source } from './source';
 import { animatorStyles } from './styles';
 import { commitTargetId, listTargets, pickTarget, type ImageTarget } from './targets';
@@ -64,6 +64,7 @@ export class McImageAnimator extends LitElement {
   private _started?: Promise<void>;
   private _svg?: SVGSVGElement;
   private _preview?: Preview;
+  private _kit?: PreviewKit;
 
   static styles = [editorSystem, kitButtonExtras, animatorStyles];
 
@@ -80,6 +81,7 @@ export class McImageAnimator extends LitElement {
     const tools = await loadImageTools();
     if (!tools) return this._fail('failed');
     tools.install();
+    this._kit = tools.kit;
     const r = await openSource(hass, source);
     if (!r.ok) return this._fail(r.reason);
     this._opened = r;
@@ -210,7 +212,7 @@ export class McImageAnimator extends LitElement {
     this._preview?.release();
     this._preview = undefined;
     const anim = this._opened?.animation;
-    if (this._svg && anim?.clips.length) this._preview = startPreview(this._svg, anim, this._clip(anim)?.id ?? anim.clips[0].id);
+    if (this._svg && this._kit && anim?.clips.length) this._preview = startPreview(this._svg, anim, this._clip(anim)?.id ?? anim.clips[0].id, this._kit);
   }
 
   private _clip(anim: ImageAnimation | undefined): ImageClip | undefined {
