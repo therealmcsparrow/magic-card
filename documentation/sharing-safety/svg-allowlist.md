@@ -203,6 +203,28 @@ A library image can carry one kind of animation: a path morph that the image edi
 | `fill` | `freeze` or `remove`. |
 | `begin` | Exactly `indefinite`. Required. |
 
+### Morph frame structure
+
+Each frame of `values` is read after tab, line feed, form feed and carriage return become a space. It is read from left to right as tokens, each starting where the last one ended:
+
+- a command letter, one of `MmLlHhVvCcSsQqTtAaZz`;
+- a number, matching `[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?` as far as it can;
+- a run of spaces and commas.
+
+The structure of a frame is its command letters in order, each with the count of numbers that follow it up to the next letter or the end. A frame is not path data when some text is none of these tokens, when a number comes before the first letter, or when it holds no letter. Every frame of one morph must have the same structure: the same letters in the same order, with the same count of numbers after each.
+
+An implicit repeat and its written-out form differ. `L1 1 2 2` is one `L` with 4 numbers, and `L1 1 L2 2` is two `L`s with 2 numbers each. The image editor writes every frame the same way: a command letter before every segment, the numbers of a segment separated by one space, each arc flag as its own number (0 or 1), and `Z` with no numbers. Every frame it writes passes this rule in the card and in Magic Card Utils, which holds the same rule word for word.
+
+### Morph miss reasons
+
+When a morph `animate` element fails, the card removes it and Magic Card Utils refuses the save, naming the reason:
+
+- `unnamed`: no morph in the record names its `id`, or its parent path is not that morph's target.
+- `counts`: `keyTimes` does not hold one number per frame from 0 to 1 at each frame's place divided by 100, or, with `calcMode` `spline`, `keySplines` does not hold four numbers from 0 to 1 for each step.
+- `frames`: `values` differs from the morph's frames in the record, or the frames differ in structure.
+
+The record's frames are compared after tab, line feed, form feed and carriage return become a space and each frame is trimmed. `keyTimes` may differ from the record by at most 0.000001.
+
 ## Size limits
 
 - Own icons: at most 32 KiB and nested at most 64 levels deep.

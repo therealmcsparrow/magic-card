@@ -29,23 +29,23 @@ export function renderMorph(p: MorphPanelProps): TemplateResult {
   return html`<section aria-labelledby="morph-title">
     <h3 id="morph-title">${t('image-animator.morph-panel.morph-one-shape-into-another')}</h3>
     <p class="hint" id="morph-hint">${t('image-animator.morph-panel.the-first-shape-changes-into-the-second')}</p>
-    <div class="row">
+    <div class="ia-row">
       <label for="morph-from">${t('image-animator.morph-panel.shape-that-changes')}</label>
       <select id="morph-from" .value=${p.from} @change=${(e: Event) => p.setFrom((e.target as HTMLSelectElement).value)}>
         ${choices(p.paths, p.from)}
       </select>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="morph-into">${t('image-animator.morph-panel.changes-into')}</label>
       <select id="morph-into" .value=${p.into} @change=${(e: Event) => p.setInto((e.target as HTMLSelectElement).value)}>
         ${choices(p.paths, p.into)}
       </select>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="morph-back">${t('image-animator.morph-panel.go-back-to-the-first-shape')}</label>
       <input id="morph-back" type="checkbox" .checked=${p.back} @change=${(e: Event) => p.setBack((e.target as HTMLInputElement).checked)} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <button type="button" class="btn btn-secondary" aria-disabled=${ready ? 'false' : 'true'} aria-describedby=${ready ? 'morph-hint' : 'morph-need'} @click=${() => ready && p.add()}>
         ${t('image-animator.morph-panel.add-morph')}
       </button>

@@ -26,21 +26,9 @@ export const MORPH_REPEAT_RE = /^(?:indefinite|\d{1,6}(?:\.\d{1,6})?|\.\d{1,6})$
 /** keyTimes and keySplines: numbers, spaces and `;`; counts and ranges are checked after splitting. */
 export const MORPH_NUMBER_LIST_RE = /^[0-9. ;]+$/;
 /**
- * Each `;`-separated frame of `values`: the image-animation path-data allow-list (MORPH_PATH_DATA_RE), then the
- * command structure rule below. Magic Card Utils (library_images_contract.py, "Command structure") holds the same
- * rule word for word.
- *
- * Command structure of a morph frame: after tab, line feed, form feed and carriage return became a space, the frame
- * is read left to right as tokens, each starting where the last one ended: a command letter (one of
- * MmLlHhVvCcSsQqTtAaZz), a number (the pattern [+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?, greedy), or a
- * run of spaces and commas. The structure is the command letters in order, each with the count of numbers after it
- * up to the next letter or the end. The frame is not path data (miss value) when some text is none of these tokens,
- * when a number comes before the first letter, or when it holds no letter. All frames of one morph have the same
- * structure: the same letters in the same order and the same count of numbers after each (miss frames otherwise).
- * An implicit repeat and its explicit form differ: "L1 1 2 2" is L with 4 numbers, "L1 1 L2 2" is L with 2 and L
- * with 2. The editor writes every frame in one form: a command letter before every segment (never an implicit
- * repeat), the numbers of a segment separated by one space, each arc flag as a number of its own (0 or 1), and Z
- * with no numbers; every frame it writes passes this rule on both sides.
+ * Each `;`-separated frame of `values` passes the path-data allow-list (MORPH_PATH_DATA_RE), then the command
+ * structure rule: all frames of one morph hold the same command letters in order, with the same count of numbers
+ * after each. Full rule: documentation/sharing-safety/svg-allowlist.md, "Morph frame structure"; Utils holds the same.
  */
 export const MORPH_VALUES_SEPARATOR = ';';
 /** SMIL elements never kept, whatever the policy. */
@@ -53,12 +41,9 @@ export interface MorphRef {
 }
 
 /**
- * The morph rule as a sanitiser option. `animation` (the record's raw animation; the sanitiser reads its morphs by
- * `smil` id) is the full rule: an `<animate>` stays only on the path its morph targets, with `values` equal to the
- * frames' `d` (tab, line feed, form feed and carriage return read as a space, each frame trimmed) and keyTimes equal
- * to each frame's `at` / 100 (within 1e-6). A morph without a string target and frames of `at` and `d` names no id.
- * `morphIds` names ids only and skips those three checks; `animation` wins when both are given. Absent or empty: every
- * SMIL element goes.
+ * The morph rule as a sanitiser option. `animation` (the record's raw animation, morphs read by `smil` id) is the full
+ * rule: target path, `values` equal to the frames' `d`, keyTimes equal to each `at` / 100 (within 1e-6). `morphIds`
+ * names ids only and skips those checks; `animation` wins. Absent or empty: every SMIL element goes.
  */
 export interface SvgMorphOption {
   animation?: unknown;
@@ -66,11 +51,9 @@ export interface SvgMorphOption {
 }
 
 /**
- * Why a morph `<animate>` failed; the card strips it and lists `animate`, Utils refuses the save naming it. `unnamed`:
- * no morph names its id, or its parent path's id is not that morph's target. `counts`: keyTimes not one per frame
- * from 0 to 1 at the frames' `at` / 100, or with spline not one keySpline of four 0..1 numbers per segment.
- * `frames`: `values` differs from its morph's frames `d`, or the frames differ in command structure (see
- * MORPH_VALUES_SEPARATOR).
+ * Why a morph `<animate>` failed; the card strips it, Utils refuses the save. `unnamed`: no morph names its id or
+ * path. `counts`: keyTimes or keySplines do not fit the frames. `frames`: `values` differs from the morph's frames,
+ * or the frames differ in command structure. See documentation/sharing-safety/svg-allowlist.md, "Morph miss reasons".
  */
 export type MorphMiss = 'namespace' | 'parent' | 'children' | 'second' | 'attribute' | 'value' | 'unnamed' | 'counts' | 'frames';
 

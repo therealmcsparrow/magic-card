@@ -143,12 +143,12 @@ export const animatorStyles = css`
   }
   .target:focus-visible,
   .effects button:focus-visible,
-  .row :is(select, input, button):focus-visible {
+  .ia-row :is(select, input, button):focus-visible {
     outline: 2px solid var(--mc-accent, currentColor);
     outline-offset: 2px;
   }
   .effects,
-  .row {
+  .ia-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -159,12 +159,12 @@ export const animatorStyles = css`
     opacity: 0.55;
     cursor: not-allowed;
   }
-  .row label {
+  .ia-row label {
     flex: 1 0 100%;
     font-size: 0.8125rem;
     color: var(--mc-text-2);
   }
-  .row :is(select, input) {
+  .ia-row :is(select, input) {
     flex: 1 1 8rem;
     min-width: 0;
     min-height: 32px;

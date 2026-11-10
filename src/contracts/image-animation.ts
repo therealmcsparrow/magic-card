@@ -15,11 +15,9 @@ export const IMAGE_ANIM_CHUNK_FILE = 'magic-card-image-anim.js';
 export const IMAGE_ANIM_CHUNK_CEILING = 16_384;
 
 /**
- * The only file that loads the image-anim chunk, inside the svg-image chunk: its lazyChunk('image-anim', …) and import()
- * sit there, not in the card's chunk table, so magic-card.js carries nothing for animated images. It is a registered
- * import() site. It also loads the anim-runtime chunk through src/utils/anim-runtime-loader.ts (loadRuntime) when the
- * record has a clip with tracks, starts both loads together and calls play() once both have settled. Neither load is
- * reported to the card's chunk notice: a failed image-anim load leaves the image still.
+ * The only file that loads the image-anim chunk (a registered import() site inside the svg-image chunk, not in the
+ * card's chunk table). It loads anim-runtime too when a clip has tracks, then calls play() once both have settled; a
+ * failed load leaves the image still. See documentation/images/animating-images.md, "How an animated image plays".
  */
 export const IMAGE_ANIM_IMPORT_SITE = 'src/svg-image/anim-loader.ts';
 
@@ -155,13 +153,9 @@ export type ImageTrackCompiler = (doc: AnimationDoc) => readonly CompiledTrack[]
 export interface ImageAnimChunk {
   readonly version: typeof IMAGE_ANIMATION_CONTRACT;
   /**
-   * `svg` is the sanitised, mounted drawing; `anim` has passed CheckImageAnimation. Each morph plays exactly once: the
-   * CSS `d` keyframes when the once-per-document effect probe sees CSS `d` move a hidden path's getBBox(), else (or
-   * unsure) the SMIL copy through beginElement(). Reduced motion holds both at their first frame and never begins SMIL;
-   * card pause and off-screen pause the CSS and call pauseAnimations() together.
-   *
-   * Synchronous. `compile` is the anim-runtime chunk's compileTracks, already loaded. Without it a clip with tracks does
-   * not play at all, morphs included, so a clip never plays in part; a clip with morphs only plays without it.
+   * Synchronous. `svg` is the sanitised, mounted drawing; `anim` has passed CheckImageAnimation. Each morph plays once,
+   * as CSS `d` keyframes or as its SMIL copy. `compile` is anim-runtime's compileTracks: without it a clip with tracks
+   * does not play at all. See documentation/images/animating-images.md, "How an animated image plays".
    */
   play(svg: SVGSVGElement, anim: ImageAnimation, ctx: ImageAnimContext, compile?: ImageTrackCompiler): ImageAnimHandle;
 }

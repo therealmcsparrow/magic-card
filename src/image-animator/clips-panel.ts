@@ -78,25 +78,25 @@ function stateFields(p: ClipsPanelProps, clip: ImageClip): TemplateResult {
     ['below', t('image-animator.clips-panel.below')],
   ];
   return html`<div class="state-fields">
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-entity">${t('image-animator.clips-panel.entity')}</label>
       <input id="clip-entity" name="entity" type="text" autocomplete="off" spellcheck="false" .value=${play.on === 'state' ? play.entity : ''} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-attribute">${t('image-animator.clips-panel.attribute-optional')}</label>
       <input id="clip-attribute" name="attribute" type="text" autocomplete="off" spellcheck="false" .value=${play.on === 'state' ? (play.attribute ?? '') : ''} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-condition">${t('image-animator.clips-panel.condition')}</label>
       <select id="clip-condition" name="kind" .value=${kind}>
         ${kinds.map(([k, text]) => html`<option value=${k} ?selected=${k === kind}>${text}</option>`)}
       </select>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-value">${t('image-animator.clips-panel.value')}</label>
       <input id="clip-value" name="value" type="text" autocomplete="off" .value=${whenValue(play)} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <button
         type="button"
         class="btn btn-secondary"
@@ -122,38 +122,38 @@ function details(p: ClipsPanelProps, clip: ImageClip, index: number): TemplateRe
     ['alternate-reverse', t('image-animator.clips-panel.back-and-forth-starting-backwards')],
   ];
   return html`<div class="clip-details" role="group" aria-labelledby="clip-name-label">
-    <div class="row">
+    <div class="ia-row">
       <label id="clip-name-label" for="clip-name">${t('image-animator.clips-panel.clip-name')}</label>
       <input id="clip-name" type="text" maxlength="64" .value=${clip.name} @change=${(e: Event) => p.rename(clip.id, (e.target as HTMLInputElement).value)} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-trigger">${t('image-animator.clips-panel.starts-when')}</label>
       <select id="clip-trigger" .value=${shown} @change=${(e: Event) => p.setTrigger(clip.id, (e.target as HTMLSelectElement).value as TriggerKind)}>
         ${kinds.map((k) => html`<option value=${k} ?selected=${k === shown}>${triggerLabel(k)}</option>`)}
       </select>
     </div>
     ${shown === 'state' ? stateFields(p, clip) : nothing}
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-duration">${t('image-animator.clips-panel.duration-seconds')}</label>
       <input id="clip-duration" type="number" min="0.05" max="600" step="0.05" .value=${String(clip.duration)} @change=${(e: Event) => p.setTiming(clip.id, { duration: Number((e.target as HTMLInputElement).value) })} />
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-forever">${t('image-animator.clips-panel.repeat-forever')}</label>
       <input id="clip-forever" type="checkbox" .checked=${forever} @change=${(e: Event) => p.setTiming(clip.id, { iterations: (e.target as HTMLInputElement).checked ? 'infinite' : 1 })} />
     </div>
     ${forever
       ? nothing
-      : html`<div class="row">
+      : html`<div class="ia-row">
           <label for="clip-repeats">${t('image-animator.clips-panel.repeats')}</label>
           <input id="clip-repeats" type="number" min="0.01" max="1000" step="1" .value=${String(clip.iterations)} @change=${(e: Event) => p.setTiming(clip.id, { iterations: Number((e.target as HTMLInputElement).value) })} />
         </div>`}
-    <div class="row">
+    <div class="ia-row">
       <label for="clip-direction">${t('image-animator.clips-panel.direction')}</label>
       <select id="clip-direction" .value=${clip.direction ?? 'normal'} @change=${(e: Event) => p.setTiming(clip.id, { direction: (e.target as HTMLSelectElement).value as NonNullable<ImageClip['direction']> })}>
         ${directions.map(([k, text]) => html`<option value=${k} ?selected=${k === (clip.direction ?? 'normal')}>${text}</option>`)}
       </select>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <button type="button" class="btn btn-secondary" ?disabled=${index === 0} @click=${() => p.move(clip.id, -1)}>${t('image-animator.clips-panel.move-up')}</button>
       <button type="button" class="btn btn-secondary" ?disabled=${index === p.clips.length - 1} @click=${() => p.move(clip.id, 1)}>${t('image-animator.clips-panel.move-down')}</button>
       <button type="button" class="btn btn-secondary" @click=${() => p.duplicate(clip.id)}>${t('image-animator.clips-panel.duplicate')}</button>
@@ -173,7 +173,7 @@ export function renderClips(p: ClipsPanelProps): TemplateResult {
     </ul>
     ${clip ? details(p, clip, index) : nothing}
     <form
-      class="row"
+      class="ia-row"
       @submit=${(e: Event) => {
         e.preventDefault();
         const input = (e.target as HTMLFormElement).querySelector('input');

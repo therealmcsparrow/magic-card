@@ -104,14 +104,14 @@ export function renderEffects(p: PanelProps): TemplateResult {
       })}
     </div>
     ${stroke.ok ? nothing : html`<p class="hint" id="no-stroke">${t('image-animator.effects-panel.nothing-here-has-an-outline-to-draw')}</p>`}
-    <div class="row">
+    <div class="ia-row">
       <label for="preset">${t('image-animator.effects-panel.preset')}</label>
       <select id="preset" .value=${p.presetId} @change=${(e: Event) => p.setPreset((e.target as HTMLSelectElement).value)}>
         ${p.presets.map((x) => html`<option value=${x.id} ?selected=${x.id === p.presetId}>${x.name}</option>`)}
       </select>
       <button type="button" class="btn btn-secondary" ?disabled=${!p.presetId} @click=${() => p.add('preset')}>${t('image-animator.effects-panel.add-preset')}</button>
     </div>
-    <div class="row">
+    <div class="ia-row">
       <label for="path">${t('image-animator.effects-panel.path-data')}</label>
       <input id="path" type="text" inputmode="text" autocomplete="off" spellcheck="false" .value=${p.path} placeholder="M0 0 L50 20" @input=${(e: Event) => p.setPath((e.target as HTMLInputElement).value)} />
       <button type="button" class="btn btn-secondary" @click=${() => p.add('motion-path')}>${effectName('motion-path')}</button>

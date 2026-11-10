@@ -75,6 +75,14 @@ Hover only applies on devices with a pointer. On a touch screen, use tap or a st
 - **Pause.** An animated library image counts as motion on the card. When no pause button was set, the card shows one automatically (`pause_button: auto`). Set `pause_button: hidden` to remove it. Pause holds the image still, and a remembered pause holds from the first frame.
 - **Off screen.** An image that is scrolled out of view, or on a hidden page, stops moving until it is visible again.
 
+## How an animated image plays
+
+The code that plays animated images loads only when a card shows one, so cards with still images do not download it. When a clip moves parts of the image, Magic Card also loads the animation engine and starts the clip once both have loaded. If loading fails, the image stays still and the card works as before.
+
+A clip with moving parts never plays halfway: if the animation engine is missing, the clip does not play at all, shape morphs included. A clip that only holds morphs plays without it.
+
+Each morph plays exactly once. Magic Card first checks whether the browser can animate a path's shape with CSS. If it can, the CSS frames play; if it cannot, or the check is unsure, the SMIL copy plays instead. Reduced motion holds both at the first frame. Pause and scrolling off screen stop both together.
+
 ## Used on N cards
 
 When you open an image that cards already use, the animator says "Used on 3 cards. Saving changes how the image looks there." Magic Card counts this in your browser by reading your dashboards and looking for `mcu-image:<id>`. A dashboard that cannot be read is skipped, and the notice then says "Used on at least 3 cards. Magic Card could not check every dashboard." No notice means no card uses the image. The notice does not block a save.
