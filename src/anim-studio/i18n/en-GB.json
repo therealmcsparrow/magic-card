@@ -7190,7 +7190,7 @@
   "anim-studio.studio.modified-count": {
     "text": "{modified} of {total} settings changed",
     "note": "Count above the animation settings when Modified only is on: how many settings differ from their starting values, out of all of them.",
-    "max": 34,
+    "max": 48,
     "vars": {
       "modified": "How many settings differ from their starting value.",
       "total": "How many settings there are in all."

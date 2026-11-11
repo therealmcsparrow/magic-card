@@ -2643,8 +2643,8 @@
     "note": "Size of the image canvas in drawing units, shown under the canvas and in the Inspector. {w} is the width and {h} the height, as numbers.",
     "max": 30,
     "vars": {
-      "w": "The canvas width in drawing units.",
-      "h": "The canvas height in drawing units."
+      "h": "The canvas height in drawing units.",
+      "w": "The canvas width in drawing units."
     }
   },
   "svg-editor.views.what-do-you-want-to-start-from": {

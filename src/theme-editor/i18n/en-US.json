@@ -1476,8 +1476,8 @@
     "hash": "287e051b"
   },
   "theme-editor.legal.english-prevails": {
-    "text": "The English text prevails.",
-    "hash": "69976636"
+    "text": "This is a translation. If it differs from the English text, the English text prevails.",
+    "hash": "c8c30b34"
   },
   "theme-editor.legal.show-english": {
     "text": "Show English",

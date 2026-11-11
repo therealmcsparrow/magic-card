@@ -2002,9 +2002,9 @@
     "max": 215
   },
   "theme-editor.legal.english-prevails": {
-    "text": "The English text prevails.",
+    "text": "This is a translation. If it differs from the English text, the English text prevails.",
     "note": "Note shown next to a legal text that is translated; the English text is the one that counts.",
-    "max": 40
+    "max": 90
   },
   "theme-editor.legal.show-english": {
     "text": "Show English",

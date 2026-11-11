@@ -8880,6 +8880,48 @@
     "x-max-length": 35,
     "x-source-hash": "e32896a6"
   },
+  "anim-studio.studio.frame-close": "Close inspector",
+  "@anim-studio.studio.frame-close": {
+    "description": "Accessible name of the button that closes the inspector drawer or the settings sheet. Max 20 characters.",
+    "source_text": "Close inspector",
+    "x-max-length": 20,
+    "x-source-hash": "5ac712f4"
+  },
+  "anim-studio.studio.frame-modified-only": "Modified only",
+  "@anim-studio.studio.frame-modified-only": {
+    "description": "Label of the switch that shows only the animation fields that differ from their starting values. Max 18 characters.",
+    "source_text": "Modified only",
+    "x-max-length": 18,
+    "x-source-hash": "d5f0ab19"
+  },
+  "anim-studio.studio.frame-none-modified": "No changed fields yet.",
+  "@anim-studio.studio.frame-none-modified": {
+    "description": "Shown in the inspector when Modified only is on and no field differs from its starting value. Max 30 characters.",
+    "source_text": "No changed fields yet.",
+    "x-max-length": 30,
+    "x-source-hash": "d94a7e00"
+  },
+  "anim-studio.studio.frame-pin": "Keep inspector open",
+  "@anim-studio.studio.frame-pin": {
+    "description": "Accessible name of the pin button that keeps the inspector drawer open while you work on the stage. Max 28 characters.",
+    "source_text": "Keep inspector open",
+    "x-max-length": 28,
+    "x-source-hash": "a35fcfe5"
+  },
+  "anim-studio.studio.frame-settings": "Settings",
+  "@anim-studio.studio.frame-settings": {
+    "description": "Bar button on a narrow screen that opens the settings sheet with the inspector. Max 14 characters.",
+    "source_text": "Settings",
+    "x-max-length": 14,
+    "x-source-hash": "74a883a0"
+  },
+  "anim-studio.studio.frame-zoom": "Zoom",
+  "@anim-studio.studio.frame-zoom": {
+    "description": "Accessible name of the group of zoom controls over the stage. Max 10 characters.",
+    "source_text": "Zoom",
+    "x-max-length": 10,
+    "x-source-hash": "509c517e"
+  },
   "anim-studio.studio.got-it": "Got it",
   "@anim-studio.studio.got-it": {
     "description": "Button that dismisses a one-time hint in the studio. Max 10 characters.",
@@ -9090,6 +9132,13 @@
     "source_text": "Loading the {kind} editor…",
     "x-max-length": 45,
     "x-source-hash": "fde35e3f"
+  },
+  "anim-studio.studio.modified-count": "{modified} of {total} settings changed",
+  "@anim-studio.studio.modified-count": {
+    "description": "Count above the animation settings when Modified only is on: how many settings differ from their starting values, out of all of them. {modified}: How many settings differ from their starting value. {total}: How many settings there are in all. Max 48 characters.",
+    "source_text": "{modified} of {total} settings changed",
+    "x-max-length": 48,
+    "x-source-hash": "dda20829"
   },
   "anim-studio.studio.more-presets-could-not-load-the-built-in": "More presets could not load. The built-in presets still work.",
   "@anim-studio.studio.more-presets-could-not-load-the-built-in": {
@@ -9356,6 +9405,13 @@
     "source_text": "Repeat count",
     "x-max-length": 20,
     "x-source-hash": "bc9e8a55"
+  },
+  "anim-studio.studio.reset-field": "Reset {field}",
+  "@anim-studio.studio.reset-field": {
+    "description": "Accessible name of the small button that puts one animation setting back to its starting value. The field is the setting name. {field}: Name of the setting that is reset, for example Duration. Max 28 characters.",
+    "source_text": "Reset {field}",
+    "x-max-length": 28,
+    "x-source-hash": "81e563cb"
   },
   "anim-studio.studio.restore-unsaved-changes": "Restore unsaved changes?",
   "@anim-studio.studio.restore-unsaved-changes": {
@@ -17062,6 +17118,13 @@
     "x-max-length": 35,
     "x-source-hash": "7930f82a"
   },
+  "card-editor.inspector.layer-name": "Layer name",
+  "@card-editor.inspector.layer-name": {
+    "description": "Label of the field that renames the selected module in the Layers list. The name is only for the editor. Max 20 characters.",
+    "source_text": "Layer name",
+    "x-max-length": 20,
+    "x-source-hash": "b6db8b76"
+  },
   "card-editor.inspector.layout-layout": "layout {layout}",
   "@card-editor.inspector.layout-layout": {
     "description": "Lower-case caption in the inspector, shown mid-line after other details. {layout} is the layout name, such as a column ratio; do not translate it. The selection key is the capitalised twin. {layout}: The value that replaces layout in the text. Max 25 characters.",
@@ -20455,12 +20518,12 @@
     "x-max-length": 40,
     "x-source-hash": "0d10d652"
   },
-  "card-editor.structure-outline.n": "{n, plural, one {module} other {modules}}",
+  "card-editor.structure-outline.n": "{n, plural, one {# module} other {# modules}}",
   "@card-editor.structure-outline.n": {
-    "description": "The noun alone, without the number, which the outline shows separately. {n} is 0 or more; give every plural form your language needs. {n}: The count the text is about. Max 15 characters.",
-    "source_text": "{n, plural, one {module} other {modules}}",
-    "x-max-length": 15,
-    "x-source-hash": "6bc7bbc0",
+    "description": "Screen reader text of a column or tab count in the outline: the number with the noun, for example 1 module or 5 modules. Plural forms follow the count. {n}: The count the text is about. Max 20 characters.",
+    "source_text": "{n, plural, one {# module} other {# modules}}",
+    "x-max-length": 20,
+    "x-source-hash": "a59f96c2",
     "x-plural": [
       "one",
       "other"
@@ -20711,6 +20774,34 @@
     "x-max-length": 10,
     "x-source-hash": "c76ae86a"
   },
+  "card-editor.studio-canvas.key-alt": "Alt",
+  "@card-editor.studio-canvas.key-alt": {
+    "description": "Name of the Alt key in a small keyboard badge; use the word on the key cap. Max 10 characters.",
+    "source_text": "Alt",
+    "x-max-length": 10,
+    "x-source-hash": "c91da2e0"
+  },
+  "card-editor.studio-canvas.key-ctrl": "Ctrl",
+  "@card-editor.studio-canvas.key-ctrl": {
+    "description": "Name of the Control key in a small keyboard badge; use the word on the key cap. Max 10 characters.",
+    "source_text": "Ctrl",
+    "x-max-length": 10,
+    "x-source-hash": "e2ee2909"
+  },
+  "card-editor.studio-canvas.key-or": "or",
+  "@card-editor.studio-canvas.key-or": {
+    "description": "The word between two alternative keyboard shortcuts, such as Ctrl+B or ⌘B. Max 10 characters.",
+    "source_text": "or",
+    "x-max-length": 10,
+    "x-source-hash": "7175517a"
+  },
+  "card-editor.studio-canvas.key-shift": "Shift",
+  "@card-editor.studio-canvas.key-shift": {
+    "description": "Name of the Shift key in a small keyboard badge; use the word on the key cap. Max 10 characters.",
+    "source_text": "Shift",
+    "x-max-length": 10,
+    "x-source-hash": "2e544a29"
+  },
   "card-editor.studio-canvas.layers-here-n": "Layers here ({n})",
   "@card-editor.studio-canvas.layers-here-n": {
     "description": "Button or heading listing the layers stacked at the clicked point. {n} is how many layers, 2 or more. {n}: The value that replaces n in the text. Max 30 characters.",
@@ -20858,12 +20949,12 @@
     "x-max-length": 30,
     "x-source-hash": "b6ea7fb6"
   },
-  "card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd": "Show or hide panels: {ctrl} or {cmd}.",
+  "card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd": "Show or hide panels: {keys}.",
   "@card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd": {
-    "description": "Keyboard help. {ctrl} and {cmd} are complete shortcuts for Windows or Linux and for a Mac, such as Ctrl+B and ⌘B; do not translate them. {cmd}: The value that replaces cmd in the text. {ctrl}: The value that replaces ctrl in the text. Max 60 characters.",
-    "source_text": "Show or hide panels: {ctrl} or {cmd}.",
+    "description": "Keyboard help. {keys} is the complete shortcut for this computer, such as Ctrl+B or ⌘B; do not translate it. {keys}: The value that replaces keys in the text. Max 60 characters.",
+    "source_text": "Show or hide panels: {keys}.",
     "x-max-length": 60,
-    "x-source-hash": "0c01a4f9"
+    "x-source-hash": "ccf407b6"
   },
   "card-editor.studio-canvas.showing-state": "Showing: {state}",
   "@card-editor.studio-canvas.showing-state": {
@@ -20878,6 +20969,13 @@
     "source_text": ", shown at {px} px",
     "x-max-length": 30,
     "x-source-hash": "72dc4b9f"
+  },
+  "card-editor.studio-canvas.unit-px": "px",
+  "@card-editor.studio-canvas.unit-px": {
+    "description": "Unit symbol for pixels, shown after the preview width. Keep it short. Max 10 characters.",
+    "source_text": "px",
+    "x-max-length": 10,
+    "x-source-hash": "6ee2cc10"
   },
   "card-editor.studio-canvas.up": "Up",
   "@card-editor.studio-canvas.up": {
@@ -20977,6 +21075,13 @@
     "x-max-length": 30,
     "x-source-hash": "6dfced21"
   },
+  "card-editor.studio.modified-only": "Modified only",
+  "@card-editor.studio.modified-only": {
+    "description": "Label of the switch that shows only the settings that differ from their default. Max 20 characters.",
+    "source_text": "Modified only",
+    "x-max-length": 20,
+    "x-source-hash": "d5f0ab19"
+  },
   "card-editor.studio.mods": "{mods, plural, one {# module} other {# modules}}",
   "@card-editor.studio.mods": {
     "description": "Studio status text counting the modules in the card, for example 1 module or 5 modules. Plural forms follow the count. {mods}: The count the text is about. Max 15 characters.",
@@ -20987,6 +21092,13 @@
       "one",
       "other"
     ]
+  },
+  "card-editor.studio.nothing-modified": "Nothing here differs from the default",
+  "@card-editor.studio.nothing-modified": {
+    "description": "Shown in the settings panel when Modified only is on and no setting differs from its default. Max 45 characters.",
+    "source_text": "Nothing here differs from the default",
+    "x-max-length": 45,
+    "x-source-hash": "75578f99"
   },
   "card-editor.studio.panels-hidden": "{panels} hidden",
   "@card-editor.studio.panels-hidden": {
@@ -21001,6 +21113,13 @@
     "source_text": "{panels} shown",
     "x-max-length": 25,
     "x-source-hash": "755f1a3b"
+  },
+  "card-editor.studio.pin-panel": "Pin the panel",
+  "@card-editor.studio.pin-panel": {
+    "description": "Accessible name of the button that keeps the settings panel open while you work on the card. Max 20 characters.",
+    "source_text": "Pin the panel",
+    "x-max-length": 20,
+    "x-source-hash": "d5b1453b"
   },
   "card-editor.studio.preview": "Preview",
   "@card-editor.studio.preview": {
@@ -21085,6 +21204,13 @@
     "source_text": "YAML",
     "x-max-length": 10,
     "x-source-hash": "9b6e8abe"
+  },
+  "card-editor.studio.zoom": "Zoom",
+  "@card-editor.studio.zoom": {
+    "description": "Accessible name of the zoom controls group beside the preview. Max 10 characters.",
+    "source_text": "Zoom",
+    "x-max-length": 10,
+    "x-source-hash": "509c517e"
   },
   "card-editor.sync-indicator.overridden": "Overridden",
   "@card-editor.sync-indicator.overridden": {
@@ -28272,6 +28398,13 @@
     "x-max-length": 10,
     "x-source-hash": "7d9eb7ac"
   },
+  "image-animator.mc-image-animator.close-settings": "Close settings",
+  "@image-animator.mc-image-animator.close-settings": {
+    "description": "Accessible name of the button that closes the settings drawer or sheet. Max 20 characters.",
+    "source_text": "Close settings",
+    "x-max-length": 20,
+    "x-source-hash": "0ccfef82"
+  },
   "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": "Could not reach Magic Card Utils. Your work is safe.",
   "@image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
     "description": "Error in the image animator when the image library does not answer or refuses a call. Max 72 characters.",
@@ -28358,12 +28491,33 @@
     "x-max-length": 20,
     "x-source-hash": "e76fd2ad"
   },
+  "image-animator.mc-image-animator.keep-settings-open": "Keep settings open",
+  "@image-animator.mc-image-animator.keep-settings-open": {
+    "description": "Accessible name of the pin button that keeps the settings drawer open while you work on the picture. Max 24 characters.",
+    "source_text": "Keep settings open",
+    "x-max-length": 24,
+    "x-source-hash": "23a9037e"
+  },
+  "image-animator.mc-image-animator.modified-only": "Modified only",
+  "@image-animator.mc-image-animator.modified-only": {
+    "description": "Label of the switch that shows only the clip settings that differ from their default. Max 20 characters.",
+    "source_text": "Modified only",
+    "x-max-length": 20,
+    "x-source-hash": "d5f0ab19"
+  },
   "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": "Not in the library yet. Save adds it as {name}.",
   "@image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
     "description": "Status line while an uploaded drawing is open but not saved. Saving adds it to the image library. {name} is the name it will get. {name}: Name the new library image will get. Max 64 characters.",
     "source_text": "Not in the library yet. Save adds it as {name}.",
     "x-max-length": 64,
     "x-source-hash": "53da3716"
+  },
+  "image-animator.mc-image-animator.nothing-modified": "Nothing here differs from the default",
+  "@image-animator.mc-image-animator.nothing-modified": {
+    "description": "Shown in the settings drawer when Modified only is on and no setting differs from its default. Max 45 characters.",
+    "source_text": "Nothing here differs from the default",
+    "x-max-length": 45,
+    "x-source-hash": "75578f99"
   },
   "image-animator.mc-image-animator.opening-the-image": "Opening the image…",
   "@image-animator.mc-image-animator.opening-the-image": {
@@ -28406,6 +28560,13 @@
     "source_text": "Saving… The window closes when it is done.",
     "x-max-length": 64,
     "x-source-hash": "1ca4d921"
+  },
+  "image-animator.mc-image-animator.settings": "Settings",
+  "@image-animator.mc-image-animator.settings": {
+    "description": "Name of the settings drawer and of the bar button that opens it on a narrow screen. Max 16 characters.",
+    "source_text": "Settings",
+    "x-max-length": 16,
+    "x-source-hash": "74a883a0"
   },
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": "The saved animation of this image is not valid, so the image cannot be animated here.",
   "@image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
@@ -28498,6 +28659,13 @@
     "source_text": "Your image library is over 50 MiB. A large library can slow down older devices. You can still save.",
     "x-max-length": 138,
     "x-source-hash": "dd014dcf"
+  },
+  "image-animator.mc-image-animator.zoom": "Zoom",
+  "@image-animator.mc-image-animator.zoom": {
+    "description": "Accessible name of the zoom control group on the stage. Max 12 characters.",
+    "source_text": "Zoom",
+    "x-max-length": 12,
+    "x-source-hash": "509c517e"
   },
   "image-animator.morph-panel.add-morph": "Add morph",
   "@image-animator.morph-panel.add-morph": {
@@ -37517,6 +37685,13 @@
     "x-max-length": 15,
     "x-source-hash": "c9143fa6"
   },
+  "look-editor.element.close-inspector": "Close settings",
+  "@look-editor.element.close-inspector": {
+    "description": "Accessible name of the button that closes the look settings panel or sheet. Max 20 characters.",
+    "source_text": "Close settings",
+    "x-max-length": 20,
+    "x-source-hash": "0ccfef82"
+  },
   "look-editor.element.colour": "Color",
   "@look-editor.element.colour": {
     "description": "Field label for a colour picker in the flow line look. A noun. Max 10 characters.",
@@ -37685,6 +37860,13 @@
     "x-max-length": 15,
     "x-source-hash": "ba3baf3d"
   },
+  "look-editor.element.flow-look": "Flow look",
+  "@look-editor.element.flow-look": {
+    "description": "Name of the flow look editor, shown above its settings. Noun phrase. Max 20 characters.",
+    "source_text": "Flow look",
+    "x-max-length": 20,
+    "x-source-hash": "2d2cba6f"
+  },
   "look-editor.element.gap-px": "Gap (px)",
   "@look-editor.element.gap-px": {
     "description": "Number field label: space between dashes or dots along the flow line, in pixels (px). Max 20 characters.",
@@ -37733,6 +37915,20 @@
     "source_text": "In pixels",
     "x-max-length": 15,
     "x-source-hash": "ed6e9ee9"
+  },
+  "look-editor.element.inspector": "Look settings",
+  "@look-editor.element.inspector": {
+    "description": "Accessible name of the look settings panel; the name of the look follows it. Max 20 characters.",
+    "source_text": "Look settings",
+    "x-max-length": 20,
+    "x-source-hash": "8139cf4d"
+  },
+  "look-editor.element.keep-inspector-open": "Keep settings open",
+  "@look-editor.element.keep-inspector-open": {
+    "description": "Accessible name of the pin button that keeps the look settings open while you work on the preview. Max 25 characters.",
+    "source_text": "Keep settings open",
+    "x-max-length": 25,
+    "x-source-hash": "23a9037e"
   },
   "look-editor.element.level-follows-value": "Level follows value",
   "@look-editor.element.level-follows-value": {
@@ -37787,6 +37983,13 @@
     "x-max-length": 30,
     "x-source-hash": "1b9e6fc5"
   },
+  "look-editor.element.modified-only": "Modified only",
+  "@look-editor.element.modified-only": {
+    "description": "Label of the switch that shows only the setting groups that differ from their default. Max 20 characters.",
+    "source_text": "Modified only",
+    "x-max-length": 20,
+    "x-source-hash": "d5f0ab19"
+  },
   "look-editor.element.motion": "Motion",
   "@look-editor.element.motion": {
     "description": "Label of the button group choosing how the shapes move: Travel along the line or Pulse in place. A noun. Max 10 characters.",
@@ -37832,6 +38035,13 @@
     "source_text": "None",
     "x-max-length": 10,
     "x-source-hash": "dc937b59"
+  },
+  "look-editor.element.none-modified": "Nothing here differs from the default",
+  "@look-editor.element.none-modified": {
+    "description": "Shown in the look settings when Modified only is on and no setting differs from its default. Max 45 characters.",
+    "source_text": "Nothing here differs from the default",
+    "x-max-length": 45,
+    "x-source-hash": "75578f99"
   },
   "look-editor.element.nothing-arrives-while-motion-is-pulse": "Nothing arrives while Motion is Pulse.",
   "@look-editor.element.nothing-arrives-while-motion-is-pulse": {
@@ -37930,6 +38140,13 @@
     "source_text": "Scale width",
     "x-max-length": 20,
     "x-source-hash": "afd9d571"
+  },
+  "look-editor.element.settings": "Settings",
+  "@look-editor.element.settings": {
+    "description": "Button in the top bar of a narrow look editor that opens the look settings as a sheet. Max 15 characters.",
+    "source_text": "Settings",
+    "x-max-length": 15,
+    "x-source-hash": "74a883a0"
   },
   "look-editor.element.shape": "Shape",
   "@look-editor.element.shape": {
@@ -38246,6 +38463,13 @@
     "x-max-length": 30,
     "x-source-hash": "adcbd509"
   },
+  "look-editor.element.zoom": "Zoom",
+  "@look-editor.element.zoom": {
+    "description": "Accessible name of the zoom controls group beside the look preview. Max 10 characters.",
+    "source_text": "Zoom",
+    "x-max-length": 10,
+    "x-source-hash": "509c517e"
+  },
   "look-editor.mc-slider-look-editor.add-evenly": "Add evenly",
   "@look-editor.mc-slider-look-editor.add-evenly": {
     "description": "Button that replaces the gradient stops with a chosen number of stops spread evenly across the slider's range. Max 25 characters.",
@@ -38371,6 +38595,13 @@
     "source_text": "Close",
     "x-max-length": 10,
     "x-source-hash": "7d9eb7ac"
+  },
+  "look-editor.mc-slider-look-editor.close-inspector": "Close settings",
+  "@look-editor.mc-slider-look-editor.close-inspector": {
+    "description": "Accessible name of the button that closes the look settings panel or sheet. Max 20 characters.",
+    "source_text": "Close settings",
+    "x-max-length": 20,
+    "x-source-hash": "0ccfef82"
   },
   "look-editor.mc-slider-look-editor.colour-source-source": "Color source: {source}.",
   "@look-editor.mc-slider-look-editor.colour-source-source": {
@@ -38526,6 +38757,20 @@
     "x-max-length": 105,
     "x-source-hash": "d89cf4a3"
   },
+  "look-editor.mc-slider-look-editor.inspector": "Look settings",
+  "@look-editor.mc-slider-look-editor.inspector": {
+    "description": "Accessible name of the look settings panel; the name of the look follows it. Max 20 characters.",
+    "source_text": "Look settings",
+    "x-max-length": 20,
+    "x-source-hash": "8139cf4d"
+  },
+  "look-editor.mc-slider-look-editor.keep-inspector-open": "Keep settings open",
+  "@look-editor.mc-slider-look-editor.keep-inspector-open": {
+    "description": "Accessible name of the pin button that keeps the look settings open while you work on the preview. Max 25 characters.",
+    "source_text": "Keep settings open",
+    "x-max-length": 25,
+    "x-source-hash": "23a9037e"
+  },
   "look-editor.mc-slider-look-editor.label": "Label",
   "@look-editor.mc-slider-look-editor.label": {
     "description": "Section heading for the text labels at the slider ends (for example min and max). A noun. Max 10 characters.",
@@ -38571,6 +38816,13 @@
     "source_text": "Min and max labels",
     "x-max-length": 30,
     "x-source-hash": "297de253"
+  },
+  "look-editor.mc-slider-look-editor.modified-only": "Modified only",
+  "@look-editor.mc-slider-look-editor.modified-only": {
+    "description": "Label of the switch that shows only the setting groups that differ from their default. Max 20 characters.",
+    "source_text": "Modified only",
+    "x-max-length": 20,
+    "x-source-hash": "d5f0ab19"
   },
   "look-editor.mc-slider-look-editor.n-3": "{n, plural, one {# stop} other {# stops}}",
   "@look-editor.mc-slider-look-editor.n-3": {
@@ -38636,6 +38888,13 @@
     "source_text": "None",
     "x-max-length": 10,
     "x-source-hash": "dc937b59"
+  },
+  "look-editor.mc-slider-look-editor.none-modified": "Nothing here differs from the default",
+  "@look-editor.mc-slider-look-editor.none-modified": {
+    "description": "Shown in the look settings when Modified only is on and no setting differs from its default. Max 45 characters.",
+    "source_text": "Nothing here differs from the default",
+    "x-max-length": 45,
+    "x-source-hash": "75578f99"
   },
   "look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": "On a Mac: System Settings, Accessibility, Display.",
   "@look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": {
@@ -38721,6 +38980,13 @@
     "x-max-length": 160,
     "x-source-hash": "629d26d6"
   },
+  "look-editor.mc-slider-look-editor.settings": "Settings",
+  "@look-editor.mc-slider-look-editor.settings": {
+    "description": "Button in the top bar of a narrow look editor that opens the look settings as a sheet. Max 15 characters.",
+    "source_text": "Settings",
+    "x-max-length": 15,
+    "x-source-hash": "74a883a0"
+  },
   "look-editor.mc-slider-look-editor.shape": "Shape",
   "@look-editor.mc-slider-look-editor.shape": {
     "description": "Label of the button group choosing the handle shape (Circle, Square, Line). Singular noun. Max 10 characters.",
@@ -38741,6 +39007,13 @@
     "source_text": "Slider colour",
     "x-max-length": 30,
     "x-source-hash": "fe395e28"
+  },
+  "look-editor.mc-slider-look-editor.slider-look": "Slider look",
+  "@look-editor.mc-slider-look-editor.slider-look": {
+    "description": "Name of the slider look editor, shown above its settings. Noun phrase. Max 20 characters.",
+    "source_text": "Slider look",
+    "x-max-length": 20,
+    "x-source-hash": "1cbab1ed"
   },
   "look-editor.mc-slider-look-editor.slider-shape": "Slider shape",
   "@look-editor.mc-slider-look-editor.slider-shape": {
@@ -38966,6 +39239,13 @@
     "x-max-length": 40,
     "x-source-hash": "91199ad5"
   },
+  "look-editor.mc-slider-look-editor.used-by-the-segmented-track-style": "Used by the Segmented track style.",
+  "@look-editor.mc-slider-look-editor.used-by-the-segmented-track-style": {
+    "description": "Hint under the Segments field of the slider look editor while another track style is chosen. The field has no effect until Segmented is picked. Max 45 characters.",
+    "source_text": "Used by the Segmented track style.",
+    "x-max-length": 45,
+    "x-source-hash": "488e3532"
+  },
   "look-editor.mc-slider-look-editor.value": "Value",
   "@look-editor.mc-slider-look-editor.value": {
     "description": "Label of the number the slider currently holds, shown on the slider. Noun. Max 10 characters.",
@@ -39021,6 +39301,13 @@
     "source_text": "Your system has reduced motion on, so this look stays still.",
     "x-max-length": 100,
     "x-source-hash": "244c5d4f"
+  },
+  "look-editor.mc-slider-look-editor.zoom": "Zoom",
+  "@look-editor.mc-slider-look-editor.zoom": {
+    "description": "Accessible name of the zoom controls group beside the look preview. Max 10 characters.",
+    "source_text": "Zoom",
+    "x-max-length": 10,
+    "x-source-hash": "509c517e"
   },
   "look-editor.presets.big-fill": "Big fill",
   "@look-editor.presets.big-fill": {
@@ -39169,12 +39456,47 @@
     "x-max-length": 70,
     "x-source-hash": "bd93b912"
   },
+  "mcu-panel.panel.animation": "Animation",
+  "@mcu-panel.panel.animation": {
+    "description": "Type shown under the name of the selected animation in the details pane. Max 15 characters.",
+    "source_text": "Animation",
+    "x-max-length": 15,
+    "x-source-hash": "1dd10f24"
+  },
   "mcu-panel.panel.animations": "Animations",
   "@mcu-panel.panel.animations": {
     "description": "Label of the Animations tab in the panel tab bar. Max 20 characters.",
     "source_text": "Animations",
     "x-max-length": 20,
     "x-source-hash": "7f7c3306"
+  },
+  "mcu-panel.panel.available": "Available",
+  "@mcu-panel.panel.available": {
+    "description": "Status of a card that can be picked for a forum shot. Max 20 characters.",
+    "source_text": "Available",
+    "x-max-length": 20,
+    "x-source-hash": "e6744473"
+  },
+  "mcu-panel.panel.available-detail": "You can pick this card for a forum shot.",
+  "@mcu-panel.panel.available-detail": {
+    "description": "Line in the status details of a card that can be picked. Max 60 characters.",
+    "source_text": "You can pick this card for a forum shot.",
+    "x-max-length": 60,
+    "x-source-hash": "db25542b"
+  },
+  "mcu-panel.panel.back": "Back",
+  "@mcu-panel.panel.back": {
+    "description": "Button that closes the details sheet on a narrow screen and returns to the list. Max 10 characters.",
+    "source_text": "Back",
+    "x-max-length": 10,
+    "x-source-hash": "76900f1b"
+  },
+  "mcu-panel.panel.back-to-the-list": "Back to the list",
+  "@mcu-panel.panel.back-to-the-list": {
+    "description": "Button above the animation studio or theme editor that closes it and returns to the list. Max 25 characters.",
+    "source_text": "Back to the list",
+    "x-max-length": 25,
+    "x-source-hash": "79b6c5ff"
   },
   "mcu-panel.panel.cancel": "Cancel",
   "@mcu-panel.panel.cancel": {
@@ -39216,6 +39538,20 @@
       "other"
     ]
   },
+  "mcu-panel.panel.card": "Card",
+  "@mcu-panel.panel.card": {
+    "description": "Column header of the card list: the name of the Magic Card. Max 20 characters.",
+    "source_text": "Card",
+    "x-max-length": 20,
+    "x-source-hash": "be3702e3"
+  },
+  "mcu-panel.panel.card-config-read-failed": "Your dashboards could not be read. Check that they are not YAML dashboards, then try again.",
+  "@mcu-panel.panel.card-config-read-failed": {
+    "description": "Error when no dashboard configuration could be read. Max 110 characters.",
+    "source_text": "Your dashboards could not be read. Check that they are not YAML dashboards, then try again.",
+    "x-max-length": 110,
+    "x-source-hash": "f4f5d640"
+  },
   "mcu-panel.panel.card-type": "Card Type",
   "@mcu-panel.panel.card-type": {
     "description": "Column heading in the templates table and label of the card type field in the template editor. Max 15 characters.",
@@ -39237,6 +39573,34 @@
     "x-max-length": 10,
     "x-source-hash": "7d9eb7ac"
   },
+  "mcu-panel.panel.colours": "Colors",
+  "@mcu-panel.panel.colours": {
+    "description": "Legend of the group where the user chooses light, dark or both. Max 14 characters.",
+    "source_text": "Colours",
+    "x-max-length": 14,
+    "x-source-hash": "88f20221"
+  },
+  "mcu-panel.panel.colours-both": "Light and dark",
+  "@mcu-panel.panel.colours-both": {
+    "description": "Option: the picture holds a light and a dark version of the card side by side. Max 20 characters.",
+    "source_text": "Light and dark",
+    "x-max-length": 20,
+    "x-source-hash": "59644334"
+  },
+  "mcu-panel.panel.colours-dark": "Dark only",
+  "@mcu-panel.panel.colours-dark": {
+    "description": "Option: the picture holds only the dark version of the card. Max 20 characters.",
+    "source_text": "Dark only",
+    "x-max-length": 20,
+    "x-source-hash": "0470ad2d"
+  },
+  "mcu-panel.panel.colours-light": "Light only",
+  "@mcu-panel.panel.colours-light": {
+    "description": "Option: the picture holds only the light version of the card. Max 20 characters.",
+    "source_text": "Light only",
+    "x-max-length": 20,
+    "x-source-hash": "a5d1af23"
+  },
   "mcu-panel.panel.copies-the-config-description-and-card": "Copies the config, description, and card type. Created and updated timestamps reset to now.",
   "@mcu-panel.panel.copies-the-config-description-and-card": {
     "description": "Help text under the name field in the duplicate window, saying what the copy takes over. Max 150 characters.",
@@ -39251,6 +39615,39 @@
     "x-max-length": 20,
     "x-source-hash": "7833e955"
   },
+  "mcu-panel.panel.count-animations": "{n, plural, one {# animation} other {# animations}}",
+  "@mcu-panel.panel.count-animations": {
+    "description": "Count above the animation list, updated as you search. {n}: How many animations are shown. Max 30 characters.",
+    "source_text": "{n, plural, one {# animation} other {# animations}}",
+    "x-max-length": 30,
+    "x-source-hash": "626cefeb",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "mcu-panel.panel.count-cards": "{n, plural, one {# card} other {# cards}}",
+  "@mcu-panel.panel.count-cards": {
+    "description": "Line above the card list. {n} is how many cards are listed. {n}: The value that replaces n in the text. Max 60 characters.",
+    "source_text": "{n, plural, one {# card} other {# cards}}",
+    "x-max-length": 60,
+    "x-source-hash": "2d0d4925",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "mcu-panel.panel.count-groups": "{n, plural, one {# group} other {# groups}}",
+  "@mcu-panel.panel.count-groups": {
+    "description": "Count of the collapsible groups in the details panel. {n}: The number of groups. Max 25 characters.",
+    "source_text": "{n, plural, one {# group} other {# groups}}",
+    "x-max-length": 25,
+    "x-source-hash": "71e111f9",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
   "mcu-panel.panel.count-templates": "{n, plural, one {# template} other {# templates}}",
   "@mcu-panel.panel.count-templates": {
     "description": "Count above the template list, updated as you search. {n}: How many templates are shown. Max 30 characters.",
@@ -39261,6 +39658,38 @@
       "one",
       "other"
     ]
+  },
+  "mcu-panel.panel.count-themes": "{n, plural, one {# theme} other {# themes}}",
+  "@mcu-panel.panel.count-themes": {
+    "description": "Count above the theme list, updated as you search. {n}: How many themes are shown. Max 30 characters.",
+    "source_text": "{n, plural, one {# theme} other {# themes}}",
+    "x-max-length": 30,
+    "x-source-hash": "ded85d0d",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "mcu-panel.panel.custom-card-lock": "This card holds another card inside it (a custom-card module). That card can load pictures from outside Home Assistant and nothing here can check it, so this card cannot be used for a forum shot.",
+  "@mcu-panel.panel.custom-card-lock": {
+    "description": "Notice next to a card that cannot be picked because it holds a custom-card module. Also the error when the picture is refused for that reason. Max 220 characters.",
+    "source_text": "This card holds another card inside it (a custom-card module). That card can load pictures from outside Home Assistant and nothing here can check it, so this card cannot be used for a forum shot.",
+    "x-max-length": 220,
+    "x-source-hash": "78df6dc2"
+  },
+  "mcu-panel.panel.dashboard": "Dashboard",
+  "@mcu-panel.panel.dashboard": {
+    "description": "Column header of the card list: the dashboard a card is on. Max 20 characters.",
+    "source_text": "Dashboard",
+    "x-max-length": 20,
+    "x-source-hash": "67b69646"
+  },
+  "mcu-panel.panel.default-dashboard": "Default dashboard",
+  "@mcu-panel.panel.default-dashboard": {
+    "description": "Name shown for the dashboard that Home Assistant opens first, which has no title of its own. Max 30 characters.",
+    "source_text": "Default dashboard",
+    "x-max-length": 30,
+    "x-source-hash": "4913c670"
   },
   "mcu-panel.panel.delete": "Delete",
   "@mcu-panel.panel.delete": {
@@ -39311,12 +39740,26 @@
     "x-max-length": 20,
     "x-source-hash": "526e0087"
   },
+  "mcu-panel.panel.details": "Details",
+  "@mcu-panel.panel.details": {
+    "description": "Accessible name of the details panel beside the list. Max 15 characters.",
+    "source_text": "Details",
+    "x-max-length": 15,
+    "x-source-hash": "45989de4"
+  },
   "mcu-panel.panel.dismiss": "Dismiss",
   "@mcu-panel.panel.dismiss": {
     "description": "Tooltip and screen reader label of the button that hides an error message in the Animations tab. Max 15 characters.",
     "source_text": "Dismiss",
     "x-max-length": 15,
     "x-source-hash": "48845bff"
+  },
+  "mcu-panel.panel.download": "Download",
+  "@mcu-panel.panel.download": {
+    "description": "Button that makes the picture and saves it to the user's device. Max 14 characters.",
+    "source_text": "Download",
+    "x-max-length": 14,
+    "x-source-hash": "d6eafe82"
   },
   "mcu-panel.panel.drawing-icons-and-shapes-here-needs": "Drawing icons and shapes here needs Magic Card {version} or newer. Update Magic Card.",
   "@mcu-panel.panel.drawing-icons-and-shapes-here-needs": {
@@ -39409,6 +39852,48 @@
     "x-max-length": 10,
     "x-source-hash": "936a161c"
   },
+  "mcu-panel.panel.error-capture-failed": "The picture could not be made in this browser. Try again, or use another browser.",
+  "@mcu-panel.panel.error-capture-failed": {
+    "description": "Error when the capture failed. Max 110 characters.",
+    "source_text": "The picture could not be made in this browser. Try again, or use another browser.",
+    "x-max-length": 110,
+    "x-source-hash": "dd7a86c4"
+  },
+  "mcu-panel.panel.error-card-not-defined": "The Magic Card is not loaded in this browser tab. Reload the page and try again.",
+  "@mcu-panel.panel.error-card-not-defined": {
+    "description": "Error when the card element is not available. Max 100 characters.",
+    "source_text": "The Magic Card is not loaded in this browser tab. Reload the page and try again.",
+    "x-max-length": 100,
+    "x-source-hash": "433ffe34"
+  },
+  "mcu-panel.panel.error-font-unavailable": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+  "@mcu-panel.panel.error-font-unavailable": {
+    "description": "Error when a font from another website could not be fetched or was not a usable font file. Max 130 characters.",
+    "source_text": "A font could not be loaded, so no picture was made. Check your connection and try again.",
+    "x-max-length": 130,
+    "x-source-hash": "9924ac84"
+  },
+  "mcu-panel.panel.error-hosts-changed": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+  "@mcu-panel.panel.error-hosts-changed": {
+    "description": "Error when the font sites of the card differ from those shown before Download; the card list has been read again. Max 200 characters.",
+    "source_text": "The fonts this card asks for changed since the list was made, and nothing was fetched. The list is up to date now. Check the sites it names, then press Download again.",
+    "x-max-length": 200,
+    "x-source-hash": "198f0eb0"
+  },
+  "mcu-panel.panel.error-too-large": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
+  "@mcu-panel.panel.error-too-large": {
+    "description": "Error when the sheet would exceed the size limit. Max 100 characters.",
+    "source_text": "The picture would be too large. Choose light or dark only, or turn off the three looks.",
+    "x-max-length": 100,
+    "x-source-hash": "15a5ec38"
+  },
+  "mcu-panel.panel.export": "Export",
+  "@mcu-panel.panel.export": {
+    "description": "Button in the theme details that downloads the theme as a file. Max 15 characters.",
+    "source_text": "Export",
+    "x-max-length": 15,
+    "x-source-hash": "36648955"
+  },
   "mcu-panel.panel.export-all": "Export all",
   "@mcu-panel.panel.export-all": {
     "description": "Button above the template list when no row is ticked: downloads every template as a file. Max 24 characters.",
@@ -39430,6 +39915,34 @@
     "x-max-length": 45,
     "x-source-hash": "aeade066"
   },
+  "mcu-panel.panel.file": "File",
+  "@mcu-panel.panel.file": {
+    "description": "Label of the field that shows where a theme file is stored. Max 15 characters.",
+    "source_text": "File",
+    "x-max-length": 15,
+    "x-source-hash": "50009ce1"
+  },
+  "mcu-panel.panel.font-host-contact": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
+  "@mcu-panel.panel.font-host-contact": {
+    "description": "Privacy notice under the preview of a card that uses fonts from other websites, naming who is contacted and what they learn. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 380 characters.",
+    "source_text": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
+    "x-max-length": 380,
+    "x-source-hash": "e4e8bf0b"
+  },
+  "mcu-panel.panel.fonts-from-hosts": "Fonts from {hosts}",
+  "@mcu-panel.panel.fonts-from-hosts": {
+    "description": "Line in the status details of a card that uses fonts from other websites. {hosts} is a list of website domain names, such as example.com, already joined with commas; do not translate it. {hosts}: The value that replaces hosts in the text. Max 120 characters.",
+    "source_text": "Fonts from {hosts}",
+    "x-max-length": 120,
+    "x-source-hash": "9f44f4ca"
+  },
+  "mcu-panel.panel.forum-admin-only": "Only the default dashboard is listed, because listing the others needs an administrator account.",
+  "@mcu-panel.panel.forum-admin-only": {
+    "description": "Note for a user who is not an administrator, shown above the list of cards. Max 120 characters.",
+    "source_text": "Only the default dashboard is listed, because listing the others needs an administrator account.",
+    "x-max-length": 120,
+    "x-source-hash": "705163a8"
+  },
   "mcu-panel.panel.forum-shot": "Forum shot",
   "@mcu-panel.panel.forum-shot": {
     "description": "Label of the Forum shot tab in the panel tab bar. Max 15 characters.",
@@ -39437,12 +39950,40 @@
     "x-max-length": 15,
     "x-source-hash": "de9aca8d"
   },
+  "mcu-panel.panel.forum-shot-intro": "Pick one of your Magic Cards and save it as a picture to post in a forum.",
+  "@mcu-panel.panel.forum-shot-intro": {
+    "description": "Short introduction under the heading of the forum shot area. Max 90 characters.",
+    "source_text": "Pick one of your Magic Cards and save it as a picture to post in a forum.",
+    "x-max-length": 90,
+    "x-source-hash": "87c3964a"
+  },
+  "mcu-panel.panel.icon": "Icon",
+  "@mcu-panel.panel.icon": {
+    "description": "Type line in the inspector for a saved icon. Max 15 characters.",
+    "source_text": "Icon",
+    "x-max-length": 15,
+    "x-source-hash": "a35abcd6"
+  },
   "mcu-panel.panel.icons": "Icons",
   "@mcu-panel.panel.icons": {
     "description": "Label of the Icons tab in the panel tab bar. Max 15 characters.",
     "source_text": "Icons",
     "x-max-length": 15,
     "x-source-hash": "eae96e02"
+  },
+  "mcu-panel.panel.id": "ID",
+  "@mcu-panel.panel.id": {
+    "description": "Label of the identifier field in the inspector of a Library, Icons, Shapes or Images item. Max 10 characters.",
+    "source_text": "ID",
+    "x-max-length": 10,
+    "x-source-hash": "3843971d"
+  },
+  "mcu-panel.panel.image": "Image",
+  "@mcu-panel.panel.image": {
+    "description": "Type line in the inspector for a saved image. Max 15 characters.",
+    "source_text": "Image",
+    "x-max-length": 15,
+    "x-source-hash": "1aa4cb0b"
   },
   "mcu-panel.panel.images": "Images",
   "@mcu-panel.panel.images": {
@@ -39497,6 +40038,20 @@
     "x-max-length": 65,
     "x-source-hash": "0fdc1e5b"
   },
+  "mcu-panel.panel.kind": "Kind",
+  "@mcu-panel.panel.kind": {
+    "description": "Label of the field that tells how an animation is built (keyframes, path or particles). Max 15 characters.",
+    "source_text": "Kind",
+    "x-max-length": 15,
+    "x-source-hash": "f5387f9b"
+  },
+  "mcu-panel.panel.larger-rows": "Larger rows",
+  "@mcu-panel.panel.larger-rows": {
+    "description": "Accessible name of the button that makes the list rows larger. Max 20 characters.",
+    "source_text": "Larger rows",
+    "x-max-length": 20,
+    "x-source-hash": "5174d318"
+  },
   "mcu-panel.panel.library": "Library",
   "@mcu-panel.panel.library": {
     "description": "Label of the Library tab in the panel tab bar. Max 15 characters.",
@@ -39504,12 +40059,75 @@
     "x-max-length": 15,
     "x-source-hash": "dc20b3d5"
   },
+  "mcu-panel.panel.light-and-dark": "Light and dark",
+  "@mcu-panel.panel.light-and-dark": {
+    "description": "Summary of a theme that has a light and a dark mode. Max 20 characters.",
+    "source_text": "Light and dark",
+    "x-max-length": 20,
+    "x-source-hash": "59644334"
+  },
   "mcu-panel.panel.loading-the-forum-shot": "Loading the forum shot",
   "@mcu-panel.panel.loading-the-forum-shot": {
     "description": "Spoken label of the progress indicator while the Forum shot tab loads. Max 35 characters.",
     "source_text": "Loading the forum shot",
     "x-max-length": 35,
     "x-source-hash": "a2cc7b19"
+  },
+  "mcu-panel.panel.local-only": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
+  "@mcu-panel.panel.local-only": {
+    "description": "Sentence under the privacy warning: the picture is made locally and nothing is stored. Max 120 characters.",
+    "source_text": "The picture is made in your browser. Nothing leaves Home Assistant, and Magic Card does not keep a copy.",
+    "x-max-length": 120,
+    "x-source-hash": "b4702d63"
+  },
+  "mcu-panel.panel.local-only-font": "The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant, but the fonts are fetched from the sites named here.",
+  "@mcu-panel.panel.local-only-font": {
+    "description": "Sentence under the privacy warning for a card that uses fonts from other websites: the picture is made locally, nothing is stored, and the fonts come from outside. Max 200 characters.",
+    "source_text": "The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant, but the fonts are fetched from the sites named here.",
+    "x-max-length": 200,
+    "x-source-hash": "85ee4021"
+  },
+  "mcu-panel.panel.lock-reason-cannot-judge": "Its settings could not be checked for outside addresses.",
+  "@mcu-panel.panel.lock-reason-cannot-judge": {
+    "description": "Reason a card is locked: the check could not tell whether an address is safe. Max 80 characters.",
+    "source_text": "Its settings could not be checked for outside addresses.",
+    "x-max-length": 80,
+    "x-source-hash": "a7009139"
+  },
+  "mcu-panel.panel.lock-reason-custom-card": "It holds another card (a custom-card module) that nothing here can check.",
+  "@mcu-panel.panel.lock-reason-custom-card": {
+    "description": "Reason a card is locked: it contains a custom-card module. Max 90 characters.",
+    "source_text": "It holds another card (a custom-card module) that nothing here can check.",
+    "x-max-length": 90,
+    "x-source-hash": "f37f797c"
+  },
+  "mcu-panel.panel.lock-reason-limit": "It names too many outside websites, or it is too large to check.",
+  "@mcu-panel.panel.lock-reason-limit": {
+    "description": "Reason a card is locked: it names too many outside websites or is too large to check. Max 80 characters.",
+    "source_text": "It names too many outside websites, or it is too large to check.",
+    "x-max-length": 80,
+    "x-source-hash": "cec07c66"
+  },
+  "mcu-panel.panel.lock-reason-outside-address": "It loads something from outside Home Assistant.",
+  "@mcu-panel.panel.lock-reason-outside-address": {
+    "description": "Reason a card is locked: it names an address outside Home Assistant that is not an allowed font. Max 70 characters.",
+    "source_text": "It loads something from outside Home Assistant.",
+    "x-max-length": 70,
+    "x-source-hash": "56e035ab"
+  },
+  "mcu-panel.panel.locked": "Locked",
+  "@mcu-panel.panel.locked": {
+    "description": "Status of a card that cannot be picked. A reason follows it. Max 20 characters.",
+    "source_text": "Locked",
+    "x-max-length": 20,
+    "x-source-hash": "a424e33d"
+  },
+  "mcu-panel.panel.looking-for-your-magic-cards": "Looking for your Magic Cards…",
+  "@mcu-panel.panel.looking-for-your-magic-cards": {
+    "description": "Status text while the dashboards are read. Max 40 characters.",
+    "source_text": "Looking for your Magic Cards…",
+    "x-max-length": 40,
+    "x-source-hash": "23af3ec6"
   },
   "mcu-panel.panel.lovelace-card-helpers-are-unavailable": "Lovelace card helpers are unavailable until a dashboard has been opened.",
   "@mcu-panel.panel.lovelace-card-helpers-are-unavailable": {
@@ -39546,12 +40164,44 @@
     "x-max-length": 175,
     "x-source-hash": "ecaa55e6"
   },
+  "mcu-panel.panel.making-the-picture": "Making the picture…",
+  "@mcu-panel.panel.making-the-picture": {
+    "description": "Status text while the picture is made. Max 30 characters.",
+    "source_text": "Making the picture…",
+    "x-max-length": 30,
+    "x-source-hash": "608e07ed"
+  },
+  "mcu-panel.panel.modes": "Modes",
+  "@mcu-panel.panel.modes": {
+    "description": "Label of the field that tells whether a theme has light and dark modes. Max 15 characters.",
+    "source_text": "Modes",
+    "x-max-length": 15,
+    "x-source-hash": "e9c29ff5"
+  },
+  "mcu-panel.panel.modified-only": "Modified only",
+  "@mcu-panel.panel.modified-only": {
+    "description": "Switch in the details panel that shows only the fields you changed. Max 25 characters.",
+    "source_text": "Modified only",
+    "x-max-length": 25,
+    "x-source-hash": "d5f0ab19"
+  },
   "mcu-panel.panel.n-linked-cards": "{n, plural, one {# linked card} other {# linked cards}}",
   "@mcu-panel.panel.n-linked-cards": {
     "description": "Part of the second line of a template row: how many cards use the template. {n}: How many cards use the template. Max 30 characters.",
     "source_text": "{n, plural, one {# linked card} other {# linked cards}}",
     "x-max-length": 30,
     "x-source-hash": "72f415cb",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "mcu-panel.panel.n-variables": "{n, plural, one {# variable} other {# variables}}",
+  "@mcu-panel.panel.n-variables": {
+    "description": "Number of variables in a theme, in its row and details. {n}: How many variables the theme sets. Max 25 characters.",
+    "source_text": "{n, plural, one {# variable} other {# variables}}",
+    "x-max-length": 25,
+    "x-source-hash": "f9d82f0c",
     "x-plural": [
       "one",
       "other"
@@ -39585,6 +40235,13 @@
     "x-max-length": 30,
     "x-source-hash": "f83a4bc1"
   },
+  "mcu-panel.panel.name-preview": "{name} preview",
+  "@mcu-panel.panel.name-preview": {
+    "description": "Screen reader name of the item picture in the inspector. {name} is the item name. {name}: The value that replaces name in the text. Max 40 characters.",
+    "source_text": "{name} preview",
+    "x-max-length": 40,
+    "x-source-hash": "6a434cf4"
+  },
   "mcu-panel.panel.new-template": "New template",
   "@mcu-panel.panel.new-template": {
     "description": "Primary button above the template list, and the dialog title until the new template has a name. Max 24 characters.",
@@ -39599,6 +40256,20 @@
     "x-max-length": 30,
     "x-source-hash": "0a05447d"
   },
+  "mcu-panel.panel.no-animations-match-search": "No animations match your search.",
+  "@mcu-panel.panel.no-animations-match-search": {
+    "description": "Message under the search box when no animation matches. Max 50 characters.",
+    "source_text": "No animations match your search.",
+    "x-max-length": 50,
+    "x-source-hash": "bf38ebcb"
+  },
+  "mcu-panel.panel.no-animations-saved-yet": "No animations saved yet",
+  "@mcu-panel.panel.no-animations-saved-yet": {
+    "description": "Message in place of the animation list when there are no animations. Max 40 characters.",
+    "source_text": "No animations saved yet",
+    "x-max-length": 40,
+    "x-source-hash": "d1388672"
+  },
   "mcu-panel.panel.no-card-type-available-neither-the": "No card type available — neither the config nor the template carries a `type`.",
   "@mcu-panel.panel.no-card-type-available-neither-the": {
     "description": "Error in the template preview when the card has no type to draw. `type` is the config key and stays as written. Max 125 characters.",
@@ -39606,12 +40277,40 @@
     "x-max-length": 125,
     "x-source-hash": "4e67d440"
   },
+  "mcu-panel.panel.no-cards-match-your-search": "No cards match your search.",
+  "@mcu-panel.panel.no-cards-match-your-search": {
+    "description": "Shown in place of the card list on the Forum shot tab when the search matches no card. Max 80 characters.",
+    "source_text": "No cards match your search.",
+    "x-max-length": 80,
+    "x-source-hash": "df2d1a4f"
+  },
+  "mcu-panel.panel.no-changed-fields-yet": "No changed fields yet.",
+  "@mcu-panel.panel.no-changed-fields-yet": {
+    "description": "Shown in the details panel when Modified only is on and nothing has changed. Max 40 characters.",
+    "source_text": "No changed fields yet.",
+    "x-max-length": 40,
+    "x-source-hash": "d94a7e00"
+  },
   "mcu-panel.panel.no-config-to-preview": "No config to preview.",
   "@mcu-panel.panel.no-config-to-preview": {
     "description": "Message in the template preview when the template has no card settings to show. Max 35 characters.",
     "source_text": "No config to preview.",
     "x-max-length": 35,
     "x-source-hash": "2280220b"
+  },
+  "mcu-panel.panel.no-magic-cards-found": "No Magic Cards were found on your dashboards.",
+  "@mcu-panel.panel.no-magic-cards-found": {
+    "description": "Empty state when no dashboard holds a Magic Card. Max 60 characters.",
+    "source_text": "No Magic Cards were found on your dashboards.",
+    "x-max-length": 60,
+    "x-source-hash": "db9cdd82"
+  },
+  "mcu-panel.panel.no-preview-available": "No preview available",
+  "@mcu-panel.panel.no-preview-available": {
+    "description": "Shown in the inspector Preview group when an item has no picture. Max 30 characters.",
+    "source_text": "No preview available",
+    "x-max-length": 30,
+    "x-source-hash": "e5c083cf"
   },
   "mcu-panel.panel.no-templates-match-search": "No templates match your search.",
   "@mcu-panel.panel.no-templates-match-search": {
@@ -39626,6 +40325,48 @@
     "source_text": "No templates saved yet.",
     "x-max-length": 40,
     "x-source-hash": "6d4c6b7c"
+  },
+  "mcu-panel.panel.no-themes-match-search": "No themes match your search.",
+  "@mcu-panel.panel.no-themes-match-search": {
+    "description": "Message under the search box when no theme matches. Max 50 characters.",
+    "source_text": "No themes match your search.",
+    "x-max-length": 50,
+    "x-source-hash": "32c5f0cd"
+  },
+  "mcu-panel.panel.no-themes-saved-yet": "No themes saved yet",
+  "@mcu-panel.panel.no-themes-saved-yet": {
+    "description": "Message in place of the theme list when there are no theme files. Max 40 characters.",
+    "source_text": "No themes saved yet",
+    "x-max-length": 40,
+    "x-source-hash": "fb75ab71"
+  },
+  "mcu-panel.panel.nothing-selected": "Nothing selected",
+  "@mcu-panel.panel.nothing-selected": {
+    "description": "Title of the details panel while no item is picked. Max 30 characters.",
+    "source_text": "Nothing selected",
+    "x-max-length": 30,
+    "x-source-hash": "f8c10424"
+  },
+  "mcu-panel.panel.notice-remote-placeholder": "A picture from outside Home Assistant was replaced by a placeholder, so no other server was contacted. Your card may look different on your dashboard.",
+  "@mcu-panel.panel.notice-remote-placeholder": {
+    "description": "Notice under the preview when an image from another server was left out. Max 170 characters.",
+    "source_text": "A picture from outside Home Assistant was replaced by a placeholder, so no other server was contacted. Your card may look different on your dashboard.",
+    "x-max-length": 170,
+    "x-source-hash": "4d773277"
+  },
+  "mcu-panel.panel.notice-remote-placeholder-font": "A picture from outside Home Assistant was replaced by a placeholder, and no server was asked for it. Your card may look different on your dashboard.",
+  "@mcu-panel.panel.notice-remote-placeholder-font": {
+    "description": "Notice under the preview of a card that uses fonts from other websites, when an image from another server was left out. Max 170 characters.",
+    "source_text": "A picture from outside Home Assistant was replaced by a placeholder, and no server was asked for it. Your card may look different on your dashboard.",
+    "x-max-length": 170,
+    "x-source-hash": "95051ca3"
+  },
+  "mcu-panel.panel.one-mode": "One mode",
+  "@mcu-panel.panel.one-mode": {
+    "description": "Summary of a theme that has a single mode. Max 20 characters.",
+    "source_text": "One mode",
+    "x-max-length": 20,
+    "x-source-hash": "687e12a9"
   },
   "mcu-panel.panel.only-administrators-can-create-or-change": "Only administrators can create or change images.",
   "@mcu-panel.panel.only-administrators-can-create-or-change": {
@@ -39655,6 +40396,34 @@
     "x-max-length": 35,
     "x-source-hash": "16681a49"
   },
+  "mcu-panel.panel.open-the-animation-in-the-studio-to-play": "Open this animation in the studio to see it play.",
+  "@mcu-panel.panel.open-the-animation-in-the-studio-to-play": {
+    "description": "Hint in the animation preview, which stays still. Max 60 characters.",
+    "source_text": "Open this animation in the studio to see it play.",
+    "x-max-length": 60,
+    "x-source-hash": "15dd4940"
+  },
+  "mcu-panel.panel.path": "Path",
+  "@mcu-panel.panel.path": {
+    "description": "Label of the file path field in the inspector of an image. Max 10 characters.",
+    "source_text": "Path",
+    "x-max-length": 10,
+    "x-source-hash": "62fa5a5b"
+  },
+  "mcu-panel.panel.pick-an-item": "Pick an item",
+  "@mcu-panel.panel.pick-an-item": {
+    "description": "Line under the title of the details panel while no item is picked. Max 30 characters.",
+    "source_text": "Pick an item",
+    "x-max-length": 30,
+    "x-source-hash": "5c4c9834"
+  },
+  "mcu-panel.panel.picture-shows-after-download": "The picture shows here after you press Download.",
+  "@mcu-panel.panel.picture-shows-after-download": {
+    "description": "Placeholder in the preview box of the Forum shot details pane until a picture has been made for the selected card. Max 60 characters.",
+    "source_text": "The picture shows here after you press Download.",
+    "x-max-length": 60,
+    "x-source-hash": "66f0ba32"
+  },
   "mcu-panel.panel.points": "{n, plural, one {# point} other {# points}}",
   "@mcu-panel.panel.points": {
     "description": "Detail line on a shape in the Shapes tab. {n} is how many points the shape has. {n}: The count the text is about. Max 15 characters.",
@@ -39666,12 +40435,47 @@
       "other"
     ]
   },
+  "mcu-panel.panel.preset": "Preset",
+  "@mcu-panel.panel.preset": {
+    "description": "Type line in the inspector for a saved look in the Library tab. Max 15 characters.",
+    "source_text": "Preset",
+    "x-max-length": 15,
+    "x-source-hash": "7252e7ce"
+  },
   "mcu-panel.panel.preview": "Preview",
   "@mcu-panel.panel.preview": {
     "description": "Heading of the right-hand pane of the template window while it only shows the card. Max 15 characters.",
     "source_text": "Preview",
     "x-max-length": 15,
     "x-source-hash": "324b134f"
+  },
+  "mcu-panel.panel.preview-alt": "Preview of the forum shot picture",
+  "@mcu-panel.panel.preview-alt": {
+    "description": "Text alternative of the preview image. Max 40 characters.",
+    "source_text": "Preview of the forum shot picture",
+    "x-max-length": 40,
+    "x-source-hash": "51beebfe"
+  },
+  "mcu-panel.panel.privacy-check": "Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too.",
+  "@mcu-panel.panel.privacy-check": {
+    "description": "Privacy warning shown before the Download button. Max 190 characters.",
+    "source_text": "Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too.",
+    "x-max-length": 190,
+    "x-source-hash": "7be450e3"
+  },
+  "mcu-panel.panel.read-only": "Read only",
+  "@mcu-panel.panel.read-only": {
+    "description": "Tag on a theme row that cannot be edited here. Max 15 characters.",
+    "source_text": "Read only",
+    "x-max-length": 15,
+    "x-source-hash": "8ac76735"
+  },
+  "mcu-panel.panel.remote-asset-lock": "This card loads an image, a web address or another file from outside Home Assistant that cannot be checked. It cannot be used for a forum shot, because making the picture would contact an unchecked server.",
+  "@mcu-panel.panel.remote-asset-lock": {
+    "description": "Notice next to a card that cannot be picked because its settings name something outside Home Assistant. Also the error when the picture is refused for that reason. Max 220 characters.",
+    "source_text": "This card loads an image, a web address or another file from outside Home Assistant that cannot be checked. It cannot be used for a forum shot, because making the picture would contact an unchecked server.",
+    "x-max-length": 220,
+    "x-source-hash": "24f49698"
   },
   "mcu-panel.panel.request-failed": "Request failed",
   "@mcu-panel.panel.request-failed": {
@@ -39680,12 +40484,40 @@
     "x-max-length": 25,
     "x-source-hash": "cfce761b"
   },
+  "mcu-panel.panel.reset": "Reset",
+  "@mcu-panel.panel.reset": {
+    "description": "Button next to a changed field in the details panel that puts back its default. Max 12 characters.",
+    "source_text": "Reset",
+    "x-max-length": 12,
+    "x-source-hash": "daee7606"
+  },
+  "mcu-panel.panel.resize-details": "Resize details",
+  "@mcu-panel.panel.resize-details": {
+    "description": "Accessible name of the draggable divider between the list and the details panel. Max 35 characters.",
+    "source_text": "Resize details",
+    "x-max-length": 35,
+    "x-source-hash": "53196438"
+  },
+  "mcu-panel.panel.row-size": "Row size",
+  "@mcu-panel.panel.row-size": {
+    "description": "Accessible name of the group of buttons that make the list rows smaller or larger. Max 20 characters.",
+    "source_text": "Row size",
+    "x-max-length": 20,
+    "x-source-hash": "38415e82"
+  },
   "mcu-panel.panel.save": "Save",
   "@mcu-panel.panel.save": {
     "description": "Button in the template editor that saves your changes. Max 10 characters.",
     "source_text": "Save",
     "x-max-length": 10,
     "x-source-hash": "1509f561"
+  },
+  "mcu-panel.panel.saved-to-downloads": "The picture was saved to your downloads.",
+  "@mcu-panel.panel.saved-to-downloads": {
+    "description": "Status text after the picture was saved. Max 50 characters.",
+    "source_text": "The picture was saved to your downloads.",
+    "x-max-length": 50,
+    "x-source-hash": "bc4f343c"
   },
   "mcu-panel.panel.saved-to-the-library-cards-with-their": "Saved to the library. Cards with their own copy of this shape keep it. To use this version in such a card, pick the shape again under My shapes in the card editor.",
   "@mcu-panel.panel.saved-to-the-library-cards-with-their": {
@@ -39701,12 +40533,33 @@
     "x-max-length": 20,
     "x-source-hash": "23e39291"
   },
+  "mcu-panel.panel.search-animations": "Search animations",
+  "@mcu-panel.panel.search-animations": {
+    "description": "Label of the search box above the animation list on the Animations tab. Max 30 characters.",
+    "source_text": "Search animations",
+    "x-max-length": 30,
+    "x-source-hash": "15159e54"
+  },
+  "mcu-panel.panel.search-cards": "Search cards",
+  "@mcu-panel.panel.search-cards": {
+    "description": "Label of the search box above the card list on the Forum shot tab. It filters by card, dashboard or view name. Max 30 characters.",
+    "source_text": "Search cards",
+    "x-max-length": 30,
+    "x-source-hash": "8d0b0964"
+  },
   "mcu-panel.panel.search-templates": "Search templates",
   "@mcu-panel.panel.search-templates": {
     "description": "Label of the search field above the templates table. It filters rows by name, description or card type. Max 30 characters.",
     "source_text": "Search templates",
     "x-max-length": 30,
     "x-source-hash": "04b9835b"
+  },
+  "mcu-panel.panel.search-themes": "Search themes",
+  "@mcu-panel.panel.search-themes": {
+    "description": "Label of the search box above the theme list on the Themes tab. Max 30 characters.",
+    "source_text": "Search themes",
+    "x-max-length": 30,
+    "x-source-hash": "22da14c0"
   },
   "mcu-panel.panel.select-name": "Select {name}",
   "@mcu-panel.panel.select-name": {
@@ -39715,12 +40568,40 @@
     "x-max-length": 60,
     "x-source-hash": "cbe2f067"
   },
+  "mcu-panel.panel.shape": "Shape",
+  "@mcu-panel.panel.shape": {
+    "description": "Type line in the inspector for a saved shape. Max 15 characters.",
+    "source_text": "Shape",
+    "x-max-length": 15,
+    "x-source-hash": "e0e49270"
+  },
   "mcu-panel.panel.shapes": "Shapes",
   "@mcu-panel.panel.shapes": {
     "description": "Label of the Shapes tab in the panel tab bar. Max 10 characters.",
     "source_text": "Shapes",
     "x-max-length": 10,
     "x-source-hash": "75e8028a"
+  },
+  "mcu-panel.panel.show-the-quiet-living-and-glow-looks": "Show the Quiet, Living and Glow looks of animated icons, one row each",
+  "@mcu-panel.panel.show-the-quiet-living-and-glow-looks": {
+    "description": "Checkbox: the picture gets three rows, one per look of the animated icons. Max 90 characters.",
+    "source_text": "Show the Quiet, Living and Glow looks of animated icons, one row each",
+    "x-max-length": 90,
+    "x-source-hash": "a44c2916"
+  },
+  "mcu-panel.panel.smaller-rows": "Smaller rows",
+  "@mcu-panel.panel.smaller-rows": {
+    "description": "Accessible name of the button that makes the list rows smaller. Max 20 characters.",
+    "source_text": "Smaller rows",
+    "x-max-length": 20,
+    "x-source-hash": "4826d498"
+  },
+  "mcu-panel.panel.status": "Status",
+  "@mcu-panel.panel.status": {
+    "description": "Column header of the card list: whether the card can be used. Max 20 characters.",
+    "source_text": "Status",
+    "x-max-length": 20,
+    "x-source-hash": "920e413c"
   },
   "mcu-panel.panel.template": "Template",
   "@mcu-panel.panel.template": {
@@ -39834,12 +40715,40 @@
     "x-max-length": 55,
     "x-source-hash": "d7c3ca43"
   },
+  "mcu-panel.panel.the-theme-could-not-be-deleted": "The theme could not be deleted.",
+  "@mcu-panel.panel.the-theme-could-not-be-deleted": {
+    "description": "Error above the theme list when deleting a theme fails. Max 50 characters.",
+    "source_text": "The theme could not be deleted.",
+    "x-max-length": 50,
+    "x-source-hash": "a2a30632"
+  },
+  "mcu-panel.panel.the-theme-could-not-be-exported": "The theme could not be exported.",
+  "@mcu-panel.panel.the-theme-could-not-be-exported": {
+    "description": "Error above the theme list when exporting a theme fails. Max 50 characters.",
+    "source_text": "The theme could not be exported.",
+    "x-max-length": 50,
+    "x-source-hash": "db0b645c"
+  },
   "mcu-panel.panel.the-theme-editor-could-not-be-loaded-it": "The theme editor could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
   "@mcu-panel.panel.the-theme-editor-could-not-be-loaded-it": {
     "description": "Notice in the Themes tab when the theme editor file is missing. {file} is the name of that file, {version} the lowest Magic Card version that has it. {file}: The value that replaces file in the text. {version}: The value that replaces version in the text. Max 185 characters.",
     "source_text": "The theme editor could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
     "x-max-length": 185,
     "x-source-hash": "beaf6a42"
+  },
+  "mcu-panel.panel.the-theme-list-could-not-be-loaded": "The theme list could not be loaded.",
+  "@mcu-panel.panel.the-theme-list-could-not-be-loaded": {
+    "description": "Error above the theme list when the list of theme files cannot be read. Max 60 characters.",
+    "source_text": "The theme list could not be loaded.",
+    "x-max-length": 60,
+    "x-source-hash": "16fecb1e"
+  },
+  "mcu-panel.panel.theme": "Theme",
+  "@mcu-panel.panel.theme": {
+    "description": "Type shown under the name of the selected theme and heading of its details group. Max 15 characters.",
+    "source_text": "Theme",
+    "x-max-length": 15,
+    "x-source-hash": "efb52e71"
   },
   "mcu-panel.panel.themes": "Themes",
   "@mcu-panel.panel.themes": {
@@ -39866,6 +40775,13 @@
       "other"
     ]
   },
+  "mcu-panel.panel.this-theme-is-read-only-copy-it-to-edit": "This theme is read-only. Open it in the studio and save a copy to edit it.",
+  "@mcu-panel.panel.this-theme-is-read-only-copy-it-to-edit": {
+    "description": "Note in the theme details for a theme file that cannot be changed from the panel. Max 90 characters.",
+    "source_text": "This theme is read-only. Open it in the studio and save a copy to edit it.",
+    "x-max-length": 90,
+    "x-source-hash": "6db9fa47"
+  },
   "mcu-panel.panel.try-again": "Try again",
   "@mcu-panel.panel.try-again": {
     "description": "Button under a load error in the Animations, Themes, Library, Shapes, Images and Icons tabs that tries the load again. Max 20 characters.",
@@ -39879,6 +40795,27 @@
     "source_text": "Updated {date}",
     "x-max-length": 40,
     "x-source-hash": "328a4d4c"
+  },
+  "mcu-panel.panel.variables": "Variables",
+  "@mcu-panel.panel.variables": {
+    "description": "Label of the field that shows how many variables a theme sets. Max 15 characters.",
+    "source_text": "Variables",
+    "x-max-length": 15,
+    "x-source-hash": "02db55ba"
+  },
+  "mcu-panel.panel.view": "View",
+  "@mcu-panel.panel.view": {
+    "description": "Column header of the card list: the view (tab) of the dashboard a card is on. Max 20 characters.",
+    "source_text": "View",
+    "x-max-length": 20,
+    "x-source-hash": "dcc839a4"
+  },
+  "mcu-panel.panel.view-box-w-h": "View box {w} × {h}",
+  "@mcu-panel.panel.view-box-w-h": {
+    "description": "Caption under the item preview in the inspector. {w} and {h} are the width and height of the SVG view box. {h}: The view box height. {w}: The view box width. Max 30 characters.",
+    "source_text": "View box {w} × {h}",
+    "x-max-length": 30,
+    "x-source-hash": "6bfc63a8"
   },
   "modules-extra.camera-view.no-camera": "No camera",
   "@modules-extra.camera-view.no-camera": {
@@ -41409,6 +42346,48 @@
     "x-max-length": 55,
     "x-source-hash": "9cb6d703"
   },
+  "shape-editor.mc-shape-studio.frame-close": "Close inspector",
+  "@shape-editor.mc-shape-studio.frame-close": {
+    "description": "Accessible name of the button that closes the inspector drawer or the settings sheet. Max 20 characters.",
+    "source_text": "Close inspector",
+    "x-max-length": 20,
+    "x-source-hash": "5ac712f4"
+  },
+  "shape-editor.mc-shape-studio.frame-modified-only": "Modified only",
+  "@shape-editor.mc-shape-studio.frame-modified-only": {
+    "description": "Label of the switch that shows only the shape settings that differ from the shape as it was opened. Max 18 characters.",
+    "source_text": "Modified only",
+    "x-max-length": 18,
+    "x-source-hash": "d5f0ab19"
+  },
+  "shape-editor.mc-shape-studio.frame-none-modified": "No changed fields yet.",
+  "@shape-editor.mc-shape-studio.frame-none-modified": {
+    "description": "Shown in the inspector when Modified only is on and no setting has changed. Max 30 characters.",
+    "source_text": "No changed fields yet.",
+    "x-max-length": 30,
+    "x-source-hash": "d94a7e00"
+  },
+  "shape-editor.mc-shape-studio.frame-pin": "Keep inspector open",
+  "@shape-editor.mc-shape-studio.frame-pin": {
+    "description": "Accessible name of the pin button that keeps the inspector drawer open while you work on the stage. Max 28 characters.",
+    "source_text": "Keep inspector open",
+    "x-max-length": 28,
+    "x-source-hash": "a35fcfe5"
+  },
+  "shape-editor.mc-shape-studio.frame-settings": "Settings",
+  "@shape-editor.mc-shape-studio.frame-settings": {
+    "description": "Accessible name of the bar button that opens the inspector as a full-height sheet on a narrow window. Max 14 characters.",
+    "source_text": "Settings",
+    "x-max-length": 14,
+    "x-source-hash": "74a883a0"
+  },
+  "shape-editor.mc-shape-studio.frame-zoom": "Zoom",
+  "@shape-editor.mc-shape-studio.frame-zoom": {
+    "description": "Accessible name of the group of zoom buttons over the shape canvas. Max 10 characters.",
+    "source_text": "Zoom",
+    "x-max-length": 10,
+    "x-source-hash": "509c517e"
+  },
   "shape-editor.mc-shape-studio.free-shape": "Free shape",
   "@shape-editor.mc-shape-studio.free-shape": {
     "description": "Name of the shape type where every point is edited by hand. Also a segmented option label. Max 20 characters.",
@@ -42524,6 +43503,27 @@
     "source_text": "Y, from the top edge",
     "x-max-length": 35,
     "x-source-hash": "76233527"
+  },
+  "shape-editor.mc-shape-studio.zoom-fit": "Fit",
+  "@shape-editor.mc-shape-studio.zoom-fit": {
+    "description": "Accessible name of the button that fits the whole shape in the canvas. Max 10 characters.",
+    "source_text": "Fit",
+    "x-max-length": 10,
+    "x-source-hash": "9f872ed4"
+  },
+  "shape-editor.mc-shape-studio.zoom-in": "Zoom in",
+  "@shape-editor.mc-shape-studio.zoom-in": {
+    "description": "Accessible name of the button that zooms the shape canvas in. Max 14 characters.",
+    "source_text": "Zoom in",
+    "x-max-length": 14,
+    "x-source-hash": "0e47f09a"
+  },
+  "shape-editor.mc-shape-studio.zoom-out": "Zoom out",
+  "@shape-editor.mc-shape-studio.zoom-out": {
+    "description": "Accessible name of the button that zooms the shape canvas out. Max 14 characters.",
+    "source_text": "Zoom out",
+    "x-max-length": 14,
+    "x-source-hash": "bc7b631a"
   },
   "shape-editor.names.a-quarter-circle": "A quarter circle.",
   "@shape-editor.names.a-quarter-circle": {
@@ -45873,6 +46873,13 @@
     "x-max-length": 10,
     "x-source-hash": "8aa318eb"
   },
+  "svg-editor.views.inspector": "Inspector",
+  "@svg-editor.views.inspector": {
+    "description": "Name of the Inspector tab in the image editor drawer, and of the drawer itself. Max 15 characters.",
+    "source_text": "Inspector",
+    "x-max-length": 15,
+    "x-source-hash": "da188e3b"
+  },
   "svg-editor.views.inspector-panel": "Inspector panel",
   "@svg-editor.views.inspector-panel": {
     "description": "Accessible name of the side panel with properties of the selected shape. Max 25 characters.",
@@ -45914,6 +46921,13 @@
     "source_text": "Keep editing",
     "x-max-length": 20,
     "x-source-hash": "e76fd2ad"
+  },
+  "svg-editor.views.keep-the-inspector-open": "Keep inspector open",
+  "@svg-editor.views.keep-the-inspector-open": {
+    "description": "Accessible name of the pin button in the image editor drawer; pressed means the drawer stays open while you work on the canvas. Max 30 characters.",
+    "source_text": "Keep inspector open",
+    "x-max-length": 30,
+    "x-source-hash": "a35fcfe5"
   },
   "svg-editor.views.keep-your-own-icons-for-every-dashboard": "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.",
   "@svg-editor.views.keep-your-own-icons-for-every-dashboard": {
@@ -46073,6 +47087,13 @@
     "x-max-length": 15,
     "x-source-hash": "1c9fcada"
   },
+  "svg-editor.views.modified-only": "Modified only",
+  "@svg-editor.views.modified-only": {
+    "description": "Label of the switch that shows only the layer settings that differ from their default. Max 20 characters.",
+    "source_text": "Modified only",
+    "x-max-length": 20,
+    "x-source-hash": "d5f0ab19"
+  },
   "svg-editor.views.move-alt-up-down-in-or-out-of-a-group": "Move: Alt+Up / Down. In or out of a group: Alt+Shift+Right / Left.",
   "@svg-editor.views.move-alt-up-down-in-or-out-of-a-group": {
     "description": "Keyboard help for reordering layers. Alt, Shift and the arrow key names stay as written. Max 110 characters.",
@@ -46177,6 +47198,13 @@
     "source_text": "Nothing here yet",
     "x-max-length": 30,
     "x-source-hash": "49abaf80"
+  },
+  "svg-editor.views.nothing-modified": "Nothing here differs from the defaults.",
+  "@svg-editor.views.nothing-modified": {
+    "description": "Shown in the image editor drawer when Modified only is on and no setting of the layer differs from its default. Max 50 characters.",
+    "source_text": "Nothing here differs from the defaults.",
+    "x-max-length": 50,
+    "x-source-hash": "b23be145"
   },
   "svg-editor.views.nothing-selected-pick-a-layer-or-click-a": "Nothing selected. Pick a layer, or click a shape.",
   "@svg-editor.views.nothing-selected-pick-a-layer-or-click-a": {
@@ -46485,6 +47513,13 @@
     "source_text": "Selected point",
     "x-max-length": 25,
     "x-source-hash": "53f29419"
+  },
+  "svg-editor.views.settings": "Settings",
+  "@svg-editor.views.settings": {
+    "description": "Button in the image editor bar on a narrow screen that opens the Inspector and Layers sheet. Max 15 characters.",
+    "source_text": "Settings",
+    "x-max-length": 15,
+    "x-source-hash": "74a883a0"
   },
   "svg-editor.views.shape-actions": "Shape actions",
   "@svg-editor.views.shape-actions": {
@@ -46882,6 +47917,13 @@
     "x-max-length": 30,
     "x-source-hash": "68edf118"
   },
+  "svg-editor.views.w-x-h-units": "{w} x {h} units",
+  "@svg-editor.views.w-x-h-units": {
+    "description": "Size of the image canvas in drawing units, shown under the canvas and in the Inspector. {w} is the width and {h} the height, as numbers. {h}: The canvas height in drawing units. {w}: The canvas width in drawing units. Max 30 characters.",
+    "source_text": "{w} x {h} units",
+    "x-max-length": 30,
+    "x-source-hash": "86219fc5"
+  },
   "svg-editor.views.what-do-you-want-to-start-from": "What do you want to start from?",
   "@svg-editor.views.what-do-you-want-to-start-from": {
     "description": "Heading of the start screen in the icon editor. Asks the user to pick a starting point, such as blank, a file or the library. Max 50 characters.",
@@ -46923,6 +47965,13 @@
     "source_text": "Y",
     "x-max-length": 5,
     "x-source-hash": "18f5384d"
+  },
+  "svg-editor.views.zoom": "Zoom",
+  "@svg-editor.views.zoom": {
+    "description": "Accessible name of the zoom controls group (zoom out, percentage, zoom in, fit) in the image editor. Max 15 characters.",
+    "source_text": "Zoom",
+    "x-max-length": 15,
+    "x-source-hash": "509c517e"
   },
   "svg-editor.views.zoom-in": "Zoom in",
   "@svg-editor.views.zoom-in": {
@@ -47765,6 +48814,34 @@
       "one",
       "other"
     ]
+  },
+  "theme-editor.editor-view.frame-close": "Close variables",
+  "@theme-editor.editor-view.frame-close": {
+    "description": "Accessible name of the button that closes the variables drawer or the variables sheet. Max 20 characters.",
+    "source_text": "Close variables",
+    "x-max-length": 20,
+    "x-source-hash": "812b7f31"
+  },
+  "theme-editor.editor-view.frame-none-modified": "No variables changed yet.",
+  "@theme-editor.editor-view.frame-none-modified": {
+    "description": "Shown in the variables drawer when Modified only is on and the theme sets no variable. Max 40 characters.",
+    "source_text": "No variables changed yet.",
+    "x-max-length": 40,
+    "x-source-hash": "78c3ab0b"
+  },
+  "theme-editor.editor-view.frame-pin": "Keep variables open",
+  "@theme-editor.editor-view.frame-pin": {
+    "description": "Accessible name of the pin button that keeps the variables drawer open while you work on the preview. Max 28 characters.",
+    "source_text": "Keep variables open",
+    "x-max-length": 28,
+    "x-source-hash": "0c80d837"
+  },
+  "theme-editor.editor-view.frame-zoom": "Zoom",
+  "@theme-editor.editor-view.frame-zoom": {
+    "description": "Accessible name of the zoom control group on the preview stage. Max 10 characters.",
+    "source_text": "Zoom",
+    "x-max-length": 10,
+    "x-source-hash": "509c517e"
   },
   "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.",
   "@theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
@@ -49509,6 +50586,20 @@
     "x-max-length": 215,
     "x-source-hash": "287e051b"
   },
+  "theme-editor.legal.english-prevails": "This is a translation. If it differs from the English text, the English text prevails.",
+  "@theme-editor.legal.english-prevails": {
+    "description": "Note shown next to a legal text that is translated; the English text is the one that counts. Max 90 characters.",
+    "source_text": "This is a translation. If it differs from the English text, the English text prevails.",
+    "x-max-length": 90,
+    "x-source-hash": "c8c30b34"
+  },
+  "theme-editor.legal.show-english": "Show English",
+  "@theme-editor.legal.show-english": {
+    "description": "Action that replaces a translated legal text with the English original. Max 20 characters.",
+    "source_text": "Show English",
+    "x-max-length": 20,
+    "x-source-hash": "f827a651"
+  },
   "theme-editor.lips.got-it": "Got it",
   "@theme-editor.lips.got-it": {
     "description": "Button that dismisses the one-time hint about the side panel tabs. Means understood. Max 10 characters.",
@@ -49551,12 +50642,12 @@
     "x-max-length": 35,
     "x-source-hash": "7a362b14"
   },
-  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
+  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": "The {noun} panel is hidden, as you left it. Use the button in the bar to show it.",
   "@theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
     "description": "Hint at the screen edge. {noun} is the panel name, such as 'variables' or 'preview'. {noun}: The value that replaces noun in the text. Max 130 characters.",
-    "source_text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
+    "source_text": "The {noun} panel is hidden, as you left it. Use the button in the bar to show it.",
     "x-max-length": 130,
-    "x-source-hash": "cca8a786"
+    "x-source-hash": "fc9c41e5"
   },
   "theme-editor.lips.variables": "variables",
   "@theme-editor.lips.variables": {
