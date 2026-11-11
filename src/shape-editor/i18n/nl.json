@@ -335,6 +335,36 @@
     "text": "Volgt de kortste zijde van de kaart.",
     "hash": "9cb6d703"
   },
+  "shape-editor.mc-shape-studio.frame-close": {
+    "text": "Inspecteur sluiten",
+    "note": "Accessible name of the button that closes the inspector drawer or the settings sheet.",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.frame-modified-only": {
+    "text": "Alleen gewijzigd",
+    "note": "Label of the switch that shows only the shape settings that differ from the shape as it was opened.",
+    "max": 18
+  },
+  "shape-editor.mc-shape-studio.frame-none-modified": {
+    "text": "Nog geen gewijzigde velden.",
+    "note": "Shown in the inspector when Modified only is on and no setting has changed.",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.frame-pin": {
+    "text": "Houd inspecteur open",
+    "note": "Accessible name of the pin button that keeps the inspector drawer open while you work on the stage.",
+    "max": 28
+  },
+  "shape-editor.mc-shape-studio.frame-settings": {
+    "text": "Instellingen",
+    "note": "Accessible name of the bar button that opens the inspector as a full-height sheet on a narrow window.",
+    "max": 14
+  },
+  "shape-editor.mc-shape-studio.frame-zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the group of zoom buttons over the shape canvas.",
+    "max": 10
+  },
   "shape-editor.mc-shape-studio.free-shape": {
     "text": "Vrije vorm",
     "hash": "9361c422"
@@ -958,6 +988,21 @@
   "shape-editor.mc-shape-studio.y-from-the-top-edge": {
     "text": "Y, vanaf de bovenrand",
     "hash": "76233527"
+  },
+  "shape-editor.mc-shape-studio.zoom-fit": {
+    "text": "Passend",
+    "note": "Accessible name of the button that fits the whole shape in the canvas.",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.zoom-in": {
+    "text": "Inzoomen",
+    "note": "Accessible name of the button that zooms the shape canvas in.",
+    "max": 14
+  },
+  "shape-editor.mc-shape-studio.zoom-out": {
+    "text": "Uitzoomen",
+    "note": "Accessible name of the button that zooms the shape canvas out.",
+    "max": 14
   },
   "shape-editor.names.a-quarter-circle": {
     "text": "Een kwartcirkel.",

@@ -30,8 +30,8 @@ import { setI18nLocale } from '../i18n/runtime';
 import { t, locale } from './i18n';
 import { PanelLips } from '../ui-kit/controllers/panel-lips';
 import { DirectionController } from '../ui-kit/controllers/direction';
-import { ScrollbarWatch } from '../ui-kit/controllers/scrollbar-width';
-import { lipSpecs, lipStrings, lipTokens } from './lips';
+import { FRAME_WIDE_MIN_PX, UI_STUDIO_FRAME_TAG, type FrameMeasure, type StudioFrameElement, type StudioFrameStrings } from '../contracts/studio-frame';
+import { lipSpecs, lipStrings } from './lips';
 import { BOX, CORNER, DIST, EDIT_AT, FAIL, HANDLE, OPS, presetName, PRIM, SAMPLE, SHORT, SHORTCUTS, SIDE, SIZE, STARTER, TYPE, TYPE_HELP } from './names';
 import { studioStyles } from './styles';
 import { btn, num, r1, seg } from './ui';
@@ -194,11 +194,20 @@ export class McShapeStudio extends LitElement {
   private back?: HTMLElement;
   private roving = new RovingFocus({ items: '.pk', orientation: 'both' });
   /** Panel lips: hide and show the side panel and the inspector, remembered per device; Ctrl/Cmd + backslash toggles the column panels. */
-  private readonly lips = new PanelLips(this, { editor: 'shape-studio', panels: lipSpecs(), strings: lipStrings('en') });
+  private readonly lips = new PanelLips(this, { editor: 'shape-studio', keys: 'manual', panels: lipSpecs(), strings: lipStrings('en') });
   private lipLocale = 'en';
-  /** Width of the scrollbar of the side panel, whose inner edge carries its lip. */
-  private readonly bar = new ScrollbarWatch(this);
-  private barSig = '';
+  /** The studio is narrower than the frame's wide width: the side panel is a sheet and the inspector drawer a full-height sheet. */
+  @state() narrowFrame = false;
+  /** The drawer is open (mirrors the frame). */
+  @state() drawerOpen = false;
+  /** Modified only is on: the drawer shows the groups that differ from the shape as it was opened. */
+  @state() modOnly = false;
+  /** The canvas zoom in CSS px per frame unit and the zoom that fits the frame; their ratio is the zoom shown. */
+  @state() viewZoom = 0;
+  private fitZoom = 0;
+  private frameKey = '';
+  private drawerInit = false;
+  private sheetWas = false;
 
   // ── lifecycle ──
 
@@ -254,8 +263,8 @@ export class McShapeStudio extends LitElement {
       this.lipLocale = language;
       this.lips.setPanels(lipSpecs(), lipStrings(language));
     }
-    // a panel has a lip only while it is a column beside the stage; the side panel is a sheet in the compact layout
-    this.lips.columns({ side: this.ready && (this.layout === 'wide' || this.layout === 'mid'), inspector: this.ready && this.layout !== 'stacked' });
+    // the side panel has a lip only while it is a column beside the stage; below the frame's wide width it is a sheet
+    this.lips.columns({ side: this.ready && !this.narrowFrame });
     // the host feeds our own changes back through `value`: only something else (or a new preset) reopens
     const foreign = this.host !== 'mcu' && changed.has('value') && !!this.value && JSON.stringify(this.value.shape_options) !== this.sent;
     if (this.ready && this.opened && (foreign || changed.has('preset'))) this.open();
@@ -283,11 +292,29 @@ export class McShapeStudio extends LitElement {
       this.shadowRoot?.querySelector<HTMLElement>('.left [role=tab][aria-selected=true]')?.focus();
     }
     this.dataset.layout = this.layout;
-    const barSig = `${this.ready}|${this.layout}|${this.sheet}|${this.side}|${this.lips.state('side')}|${this.lips.state('inspector')}`;
-    if (barSig !== this.barSig) {
-      this.barSig = barSig;
-      this.bar.watch(this.shadowRoot?.querySelector<HTMLElement>('.left') ?? null, this.shadowRoot?.querySelector<HTMLElement>('.work') ?? null);
+    // a frame wider than the push breakpoint shows its drawer from the start; a narrower one starts on the stage
+    if (this.ready && !this.drawerInit) {
+      this.drawerInit = true;
+      if (!this.narrowFrame) this.frame()?.openDrawer(null, 'selection');
     }
+    // a new frame size is fitted by the canvas, which reports the fit zoom
+    const key = `${this.doc.mode}|${this.size.w}|${this.size.h}`;
+    if (key !== this.frameKey) {
+      this.frameKey = key;
+      this.fitZoom = 0;
+    }
+    if (!this.fitZoom && this.doc.mode === 'path' && this.canvas === 'ready') {
+      const cv = this.canvasEl() as (HTMLElement & { updateComplete?: Promise<unknown>; view: { zoom: number } }) | null;
+      void Promise.resolve(cv?.updateComplete).then(() => {
+        const z = cv?.view.zoom ?? 0;
+        if (!this.fitZoom && z > 0) {
+          this.fitZoom = z;
+          this.viewZoom = z;
+        }
+      });
+    }
+    if (this.sheet && !this.sheetWas) this.shadowRoot?.querySelector<HTMLElement>('.side-close')?.focus();
+    this.sheetWas = this.sheet;
     const sw = this.shadowRoot?.querySelector('.stage')?.clientWidth ?? 0;
     if (sw && sw !== this.stageW) this.stageW = sw;
     // a window opens the first time it renders; it closes through close() so focus goes back to its opener
@@ -300,7 +327,8 @@ export class McShapeStudio extends LitElement {
   private measure(): void {
     const w = this.getBoundingClientRect().width || (typeof innerWidth === 'number' ? innerWidth : 1280);
     this.layout = w > 1180 ? 'wide' : w > 900 ? 'mid' : w > 640 ? 'compact' : 'stacked';
-    if (this.layout !== 'compact') this.sheet = false;
+    this.narrowFrame = w < FRAME_WIDE_MIN_PX;
+    if (!this.narrowFrame) this.sheet = false;
   }
 
   // ── opening ──
@@ -512,6 +540,11 @@ export class McShapeStudio extends LitElement {
   // ── keys ──
 
   private onKey = (e: KeyboardEvent): void => {
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash')) {
+      e.preventDefault();
+      if (!e.repeat) this.toggleDrawer();
+      return;
+    }
     if (e.key === 'Escape') {
       // the canvas ends a drag and clears its selection first (and stops the event then); what reaches here is ours
       if (this.sheet) this.sheet = false;
@@ -1308,6 +1341,170 @@ export class McShapeStudio extends LitElement {
     this.shadowRoot?.querySelector<HTMLElement>(sel)?.focus();
   }
 
+  // ── studio frame ──
+
+  private frame(): StudioFrameElement | null {
+    return this.shadowRoot?.querySelector<StudioFrameElement>(UI_STUDIO_FRAME_TAG) ?? null;
+  }
+
+  /** The scheme follows the Home Assistant theme, never the system setting. */
+  private get scheme(): 'light' | 'dark' {
+    return (this.hass as unknown as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode ? 'dark' : 'light';
+  }
+
+  private strings?: { language: string; value: StudioFrameStrings };
+
+  /** The frame's words in the studio's language (one object per language, so the frame re-renders only when it changes). */
+  private frameStrings(): StudioFrameStrings {
+    const language = locale();
+    if (this.strings?.language !== language) {
+      this.strings = {
+        language,
+        value: {
+          pin: t('shape-editor.mc-shape-studio.frame-pin'),
+          modifiedOnly: t('shape-editor.mc-shape-studio.frame-modified-only'),
+          noneModified: t('shape-editor.mc-shape-studio.frame-none-modified'),
+          close: t('shape-editor.mc-shape-studio.frame-close'),
+          drawer: t('shape-editor.mc-shape-studio.inspector-panel'),
+          zoom: t('shape-editor.mc-shape-studio.frame-zoom'),
+        },
+      };
+    }
+    return this.strings.value;
+  }
+
+  /** Names what the drawer shows: the selected point, else the shape. */
+  private selectionLabel(): string {
+    if (this.doc.mode === 'path' && this.pointSel !== undefined) return t('shape-editor.mc-shape-studio.point-i-of-c', { i: this.pointSel + 1, c: this.doc.points.length });
+    return t('shape-editor.mc-shape-studio.shape');
+  }
+
+  private openDrawer(opener?: HTMLElement | null): void {
+    this.frame()?.openDrawer(opener ?? (this.shadowRoot?.activeElement as HTMLElement | null), 'user');
+  }
+
+  private toggleDrawer(opener?: HTMLElement | null): void {
+    const f = this.frame();
+    if (!f) return;
+    if (f.drawerOpen) f.closeDrawer('user');
+    else this.openDrawer(opener);
+  }
+
+  private onFrameDrawer = (e: Event): void => {
+    this.drawerOpen = (e as CustomEvent<{ open: boolean }>).detail.open;
+  };
+
+  private onFrameModified = (e: Event): void => {
+    this.modOnly = (e as CustomEvent<{ on: boolean }>).detail.on;
+  };
+
+  /** A press on the stage (not on its float bar) is work on the drawing: an unpinned drawer closes. */
+  private stageDown = (e: PointerEvent): void => {
+    if (e.composedPath().some((n) => n instanceof Element && n.classList.contains('float'))) return;
+    this.frame()?.stageWork();
+  };
+
+  /** The side panel is a column (wide, unless hidden with its lip) or a sheet opened from the bar (narrow). */
+  get sideShown(): boolean {
+    return this.narrowFrame ? this.sheet : !this.lips.isHidden('side');
+  }
+
+  private toggleSide(): void {
+    if (this.narrowFrame) this.sheet = !this.sheet;
+    else this.lips.toggle('side');
+  }
+
+  /** Which groups of the drawer differ from the shape as it was opened (what Modified only keeps). */
+  private changed(): { shape: boolean; corners: boolean; space: boolean; points: boolean } {
+    const d = this.doc;
+    const i = this.initial;
+    const j = JSON.stringify;
+    return {
+      shape: d.mode !== i.mode || this.size.id !== ROW.id || this.size.w !== ROW.w || this.size.h !== ROW.h,
+      corners: j(d.corners) !== j(i.corners) || d.smoothing !== i.smoothing,
+      space: j(d.extra) !== j(i.extra) || j(d.pad) !== j(i.pad),
+      points: j(d.points) !== j(i.points),
+    };
+  }
+
+  /** Something would show in the drawer while Modified only is on. */
+  private anyModified(): boolean {
+    const c = this.changed();
+    if (this.doc.mode === 'path') return c.shape || c.points || c.space || this.pointSel !== undefined || !!this.pending;
+    return c.shape || c.corners || c.space;
+  }
+
+  private frameObj?: { x: number; y: number; w: number; h: number };
+
+  /** One frame object per size, so a re-render never makes the canvas refit a view the user zoomed. */
+  private canvasFrame(w: number, h: number): { x: number; y: number; w: number; h: number } {
+    if (this.frameObj?.w !== w || this.frameObj.h !== h) this.frameObj = { x: 0, y: 0, w, h };
+    return this.frameObj;
+  }
+
+  private canvasEl(): (HTMLElement & { fit(): void; setView(zoom: number, pan: Pt): void; view: { zoom: number; pan: Pt } }) | null {
+    return this.shadowRoot?.querySelector('mc-path-canvas') ?? null;
+  }
+
+  /** The canvas reports its zoom in CSS px per frame unit; the first report after a new frame is the fit zoom (100 %). */
+  private onPathView = (e: Event): void => {
+    const z = (e as CustomEvent<{ zoom: number }>).detail?.zoom;
+    if (!(z > 0)) return;
+    if (!this.fitZoom) this.fitZoom = z;
+    this.viewZoom = z;
+  };
+
+  private zoomFactor(): number {
+    return this.viewZoom > 0 && this.fitZoom > 0 ? this.viewZoom / this.fitZoom : 1;
+  }
+
+  /** Zoom about the middle of the canvas through its own view maths. */
+  private zoomBy(factor: number): void {
+    const cv = this.canvasEl();
+    if (!cv) return;
+    const mid = [cv.clientWidth / 2, cv.clientHeight / 2];
+    const at = (zoom: number, pan: Pt, k: number): void => cv.setView(zoom, [mid[0] - (mid[0] - pan[0]) * k, mid[1] - (mid[1] - pan[1]) * k] as unknown as Pt);
+    const { zoom, pan } = cv.view;
+    at(zoom * factor, pan, factor);
+    // the canvas limits its zoom: the pan follows the zoom it kept
+    const kept = cv.view.zoom / zoom;
+    if (kept !== factor) at(cv.view.zoom, pan, kept);
+    this.viewZoom = cv.view.zoom;
+  }
+
+  private zoomFit(): void {
+    this.fitZoom = 0;
+    this.canvasEl()?.fit();
+  }
+
+  /** The box of the selected points (the whole outline when none) in frame units, for the frame's callout. */
+  private selectionBox(): FrameMeasure['selection'] {
+    const sel = this.cvSel;
+    if (!sel || this.pending) return null;
+    const all = this.path.anchors;
+    const pts = sel.anchors?.length ? sel.anchors.map((i) => all[i]).filter(Boolean) : all;
+    if (!pts.length) return null;
+    const xs = pts.map((p) => p.x);
+    const ys = pts.map((p) => p.y);
+    const [x, y] = [Math.min(...xs), Math.min(...ys)];
+    return { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y };
+  }
+
+  /** Ruler, grid and callout geometry: the frame in frame units, with the canvas zoom against its fit zoom. */
+  private frameMeasure(): FrameMeasure | null {
+    if (!this.ready) return null;
+    const { w, h } = this.size;
+    if (this.doc.mode === 'path' && this.canvas === 'ready') return { width: w, height: h, grid: this.grid ? GRID : 0, selection: this.selectionBox(), zoom: this.zoomFactor() };
+    const k = this.stageW ? this.stageW / (w + 2 * PAD) : 1;
+    return { width: w, height: h, grid: 0, selection: null, zoom: k > 0 ? k : 1 };
+  }
+
+  /** Zoom out, the zoom shown, zoom in and Fit, while the path canvas is on the stage. */
+  private zoomPill(): TemplateResult | typeof nothing {
+    if (!this.ready || this.doc.mode !== 'path' || this.canvas !== 'ready') return nothing;
+    return html`<div class="zoom-pill" slot="zoom" role="group" aria-label=${t('shape-editor.mc-shape-studio.frame-zoom')}>${button({ label: t('shape-editor.mc-shape-studio.zoom-out'), icon: 'mdi:minus', iconOnly: true, size: 'sm', onClick: () => this.zoomBy(0.8) })}<output>${Math.round(this.zoomFactor() * 100)} %</output>${button({ label: t('shape-editor.mc-shape-studio.zoom-in'), icon: 'mdi:plus', iconOnly: true, size: 'sm', onClick: () => this.zoomBy(1.25) })}${button({ label: t('shape-editor.mc-shape-studio.zoom-fit'), icon: 'mdi:fit-to-screen-outline', iconOnly: true, size: 'sm', onClick: () => this.zoomFit() })}</div>`;
+  }
+
   // ── render ──
 
   // prettier-ignore
@@ -1317,14 +1514,15 @@ export class McShapeStudio extends LitElement {
     return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${title} tabindex="-1" data-layout=${this.layout}>
 <span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(true)}></span>
 ${this.lips.status()}
-<div class="skips">${btn(t('shape-editor.mc-shape-studio.skip-to-canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('shape-editor.mc-shape-studio.skip-to-point-fields'), () => this.focusTo('#fx')) : nothing}${btn(t('shape-editor.mc-shape-studio.skip-to-inspector'), () => void this.lips.reveal('inspector').then(() => this.focusTo('.insp button, .insp input')))}</div>
-${this.top(title)}
-${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check')}</p>${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.boot())}` : t('shape-editor.mc-shape-studio.loading-the-shape-editor')}</div>` : html`<div class="work${this.lips.isHidden('side') ? ' no-side' : ''}${this.lips.isHidden('inspector') ? ' no-insp' : ''}" style=${lipTokens(this.lips.state('side'), this.lips.state('inspector'), this.bar.width)}>
-<aside class="left ${this.sheet ? 'sheet' : ''}" id="side" ?inert=${this.lips.isHidden('side')} data-lip=${this.lips.state('side')} data-dir=${this.lips.dir} aria-label=${t('shape-editor.mc-shape-studio.side-panel')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')], ['library', t('shape-editor.mc-shape-studio.library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>${this.lips.lip('side')}
-<main class="center"><div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div></main>
-${this.lips.lip('inspector')}<aside class="insp" id="inspector" ?inert=${this.lips.isHidden('inspector')} data-lip=${this.lips.state('inspector')} data-dir=${this.lips.dir} aria-label=${t('shape-editor.mc-shape-studio.inspector-panel')}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
-</div>`}
-${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${this.menu.kind === 'xfer' ? t('shape-editor.mc-shape-studio.export-import') : t('shape-editor.mc-shape-studio.outline-actions')} .at=${this.menu.at} .anchor=${this.menu.anchor} .align=${this.menu.anchor ? 'end' : 'start'} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => this.onMenuClose(e)}></mc-ui-menu>` : nothing}
+<div class="skips">${btn(t('shape-editor.mc-shape-studio.skip-to-canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('shape-editor.mc-shape-studio.skip-to-point-fields'), () => this.focusTo('#fx')) : nothing}${btn(t('shape-editor.mc-shape-studio.skip-to-inspector'), () => (this.openDrawer(), void this.updateComplete.then(() => this.focusTo('.insp button, .insp input'))))}</div>
+<mc-ui-studio-frame class=${this.narrowFrame ? 'narrow' : ''} studio="shape-studio" .scheme=${this.scheme} .strings=${this.frameStrings()} .selectionLabel=${this.selectionLabel()} .measure=${this.frameMeasure()} .rulers=${this.ready} @mc-frame-drawer=${this.onFrameDrawer} @mc-frame-modified=${this.onFrameModified} @mc-path-view=${this.onPathView}>
+<div slot="top" class="fr-bar">${this.top(title)}</div>
+${this.ready ? html`<div class="fr-start" slot="start" ?hidden=${!this.sideShown}><aside class="left" id="side" ?inert=${this.lips.isHidden('side')} data-lip=${this.lips.state('side')} data-dir=${this.lips.dir} aria-label=${t('shape-editor.mc-shape-studio.side-panel')}>${this.narrowFrame ? html`<button type="button" class="side-close btn btn-secondary btn-sm" @click=${() => this.toggleSide()}>${t('shape-editor.mc-shape-studio.close')}</button>` : nothing}${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')], ['library', t('shape-editor.mc-shape-studio.library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>${this.lips.lip('side')}</div>` : nothing}
+<main class="center" slot="stage" @pointerdown=${this.stageDown}>${this.ready ? html`<div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div>` : html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check')}</p>${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.boot())}` : t('shape-editor.mc-shape-studio.loading-the-shape-editor')}</div>`}</main>
+${this.zoomPill()}
+${this.ready ? html`<div class="insp" id="inspector" slot="drawer" ?hidden=${this.modOnly && !this.anyModified()}>${inPath ? this.pathInspector() : this.cornersInspector()}${this.modOnly ? nothing : this.previewSection()}</div>` : nothing}
+</mc-ui-studio-frame>
+<mc-ui-menu .items=${this.menu?.items ?? []} .label=${this.menu?.kind === 'xfer' ? t('shape-editor.mc-shape-studio.export-import') : t('shape-editor.mc-shape-studio.outline-actions')} .at=${this.menu?.at} .anchor=${this.menu?.anchor} .align=${this.menu?.anchor ? 'end' : 'start'} .touch=${this.menu?.touch} .opener=${this.menu?.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => this.onMenuClose(e)}></mc-ui-menu>
 <mc-ui-popover id="pv-pop" .label=${t('shape-editor.mc-shape-studio.preview')} @mc-popover-close=${() => (this.pvOpen = false)}>${this.pvOpen ? this.previews() : nothing}</mc-ui-popover>
 <mc-ui-popover id="help-pop" .label=${t('shape-editor.mc-shape-studio.shortcuts')} align="end" @mc-popover-close=${() => (this.helpOpen = false)}>${this.helpOpen ? this.shortcuts() : nothing}</mc-ui-popover>
 ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : nothing}${this.leaving ? this.leaveWin() : nothing}${this.xfer ? this.xferWin() : nothing}
@@ -1357,10 +1555,11 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
     const actions: KitButtonOptions[] = [];
     // narrow window or 200 % zoom: shorter words, Export / Import as a glyph, the title for screen readers only (styles.ts), so the bar needs one or two rows
     const tight = this.layout === 'compact' || this.layout === 'stacked';
-    if (this.layout === 'compact') actions.push({ label: `${this.tab === 'path' ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')}${this.msgCount() ? ` (${this.msgCount()})` : ''}`, expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
+    actions.push({ label: `${this.tab === 'path' ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')}${this.msgCount() ? ` (${this.msgCount()})` : ''}`, controls: 'side', expanded: this.sideShown, onClick: () => this.toggleSide() });
     actions.push({ label: t('shape-editor.mc-shape-studio.export-import'), icon: 'mdi:swap-vertical', iconOnly: tight, haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
     if (mcu) actions.push({ label: t('shape-editor.mc-shape-studio.save'), variant: 'primary', disabledReason: this.saveBusy ? t('shape-editor.mc-shape-studio.working') : undefined, onClick: () => void this.saveMcu() });
     else actions.push({ label: t('shape-editor.mc-shape-studio.save-to-library'), onClick: () => this.openSave() }, { label: t('shape-editor.mc-shape-studio.done'), variant: 'primary', onClick: () => this.done() });
+    actions.push({ label: this.narrowFrame ? t('shape-editor.mc-shape-studio.frame-settings') : t('shape-editor.mc-shape-studio.inspector-panel'), icon: 'mdi:tune-variant', iconOnly: true, haspopup: this.narrowFrame ? 'dialog' : undefined, controls: 'inspector', expanded: this.drawerOpen, onClick: (e) => this.toggleDrawer(e.currentTarget as HTMLElement) });
     return topBar({
       back: { label: mcu ? t('shape-editor.mc-shape-studio.close') : tight ? t('shape-editor.mc-shape-studio.back') : t('shape-editor.mc-shape-studio.back-to-card-editor'), onClick: () => (mcu ? this.close() : this.leave(false)) },
       title,
@@ -1525,7 +1724,7 @@ ${group(t('shape-editor.mc-shape-studio.shapes'), PRIMITIVE_KINDS.length, shapes
     if (this.doc.mode === 'path') {
       if (this.canvas !== 'ready') return html`<div class="stage">${this.floatBar()}<div class="empty-stage" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`<div>${t('shape-editor.mc-shape-studio.the-path-editor-could-not-load-check')} ${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.ensureCanvas())}</div>` : t('shape-editor.mc-shape-studio.loading-the-shape-editor')}</div></div>`;
       return html`<div class="stage"><mc-path-canvas aria-label=${t('shape-editor.mc-shape-studio.shape-editor')} aria-describedby="hint" loupeLabel=${t('shape-editor.mc-shape-studio.at-name', { name: sh(this.size.id) })}
-.frame=${{ x: 0, y: 0, w, h }} @pointerdown=${this.ptrDown} .paths=${this.pending?.path ? [this.path, this.pending.path] : [this.path]} .paint=${this.pending ? LOCKED : NONE} .selection=${this.cvSel} .mode=${this.cvMode} .maxPaths=${this.pending ? 2 : 1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: this.snapOn, grid: GRID, anchors: false, frame: true }} .pixelGrid=${this.grid} .gridStep=${GRID}
+.frame=${this.canvasFrame(w, h)} @pointerdown=${this.ptrDown} .paths=${this.pending?.path ? [this.path, this.pending.path] : [this.path]} .paint=${this.pending ? LOCKED : NONE} .selection=${this.cvSel} .mode=${this.cvMode} .maxPaths=${this.pending ? 2 : 1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: this.snapOn, grid: GRID, anchors: false, frame: true }} .pixelGrid=${this.grid} .gridStep=${GRID}
 .nudge=${1} .bigNudge=${10} .fineNudge=${0.1} .constrain=${this.constrain} .transform=${this.transformBox} .contextMenu=${this.pending?.kind !== 'pen'}
 @mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas>${this.floatBar()}<span class="sr-only" id="hint">${this.pending?.kind === 'pen' ? t('shape-editor.mc-shape-studio.click-or-tap-to-add-points-drag-to-curve') : this.tool === 'add' ? t('shape-editor.mc-shape-studio.click-on-the-outline-to-add-a-point') : this.tool === 'remove' ? t('shape-editor.mc-shape-studio.click-a-point-to-remove-it') : t('shape-editor.mc-shape-studio.tab-into-the-canvas-and-choose-a-point')}</span>${this.dock()}</div>`;
     }
@@ -1638,6 +1837,10 @@ ${btn(t('shape-editor.mc-shape-studio.save-current-shape'), () => this.openSave(
 ${id === 'custom' ? html`<div class="grid2">${num(t('shape-editor.mc-shape-studio.width'), w, (v) => this.setDims(v, h), { min: 24, max: MAX_SIZE })}${num(t('shape-editor.mc-shape-studio.height'), h, (v) => this.setDims(w, v), { min: 24, max: MAX_SIZE })}</div>` : nothing}`;
   }
 
+  private previewSection(): TemplateResult {
+    return html`<section class="sec">${sectionHead({ title: t('shape-editor.mc-shape-studio.preview'), level: 4 })}<div class="acts">${btn(t('shape-editor.mc-shape-studio.preview'), (e) => this.togglePop(e, 'pv'), { haspopup: 'dialog', expanded: this.pvOpen, controls: 'pv-pop' })}</div></section>`;
+  }
+
   // prettier-ignore
   private cornersInspector(): TemplateResult {
     const d = this.doc;
@@ -1653,17 +1856,19 @@ ${id === 'custom' ? html`<div class="grid2">${num(t('shape-editor.mc-shape-studi
       pick(list[(list.indexOf(at) + to + list.length) % list.length]);
       void this.updateComplete.then(() => this.focusTo(sel));
     };
-    return html`<section class="sec">${this.shapeHead()}${this.caption ? html`<p class="help" role="status">${this.caption}</p>` : nothing}${this.modeSwitch()}${this.editAt()}</section>
-<section class="sec">${sectionHead({ title: t('shape-editor.mc-shape-studio.starters'), level: 4 })}<div class="acts" role="group" aria-label=${t('shape-editor.mc-shape-studio.starters')}>${STARTERS.map((s) => chip({ label: t(STARTER[s.id]), onClick: () => this.applyStarter(s.id) }))}</div></section>
-<section class="sec"><fieldset ?disabled=${d.mode === 'path'} class="bare-set">${sectionHead({ title: t('shape-editor.mc-shape-studio.corner'), level: 4 })}<div class="field"><span class="fl">${t('shape-editor.mc-shape-studio.edit-corners')}</span>${seg(t('shape-editor.mc-shape-studio.edit-corners'), [['each', t('shape-editor.mc-shape-studio.each-corner')], ['all', t('shape-editor.mc-shape-studio.all-corners-together')]], this.together ? 'all' : 'each', (k) => this.setTogether(k === 'all'))}</div>
+    const mod = this.modOnly ? this.changed() : undefined;
+    const show = (on: boolean | undefined): boolean => !mod || !!on;
+    const sShape = html`<section class="sec">${this.shapeHead()}${this.caption ? html`<p class="help" role="status">${this.caption}</p>` : nothing}${this.modeSwitch()}${this.editAt()}</section>`;
+    const sStart = html`<section class="sec">${sectionHead({ title: t('shape-editor.mc-shape-studio.starters'), level: 4 })}<div class="acts" role="group" aria-label=${t('shape-editor.mc-shape-studio.starters')}>${STARTERS.map((s) => chip({ label: t(STARTER[s.id]), onClick: () => this.applyStarter(s.id) }))}</div></section>`;
+    const sCorner = html`<section class="sec"><fieldset ?disabled=${d.mode === 'path'} class="bare-set">${sectionHead({ title: t('shape-editor.mc-shape-studio.corner'), level: 4 })}<div class="field"><span class="fl">${t('shape-editor.mc-shape-studio.edit-corners')}</span>${seg(t('shape-editor.mc-shape-studio.edit-corners'), [['each', t('shape-editor.mc-shape-studio.each-corner')], ['all', t('shape-editor.mc-shape-studio.all-corners-together')]], this.together ? 'all' : 'each', (k) => this.setTogether(k === 'all'))}</div>
 ${this.together && this.allChanged ? html`<p class="help" role="status">${t('shape-editor.mc-shape-studio.all-four-corners-changed-change-just-one')} ${btn(t('shape-editor.mc-shape-studio.edit-corners-separately'), () => this.setTogether(false), { variant: 'text' })}</p>` : nothing}
 <div class="corner-form"><div class="cmini" role="radiogroup" aria-label=${t('shape-editor.mc-shape-studio.corner')} @keydown=${(e: KeyboardEvent) => arrow(e, KEYS, this.sel, (k) => (this.sel = k as CornerKey), '.cmini [tabindex="0"]')}>${KEYS.map((k, i) => html`<button type="button" role="radio" aria-label=${t(CORNER[k])} aria-checked=${this.together || this.sel === k} tabindex=${this.sel === k ? 0 : -1} @click=${() => (this.sel = k)}>${glyph(d.corners[k].type, turn[i])}</button>`)}</div>
 <div class="cf"><h4 class="sub-label">${this.together ? t('shape-editor.mc-shape-studio.all-four-corners') : t(CORNER[this.sel])}</h4><span class="fl" id="ct">${t('shape-editor.mc-shape-studio.type')}</span><div class="ctiles" role="radiogroup" aria-labelledby="ct" aria-describedby="th" @keydown=${(e: KeyboardEvent) => arrow(e, CORNER_TYPES, c.type, (ty) => this.editCorner({ type: ty as CornerType }, t(TYPE[ty as CornerType])), '.ctiles [tabindex="0"]')}>${CORNER_TYPES.map((ty) => html`<button type="button" role="radio" aria-label=${t(TYPE[ty])} aria-checked=${c.type === ty} tabindex=${c.type === ty ? 0 : -1} title=${t(TYPE_HELP[ty])} @click=${() => this.editCorner({ type: ty }, t(TYPE[ty]))}>${glyph(ty)}${t(TYPE[ty])}</button>`)}</div><p class="help" id="th">${t(TYPE_HELP[c.type])}</p>
 ${c.type === 'square' ? html`<p class="help">${t('shape-editor.mc-shape-studio.square-corners-have-no-size')}</p>` : html`<div class="field"><span class="fl">${t('shape-editor.mc-shape-studio.size')}</span><div class="unit"><input class="input" type="number" min="0" inputmode="decimal" aria-label=${t('shape-editor.mc-shape-studio.size')} .value=${String(r1(c.size))} @change=${(e: Event) => this.editCorner({ size: Math.max(0, +(e.target as HTMLInputElement).value || 0) }, t('shape-editor.mc-shape-studio.size'), `size-${this.sel}`)} /><div class="select"><select class="input" aria-label=${t('shape-editor.mc-shape-studio.unit')} @change=${(e: Event) => { const p = (e.target as HTMLSelectElement).value === '%'; this.editCorner({ pct: p, size: toPct(p) }, t('shape-editor.mc-shape-studio.unit')); }}><option value="px" ?selected=${!c.pct}>px</option><option value="%" ?selected=${c.pct}>%</option></select><ha-icon icon="mdi:chevron-down"></ha-icon></div></div><p class="help">${c.pct ? t('shape-editor.mc-shape-studio.follows-the-card-s-shorter-side') : t('shape-editor.mc-shape-studio.stays-the-same-on-every-card-size')}</p></div>`}
 <div class="acts">${btn(t('shape-editor.mc-shape-studio.copy-to-all-corners'), () => this.setCorners(cornersOf(c), t('shape-editor.mc-shape-studio.copy-to-all-corners')), { variant: 'text' })}${btn(t('shape-editor.mc-shape-studio.reset'), () => this.resetCorner(), { variant: 'text' })}</div></div></div>
 ${clamped(d.corners, this.size.w, this.size.h).map((x) => html`<span class="chip is-warn" role="status">${t('shape-editor.mc-shape-studio.corner-is-smaller-on-small-cards-v-px-on', { size: sh(this.size.id), v: r1(x.to) })}</span>`)}
-${Object.values(d.corners).some((x) => x.type === 'round' || x.type === 'squircle') ? slider({ id: 'smooth', label: t('shape-editor.mc-shape-studio.smoothing'), min: 0, max: 1, step: 0.05, value: d.smoothing, onInput: (v) => this.commit({ ...d, smoothing: clamp(v, 0, 1) }, t('shape-editor.mc-shape-studio.smoothing'), 'smooth'), onChange: (v) => this.commit({ ...this.doc, smoothing: clamp(v, 0, 1) }, t('shape-editor.mc-shape-studio.smoothing'), 'smooth') }) : nothing}</fieldset></section>
-${this.spaceBlock(worst)}<div class="acts">${btn(t('shape-editor.mc-shape-studio.reset-shape'), () => this.commit(this.initial, t('shape-editor.mc-shape-studio.reset-shape')), { variant: 'text' })}</div>`;
+${Object.values(d.corners).some((x) => x.type === 'round' || x.type === 'squircle') ? slider({ id: 'smooth', label: t('shape-editor.mc-shape-studio.smoothing'), min: 0, max: 1, step: 0.05, value: d.smoothing, onInput: (v) => this.commit({ ...d, smoothing: clamp(v, 0, 1) }, t('shape-editor.mc-shape-studio.smoothing'), 'smooth'), onChange: (v) => this.commit({ ...this.doc, smoothing: clamp(v, 0, 1) }, t('shape-editor.mc-shape-studio.smoothing'), 'smooth') }) : nothing}</fieldset></section>`;
+    return html`${show(mod?.shape) ? sShape : nothing}${mod ? nothing : sStart}${show(mod?.corners) ? sCorner : nothing}${show(mod?.space) ? this.spaceBlock(worst) : nothing}<div class="acts">${btn(t('shape-editor.mc-shape-studio.reset-shape'), () => this.commit(this.initial, t('shape-editor.mc-shape-studio.reset-shape')), { variant: 'text' })}</div>`;
   }
 
   // prettier-ignore
@@ -1678,9 +1883,11 @@ ${switchRow({ id: 'show-text', label: t('shape-editor.mc-shape-studio.show-text-
   // prettier-ignore
   private pathInspector(): TemplateResult {
     const d = this.doc;
-    return html`<section class="sec">${this.shapeHead()}<p class="help">${t('shape-editor.mc-shape-studio.drag-points-or-pick-one-in-the-list')}</p>${this.modeSwitch()}${this.editAt()}</section>
-${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}${this.combine()}<section class="sec">${sectionHead({ title: t('shape-editor.mc-shape-studio.points'), level: 4 })}<span class="mono" role="status">${t('shape-editor.mc-shape-studio.c-of-max-points', { c: d.points.length, max: MAX_SHAPE_POINTS })}</span>
-<div class="acts">${btn(t('shape-editor.mc-shape-studio.reverse-direction'), () => (this.commitPoints(reversePoints(d.points), t('shape-editor.mc-shape-studio.reverse-direction')), this.selectPoint(undefined)))}</div></section>${this.spaceBlock(0)}`;
+    const mod = this.modOnly ? this.changed() : undefined;
+    const show = (on: boolean | undefined): boolean => !mod || !!on;
+    return html`${show(mod?.shape) ? html`<section class="sec">${this.shapeHead()}<p class="help">${t('shape-editor.mc-shape-studio.drag-points-or-pick-one-in-the-list')}</p>${this.modeSwitch()}${this.editAt()}</section>` : nothing}
+${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}${this.combine()}${show(mod?.points) ? html`<section class="sec">${sectionHead({ title: t('shape-editor.mc-shape-studio.points'), level: 4 })}<span class="mono" role="status">${t('shape-editor.mc-shape-studio.c-of-max-points', { c: d.points.length, max: MAX_SHAPE_POINTS })}</span>
+<div class="acts">${btn(t('shape-editor.mc-shape-studio.reverse-direction'), () => (this.commitPoints(reversePoints(d.points), t('shape-editor.mc-shape-studio.reverse-direction')), this.selectPoint(undefined)))}</div></section>` : nothing}${show(mod?.space) ? this.spaceBlock(0) : nothing}`;
   }
 
   get cvMode(): CanvasMode {

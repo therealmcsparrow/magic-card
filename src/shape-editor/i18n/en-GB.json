@@ -476,6 +476,36 @@
     "note": "Hint under a size field in the shape studio. Says the size scales with the card's shorter side.",
     "max": 55
   },
+  "shape-editor.mc-shape-studio.frame-close": {
+    "text": "Close inspector",
+    "note": "Accessible name of the button that closes the inspector drawer or the settings sheet.",
+    "max": 20
+  },
+  "shape-editor.mc-shape-studio.frame-modified-only": {
+    "text": "Modified only",
+    "note": "Label of the switch that shows only the shape settings that differ from the shape as it was opened.",
+    "max": 18
+  },
+  "shape-editor.mc-shape-studio.frame-none-modified": {
+    "text": "No changed fields yet.",
+    "note": "Shown in the inspector when Modified only is on and no setting has changed.",
+    "max": 30
+  },
+  "shape-editor.mc-shape-studio.frame-pin": {
+    "text": "Keep inspector open",
+    "note": "Accessible name of the pin button that keeps the inspector drawer open while you work on the stage.",
+    "max": 28
+  },
+  "shape-editor.mc-shape-studio.frame-settings": {
+    "text": "Settings",
+    "note": "Accessible name of the bar button that opens the inspector as a full-height sheet on a narrow window.",
+    "max": 14
+  },
+  "shape-editor.mc-shape-studio.frame-zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the group of zoom buttons over the shape canvas.",
+    "max": 10
+  },
   "shape-editor.mc-shape-studio.free-shape": {
     "text": "Free shape",
     "note": "Name of the shape type where every point is edited by hand. Also a segmented option label.",
@@ -1351,6 +1381,21 @@
     "text": "Y, from the top edge",
     "note": "Accessible name of the Y coordinate field. Y is the axis letter; the distance is measured from the top edge.",
     "max": 35
+  },
+  "shape-editor.mc-shape-studio.zoom-fit": {
+    "text": "Fit",
+    "note": "Accessible name of the button that fits the whole shape in the canvas.",
+    "max": 10
+  },
+  "shape-editor.mc-shape-studio.zoom-in": {
+    "text": "Zoom in",
+    "note": "Accessible name of the button that zooms the shape canvas in.",
+    "max": 14
+  },
+  "shape-editor.mc-shape-studio.zoom-out": {
+    "text": "Zoom out",
+    "note": "Accessible name of the button that zooms the shape canvas out.",
+    "max": 14
   },
   "shape-editor.names.a-quarter-circle": {
     "text": "A quarter circle.",

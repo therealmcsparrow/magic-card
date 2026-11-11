@@ -335,6 +335,30 @@
     "text": "Follows the card's shorter side.",
     "hash": "9cb6d703"
   },
+  "shape-editor.mc-shape-studio.frame-close": {
+    "text": "Close inspector",
+    "hash": "5ac712f4"
+  },
+  "shape-editor.mc-shape-studio.frame-modified-only": {
+    "text": "Modified only",
+    "hash": "d5f0ab19"
+  },
+  "shape-editor.mc-shape-studio.frame-none-modified": {
+    "text": "No changed fields yet.",
+    "hash": "d94a7e00"
+  },
+  "shape-editor.mc-shape-studio.frame-pin": {
+    "text": "Keep inspector open",
+    "hash": "a35fcfe5"
+  },
+  "shape-editor.mc-shape-studio.frame-settings": {
+    "text": "Settings",
+    "hash": "74a883a0"
+  },
+  "shape-editor.mc-shape-studio.frame-zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
+  },
   "shape-editor.mc-shape-studio.free-shape": {
     "text": "Free shape",
     "hash": "9361c422"
@@ -958,6 +982,18 @@
   "shape-editor.mc-shape-studio.y-from-the-top-edge": {
     "text": "Y, from the top edge",
     "hash": "76233527"
+  },
+  "shape-editor.mc-shape-studio.zoom-fit": {
+    "text": "Fit",
+    "hash": "9f872ed4"
+  },
+  "shape-editor.mc-shape-studio.zoom-in": {
+    "text": "Zoom in",
+    "hash": "0e47f09a"
+  },
+  "shape-editor.mc-shape-studio.zoom-out": {
+    "text": "Zoom out",
+    "hash": "bc7b631a"
   },
   "shape-editor.names.a-quarter-circle": {
     "text": "A quarter circle.",
