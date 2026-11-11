@@ -74,6 +74,10 @@ interface ColumnDrag {
 
 /** Key presses on the same gutter this close together (or held down) are one undo step. */
 const KEY_COALESCE_MS = 500;
+const round2 = (n: number): number => Math.round(n * 100) / 100;
+/** Room around the card, inside the studio frame's stage, that the float bar may use (selection tags and handles hang out there). */
+const CANVAS_ROOM_X = 20;
+const CANVAS_ROOM_Y = 32;
 
 /** Events the canvas swallows before they reach the live card (module previews may call services). */
 const BLOCKED = ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'touchstart', 'touchend', 'dblclick', 'contextmenu', 'keyup'];
@@ -969,7 +973,7 @@ export class StudioCanvas extends LitElement {
     const detail = {
       width: Math.round(device.offsetWidth),
       height: Math.round(inner.offsetHeight),
-      selection: box ? { x: Math.round(box.left), y: Math.round(box.top), width: Math.round(box.width), height: Math.round(box.height) } : null,
+      selection: box ? { x: round2(box.left), y: round2(box.top), width: round2(box.width), height: round2(box.height) } : null,
     };
     const key = JSON.stringify(detail);
     if (key === this._measureKey) return;
@@ -1016,7 +1020,7 @@ export class StudioCanvas extends LitElement {
     // a module put behind others or on top is framed inside its box, so the card's rounded clip never cuts the outline
     const selMod = sel.kind === 'module' && this._state ? moduleAt(this._state.config, sel) : undefined;
     const layered = !!selMod && (placementOf(selMod) !== 'flow' || (isAutomatic(selMod) && selMod.type === 'video-bg'));
-    const pad = layered ? -3 : 6;
+    const pad = layered ? -3 : sel.kind === 'card' ? 0 : 6;
     const top = t.top - pad;
     const left = t.left - pad;
     const w = t.width + pad * 2;
@@ -1041,11 +1045,11 @@ export class StudioCanvas extends LitElement {
       // the panel lips overlay the canvas edges: the bar keeps off them
       obstacles.push(...lipBoxes(this.getRootNode() as ParentNode, toLocal));
       const viewport = {
-        top: canvas.scrollTop,
-        left: canvas.scrollLeft,
-        width: Math.min(canvas.clientWidth, inner.clientWidth),
+        top: -CANVAS_ROOM_Y,
+        left: -CANVAS_ROOM_X,
+        width: inner.clientWidth + CANVAS_ROOM_X * 2,
         // the dock strip takes its height from the canvas while docked; judge the spots against the canvas without it
-        height: canvas.clientHeight + (root?.querySelector<HTMLElement>('.bar-dock')?.offsetHeight ?? 0),
+        height: canvas.clientHeight + (root?.querySelector<HTMLElement>('.bar-dock')?.offsetHeight ?? 0) + CANVAS_ROOM_Y * 2,
       };
       const pos = findFloatBarSpot(
         { top, left, width: w, height: h },
@@ -1503,17 +1507,21 @@ export class StudioCanvas extends LitElement {
       .canvas {
         direction: ltr; /* frames, handles and drag maths use screen coordinates */
         grid-row: 2;
-        overflow: auto;
         min-height: 0;
-        /* the studio frame draws the grid; this room keeps the selection tags and handles from being clipped */
-        margin: -32px -20px;
-        padding: 32px 20px;
+        /* the card sits straight on the studio frame's grid; the frame's stage is the only scroll area */
       }
       /* The canvas always shows a ring when the keyboard is on it; the selection frame inside it marks what is selected. */
       .canvas:focus-visible {
-        /* --mc-text-2: non-accent, >= 3:1 against --mc-canvas in light (5.2:1) and dark (6.0:1) */
+        outline: none;
+      }
+      /* --mc-text-2: non-accent, >= 3:1 against --mc-canvas in light (5.2:1) and dark (6.0:1) */
+      .canvas:focus-visible .sel-frame:not([hidden]) {
         outline: 2px solid var(--mc-text-2);
-        outline-offset: -2px;
+        outline-offset: 2px;
+      }
+      .canvas:focus-visible:not(.framed) {
+        outline: 2px solid var(--mc-text-2);
+        outline-offset: 4px;
       }
       .canvas-inner {
         position: relative;
@@ -1543,24 +1551,15 @@ export class StudioCanvas extends LitElement {
         gap: 4px;
         text-align: end;
       }
-      /* the device may be wider than a narrow canvas (it scrolls sideways): the label, with the preview-pause toggle at its end, stays within the screen and pinned to the left edge while scrolled */
+      /* one slim line above the card, between its left and right edges (the width callout sits above it) */
       .device-label {
-        position: sticky;
-        left: 24px; /* physical */
-        max-width: calc(100vw - 48px);
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        gap: 8px;
-        margin-bottom: 8px;
+        gap: 4px 8px;
+        margin-bottom: 30px;
         font-size: 0.75rem;
         color: var(--mc-text-2);
-      }
-      /* a wrapped label would sit under the selection tag above the card: leave the tag its own line */
-      @media (max-width: 600px) {
-        .device-label {
-          margin-bottom: 26px;
-        }
       }
       .preview-pause {
         display: inline-flex;
@@ -1850,6 +1849,10 @@ export class StudioCanvas extends LitElement {
         white-space: nowrap;
       }
       /* a module behind others or on top: dashed white line over a black inner line, 3:1 on light and dark pictures, no canvas tag */
+      /* the card is marked by the frame's measure box, which sits on its edges */
+      .sel-frame.k-card {
+        border-color: transparent;
+      }
       .sel-frame[data-layered] {
         border: 2px dashed #fff;
         border-radius: 8px;
@@ -1868,9 +1871,6 @@ export class StudioCanvas extends LitElement {
         /* Stacked studio: the canvas grows to fit the card; the studio workspace does the scrolling. */
         :host {
           grid-template-rows: auto;
-        }
-        .canvas {
-          overflow: visible;
         }
       }
       kbd {

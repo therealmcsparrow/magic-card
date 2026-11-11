@@ -236,8 +236,9 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     if (!m) return nothing;
     const z = m.zoom > 0 ? m.zoom : 1;
     const s = m.selection;
+    const onItem = this.centreStage && !!s;
     return html`
-      <div data-bp="width-callout" aria-hidden="true"><output>${Math.round(m.width)} px</output></div>
+      <div data-bp="width-callout" aria-hidden="true" style=${onItem ? `left:${s.x * z}px;right:auto;width:${s.width * z}px` : ''}><output>${Math.round(onItem ? s.width : m.width)} px</output></div>
       ${s
         ? html`<div data-bp="callout" aria-hidden="true" style=${`left:${s.x * z}px;top:${s.y * z}px;width:${s.width * z}px;height:${s.height * z}px`}>
             <output>${Math.round(s.width)} × ${Math.round(s.height)}</output>

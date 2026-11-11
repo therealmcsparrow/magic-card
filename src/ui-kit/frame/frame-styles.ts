@@ -202,7 +202,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   }
   :host([centre-stage]) .field {
     display: grid;
-    padding-inline: 20px; /* the card studio canvas bleeds 20px each side for its handles; this room keeps that bleed inside the field */
+    padding-inline: 8px; /* room for the selection frame and its handles beside the card */
   }
   .content {
     position: relative;
@@ -231,6 +231,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   :host([centre-stage]) [data-bp="callout"] output {
     inset-block-start: auto;
     inset-block-end: -20px;
+    inset-inline-start: -1px;
   }
   [data-bp="width-callout"] {
     position: absolute;
@@ -241,6 +242,10 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     color: var(--bp-mute);
     font: var(--bp-t-meta) var(--bp-font-mono);
     pointer-events: none;
+  }
+  :host([centre-stage]) [data-bp="width-callout"] {
+    overflow: hidden;
+    white-space: nowrap;
   }
   [data-bp="width-callout"]::before,
   [data-bp="width-callout"]::after {
