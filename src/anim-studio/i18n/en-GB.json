@@ -7164,6 +7164,11 @@
     "note": "Capitalised name of the layers panel, used as a heading or in panel toggles.",
     "max": 10
   },
+  "anim-studio.studio.close-layers": {
+    "text": "Close layers",
+    "note": "Tooltip and label of the button that closes the Layers sheet on a narrow screen.",
+    "max": 20
+  },
   "anim-studio.studio.layers-panel": {
     "text": "Layers panel",
     "note": "Accessible name of the studio panel that lists the animation's layers.",

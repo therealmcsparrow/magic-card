@@ -1074,6 +1074,11 @@ export class AnimationStudio extends LitElement {
         return;
       }
       if (e.key === 'Escape' && !isTyping(e)) {
+        if (this._narrow && this._layersSheet) {
+          e.preventDefault();
+          this._closeLayersSheet();
+          return;
+        }
         if (this._selection.kind !== 'none') {
           e.preventDefault();
           // focus inside the inspector would be lost with its panel: it goes to the inspector itself
@@ -1386,8 +1391,19 @@ export class AnimationStudio extends LitElement {
   }
 
   private _toggleLayers(): void {
-    if (this._narrow) this._layersSheet = !this._layersSheet;
-    else this._lips.toggle('layers');
+    if (this._narrow) {
+      if (this._layersSheet) this._closeLayersSheet();
+      else {
+        this._layersSheet = true;
+        void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>('.layers-close')?.focus());
+      }
+    } else this._lips.toggle('layers');
+  }
+
+  /** Close the Layers sheet and give focus back to the bar's Layers button. */
+  private _closeLayersSheet(): void {
+    this._layersSheet = false;
+    void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>('.layers-toggle')?.focus());
   }
 
   private _setSelection(sel: StudioSelection): void {
@@ -1953,13 +1969,17 @@ export class AnimationStudio extends LitElement {
         </section>`,
     );
     const lips = this._lips;
-    return html`<nav class="layers" id="layers" aria-label=${t('anim-studio.studio.layers-panel')} ?inert=${lips.isHidden('layers')} data-lip=${lips.state('layers')} data-dir=${lips.dir}>
+    const sheet = this._narrow;
+    return html`<nav class="layers" id="layers" aria-label=${t('anim-studio.studio.layers-panel')} ?inert=${!sheet && lips.isHidden('layers')} data-lip=${lips.state('layers')} data-dir=${lips.dir}>
       <div class="layers-head">
         <h2>${t('anim-studio.studio.layers-2')}</h2>
+        ${sheet ? html`<button type="button" class="icon-btn layers-close" aria-label=${t('anim-studio.studio.close-layers')} title=${t('anim-studio.studio.close-layers')} @click=${() => this._closeLayersSheet()}>
+          <ha-icon icon="mdi:close"></ha-icon>
+        </button>` : nothing}
       </div>
       <div class="layers-body">${panels.length ? html`${panels}<p class="help layers-help">${t('anim-studio.studio.hide-solo-and-lock-only-change-this')}</p>` : this._renderLayerList(d)}</div>
     </nav>
-    ${lips.lip('layers')}`;
+    ${sheet ? nothing : lips.lip('layers')}`;
   }
 
 
@@ -2205,8 +2225,9 @@ export class AnimationStudio extends LitElement {
         </div>
       </header>
       <output class="zoom-read" slot="zoom">${new Intl.NumberFormat(locale(), { style: 'percent', maximumFractionDigits: 0 }).format(this._stageScale > 0 ? this._stageScale : 1)}</output>
-      ${layersShown ? html`<div class="fr-start" slot="start">${this._renderLayers(d)}</div>` : nothing}
-      <div class="center ${panel ? 'with-panel' : ''}" slot="stage" style="--split: ${this._split}">
+      ${layersShown && !this._narrow ? html`<div class="fr-start" slot="start">${this._renderLayers(d)}</div>` : nothing}
+      <div class="center ${panel ? 'with-panel' : ''}" slot="stage" style="--split: ${this._split}${this._narrow ? `;max-inline-size: calc(${this._width}px - 2 * var(--bp-s-6))` : ''}">
+        ${layersShown && this._narrow ? html`<div class="layers-sheet">${this._renderLayers(d)}</div>` : nothing}
         <mcas-stage
           dir=${this._pseudo ? 'rtl' : nothing}
           .doc=${this._previewDoc(playing, lv)}

@@ -4823,6 +4823,10 @@
     "text": "Cards use it as",
     "hash": "8239a9a2"
   },
+  "anim-studio.studio.close-layers": {
+    "text": "Close layers",
+    "hash": "0cbb5e46"
+  },
   "anim-studio.studio.count": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}}",
     "hash": "bb6b3c12"

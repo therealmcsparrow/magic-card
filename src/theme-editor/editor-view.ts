@@ -1274,8 +1274,9 @@ export class McteEditorView extends LitElement {
     return { width, height, grid: 24, selection: null, zoom: 1 };
   }
 
-  /** A variable is modified when some scope holds a value that differs from the theme as it was opened or last saved; removing one puts it back to its default. */
+  /** A variable is modified when the theme sets it in some scope. A new theme starts from its starter values, so only what differs from them counts until it is saved. */
   private _isModified(name: string): boolean {
+    if (this._saved) return isSetAnywhere(this._doc, name);
     return (['shared', 'light', 'dark'] as const).some((sc) => {
       const v = ownValue(this._doc, sc, name);
       return v !== undefined && v !== ownValue(this._baseline, sc, name);

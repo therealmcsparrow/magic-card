@@ -2,13 +2,14 @@ import { css, CSSResult, unsafeCSS } from 'lit';
 import { editorTokens } from '../css/editor-system';
 import { editorPrimitives } from '../ui-kit/css/primitives';
 import { kitTopbar, kitButtonExtras, kitCheck } from '../ui-kit/css/extras';
+import { kitLip } from '../ui-kit/css/lip';
 
 /** The stage and the timeline each keep at least this height (px); studio.ts SPLIT_MIN_PX. */
 const SPLIT_MIN_PX = 160;
 
 /** The animation studio's own layout, on the editor design system (DESIGN.md). */
 export const studioStyles: CSSResult[] = [
-  editorTokens, editorPrimitives, kitTopbar, kitButtonExtras, kitCheck,
+  editorTokens, editorPrimitives, kitTopbar, kitButtonExtras, kitCheck, kitLip,
   css`
     :host {
       display: block;
@@ -162,11 +163,14 @@ export const studioStyles: CSSResult[] = [
       min-block-size: 0;
       background: var(--bp-sheet);
     }
-    .layers-close {
-      display: none;
-    }
-    .narrow .layers-close {
-      display: inline-grid;
+    /* narrow: Layers is a sheet over the stage area, so the top bar stays in view */
+    .layers-sheet {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: flex;
+      flex-direction: column;
+      background: var(--bp-sheet);
     }
     /* the stage and the timeline fill the frame's stage area (its bar, ruler and padding taken off) */
     .center {
@@ -433,6 +437,7 @@ export const studioStyles: CSSResult[] = [
     }
     .center {
       display: grid;
+      position: relative;
       grid-template-rows: minmax(0, 1fr);
       min-height: 0;
       min-width: 0;

@@ -5067,6 +5067,10 @@
     "text": "Lagen",
     "hash": "0bcd66e6"
   },
+  "anim-studio.studio.close-layers": {
+    "text": "Lagen sluiten",
+    "hash": "0cbb5e46"
+  },
   "anim-studio.studio.layers-panel": {
     "text": "Lagenpaneel",
     "hash": "201340a9"
