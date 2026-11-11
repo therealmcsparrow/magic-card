@@ -50,6 +50,7 @@ export function newText(x: ImageExt, at?: Pt, words?: string): Shape {
 export function addText(x: ImageExt): void {
   if (x.readOnly) return;
   const sh = x.shell;
+  sh.tab = 'inspector';
   sh.addShape(newText(x));
   void sh.updateComplete.then(() => {
     const el = sh.renderRoot.querySelector<HTMLTextAreaElement>('#tx-content');

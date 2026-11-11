@@ -40,6 +40,12 @@ const settle = async (el: Ed): Promise<void> => {
   await new Promise((r) => setTimeout(r, 20));
   await el.updateComplete;
 };
+
+const openLayers = async (el: Ed): Promise<void> => {
+  const tab = [...el.renderRoot.querySelectorAll<HTMLButtonElement>('[role=tab]')].find((b) => b.textContent!.trim() === 'Layers');
+  tab?.click();
+  await settle(el);
+};
 async function open(svg: string, admin = true): Promise<{ el: Ed; saves: () => any[] }> {
   const w = wire(svg, admin);
   const el = document.createElement('mc-svg-editor') as Ed;
@@ -143,6 +149,7 @@ describe('text layers: opening a library image', () => {
 describe('text layers: adding', () => {
   it('Add text makes a selected layer in the middle of the drawing and puts the cursor in Content, selected', async () => {
     const { el } = await open(ONE);
+    await openLayers(el);
     btn(el, 'Add text')!.click();
     await settle(el);
     const t = texts(el);
@@ -184,6 +191,7 @@ describe('text layers: adding', () => {
 
   it('adds one undo step', async () => {
     const { el } = await open(ONE);
+    await openLayers(el);
     btn(el, 'Add text')!.click();
     await settle(el);
     el.undo();
@@ -402,6 +410,7 @@ describe('text layers: saving and reopening', () => {
 
   it('a new text layer is saved with an id the markup allows, and with the words', async () => {
     const { el, saves } = await open(ONE);
+    await openLayers(el);
     btn(el, 'Add text')!.click();
     await settle(el);
     await type(el, 'tx-content', 'Kitchen');

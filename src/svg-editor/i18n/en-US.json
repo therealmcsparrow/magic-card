@@ -1339,6 +1339,10 @@
     "text": "Insert",
     "hash": "8aa318eb"
   },
+  "svg-editor.views.inspector": {
+    "text": "Inspector",
+    "hash": "da188e3b"
+  },
   "svg-editor.views.inspector-panel": {
     "text": "Inspector panel",
     "hash": "20f92072"
@@ -1362,6 +1366,10 @@
   "svg-editor.views.keep-editing": {
     "text": "Keep editing",
     "hash": "e76fd2ad"
+  },
+  "svg-editor.views.keep-the-inspector-open": {
+    "text": "Keep inspector open",
+    "hash": "a35fcfe5"
   },
   "svg-editor.views.keep-your-own-icons-for-every-dashboard": {
     "text": "Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.",
@@ -1451,6 +1459,10 @@
     "text": "Maximize",
     "hash": "1c9fcada"
   },
+  "svg-editor.views.modified-only": {
+    "text": "Modified only",
+    "hash": "d5f0ab19"
+  },
   "svg-editor.views.move-alt-up-down-in-or-out-of-a-group": {
     "text": "Move: Alt+Up / Down. In or out of a group: Alt+Shift+Right / Left.",
     "hash": "32dfcfab"
@@ -1510,6 +1522,10 @@
   "svg-editor.views.nothing-here-yet": {
     "text": "Nothing here yet",
     "hash": "49abaf80"
+  },
+  "svg-editor.views.nothing-modified": {
+    "text": "Nothing here differs from the defaults.",
+    "hash": "b23be145"
   },
   "svg-editor.views.nothing-selected-pick-a-layer-or-click-a": {
     "text": "Nothing selected. Pick a layer, or click a shape.",
@@ -1686,6 +1702,10 @@
   "svg-editor.views.selected-point": {
     "text": "Selected point",
     "hash": "53f29419"
+  },
+  "svg-editor.views.settings": {
+    "text": "Settings",
+    "hash": "74a883a0"
   },
   "svg-editor.views.shape-actions": {
     "text": "Shape actions",
@@ -1911,6 +1931,10 @@
     "text": "Used as mcu:{id}",
     "hash": "68edf118"
   },
+  "svg-editor.views.w-x-h-units": {
+    "text": "{w} x {h} units",
+    "hash": "86219fc5"
+  },
   "svg-editor.views.what-do-you-want-to-start-from": {
     "text": "What do you want to start from?",
     "hash": "39da86e9"
@@ -1934,6 +1958,10 @@
   "svg-editor.views.y": {
     "text": "Y",
     "hash": "18f5384d"
+  },
+  "svg-editor.views.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
   },
   "svg-editor.views.zoom-in": {
     "text": "Zoom in",

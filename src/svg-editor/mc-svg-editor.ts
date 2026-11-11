@@ -14,6 +14,9 @@ import { readFile, refuseText } from '../svg-io/intake';
 import { ICON_SVG_INTAKE, ICON_SVG_MAX_FILE_BYTES, IMAGE_SVG_MAX_FILE_BYTES } from '../contracts/svg-intake';
 import { loadPathBooleans } from '../path-booleans/loader';
 import type { PathTool } from '../contracts/path-tools';
+import { FRAME_WIDE_MIN_PX, UI_STUDIO_FRAME_TAG, type StudioFrameElement } from '../contracts/studio-frame';
+import { defineKitElements } from '../ui-kit/define-parts';
+import { StudioFrame } from '../ui-kit/frame/studio-frame';
 import type { BooleanOp } from '../contracts/path-booleans';
 import { loadPathCanvas } from '../path-canvas/loader';
 import { loadSvgCss } from '../svg-safety/css-loader';
@@ -124,7 +127,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'startBusy', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'startBusy', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving', 'tab', 'modOnly', 'narrow', 'drawer'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -165,6 +168,12 @@ export class McSvgEditor extends LitElement implements StageHost {
   safe = true;
   decimals = 2;
   nudgePad = true;
+  /** The image drawer: its open tab, Modified only, the frame being narrow (a sheet), the drawer being open, and the grid the image started with. */
+  tab: 'inspector' | 'layers' = 'inspector';
+  modOnly = false;
+  narrow = false;
+  drawer = false;
+  gridBase = 0;
   lockRatio = true;
   opts: ToolOpts = { ...DEFAULT_OPTS };
   panel: 'layers' | 'library' = 'layers';
@@ -320,6 +329,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   private measure(): void {
     const w = this.getBoundingClientRect().width;
     if (!w) return;
+    this.narrow = w < FRAME_WIDE_MIN_PX;
     this.layout = w > 1180 ? 'wide' : w > 900 ? 'mid' : w > 640 ? 'compact' : 'stacked';
     if (this.layout === 'wide' || this.layout === 'mid') this.overlay = false;
   }
@@ -329,6 +339,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   async start(): Promise<void> {
     this.stage = 'loading';
     const src = this.source;
+    if (src.kind.startsWith('image')) defineKitElements([[UI_STUDIO_FRAME_TAG, StudioFrame]]);
     const imageLoad = src.kind === 'image' || src.kind === 'image-blank' || src.kind === 'image-svg' ? loadImageEditor() : undefined;
     // the resolver is for the SVG text a user brings in: loaded here only for markup the editor starts from, otherwise when a file or pasted text is opened
     const [chunk] = await Promise.all([loadPathCanvas(), src.kind === 'svg' ? this.needCss() : undefined]);
@@ -2103,6 +2114,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       if (this.chipSaid && chip) this.say(chip);
       this.chipSaid = chip;
     }
+    if (changed.has('sel') && this.sel.length && this.img && !this.narrow) this.frame?.openDrawer(null, 'selection');
     if (changed.has('dlg') && changed.get('dlg') && !this.dlg) {
       // the window left the page by state, not through its own close(): nothing else puts focus back
       const a = deepActive();
@@ -2169,6 +2181,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     (end ? list[list.length - 1] : list[0])?.focus();
   }
 
+  /** The studio frame of the image editor, when it is on screen. */
+  get frame(): StudioFrameElement | null {
+    return this.renderRoot.querySelector<StudioFrameElement>(UI_STUDIO_FRAME_TAG);
+  }
+
   get unionBox(): Box | undefined {
     return unionBox(this.selected.map(shapeBox));
   }
@@ -2192,7 +2209,11 @@ export const kbOf = (bytes: number): number => bytes / 1024;
 
 function deepActive(): HTMLElement | undefined {
   let a: Element | null = document.activeElement;
-  while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
+  try {
+    while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
+  } catch {
+    // a focus the shadow tree cannot report stays at the outer element
+  }
   return a instanceof HTMLElement ? a : undefined;
 }
 

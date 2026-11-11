@@ -338,7 +338,8 @@ export const editorStyles: CSSResult[] = [
       align-self: flex-start;
       max-width: 100%;
     }
-    .toolbar .zoom {
+    .toolbar .zoom,
+    .zoomp .zoom {
       min-width: 4ch;
       text-align: center;
       font: 0.75rem var(--mc-mono);
@@ -646,6 +647,76 @@ export const editorStyles: CSSResult[] = [
     @media (max-width: 300px) {
       .bool-grid {
         grid-template-columns: 1fr;
+      }
+    }
+    /* the image editor inside <mc-ui-studio-frame>: the frame lays out the bar, rail, stage and drawer */
+    mc-ui-studio-frame {
+      flex: 1;
+      min-block-size: 0;
+      --bp-layers-w: 56px;
+    }
+    .ftop,
+    .zoomp {
+      display: contents;
+    }
+    .frail {
+      display: flex;
+      justify-content: center;
+      padding-block: 8px;
+    }
+    .frail .rail {
+      flex-direction: column;
+      inline-size: 56px;
+      padding: 0;
+      border: 0;
+      overflow: visible;
+    }
+    .zoomp {
+      pointer-events: auto;
+    }
+    .center.fstage {
+      min-inline-size: 100%;
+      min-block-size: max(320px, calc(100vh - 220px));
+      padding: 0;
+    }
+    .dims {
+      font: 0.75rem var(--mc-mono);
+      opacity: 0.75;
+    }
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-block-end: 12px;
+    }
+    .tabs [role='tab'] {
+      flex: 1;
+      min-block-size: 32px;
+      border: 1px solid var(--mc-divider);
+      border-radius: var(--mc-radius);
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+    .tabs [aria-selected='true'] {
+      background: var(--mc-accent-tint);
+      color: var(--mc-accent-ink);
+    }
+    .tabs [role='tab']:focus-visible {
+      outline: 2px solid var(--mc-accent);
+      outline-offset: 2px;
+    }
+    .drawer-body .insp,
+    .drawer-body .layers {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .insp,
+      .tabs [role='tab'] {
+        transition: none;
       }
     }
     @media (forced-colors: active) {

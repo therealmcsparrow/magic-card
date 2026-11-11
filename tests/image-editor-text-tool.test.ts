@@ -35,6 +35,12 @@ const settle = async (el: Ed): Promise<void> => {
   await new Promise((r) => setTimeout(r, 20));
   await el.updateComplete;
 };
+
+const openLayers = async (el: Ed): Promise<void> => {
+  const tab = [...el.renderRoot.querySelectorAll<HTMLButtonElement>('[role=tab]')].find((b) => b.textContent!.trim() === 'Layers');
+  tab?.click();
+  await settle(el);
+};
 async function open(svg: string, admin = true): Promise<Ed> {
   const w = wire(svg, admin);
   const el = document.createElement('mc-svg-editor') as Ed;
@@ -403,6 +409,7 @@ describe('Text tool: keyboard', () => {
 
   it('the T key and Add text still add a text layer at once', async () => {
     const el = await open(ONE);
+    await openLayers(el);
     btn(el, 'Add text')!.click();
     await settle(el);
     expect(texts(el)).toHaveLength(1);
