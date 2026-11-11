@@ -503,7 +503,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     `;
   }
 
-  private _trackSection(): TemplateResult {
+  private _trackSection(): TemplateResult | typeof nothing {
     const c = this._c;
     const style = c.track_style ?? 'standard';
     const mode = c.fill_mode ?? 'solid';
@@ -566,7 +566,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     );
   }
 
-  private _thumbSection(): TemplateResult {
+  private _thumbSection(): TemplateResult | typeof nothing {
     const c = this._c;
     const thumb = c.thumb ?? 'line';
     const shaped = thumb === 'circle' || thumb === 'pill' || thumb === 'square';
@@ -605,7 +605,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     );
   }
 
-  private _valueSection(): TemplateResult {
+  private _valueSection(): TemplateResult | typeof nothing {
     const c = this._c;
     const pos = valuePosition(c);
     const options = (['beside', 'bubble', 'track', 'hidden'] as ValuePosition[]).map((v) => ({ value: v, label: this._positionLabel(v) }));
@@ -642,7 +642,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     );
   }
 
-  private _shapeSection(): TemplateResult {
+  private _shapeSection(): TemplateResult | typeof nothing {
     const c = this._c;
     return this._section(
       'shape',
@@ -665,7 +665,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     this._set({ stops: stops.length ? stops : undefined });
   }
 
-  private _stopsSection(): TemplateResult {
+  private _stopsSection(): TemplateResult | typeof nothing {
     const c = this._c;
     const stops = readStops(c);
     const { min, max, step } = this._range;
