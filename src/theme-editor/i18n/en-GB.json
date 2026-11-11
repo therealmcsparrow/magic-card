@@ -634,6 +634,26 @@
       "c": "The count the text is about."
     }
   },
+  "theme-editor.editor-view.frame-close": {
+    "text": "Close variables",
+    "note": "Accessible name of the button that closes the variables drawer or the variables sheet.",
+    "max": 20
+  },
+  "theme-editor.editor-view.frame-none-modified": {
+    "text": "No variables changed yet.",
+    "note": "Shown in the variables drawer when Modified only is on and the theme sets no variable.",
+    "max": 40
+  },
+  "theme-editor.editor-view.frame-pin": {
+    "text": "Keep variables open",
+    "note": "Accessible name of the pin button that keeps the variables drawer open while you work on the preview.",
+    "max": 28
+  },
+  "theme-editor.editor-view.frame-zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the zoom control group on the preview stage.",
+    "max": 10
+  },
   "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
     "text": "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.",
     "note": "Help text for trying a theme. {help} is a full sentence from another string, placed first; {other} is the opposite mode to the current one, 'dark' or 'light'. Revert is a button label.",
@@ -1981,6 +2001,16 @@
     "note": "Intro sentence in the setup notice when themes come from an include or other method; the lines to add follow in a code block.",
     "max": 215
   },
+  "theme-editor.legal.english-prevails": {
+    "text": "The English text prevails.",
+    "note": "Note shown next to a legal text that is translated; the English text is the one that counts.",
+    "max": 40
+  },
+  "theme-editor.legal.show-english": {
+    "text": "Show English",
+    "note": "Action that replaces a translated legal text with the English original.",
+    "max": 20
+  },
   "theme-editor.lips.got-it": {
     "text": "Got it",
     "note": "Button that dismisses the one-time hint about the side panel tabs. Means understood.",
@@ -2029,7 +2059,7 @@
     }
   },
   "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
-    "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
+    "text": "The {noun} panel is hidden, as you left it. Use the button in the bar to show it.",
     "note": "Hint at the screen edge. {noun} is the panel name, such as 'variables' or 'preview'.",
     "max": 130,
     "vars": {

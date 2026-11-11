@@ -1,9 +1,10 @@
 import './public-path';
 import { THEME_EDITOR_TAG } from '../contracts/theme-editor';
-import { UI_TOAST_TAG, UI_WINDOW_TAG } from '../contracts/ui-kit';
+import { UI_STUDIO_FRAME_TAG, UI_TOAST_TAG, UI_WINDOW_TAG } from '../contracts/ui-kit';
 import { defineKitElements } from '../ui-kit/define-parts';
 import { UiToast } from '../ui-kit/elements/toast';
 import { UiWindow } from '../ui-kit/elements/window';
+import { StudioFrame } from '../ui-kit/frame/studio-frame';
 import { McteEditorView } from './editor-view';
 import { McteFieldGroup } from './field-group';
 import { McteIncludeNotice } from './include-notice';
@@ -30,10 +31,11 @@ export const THEME_EDITOR_ELEMENTS: Array<[string, CustomElementConstructor]> = 
 ];
 
 for (const [tag, ctor] of THEME_EDITOR_ELEMENTS) if (!customElements.get(tag)) customElements.define(tag, ctor);
-// the kit's window and toast (ui-kit 1.0.0): this entry compiles its own copy of just these two; the guard keeps whichever defined a tag first
+// the kit's window, toast and studio frame: this entry compiles its own copy of just these three; the guard keeps whichever defined a tag first
 defineKitElements([
   [UI_WINDOW_TAG, UiWindow],
   [UI_TOAST_TAG, UiToast],
+  [UI_STUDIO_FRAME_TAG, StudioFrame],
 ]);
 
 export { MagicCardThemeEditor };

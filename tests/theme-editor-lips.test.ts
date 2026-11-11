@@ -66,78 +66,64 @@ async function openEditor(width = 1280): Promise<{ ed: AnyEl; root: ShadowRoot }
   const ed = deepAll(host.shadowRoot!, 'mcte-editor-view')[0];
   ed._w = width;
   await settle(ed);
+  // jsdom has no layout, so the frame never measures a wide screen on its own: open its drawer the way a wide editor does
+  if (width >= 1024) {
+    ed._frame().openDrawer(null, 'selection');
+    await settle(ed);
+  }
   return { ed, root: ed.shadowRoot! };
 }
-const lip = (root: ShadowRoot): HTMLButtonElement | null => root.querySelector<HTMLButtonElement>('.lip[aria-controls="vars-pane"]');
+const toggle = (root: ShadowRoot): HTMLButtonElement | null => root.querySelector<HTMLButtonElement>('.vars-toggle[aria-controls="vars"]');
+const status = (root: ShadowRoot): string => [...root.querySelectorAll('p.sr-only[role="status"]')].map((n) => n.textContent).join('');
 const ctrlBackslash = (): KeyboardEvent => new KeyboardEvent('keydown', { key: '\\', code: 'Backslash', ctrlKey: true, bubbles: true, composed: true, cancelable: true });
 
-describe('theme editor panel lip', () => {
-  it('has a lip on the Variables pane at 1024 px and up, directly after it, and a status region', async () => {
+describe('theme editor variables drawer toggle', () => {
+  it('has a toggle in the bar named Variables panel, with the shortcut in its title, and the drawer slot holds the variables', async () => {
     const { root } = await openEditor(1280);
-    const l = lip(root)!;
-    expect(l.getAttribute('aria-label')).toBe('Variables panel');
-    expect(root.getElementById('vars-pane')!.getAttribute('aria-label')).toBe('Variables panel');
-    expect(l.getAttribute('aria-expanded')).toBe('true');
-    const pane = root.querySelector<HTMLElement>('#vars-pane')!;
-    expect(pane.dataset.lip).toBe('shown');
-    expect(pane.nextElementSibling).toBe(l);
-    expect(root.querySelector('.lip-status[role="status"]')).not.toBeNull();
+    const b = toggle(root)!;
+    expect(b.getAttribute('aria-label')).toBe('Variables panel');
+    expect(b.getAttribute('aria-expanded')).toBe('true');
+    expect(b.title).toMatch(/^Hide variables \((Ctrl\+\\|⌘\\)\)/);
+    expect(root.querySelector('#vars[slot="drawer"]')).not.toBeNull();
+    expect(root.querySelector('header[aria-label="Editor panels"]')).not.toBeNull();
   });
 
-  it('has no lip below 1024 px, where Variables and Preview are tabs', async () => {
-    const { root } = await openEditor(1000);
-    expect(lip(root)).toBeNull();
-    expect(root.querySelector('.lip-status')).not.toBeNull();
-    expect(root.querySelector('#panel-vars')).not.toBeNull();
+  it('below 1024 px the drawer is a sheet that starts closed, and the toggle announces a dialog', async () => {
+    const { root } = await openEditor(800);
+    const b = toggle(root)!;
+    expect(b.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(b.getAttribute('aria-expanded')).toBe('false');
+    expect(root.querySelector('#vars[slot="drawer"]')).not.toBeNull();
   });
 
-  it('hiding the pane gives its track to the preview, keeps it mounted and remembers it', async () => {
+  it('pressing the toggle closes and reopens the drawer and announces it', async () => {
     const { ed, root } = await openEditor();
-    const pane = root.querySelector<HTMLElement>('#vars-pane')!;
-    lip(root)!.click();
+    toggle(root)!.click();
     await settle(ed);
-    expect(root.querySelector('#vars-pane')).toBe(pane);
-    expect(pane.dataset.lip).toBe('hidden');
-    expect(pane.hasAttribute('inert')).toBe(true);
-    expect(root.querySelector('.cols')!.classList.contains('no-vars')).toBe(true);
-    expect(localStorage.getItem('mc-panels:theme-editor')).toBe('variables');
-    expect(lip(root)!.getAttribute('aria-expanded')).toBe('false');
-    // a field typed into earlier stays: the pane is the same node
-    lip(root)!.click();
+    expect(toggle(root)!.getAttribute('aria-expanded')).toBe('false');
+    expect(status(root)).toBe('Variables panel hidden');
+    expect(root.querySelector('.panel-hint')!.textContent).toContain('The variables panel is hidden, as you left it. Use the button in the bar to show it.');
+    toggle(root)!.click();
     await settle(ed);
-    expect(pane.dataset.lip).toBe('shown');
-    expect(localStorage.getItem('mc-panels:theme-editor')).toBeNull();
+    expect(toggle(root)!.getAttribute('aria-expanded')).toBe('true');
+    expect(status(root)).toBe('Variables panel shown');
   });
 
-  it('a remembered hidden pane opens hidden with the hint', async () => {
-    localStorage.setItem('mc-panels:theme-editor', 'variables');
-    const { root } = await openEditor();
-    expect(root.querySelector<HTMLElement>('#vars-pane')!.dataset.lip).toBe('hidden');
-    expect(root.querySelector('.lip-hint p')!.textContent).toBe('The variables panel is hidden, as you left it. Use the arrow on the edge to show it.');
+  it('Got it dismisses the hint', async () => {
+    const { ed, root } = await openEditor();
+    toggle(root)!.click();
+    await settle(ed);
+    (root.querySelector('.panel-hint button') as HTMLElement).click();
+    await settle(ed);
+    expect(root.querySelector('.panel-hint')).toBeNull();
   });
 
-  it('Ctrl+\\ toggles the pane, announces it, and does nothing below 1024 px', async () => {
+  it('Ctrl+\\ toggles the drawer and prevents the default', async () => {
     const { ed, root } = await openEditor();
     const ev = ctrlBackslash();
-    root.querySelector('.cols')!.dispatchEvent(ev);
+    ed.dispatchEvent(ev);
     await settle(ed);
     expect(ev.defaultPrevented).toBe(true);
-    expect(root.querySelector<HTMLElement>('#vars-pane')!.dataset.lip).toBe('hidden');
-    await new Promise((r) => requestAnimationFrame(() => r(null)));
-    expect(root.querySelector('.lip-status')!.textContent).toBe('Variables hidden');
-    ed._w = 800;
-    await settle(ed);
-    expect(root.querySelector('#vars-pane')).toBeNull();
-    expect(root.querySelector('#panel-vars')).not.toBeNull();
-    expect(root.querySelector('#panel-vars')!.hasAttribute('hidden')).toBe(false);
-  });
-
-  it('the stylesheet: the hidden pane keeps its width and the preview takes the track', async () => {
-    const { ed } = await openEditor();
-    const sheets = (ed.constructor as unknown as { styles: Array<{ cssText: string }> }).styles;
-    const css = sheets.map((x) => x.cssText).join('\n');
-    expect(css).toMatch(/\.vars\[data-lip='hidden'\]\s*\{[^}]*width:\s*var\(--vw\)/);
-    expect(css).toMatch(/\.no-vars\s*\{[^}]*--cw:\s*0px/);
-    expect(css).toMatch(/grid-template-columns:\s*var\(--cw, var\(--vw\)\)\s+minmax\(0,\s*1fr\)/);
+    expect(toggle(root)!.getAttribute('aria-expanded')).toBe('false');
   });
 });
