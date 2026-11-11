@@ -3,6 +3,8 @@ import { repeat } from 'lit/directives/repeat.js';
 import type { PropertyDeclarations, PropertyValues, TemplateResult } from 'lit';
 import { FORUM_SHOT_CONTRACT_VERSION } from '../contracts/forum-shot';
 import type {
+  ForumShotChoice,
+  ForumShotEntry,
   ForumShotErrorCode,
   ForumShotLook,
   ForumShotMode,
@@ -36,6 +38,35 @@ function timedName(base: string, now = new Date()): string {
 export class MagicCardForumShot extends LitElement {
   static readonly contractVersion = FORUM_SHOT_CONTRACT_VERSION;
 
+  /** Every Magic Card in the dashboards; the element's table and a host's own list call this one. */
+  static listCards(hass: object): Promise<MagicCardRef[]> {
+    return listMagicCards((hass ?? {}) as WsHass);
+  }
+
+  /** Makes the sheet for one card, saves it as a PNG and resolves to it; the blob: URL is revoked shortly after. */
+  static async download(
+    hass: object,
+    ref: MagicCardRef,
+    choice: ForumShotChoice,
+  ): Promise<ForumShotSheet> {
+    const h = (hass ?? {}) as WsHass;
+    const config = await cardConfigOf(h, ref);
+    const modes: ForumShotMode[] = choice.mode === 'both' ? ['light', 'dark'] : [choice.mode];
+    const looks: ForumShotLook[] = choice.looks ? ALL_LOOKS : ['as-configured'];
+    const sheet = await renderSheet(
+      h,
+      { config, modes, looks, fontHosts: ref.fontHosts },
+      { lookSource: iconLibraryLookSource },
+    );
+    const url = URL.createObjectURL(sheet.blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = timedName(sheet.fileName);
+    a.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), REVOKE_DELAY_MS);
+    return sheet;
+  }
+
   static properties: PropertyDeclarations = {
     hass: { attribute: false },
     narrow: { type: Boolean, reflect: true },
@@ -65,7 +96,6 @@ export class MagicCardForumShot extends LitElement {
   private _previewUrl?: string;
   private _saved = false;
   private _started = false;
-  private _timers = new Set<number>();
   private _tip: string | null = null;
   private _watching = false;
   private readonly _onPointerDown = (e: Event): void => {
@@ -88,8 +118,6 @@ export class MagicCardForumShot extends LitElement {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    for (const id of this._timers) clearTimeout(id);
-    this._timers.clear();
     this._forget();
     this._dropPreview();
   }
@@ -114,7 +142,7 @@ export class MagicCardForumShot extends LitElement {
     this._loadError = undefined;
     this.requestUpdate();
     try {
-      this._cards = await listMagicCards(this.hass ?? {});
+      this._cards = await MagicCardForumShot.listCards(this.hass ?? {});
       this._load = 'ready';
       if (!this._cards.some((c) => rowKey(c) === this._pick && c.lock === null)) this._pick = '';
     } catch (e) {
@@ -130,20 +158,6 @@ export class MagicCardForumShot extends LitElement {
     this._previewUrl = undefined;
   }
 
-  /** Saves the PNG through a blob: URL made here and revoked shortly after; nothing is stored. */
-  private _save(sheet: ForumShotSheet): void {
-    const url = URL.createObjectURL(sheet.blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = timedName(sheet.fileName);
-    a.click();
-    const id = window.setTimeout(() => {
-      this._timers.delete(id);
-      URL.revokeObjectURL(url);
-    }, REVOKE_DELAY_MS);
-    this._timers.add(id);
-  }
-
   private async _download(): Promise<void> {
     const ref = this._picked();
     if (!ref || this._busy) return;
@@ -154,19 +168,14 @@ export class MagicCardForumShot extends LitElement {
     this._sheet = undefined;
     this.requestUpdate();
     try {
-      const config = await cardConfigOf(this.hass ?? {}, ref);
-      const modes: ForumShotMode[] = this._mode === 'both' ? ['light', 'dark'] : [this._mode];
-      const looks: ForumShotLook[] = this._looks ? ALL_LOOKS : ['as-configured'];
-      const sheet = await renderSheet(
-        this.hass ?? {},
-        { config, modes, looks, fontHosts: ref.fontHosts },
-        { lookSource: iconLibraryLookSource },
-      );
+      const sheet = await MagicCardForumShot.download(this.hass ?? {}, ref, {
+        mode: this._mode,
+        looks: this._looks,
+      });
       this._dropPreview();
       this._previewUrl = URL.createObjectURL(sheet.blob);
       this._sheet = sheet;
       this._sheetFont = ref.fontHosts.length > 0;
-      this._save(sheet);
       this._saved = true;
     } catch (e) {
       const code = codeOf(e);
@@ -546,3 +555,6 @@ export class MagicCardForumShot extends LitElement {
     </section>`;
   }
 }
+
+const _entry: ForumShotEntry = MagicCardForumShot;
+void _entry;
