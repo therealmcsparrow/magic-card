@@ -38,7 +38,7 @@ mc-ui-studio-frame .switch[aria-checked='true']::after{background:var(--bp-acc-i
 .zoom-pill{display:flex;align-items:center;gap:4px}
 .zoom-pill output{min-inline-size:3.5em;text-align:center;font:.75rem var(--mc-mono)}
 @media(max-width:799px){.stagewrap{flex-direction:column}}
-.stage{position:relative;flex:1 1 auto;min-width:0;min-height:260px;overflow:hidden;background:var(--mc-surface);border:1px solid var(--bp-line);border-radius:var(--bp-r-m)}
+.stage{position:relative;flex:1 1 auto;min-width:0;min-height:260px;overflow:hidden;background:none;border:0;border-radius:0}
 [data-layout=stacked] .center{flex:none}
 [data-layout=stacked] .stage{flex:none;min-height:max(320px,45vh)}
 .stage{direction:ltr}

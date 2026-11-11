@@ -1,10 +1,10 @@
 import { html, nothing, svg, type TemplateResult } from 'lit';
 import { guard } from 'lit/directives/guard.js';
 import type { TransferItem } from '../contracts/preset-transfer';
-import type { FrameDrawerChange, FrameModifiedChange, StudioFrameStrings } from '../contracts/studio-frame';
+import type { FrameDrawerChange, FrameMeasure, FrameModifiedChange, StudioFrameStrings } from '../contracts/studio-frame';
 import { toPathString } from '../path/core';
 import { D, E } from './bind';
-import { PRIMITIVE_KINDS, type PrimitiveKind } from '../contracts/path-model';
+import { PRIMITIVE_KINDS, type Box, type PrimitiveKind } from '../contracts/path-model';
 import { HA_SECONDARY_OPACITY, type SvgArrange } from '../contracts/svg-editor';
 import { haWarns } from './ha';
 import { groupBlocked, layerTree, subject } from './layers';
@@ -533,15 +533,15 @@ function imageFrame(ed: McSvgEditor): TemplateResult {
   const inspect = ed.tab === 'inspector';
   const empty = inspect && ed.modOnly && !Object.values(mods(ed)).some(Boolean);
   const tabs = (['inspector', 'layers'] as const).map((k) => html`<button type="button" role="tab" id=${`tab-${k}`} aria-selected=${aria(ed.tab === k)} aria-controls="drawer-body" tabindex=${ed.tab === k ? '0' : '-1'} @click=${() => (ed.tab = k)}>${k === 'layers' ? t('svg-editor.views.layers') : t('svg-editor.views.inspector')}</button>`);
-  return html`<mc-ui-studio-frame studio="image-editor" fixed-drawer start-mode="rail" .scheme=${(ed.hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode ? 'dark' : 'light'} .strings=${strings}
+  return html`<mc-ui-studio-frame studio="image-editor" fixed-drawer edge-to-edge start-mode="rail" .scheme=${(ed.hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode ? 'dark' : 'light'} .strings=${strings}
     .selectionLabel=${sel.length === 1 ? sel[0].name || t('svg-editor.views.layer') : sel.length ? t('svg-editor.views.c-shapes-selected', { c: sel.length }) : ed.doc.name || t('svg-editor.views.image-editor')}
-    .measure=${{ width: ed.doc.vb.w, height: ed.doc.vb.h, grid: ed.pixelGrid ? ed.grid : 0, selection: b ? { x: b.x, y: b.y, width: b.w, height: b.h } : null, zoom: stageZoom(ed) }}
+    .measure=${stageMeasure(ed, b)}
     @mc-frame-drawer=${(e: CustomEvent<FrameDrawerChange>) => (ed.drawer = e.detail.open)}
     @mc-frame-modified=${(e: CustomEvent<FrameModifiedChange>) => (ed.modOnly = e.detail.on)}>
     <div slot="top" class="ftop">${topBar(ed, false)}</div>
     <div slot="start" class="frail">${rail(ed)}</div>
     ${stageSection(ed, true)}
-    <div slot="zoom" class="zoomp">${zoomGroup(ed)}</div>
+    <div slot="zoom" class="zoomp">${zoomGroup(ed, true)}</div>
     ${empty
       ? nothing
       : html`<div slot="drawer" id="drawer-body" class="drawer-body">
@@ -555,19 +555,36 @@ function imageFrame(ed: McSvgEditor): TemplateResult {
   </mc-ui-studio-frame>`;
 }
 
-/** The zoom the frame sizes its stage box with: the view's zoom against fit, never past the room the frame has for it. */
-function stageZoom(ed: McSvgEditor): number {
-  const z = ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1);
+/** The rulers and callouts of the frame: stage units are image units, 0 sits at the image's top-left corner on screen, zoom is canvas px per unit. */
+function stageMeasure(ed: McSvgEditor, b: Box | undefined): FrameMeasure {
+  const f = ed.doc.vb;
+  const v = ed.view;
+  return {
+    width: f.w,
+    height: f.h,
+    grid: ed.pixelGrid ? ed.grid : 0,
+    selection: b ? { x: b.x - f.x, y: b.y - f.y, width: b.w, height: b.h } : null,
+    zoom: v.zoom,
+    origin: { x: v.x + f.x * v.zoom, y: v.y + f.y * v.zoom },
+  };
+}
+
+/** The "w x h px" line under the image: it follows the image's bottom-right corner on the canvas and leaves when that corner is off screen. */
+function dimsLine(ed: McSvgEditor): TemplateResult | typeof nothing {
+  const f = ed.doc.vb;
+  const v = ed.view;
   const [w, h] = ed.fieldBox;
-  const room = w > 0 && h > 0 ? Math.min(w / ed.doc.vb.w, h / ed.doc.vb.h) : Math.min(innerWidth / 2 / ed.doc.vb.w, innerHeight / 2 / ed.doc.vb.h);
-  return Math.min(z, room);
+  const left = v.x + (f.x + f.w) * v.zoom;
+  const top = v.y + (f.y + f.h) * v.zoom + 6;
+  if (w > 0 && h > 0 && (left < 80 || left > w || top > h - 18)) return nothing;
+  return html`<p class="dims" style=${`left:${left}px;top:${top}px`}>${t('svg-editor.views.w-x-h-px', { w: f.w, h: f.h })}</p>`;
 }
 
 /** The canvas section: the floating bar, the stage with its canvas and the notices below it. */
 function stageSection(ed: McSvgEditor, framed: boolean): TemplateResult {
   return html`
     <section class=${framed ? 'center fstage' : 'center'} slot=${framed ? 'stage' : nothing} aria-label=${ed.img ? ed.img.title : t('svg-editor.views.icon-editor')}>
-      ${framed && ed.picker ? picker(ed) : nothing}${framed ? ed.img?.barTail() : nothing}${floatBar(ed)}
+      ${framed ? html`<div class="fover">${ed.picker ? picker(ed) : nothing}${ed.img?.barTail()}${floatBar(ed)}</div>` : html`${floatBar(ed)}`}
       <div class="stagebox">
       <div
         class=${`stage tool-${ed.tool}${ed.img?.hasRef ? ' has-ref' : ''}`}
@@ -612,7 +629,7 @@ function stageSection(ed: McSvgEditor, framed: boolean): TemplateResult {
       ${toolOptions(ed)}
       </div>
       ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${nudgePad(ed)}
-      ${framed ? html`<p class="dims">${t('svg-editor.views.w-x-h-units', { w: ed.doc.vb.w, h: ed.doc.vb.h })}</p>` : nothing}
+      ${framed ? dimsLine(ed) : nothing}
     </section>`;
 }
 
@@ -640,7 +657,7 @@ function hintFor(ed: McSvgEditor): string {
 }
 
 /** Zoom out, the percentage, Zoom in and Fit to view: in the canvas toolbar, or in the frame's zoom pill. */
-const zoomGroup = (ed: McSvgEditor): TemplateResult => html`${btn(t('svg-editor.views.zoom-out'), 'minus', () => ed.zoomBy(0.8), { keys: '-' })}<span class="zoom" aria-live="off">${Math.round((ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1)) * 100)}%</span>${btn(t('svg-editor.views.zoom-in'), 'add', () => ed.zoomBy(1.25), { keys: '=' })}${btn(t('svg-editor.views.fit-to-view'), 'fitToScreenOutline', () => ed.fitView(), { keys: '0' })}`;
+const zoomGroup = (ed: McSvgEditor, actual = false): TemplateResult => html`${btn(t('svg-editor.views.zoom-out'), 'minus', () => ed.zoomBy(0.8), { keys: '-' })}<span class="zoom" aria-live="off">${Math.round((actual ? ed.view.zoom : ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1)) * 100)}%</span>${btn(t('svg-editor.views.zoom-in'), 'add', () => ed.zoomBy(1.25), { keys: '=' })}${btn(t('svg-editor.views.fit-to-view'), 'fitToScreenOutline', () => ed.fitView(), { keys: '0' })}`;
 
 /** The canvas toolbar: zoom, view, then Align, Combine and Path after a divider. Small, borderless buttons (kit `.toolbar`). */
 function floatBar(ed: McSvgEditor): TemplateResult {
@@ -850,7 +867,7 @@ function gridChips(ed: McSvgEditor): TemplateResult {
               const el = e.target as HTMLInputElement;
               ed.typeGrid(el.value, true);
               if (!ed.gridMsg?.error) el.value = fmt(ed.grid);
-            }} /><span>${t('svg-editor.views.units')}</span></span
+            }} /><span>${ed.img ? t('svg-editor.views.px') : t('svg-editor.views.units')}</span></span
           >`,
         })
       : nothing}
@@ -862,7 +879,7 @@ function documentSection(ed: McSvgEditor): TemplateResult {
   if (ed.modOnly && !mods(ed).doc) return html``;
   return html`${group(
       t('svg-editor.views.document'),
-      html`${ed.img ? html`<p class="dims">${t('svg-editor.views.w-x-h-units', { w: ed.doc.vb.w, h: ed.doc.vb.h })}</p>` : nothing}<p class="help">${t('svg-editor.views.nothing-selected-pick-a-layer-or-click-a')}</p>
+      html`${ed.img ? html`<p class="dims">${t('svg-editor.views.w-x-h-px', { w: ed.doc.vb.w, h: ed.doc.vb.h })}</p>` : nothing}<p class="help">${t('svg-editor.views.nothing-selected-pick-a-layer-or-click-a')}</p>
         ${ed.img ? nothing : dualSwitch(ed)} ${gridChips(ed)}
         ${ed.img ? nothing : chk('sw-safe', t('svg-editor.views.show-20-x-20-safe-area'), ed.safe, (v) => { ed.safe = v; ed.checks(); })}
         ${chk('sw-nudge', t('svg-editor.views.show-nudge-pad'), ed.nudgePad, (v) => (ed.nudgePad = v))}`,

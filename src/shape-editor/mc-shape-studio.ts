@@ -204,6 +204,8 @@ export class McShapeStudio extends LitElement {
   @state() modOnly = false;
   /** The canvas zoom in CSS px per frame unit and the zoom that fits the frame; their ratio is the zoom shown. */
   @state() viewZoom = 0;
+  /** Where frame unit 0, 0 sits on screen, in px from the top-left of the frame's stage content, and the px per unit that go with it. */
+  @state() private drawn: { x: number; y: number; k: number } | null = null;
   private fitZoom = 0;
   private frameKey = '';
   private drawerInit = false;
@@ -239,6 +241,7 @@ export class McShapeStudio extends LitElement {
     for (const d of this.dialogs) d.removeEventListener('cancel', this.onCancel);
     this.dialogs = [];
     this.ro?.disconnect();
+    this.watched.clear();
     this.stopLib?.();
     this.flushDelete();
     clearTimeout(this.liveTimer);
@@ -329,6 +332,8 @@ export class McShapeStudio extends LitElement {
     this.sheetWas = this.sheet;
     const sw = this.shadowRoot?.querySelector('.stage')?.clientWidth ?? 0;
     if (sw && sw !== this.stageW) this.stageW = sw;
+    this.watchStage();
+    this.syncDrawn();
     // a window opens the first time it renders; it closes through close() so focus goes back to its opener
     for (const w of this.shadowRoot?.querySelectorAll<UiWindowElement>('mc-ui-window:not([data-shown])') ?? []) {
       w.dataset.shown = '1';
@@ -336,7 +341,46 @@ export class McShapeStudio extends LitElement {
     }
   }
 
+  private watched = new Set<Element>();
+
+  /** The stage and the frame's content box move when the drawer opens or the window resizes, so they are watched with the host. */
+  private watchStage(): void {
+    if (!this.ro) return;
+    for (const el of [this.shadowRoot?.querySelector('.stage'), this.frame()?.shadowRoot?.querySelector('.content')]) {
+      if (el && !this.watched.has(el)) {
+        this.watched.add(el);
+        this.ro.observe(el);
+      }
+    }
+  }
+
+  /** Reads where the drawing sits in the frame's stage content, so the rulers and callouts follow the pixels the user sees. */
+  private syncDrawn(): void {
+    const content = this.frame()?.shadowRoot?.querySelector('.content')?.getBoundingClientRect();
+    const { w, h } = this.size;
+    let next: { x: number; y: number; k: number } | null = null;
+    if (content && this.doc.mode === 'path' && this.canvas === 'ready') {
+      const cv = this.canvasEl();
+      const r = cv?.getBoundingClientRect();
+      if (cv && r && r.width > 0) next = { x: r.left - content.left + cv.view.pan[0], y: r.top - content.top + cv.view.pan[1], k: cv.view.zoom };
+    } else if (content && this.doc.mode !== 'path') {
+      const r = this.shadowRoot?.querySelector('.stage > svg.cv')?.getBoundingClientRect();
+      if (r && r.width > 0 && r.height > 0) {
+        const k = Math.min(r.width / (w + 2 * PAD), r.height / (h + 2 * PAD));
+        next = { x: r.left - content.left + (r.width - (w + 2 * PAD) * k) / 2 + PAD * k, y: r.top - content.top + (r.height - (h + 2 * PAD) * k) / 2 + PAD * k, k };
+      }
+    }
+    const q = (n: number): number => Math.round(n * 2) / 2;
+    const was = this.drawn;
+    if (!next) {
+      if (was) this.drawn = null;
+    } else if (!was || q(next.x) !== was.x || q(next.y) !== was.y || Math.abs(next.k - was.k) > 1e-4) {
+      this.drawn = { x: q(next.x), y: q(next.y), k: next.k };
+    }
+  }
+
   private measure(): void {
+    this.syncDrawn();
     const w = this.getBoundingClientRect().width || (typeof innerWidth === 'number' ? innerWidth : 1280);
     this.layout = w > 1180 ? 'wide' : w > 900 ? 'mid' : w > 640 ? 'compact' : 'stacked';
     this.narrowFrame = w < FRAME_WIDE_MIN_PX;
@@ -1475,11 +1519,8 @@ export class McShapeStudio extends LitElement {
     if (!(z > 0)) return;
     if (!this.fitZoom) this.fitZoom = z;
     this.viewZoom = z;
+    this.syncDrawn();
   };
-
-  private zoomFactor(): number {
-    return this.viewZoom > 0 && this.fitZoom > 0 ? this.viewZoom / this.fitZoom : 1;
-  }
 
   /** Zoom about the middle of the canvas through its own view maths. */
   private zoomBy(factor: number): void {
@@ -1517,15 +1558,16 @@ export class McShapeStudio extends LitElement {
   private frameMeasure(): FrameMeasure | null {
     if (!this.ready) return null;
     const { w, h } = this.size;
-    if (this.doc.mode === 'path' && this.canvas === 'ready') return { width: w, height: h, grid: this.grid ? GRID : 0, selection: this.selectionBox(), zoom: this.zoomFactor() };
-    const k = this.stageW ? this.stageW / (w + 2 * PAD) : 1;
-    return { width: w, height: h, grid: 0, selection: null, zoom: k > 0 ? k : 1 };
+    const d = this.drawn;
+    const path = this.doc.mode === 'path' && this.canvas === 'ready';
+    if (path) return { width: w, height: h, grid: this.grid ? GRID : 0, selection: this.selectionBox(), zoom: this.viewZoom > 0 ? this.viewZoom : d?.k ?? 1, origin: d ? { x: d.x, y: d.y } : undefined };
+    return { width: w, height: h, grid: 0, selection: null, zoom: d?.k ?? 1, origin: d ? { x: d.x, y: d.y } : undefined };
   }
 
   /** Zoom out, the zoom shown, zoom in and Fit, while the path canvas is on the stage. */
   private zoomPill(): TemplateResult | typeof nothing {
     if (!this.ready || this.doc.mode !== 'path' || this.canvas !== 'ready') return nothing;
-    return html`<div class="zoom-pill" slot="zoom" role="group" aria-label=${t('shape-editor.mc-shape-studio.frame-zoom')}>${button({ label: t('shape-editor.mc-shape-studio.zoom-out'), icon: 'mdi:minus', iconOnly: true, size: 'sm', onClick: () => this.zoomBy(0.8) })}<output>${Math.round(this.zoomFactor() * 100)} %</output>${button({ label: t('shape-editor.mc-shape-studio.zoom-in'), icon: 'mdi:plus', iconOnly: true, size: 'sm', onClick: () => this.zoomBy(1.25) })}${button({ label: t('shape-editor.mc-shape-studio.zoom-fit'), icon: 'mdi:fit-to-screen-outline', iconOnly: true, size: 'sm', onClick: () => this.zoomFit() })}</div>`;
+    return html`<div class="zoom-pill" slot="zoom" role="group" aria-label=${t('shape-editor.mc-shape-studio.frame-zoom')}>${button({ label: t('shape-editor.mc-shape-studio.zoom-out'), icon: 'mdi:minus', iconOnly: true, size: 'sm', onClick: () => this.zoomBy(0.8) })}<output>${Math.round((this.viewZoom || this.drawn?.k || 1) * 100)} %</output>${button({ label: t('shape-editor.mc-shape-studio.zoom-in'), icon: 'mdi:plus', iconOnly: true, size: 'sm', onClick: () => this.zoomBy(1.25) })}${button({ label: t('shape-editor.mc-shape-studio.zoom-fit'), icon: 'mdi:fit-to-screen-outline', iconOnly: true, size: 'sm', onClick: () => this.zoomFit() })}</div>`;
   }
 
   // ── render ──

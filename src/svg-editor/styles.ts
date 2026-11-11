@@ -659,10 +659,55 @@ export const editorStyles: CSSResult[] = [
     .center.fstage {
       grid-area: auto;
       inline-size: 100%;
+      block-size: 100%;
       min-inline-size: 0;
       max-inline-size: 100%;
-      min-block-size: max(320px, calc(100vh - 220px));
+      min-block-size: 0;
+      gap: 0;
       padding: 0;
+      overflow: hidden;
+    }
+    .fstage .stagebox {
+      min-height: 0;
+    }
+    .fstage .stage {
+      border-radius: 0;
+      background: none;
+    }
+    .fover {
+      position: absolute;
+      z-index: 5;
+      inset-block-start: 8px;
+      inset-inline: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .fover > *,
+    .fover .img-meter :is(button, a, .kib) {
+      pointer-events: auto;
+    }
+    .fover > .img-meter {
+      align-self: stretch;
+      padding: 0 4px;
+      border: 0;
+      background: none;
+      pointer-events: none;
+    }
+    .fover .img-meter .bar {
+      background: transparent;
+      box-shadow: inset 0 0 0 1px var(--bp-edge, var(--mc-divider));
+    }
+    .fstage > .dims {
+      position: absolute;
+      z-index: 2;
+      margin: 0;
+      transform: translateX(-100%);
+      white-space: nowrap;
+      pointer-events: none;
+      color: var(--bp-mute, inherit);
     }
     .dims {
       font: 0.75rem var(--mc-mono);

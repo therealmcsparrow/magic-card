@@ -148,11 +148,11 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   }
   [data-bp="ruler"][data-axis="x"] {
     border-block-end: 1px solid var(--bp-hair2);
-    background: repeating-linear-gradient(90deg, var(--bp-hair2) 0 1px, transparent 1px var(--bp-tick, 10px)) bottom / 100% 5px no-repeat;
+    background: repeating-linear-gradient(90deg, var(--bp-hair2) 0 1px, transparent 1px var(--bp-tick, 10px)) var(--bp-ro, 0px) bottom / calc(100% + var(--bp-tick, 10px)) 5px no-repeat;
   }
   [data-bp="ruler"][data-axis="y"] {
     border-inline-end: 1px solid var(--bp-hair2);
-    background: repeating-linear-gradient(180deg, var(--bp-hair2) 0 1px, transparent 1px var(--bp-tick, 10px)) right / 5px 100% no-repeat; /* physical */
+    background: repeating-linear-gradient(180deg, var(--bp-hair2) 0 1px, transparent 1px var(--bp-tick, 10px)) right top var(--bp-ro, 0px) / 5px calc(100% + var(--bp-tick, 10px)) no-repeat; /* physical */
   }
   [data-bp="ruler"] span {
     position: absolute;
@@ -204,6 +204,20 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     display: grid;
     padding-inline: 8px; /* room for the selection frame and its handles beside the card */
   }
+  :host([edge-to-edge]) .field {
+    display: grid;
+    padding: 0;
+    overflow: hidden;
+    scroll-padding: 0;
+  }
+  :host([edge-to-edge]) .content {
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+    justify-items: stretch;
+    align-content: stretch;
+    margin: 0;
+    max-inline-size: none;
+    min-block-size: 0;
+  }
   .content {
     position: relative;
     display: grid;
@@ -228,7 +242,8 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     font: var(--bp-t-meta) var(--bp-font-mono);
     white-space: nowrap;
   }
-  :host([centre-stage]) [data-bp="callout"] output {
+  :host([centre-stage]) [data-bp="callout"] output,
+  :host([edge-to-edge]) [data-bp="callout"] output {
     inset-block-start: auto;
     inset-block-end: -20px;
     inset-inline-start: -1px;
@@ -243,7 +258,8 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     font: var(--bp-t-meta) var(--bp-font-mono);
     pointer-events: none;
   }
-  :host([centre-stage]) [data-bp="width-callout"] {
+  :host([centre-stage]) [data-bp="width-callout"],
+  :host([edge-to-edge]) [data-bp="width-callout"] {
     overflow: hidden;
     white-space: nowrap;
   }

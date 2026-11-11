@@ -1,8 +1,8 @@
-// Contract: studio frame. Version 1.2.0 (1.2.0 adds the optional `fixed-drawer` and `centre-stage` attributes). Part of the ui kit (re-exported by ./ui-kit from ui-kit 1.4.0).
+// Contract: studio frame. Version 1.3.0 (1.2.0 adds the optional `fixed-drawer` and `centre-stage` attributes; 1.3.0 adds the optional `edge-to-edge` attribute and `FrameMeasure.origin`). Part of the ui kit (re-exported by ./ui-kit from ui-kit 1.4.0).
 // The shared shell of every studio: top bar, rulers, measured grid stage with a zoom pill, and an end-side drawer (pushes the stage at 1024 px+, full-height sheet below).
 // The frame owns layout, rulers, grid, drawer, pin, "Modified only" and the sheet; the studio owns every field, tool and string (all words come in through `strings`).
 
-export const STUDIO_FRAME_CONTRACT_VERSION = '1.2.0';
+export const STUDIO_FRAME_CONTRACT_VERSION = '1.3.0';
 
 export const UI_STUDIO_FRAME_TAG = 'mc-ui-studio-frame';
 
@@ -50,8 +50,14 @@ export interface FrameMeasure {
   grid: number;
   /** Selection box for the selection and width callouts; null when nothing is selected. */
   selection: { x: number; y: number; width: number; height: number } | null;
-  /** Zoom as a factor (1 = 100 %). */
+  /** Zoom as a factor (1 = 100 %): screen px per stage unit. */
   zoom: number;
+  /**
+   * Where stage unit 0,0 sits on screen, in px from the top-left corner of the stage content. Set it, together with the `edge-to-edge` attribute,
+   * when the studio's own canvas pans and zooms: the frame then puts 0 on the rulers and the callouts at that point and sizes no box.
+   * Omit it for a stage whose content starts at the top-left of the frame's content box; the rulers then start at that box's edge.
+   */
+  origin?: { x: number; y: number };
 }
 
 /** detail of FRAME_DRAWER_EVENT. */
@@ -98,6 +104,8 @@ export interface StudioFrameElement extends HTMLElement {
   fixedDrawer?: boolean;
   /** Attribute `centre-stage` (default false): the stage content is centred in the stage, horizontally and vertically, while it fits. */
   centreStage?: boolean;
+  /** Attribute `edge-to-edge` (default false): the stage content fills the whole stage, with no padding and no scrolling, for a studio whose canvas pans and zooms itself. */
+  edgeToEdge?: boolean;
   readonly drawerOpen: boolean;
   readonly pinned: boolean;
   readonly modifiedOnly: boolean;
