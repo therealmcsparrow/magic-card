@@ -107,7 +107,8 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
 
   /** True when the node holds this frame, for example a dialog host that took focus itself. */
   private _holdsFrame(node: Node): boolean {
-    for (let n: Node | null = this; n; n = n.parentNode ?? (n as ShadowRoot).host ?? null) if (n === node) return true;
+    if (node === this) return true;
+    for (let n: Node | null = this.parentNode; n; n = n.parentNode ?? (n as ShadowRoot).host ?? null) if (n === node) return true;
     return false;
   }
 
