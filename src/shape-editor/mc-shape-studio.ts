@@ -1560,8 +1560,8 @@ export class McShapeStudio extends LitElement {
     const { w, h } = this.size;
     const d = this.drawn;
     const path = this.doc.mode === 'path' && this.canvas === 'ready';
-    if (path) return { width: w, height: h, grid: this.grid ? GRID : 0, selection: this.selectionBox(), zoom: this.viewZoom > 0 ? this.viewZoom : d?.k ?? 1, origin: d ? { x: d.x, y: d.y } : undefined };
-    return { width: w, height: h, grid: 0, selection: null, zoom: d?.k ?? 1, origin: d ? { x: d.x, y: d.y } : undefined };
+    if (path) return { width: w, height: h, grid: GRID, selection: this.selectionBox(), zoom: this.viewZoom > 0 ? this.viewZoom : d?.k ?? 1, origin: d ? { x: d.x, y: d.y } : undefined };
+    return { width: w, height: h, grid: GRID, selection: null, zoom: d?.k ?? 1, origin: d ? { x: d.x, y: d.y } : undefined };
   }
 
   /** Zoom out, the zoom shown, zoom in and Fit, while the path canvas is on the stage. */

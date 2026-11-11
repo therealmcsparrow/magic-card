@@ -54,6 +54,12 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
   get modifiedOnly(): boolean {
     return this._modified;
   }
+  /** Re-reads the width; a frame without layout measures 0 and keeps the last width it knew. */
+  private _remeasure(): void {
+    const w = this.getBoundingClientRect().width;
+    if (w > 0) this._width = w;
+  }
+
   get narrow(): boolean {
     return this._width > 0 && this._width < FRAME_WIDE_MIN_PX;
   }
@@ -82,7 +88,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
   }
 
   protected firstUpdated(): void {
-    this._width = this.getBoundingClientRect().width;
+    this._remeasure();
     if (typeof ResizeObserver === 'undefined') return;
     this._contentObserver = new ResizeObserver(() => this._syncOff());
     for (const el of this.renderRoot.querySelectorAll('.field, .content')) this._contentObserver.observe(el);
@@ -116,7 +122,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     if (this.narrow) {
       void this.updateComplete.then(() => {
         // the width read at connect can be stale: re-read it so a wide frame never steals focus for a sheet that goes away
-        this._width = this.getBoundingClientRect().width;
+        this._remeasure();
         if (this.narrow) this.renderRoot.querySelector<HTMLElement>('[data-bp="sheet"] button')?.focus();
       });
     }

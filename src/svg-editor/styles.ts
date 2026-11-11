@@ -344,7 +344,7 @@ export const editorStyles: CSSResult[] = [
       overflow: hidden;
       border-radius: var(--mc-radius-lg);
       background-color: var(--mc-canvas);
-      background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1px);
+      background-image: linear-gradient(color-mix(in srgb, var(--mc-canvas-dot) 45%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--mc-canvas-dot) 45%, transparent) 1px, transparent 1px);
       background-size: 16px 16px;
       direction: ltr;
     }
@@ -714,9 +714,14 @@ export const editorStyles: CSSResult[] = [
       opacity: 0.75;
     }
     .tabs {
+      position: sticky;
+      inset-block-start: calc(-1 * var(--bp-s-2, 8px));
+      z-index: 2;
       display: flex;
       gap: 4px;
-      margin-block-end: 12px;
+      margin-block: calc(-1 * var(--bp-s-2, 8px)) 0;
+      padding-block: var(--bp-s-2, 8px) 12px;
+      background: var(--bp-sheet);
     }
     .tabs [role='tab'] {
       flex: 1;
@@ -773,6 +778,8 @@ export const editorStyles: CSSResult[] = [
       flex-direction: column;
       gap: 16px;
       padding: 0;
+      background: none;
+      overflow: visible;
     }
     @media (prefers-reduced-motion: reduce) {
       .insp,
