@@ -43,7 +43,7 @@ const COMPONENTS = [
     packages: [],
     licenceNote: 'SIL OFL 1.1',
     intro: [
-      'Fonts for the studio editors, in `fonts/` and in the lazy `magic-card-studio-fonts.js` chunk in `dist/`.',
+      'Fonts for the studio editors, in `fonts/` and in two files in `dist/`: `magic-card-editor.js` and the lazy `magic-card-studio-fonts.js` chunk.',
       'Space Grotesk: https://github.com/floriankarsten/space-grotesk. Space Mono: https://github.com/googlefonts/spacemono.',
       'Neither font declares a Reserved Font Name. The files are converted to WOFF2 and reduced to the characters the',
       'editors need (a subset). Under the SIL Open Font License 1.1 that makes them a Modified Version (definitions',
