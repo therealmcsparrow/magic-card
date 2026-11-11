@@ -126,6 +126,8 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({ __MC_BUILD_VERSION__: JSON.stringify(buildVersion()) }),
       // dist/magic-card-manifest.js: the release and the logical -> hashed chunk file names (read by the card after a chunk failed)
       new ManifestPlugin({ build: buildVersion() }),
+      // the OFL 1.1 text and copyright lines of the studio fonts (fonts/OFL.txt), preserved in the two chunks that carry the font data; magic-card.js gets none
+      new webpack.BannerPlugin({ raw: true, include: /^magic-card-(studio-fonts|editor)\.[0-9a-f]{8}\.js$/, banner: `/*!\n${fs.readFileSync(path.resolve(__dirname, 'fonts/OFL.txt'), 'utf8').replace(/\r\n/g, '\n').trimEnd().replace(/\*\//g, '* /')}\n*/\n` }),
       // the module list per built file for the i18n placement check (tools/i18n/placement.mjs, D7); git-ignored cache
       ...(isProduction ? [{ apply: (compiler) => compiler.hooks.done.tap('mc-i18n-stats', writeI18nStats) }] : []),
     ],
@@ -144,7 +146,7 @@ module.exports = (env, argv) => {
                 // keep_fargs: false drops unused trailing parameters (README: needed only by code that reads Function.length; no source or bundled dependency reads a function's arity)
                 compress: { passes: 3, keep_fargs: false },
                 format: {
-                  // the Material Design Icons attribution (src/icon-anim/mdi-paths.ts, Apache-2.0) and the OFL 1.1 notice of the studio fonts (src/ui-kit/fonts/data.ts)
+                  // the Material Design Icons attribution (src/icon-anim/mdi-paths.ts, Apache-2.0) and the OFL 1.1 notice of the studio fonts (fonts/OFL.txt, added by the BannerPlugin above)
                   comments: (_node, comment) => /^!\s*Material Design Icons/.test(comment.value) || /^!\s*Space Grotesk[\s\S]*SIL OPEN FONT LICENSE/.test(comment.value),
                 },
               },

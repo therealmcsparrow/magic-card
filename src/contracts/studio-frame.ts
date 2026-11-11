@@ -1,8 +1,6 @@
 // Contract: studio frame. Version 1.1.0. Part of the ui kit (re-exported by ./ui-kit from ui-kit 1.4.0).
-// The shared shell of every studio: a thin top bar, hairline rulers on the top and start edge, a measured grid stage
-// with a zoom pill, and an end-side drawer that pushes the stage at 1024 px and wider and becomes a full-height sheet
-// below it. The frame owns layout, rulers, grid, drawer, pin, "Modified only" and the sheet; the studio owns every
-// field, tool and string. It renders no text of its own: all words come in through `strings`.
+// The shared shell of every studio: top bar, rulers, measured grid stage with a zoom pill, and an end-side drawer (pushes the stage at 1024 px+, full-height sheet below).
+// The frame owns layout, rulers, grid, drawer, pin, "Modified only" and the sheet; the studio owns every field, tool and string (all words come in through `strings`).
 
 export const STUDIO_FRAME_CONTRACT_VERSION = '1.1.0';
 

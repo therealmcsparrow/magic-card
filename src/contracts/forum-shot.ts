@@ -64,7 +64,7 @@ export interface ForumShotChoice {
 }
 
 /**
- * Static members of the registered element's constructor (`customElements.get(FORUM_SHOT_TAG)`), from 1.2.0.
+ * Static members of the registered element's constructor (`customElements.get(FORUM_SHOT_TAG)`).
  * A host that draws its own card list and picture preview calls these and need not mount the element;
  * the element's own table and Download use the same members, so both read and save cards one way.
  * Hosts check that both members exist before calling them; an older entry has neither.
@@ -78,8 +78,7 @@ export interface ForumShotEntry {
   listCards(hass: object): Promise<MagicCardRef[]>;
   /**
    * Reads the card's current config, makes the sheet with `ref.fontHosts` as the disclosed hosts, and saves it as a PNG
-   * under `fileName` with the local time added (the blob: URL is revoked shortly after; nothing is stored).
-   * Resolves to the sheet so the host can show it; the host makes and revokes its own object URL for that.
+   * under `fileName` with the local time added (nothing is stored). Resolves to the sheet so the host can show it.
    * Rejects with a `ForumShotErrorCode`: `remote_asset` and `hosts_changed` mean the card changed since the list, so list again.
    * Only a person's click may start it, because it can contact the hosts in `ref.fontHosts`.
    */
