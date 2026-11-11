@@ -456,6 +456,14 @@ export class AnimationStudio extends LitElement {
       if (el) {
         el.focus();
         if (el instanceof HTMLInputElement) el.select();
+        // a slotted element is not rendered until the frame has rendered its slots: focus again once it has
+        const frame = this._frame();
+        if (frame && deepActive() !== el) {
+          void (frame as unknown as { updateComplete: Promise<unknown> }).updateComplete.then(() => {
+            const now = deepActive();
+            if (el.isConnected && (!now || now === document.body)) el.focus();
+          });
+        }
       }
       this._focusSel = undefined;
     }

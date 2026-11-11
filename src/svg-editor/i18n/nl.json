@@ -1611,6 +1611,10 @@
     "text": "Vorige",
     "hash": "a57b08a4"
   },
+  "svg-editor.views.px": {
+    "text": "px",
+    "hash": "6ee2cc10"
+  },
   "svg-editor.views.reading": {
     "text": "Lezen…",
     "hash": "874bfa5b"
@@ -1931,9 +1935,9 @@
     "text": "Gebruikt als mcu:{id}",
     "hash": "68edf118"
   },
-  "svg-editor.views.w-x-h-units": {
-    "text": "{w} x {h} eenheden",
-    "hash": "86219fc5"
+  "svg-editor.views.w-x-h-px": {
+    "text": "{w} x {h} px",
+    "hash": "26de7c54"
   },
   "svg-editor.views.what-do-you-want-to-start-from": {
     "text": "Waarmee wil je beginnen?",

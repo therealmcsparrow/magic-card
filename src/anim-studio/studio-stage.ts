@@ -735,9 +735,8 @@ export class AnimationStage extends LitElement {
         min-height: 0;
         min-width: 0;
         overflow: hidden;
-        background-color: var(--mc-canvas);
-        background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1.2px);
-        background-size: 16px 16px;
+        background-image: linear-gradient(var(--bp-hair, var(--mc-divider)) 1px, transparent 1px), linear-gradient(90deg, var(--bp-hair, var(--mc-divider)) 1px, transparent 1px);
+        background-size: var(--bp-grid, 16px) var(--bp-grid, 16px);
       }
       /* the card's area: what the card is fitted into */
       .area {

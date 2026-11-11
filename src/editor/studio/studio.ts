@@ -784,7 +784,7 @@ export class Studio extends LitElement {
       mc-ui-studio-frame[data-bp-w='mid'] {
         --bp-layers-w: 260px;
       }
-      /* the shortcut hint: a thin muted bar under the studio, one line, never over the stage */
+      /* the shortcut hint: a thin muted bar under the studio; at a narrow width the text wraps rather than being cut off, never over the stage */
       .foot {
         flex: none;
         box-sizing: border-box;
@@ -794,9 +794,7 @@ export class Studio extends LitElement {
         color: var(--bp-mute);
         font-size: 0.75rem;
         line-height: 20px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow-wrap: anywhere;
       }
       .foot[hidden] {
         display: none;

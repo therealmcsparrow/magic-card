@@ -344,7 +344,7 @@ export const editorStyles: CSSResult[] = [
       overflow: hidden;
       border-radius: var(--mc-radius-lg);
       background-color: var(--mc-canvas);
-      background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1px);
+      background-image: linear-gradient(color-mix(in srgb, var(--mc-canvas-dot) 45%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--mc-canvas-dot) 45%, transparent) 1px, transparent 1px);
       background-size: 16px 16px;
       direction: ltr;
     }
@@ -659,19 +659,69 @@ export const editorStyles: CSSResult[] = [
     .center.fstage {
       grid-area: auto;
       inline-size: 100%;
+      block-size: 100%;
       min-inline-size: 0;
       max-inline-size: 100%;
-      min-block-size: max(320px, calc(100vh - 220px));
+      min-block-size: 0;
+      gap: 0;
       padding: 0;
+      overflow: hidden;
+    }
+    .fstage .stagebox {
+      min-height: 0;
+    }
+    .fstage .stage {
+      border-radius: 0;
+      background: none;
+    }
+    .fover {
+      position: absolute;
+      z-index: 5;
+      inset-block-start: 8px;
+      inset-inline: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .fover > *,
+    .fover .img-meter :is(button, a, .kib) {
+      pointer-events: auto;
+    }
+    .fover > .img-meter {
+      align-self: stretch;
+      padding: 0 4px;
+      border: 0;
+      background: none;
+      pointer-events: none;
+    }
+    .fover .img-meter .bar {
+      background: transparent;
+      box-shadow: inset 0 0 0 1px var(--bp-edge, var(--mc-divider));
+    }
+    .fstage > .dims {
+      position: absolute;
+      z-index: 2;
+      margin: 0;
+      transform: translateX(-100%);
+      white-space: nowrap;
+      pointer-events: none;
+      color: var(--bp-mute, inherit);
     }
     .dims {
       font: 0.75rem var(--mc-mono);
       opacity: 0.75;
     }
     .tabs {
+      position: sticky;
+      inset-block-start: calc(-1 * var(--bp-s-2, 8px));
+      z-index: 2;
       display: flex;
       gap: 4px;
-      margin-block-end: 12px;
+      margin-block: calc(-1 * var(--bp-s-2, 8px)) 0;
+      padding-block: var(--bp-s-2, 8px) 12px;
+      background: var(--bp-sheet);
     }
     .tabs [role='tab'] {
       flex: 1;
@@ -728,6 +778,8 @@ export const editorStyles: CSSResult[] = [
       flex-direction: column;
       gap: 16px;
       padding: 0;
+      background: none;
+      overflow: visible;
     }
     @media (prefers-reduced-motion: reduce) {
       .insp,

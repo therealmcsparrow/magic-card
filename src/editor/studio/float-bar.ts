@@ -27,12 +27,51 @@ function clamp(v: number, min: number, max: number): number {
 }
 
 /**
- * Position of the module float bar. Never covers a neighbouring module:
- * below the frame first, then above it (clear of the frame's name tag), then right and left of the frame,
- * and as a last resort inside the frame's top-right corner. Always clamped to the visible canvas.
+ * Position of the module float bar, an overlay that always gets a spot. Never covers a neighbouring module:
+ * above the frame first (clear of the frame's name tag), then below it, then right and left of the frame,
+ * and when none is free, the spot that covers the least of the neighbours. Always clamped to the visible stage.
  */
 export function placeFloatBar(frame: Box, bar: Size, obstacles: Box[], viewport: Box): { top: number; left: number } {
-  return findFloatBarSpot(frame, bar, obstacles, viewport) ?? insideCorner(frame, bar, viewport);
+  return findFloatBarSpot(frame, bar, obstacles, viewport) ?? leastOverlap(frame, bar, obstacles, viewport);
+}
+
+function overlapArea(a: Box, b: Box): number {
+  const w = Math.min(a.left + a.width, b.left + b.width) - Math.max(a.left, b.left);
+  const h = Math.min(a.top + a.height, b.top + b.height) - Math.max(a.top, b.top);
+  return w > 0 && h > 0 ? w * h : 0;
+}
+
+/**
+ * No free spot: the candidate that covers the least of the neighbouring modules. The sides are slid into the
+ * visible stage (so the bar hangs over the frame's edge rather than a neighbour's text), the inside corner is the
+ * last choice on a tie.
+ */
+function leastOverlap(frame: Box, bar: Size, obstacles: Box[], viewport: Box): { top: number; left: number } {
+  const vTop = viewport.top + EDGE;
+  const vBottom = viewport.top + viewport.height - EDGE;
+  const vLeft = viewport.left + EDGE;
+  const vRight = viewport.left + viewport.width - EDGE;
+  const maxTop = vBottom - bar.height;
+  const maxLeft = vRight - bar.width;
+  const sideTop = clamp(frame.top, vTop, maxTop);
+  const candidates: Array<{ top: number; left: number }> = [
+    { top: clamp(frame.top - TAG - GAP - bar.height, vTop, maxTop), left: clamp(frame.left + frame.width - bar.width, vLeft, maxLeft) },
+    { top: clamp(frame.top + frame.height + GAP, vTop, maxTop), left: clamp(frame.left + frame.width - bar.width, vLeft, maxLeft) },
+    { top: sideTop, left: clamp(frame.left + frame.width + GAP, vLeft, maxLeft) },
+    { top: sideTop, left: clamp(frame.left - GAP - bar.width, vLeft, maxLeft) },
+    insideCorner(frame, bar, viewport),
+  ];
+  let best = candidates[candidates.length - 1];
+  let bestArea = Infinity;
+  for (const c of candidates) {
+    const box = { ...c, width: bar.width, height: bar.height };
+    const area = obstacles.reduce((sum, o) => sum + overlapArea(box, o), 0);
+    if (area < bestArea) {
+      best = c;
+      bestArea = area;
+    }
+  }
+  return best;
 }
 
 /** A spot outside the frame that is clear of every obstacle and inside the visible canvas, or null when none fits. */
@@ -54,8 +93,8 @@ export function findFloatBarSpot(frame: Box, bar: Size, obstacles: Box[], viewpo
   };
 
   const candidates: Array<[number, number]> = [
-    [frame.top + frame.height + GAP, alignedLeft],
     [frame.top - TAG - GAP - bar.height, alignedLeft],
+    [frame.top + frame.height + GAP, alignedLeft],
     [sideTop, frame.left + frame.width + GAP],
     [sideTop, frame.left - GAP - bar.width],
   ];

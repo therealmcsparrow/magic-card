@@ -4,6 +4,19 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.11.03-beta.3 (2026-11-12)
+
+A pre-release with fixes to the new studio look from 2026.11.03-beta.2. Magic Card Utils 2026.11.2-beta.2 stays the right version to use with it.
+
+### Fixed
+-   **Animation studio keyboard.** At every screen width the studio puts focus inside when it opens, so Ctrl+\ (Cmd+\ on a Mac) works straight away without a click first.
+-   **Studio grid.** The animation studio, image editor and shape editor stages show the same square measured grid as the other studios, and the shape editor always shows it.
+-   **Studio action bar.** The bar over a selected module in the Studio always shows, floats over the stage, never moves the card, and covers as little of the modules next to it as it can.
+-   **Studio stage.** The card sits on the stage grid without a second canvas around it, the size box and width callout match the selected item, and the stage no longer scrolls sideways at 1024 px.
+-   **Rulers and sizes.** In the image editor and shape editor the rulers, width callout and size box follow the real zoom and start at the drawing's edge. The image size shows in px under the image, and fitting the image leaves room for the floating toolbar.
+-   **Image editor tabs.** The Inspector and Layers tabs stay at the top while the panel scrolls.
+-   **Narrow screens.** The footer shortcuts and the line under the card in the Studio wrap instead of being cut off, and the theme editor's top bar wraps under 480 px.
+
 ## 2026.11.03-beta.1 (2026-11-09)
 
 A pre-release. Install Magic Card Utils 2026.11.2-beta.1 (or newer) first, then update Magic Card. Without it, the Animate buttons are greyed out and images stay at 256 KiB.

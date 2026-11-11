@@ -112,6 +112,8 @@ export interface Banner {
 export type Stage = 'loading' | 'fail' | 'start' | 'edit';
 export type CanvasEl = HTMLElement & { fit(): void; view: { zoom: number; pan: Pt }; setView(z: number, p: Pt): void; focusAnchor(p: number, a: number): void; selection?: PathSelection };
 
+/** Room kept between the floating controls and the image for the width callout line. */
+const OVER_CALLOUT = 34;
 const DEFAULT_OPTS: ToolOpts = { r: 0, sides: 5, inner: 0.5, star: false, prim: 'rounded-rect' };
 /** What a frame of a move or resize gesture changes. */
 const FRAME_KEYS = new Set(['doc', 'moving', 'view', 'cvSel', 'out', 'dirty']);
@@ -127,7 +129,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'startBusy', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving', 'tab', 'modOnly', 'narrow', 'drawer', 'fieldBox', 'crowdW'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'startBusy', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving', 'tab', 'modOnly', 'narrow', 'drawer', 'fieldBox', 'overTop', 'crowdW'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -205,6 +207,8 @@ export class McSvgEditor extends LitElement implements StageHost {
   layout: 'wide' | 'mid' | 'compact' | 'stacked' = 'wide';
   /** Room the studio frame leaves for the stage (width, height in px): the frame sizes its stage box from the image, so the zoom it is told never exceeds this. */
   fieldBox: readonly [number, number] = [0, 0];
+  /** Height the floating controls take from the top of the stage, plus the width callout line: the image is fitted below it. */
+  overTop = 0;
   /** Window width (px) at which the top bar ran past the window with every button worded; 0 while it fits. Those buttons keep only their glyph until the window is clearly wider. */
   crowdW = 0;
   private fieldEl?: HTMLElement;
@@ -1946,8 +1950,11 @@ export class McSvgEditor extends LitElement implements StageHost {
   };
 
   get fitZoom(): number {
-    const r = this.canvas()?.getBoundingClientRect();
-    return r && r.width ? Math.max(0.01, Math.min((r.width - 48) / this.doc.vb.w, (r.height - 48) / this.doc.vb.h)) : 0;
+    const c = this.canvas();
+    const r = c?.getBoundingClientRect();
+    if (!r || !r.width) return 0;
+    const top = Math.max(0, Math.min((c as { fitTop?: number }).fitTop ?? 0, r.height - 49));
+    return Math.max(0.01, Math.min((r.width - 48) / this.doc.vb.w, (r.height - top - 48) / this.doc.vb.h));
   }
 
   blankStart(): Doc {
@@ -2134,9 +2141,14 @@ export class McSvgEditor extends LitElement implements StageHost {
       const w = Math.max(0, Math.floor(el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)));
       const h = Math.max(0, Math.floor(el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)));
       if (w !== this.fieldBox[0] || h !== this.fieldBox[1]) this.fieldBox = [w, h];
+      const over = this.renderRoot.querySelector<HTMLElement>('.fover');
+      const top = over ? Math.ceil(over.offsetTop + over.offsetHeight + OVER_CALLOUT) : 0;
+      if (top !== this.overTop) this.overTop = top;
     };
     this.fieldRo = new ResizeObserver(read);
     this.fieldRo.observe(el);
+    const over = this.renderRoot.querySelector<HTMLElement>('.fover');
+    if (over) this.fieldRo.observe(over);
     read();
   }
 

@@ -2222,6 +2222,11 @@
     "note": "Button that moves to the previous item, such as the previous point. Pairs with Next.",
     "max": 15
   },
+  "svg-editor.views.px": {
+    "text": "px",
+    "note": "Lower-case suffix after a number field in the image editor, meaning pixels.",
+    "max": 10
+  },
   "svg-editor.views.reading": {
     "text": "Reading…",
     "note": "Short progress text while a chosen file is being read. Keep the ellipsis.",
@@ -2638,13 +2643,13 @@
       "id": "The value that replaces id in the text."
     }
   },
-  "svg-editor.views.w-x-h-units": {
-    "text": "{w} x {h} units",
-    "note": "Size of the image canvas in drawing units, shown under the canvas and in the Inspector. {w} is the width and {h} the height, as numbers.",
+  "svg-editor.views.w-x-h-px": {
+    "text": "{w} x {h} px",
+    "note": "Size of the image canvas in pixels, shown under the image in the image editor. {w} is the width and {h} the height, as numbers.",
     "max": 30,
     "vars": {
-      "h": "The canvas height in drawing units.",
-      "w": "The canvas width in drawing units."
+      "h": "The image height in pixels.",
+      "w": "The image width in pixels."
     }
   },
   "svg-editor.views.what-do-you-want-to-start-from": {

@@ -31,14 +31,19 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
   @property({ type: Boolean, attribute: 'fixed-drawer', reflect: true }) fixedDrawer = false;
   /** Attribute `centre-stage`: the stage content sits in the middle of the stage, both ways, while it fits. */
   @property({ type: Boolean, attribute: 'centre-stage', reflect: true }) centreStage = false;
+  /** Attribute `edge-to-edge`: the stage content fills the whole stage, for a studio whose canvas pans and zooms itself. */
+  @property({ type: Boolean, attribute: 'edge-to-edge', reflect: true }) edgeToEdge = false;
 
   @state() private _open = false;
   @state() private _pinned = false;
   @state() private _modified = false;
   @state() private _width = 0;
+  /** Where the stage content starts in the stage grid, so 0 on the rulers sits at its edge. */
+  @state() private _off = { x: 0, y: 0 };
 
   private _opener: HTMLElement | null = null;
   private _observer: ResizeObserver | null = null;
+  private _contentObserver: ResizeObserver | null = null;
 
   get drawerOpen(): boolean {
     return this._open;
@@ -49,6 +54,12 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
   get modifiedOnly(): boolean {
     return this._modified;
   }
+  /** Re-reads the width; a frame without layout measures 0 and keeps the last width it knew. */
+  private _remeasure(): void {
+    const w = this.getBoundingClientRect().width;
+    if (w > 0) this._width = w;
+  }
+
   get narrow(): boolean {
     return this._width > 0 && this._width < FRAME_WIDE_MIN_PX;
   }
@@ -72,6 +83,31 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     super.disconnectedCallback();
     this._observer?.disconnect();
     this._observer = null;
+    this._contentObserver?.disconnect();
+    this._contentObserver = null;
+  }
+
+  protected firstUpdated(): void {
+    this._remeasure();
+    if (typeof ResizeObserver === 'undefined') return;
+    this._contentObserver = new ResizeObserver(() => this._syncOff());
+    for (const el of this.renderRoot.querySelectorAll('.field, .content')) this._contentObserver.observe(el);
+  }
+
+  protected updated(): void {
+    this._syncOff();
+  }
+
+  /** Reads where the stage content sits against the grid (padding, centring and scroll included). */
+  private _syncOff(): void {
+    const grid = this.renderRoot.querySelector('[data-bp="grid"]');
+    const content = this.renderRoot.querySelector('.content');
+    if (!grid || !content) return;
+    const g = grid.getBoundingClientRect();
+    const c = content.getBoundingClientRect();
+    const x = Math.round((c.left - g.left) * 2) / 2;
+    const y = Math.round((c.top - g.top) * 2) / 2;
+    if (x !== this._off.x || y !== this._off.y) this._off = { x, y };
   }
 
   openDrawer(opener?: HTMLElement | null, reason: FrameDrawerReason = 'user'): void {
@@ -84,7 +120,11 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     this._open = true;
     this._fire<FrameDrawerChange>(FRAME_DRAWER_EVENT, { open: true, reason });
     if (this.narrow) {
-      void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('[data-bp="sheet"] button')?.focus());
+      void this.updateComplete.then(() => {
+        // the width read at connect can be stale: re-read it so a wide frame never steals focus for a sheet that goes away
+        this._remeasure();
+        if (this.narrow) this.renderRoot.querySelector<HTMLElement>('[data-bp="sheet"] button')?.focus();
+      });
     }
   }
 
@@ -221,13 +261,16 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     const m = this.measure;
     const zoom = m && m.zoom > 0 ? m.zoom : 1;
     const len = m ? (axis === 'x' ? m.width : m.height) : 0;
+    const off = axis === 'x' ? this._off.x : this._off.y;
+    const o = off + (m?.origin ? (axis === 'x' ? m.origin.x : m.origin.y) : 0);
     const step = RULER_STEPS.find((s) => s * zoom >= 48) ?? RULER_STEPS[RULER_STEPS.length - 1]!;
     const labels: number[] = [];
     for (let v = 0; v <= len && labels.length < MAX_LABELS; v += step) labels.push(v);
     const tick = Math.max(4, (step / 5) * zoom);
+    const shift = (((o % tick) + tick) % tick) - tick;
     const pos = axis === 'x' ? 'left' : 'top';
-    return html`<div data-bp="ruler" data-axis=${axis} aria-hidden="true" style=${`--bp-tick:${tick}px`}>
-      ${labels.map((v) => html`<span style=${`${pos}:${v * zoom}px`}>${v}</span>`)}
+    return html`<div data-bp="ruler" data-axis=${axis} aria-hidden="true" style=${`--bp-tick:${tick}px;--bp-ro:${shift}px`}>
+      ${labels.map((v) => html`<span style=${`${pos}:${o + v * zoom}px`}>${v}</span>`)}
     </div>`;
   }
 
@@ -236,10 +279,15 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     if (!m) return nothing;
     const z = m.zoom > 0 ? m.zoom : 1;
     const s = m.selection;
+    const ox = m.origin?.x ?? 0;
+    const oy = m.origin?.y ?? 0;
+    const onItem = (this.centreStage || !!m.origin) && !!s;
+    const wide = onItem ? `left:${ox + s.x * z}px;right:auto;width:${s.width * z}px` : m.origin ? `left:${ox}px;right:auto;width:${m.width * z}px` : '';
+    const top = m.origin ? `;top:${Math.max(2, oy - 28)}px` : '';
     return html`
-      <div data-bp="width-callout" aria-hidden="true"><output>${Math.round(m.width)} px</output></div>
+      <div data-bp="width-callout" aria-hidden="true" style=${wide + top}><output>${Math.round(onItem ? s.width : m.width)} px</output></div>
       ${s
-        ? html`<div data-bp="callout" aria-hidden="true" style=${`left:${s.x * z}px;top:${s.y * z}px;width:${s.width * z}px;height:${s.height * z}px`}>
+        ? html`<div data-bp="callout" aria-hidden="true" style=${`left:${ox + s.x * z}px;top:${oy + s.y * z}px;width:${s.width * z}px;height:${s.height * z}px`}>
             <output>${Math.round(s.width)} × ${Math.round(s.height)}</output>
           </div>`
         : nothing}
@@ -251,13 +299,13 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     const z = m && m.zoom > 0 ? m.zoom : 1;
     const step = m && m.grid > 0 ? m.grid * z : 0;
     const sheet = this._open && this.narrow;
-    const box = m ? `min-inline-size:${m.width * z}px;min-block-size:${m.height * z}px` : '';
+    const box = m && !m.origin ? `min-inline-size:${m.width * z}px;min-block-size:${m.height * z}px` : '';
     return html`<div data-bp="stage" data-rulers=${this.rulers ? 'on' : 'off'} ?inert=${sheet}>
       ${this.rulers
         ? html`<div class="corner" aria-hidden="true">px</div>${this._ruler('x')}${this._ruler('y')}`
         : nothing}
       <div data-bp="grid" aria-hidden="true" data-lines=${m && m.grid === 0 ? 'off' : 'on'} style=${step ? `--bp-grid-step:${step}px` : ''}></div>
-      <div class="field">
+      <div class="field" @scroll=${this._syncOff}>
         <div class="content" style=${box}>
           <slot name="stage"></slot>
           ${this._marks()}

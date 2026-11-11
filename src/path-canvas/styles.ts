@@ -13,7 +13,7 @@ export const canvasStyles: CSSResult[] = [
       -webkit-user-select: none;
       -webkit-touch-callout: none;
       background-color: var(--mc-canvas);
-      background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1px);
+      background-image: linear-gradient(color-mix(in srgb, var(--mc-canvas-dot) 45%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--mc-canvas-dot) 45%, transparent) 1px, transparent 1px);
       background-size: 16px 16px;
       border-radius: 12px;
       outline: none;
