@@ -46,9 +46,12 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     flex-direction: column;
     block-size: 100%;
     min-block-size: 0;
+    min-width: 0;
+    scroll-padding: var(--bp-bar-h) var(--bp-s-6) var(--bp-s-9);
   }
   [data-bp="bar"] {
     flex: none;
+    min-width: 0;
     display: flex;
     align-items: center;
     gap: var(--bp-s-3);
@@ -68,6 +71,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
 
   .work {
     flex: 1;
+    min-width: 0;
     min-block-size: 0;
     display: grid;
     grid-template-columns: var(--lw, 0px) minmax(0, 1fr) var(--dw, 0px);
@@ -83,11 +87,15 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     --lw: 0px;
     --dw: 0px;
   }
+  .work[data-start][data-narrow][data-rail] {
+    --lw: var(--bp-rail-w, 72px);
+  }
 
   [data-bp="start"] {
     grid-column: 1;
     grid-row: 1;
     display: none;
+    min-width: 0;
     min-inline-size: 0;
     overflow: hidden;
     background: var(--bp-sheet);
@@ -97,7 +105,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     display: flex;
     flex-direction: column;
   }
-  .work[data-start][data-narrow] [data-bp="start"] {
+  .work[data-start][data-narrow]:not([data-rail]) [data-bp="start"] {
     position: fixed;
     inset: 0;
     z-index: 20;
@@ -108,6 +116,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     grid-column: 2;
     grid-row: 1;
     position: relative;
+    min-width: 0;
     min-inline-size: 0;
     min-block-size: 0;
     display: grid;
@@ -180,9 +189,11 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     grid-column: 2;
     grid-row: 2;
     position: relative;
+    min-width: 0;
     min-inline-size: 0;
     min-block-size: 0;
     overflow: auto;
+    scroll-padding: var(--bp-s-9) var(--bp-s-6) 96px;
     padding: 56px var(--bp-s-10) 64px;
   }
   :host([data-bp-w="narrow"]) .field,
@@ -264,6 +275,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   [data-bp="drawer"] {
     grid-column: 3;
     grid-row: 1;
+    min-width: 0;
     min-inline-size: 0;
     overflow: hidden;
     border-inline-start: 1px solid var(--bp-line);
@@ -376,7 +388,9 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   .body {
     flex: 1;
     min-block-size: 0;
+    min-width: 0;
     overflow: auto;
+    scroll-padding: var(--bp-s-9) 0;
     padding: var(--bp-s-2) var(--bp-s-6) var(--bp-s-9);
   }
   .none {

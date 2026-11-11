@@ -26,6 +26,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
   @property({ attribute: false }) selectionLabel = '';
   @property({ attribute: false }) measure: FrameMeasure | null = null;
   @property({ attribute: false }) rulers = true;
+  @property({ attribute: 'start-mode' }) startMode: 'sheet' | 'rail' = 'sheet';
 
   @state() private _open = false;
   @state() private _pinned = false;
@@ -157,6 +158,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
 
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('_width')) this.setAttribute('data-bp-w', this._size());
+    if (changed.has('startMode') && this.startMode === 'rail' && this.getAttribute('start-mode') !== 'rail') this.setAttribute('start-mode', 'rail');
   }
 
   private _onSlot = (): void => {
@@ -261,7 +263,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     const sheet = this._open && narrow;
     return html`<div class="shell">
       <div data-bp="bar" ?inert=${sheet}><slot name="top"></slot></div>
-      <div class="work" ?data-start=${this._has('start')} ?data-open=${this._open && !narrow} ?data-narrow=${narrow}>
+      <div class="work" ?data-start=${this._has('start')} ?data-open=${this._open && !narrow} ?data-narrow=${narrow} ?data-rail=${this.startMode === 'rail'}>
         <div data-bp="start" ?inert=${sheet}><slot name="start" @slotchange=${this._onSlot}></slot></div>
         ${this._stage()}
         ${narrow ? nothing : this._drawer()}

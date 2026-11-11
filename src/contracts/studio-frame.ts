@@ -91,6 +91,11 @@ export interface StudioFrameElement extends HTMLElement {
   measure: FrameMeasure | null;
   /** Rulers and grid on (default true). A studio without a measured stage (theme editor list view) may turn them off. */
   rulers: boolean;
+  /**
+   * Attribute `start-mode`. 'sheet' (default): below FRAME_WIDE_MIN_PX the `start` slot becomes a full-screen fixed sheet.
+   * 'rail': the `start` slot stays an in-flow narrow column (--bp-rail-w, 72px) at every width.
+   */
+  startMode: 'sheet' | 'rail';
   readonly drawerOpen: boolean;
   readonly pinned: boolean;
   readonly modifiedOnly: boolean;
