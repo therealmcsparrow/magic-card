@@ -144,8 +144,8 @@ module.exports = (env, argv) => {
                 // keep_fargs: false drops unused trailing parameters (README: needed only by code that reads Function.length; no source or bundled dependency reads a function's arity)
                 compress: { passes: 3, keep_fargs: false },
                 format: {
-                  // only the Material Design Icons attribution (src/icon-anim/mdi-paths.ts, Apache-2.0)
-                  comments: (_node, comment) => /^!\s*Material Design Icons/.test(comment.value),
+                  // the Material Design Icons attribution (src/icon-anim/mdi-paths.ts, Apache-2.0) and the OFL 1.1 notice of the studio fonts (src/ui-kit/fonts/data.ts)
+                  comments: (_node, comment) => /^!\s*Material Design Icons/.test(comment.value) || /^!\s*Space Grotesk[\s\S]*SIL OPEN FONT LICENSE/.test(comment.value),
                 },
               },
               extractComments: false,
@@ -159,6 +159,8 @@ module.exports = (env, argv) => {
         cacheGroups: {
           default: false,
           defaultVendors: false,
+          // the one copy of the studio fonts (src/ui-kit/fonts/data.ts) for every studio chunk that loads them
+          'studio-fonts': { test: /[\\/]src[\\/]ui-kit[\\/]fonts[\\/]data\.ts$/, name: 'studio-fonts', chunks: 'async', enforce: true },
           'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
           // The modules only the forum shot and the icon-library chunk share. Two bundles load that chunk (the studio and the forum shot),
           // so webpack no longer treats the studio's modules as already loaded and would copy them into the chunk; they get their own chunk instead (not src/i18n/labels/index.ts, which import()s its tables where a shared chunk loads nothing, nor src/icon-anim/icon-doc.ts, which reads those labels).

@@ -37,6 +37,29 @@ const COMPONENTS = [
     ].join('\n'),
     extra: { heading: 'Apache License 2.0', file: `${root}tools/licenses/Apache-2.0.txt` },
   },
+  {
+    title: 'Space Grotesk and Space Mono',
+    label: 'Space Grotesk and Space Mono, fonts for the studio editors',
+    packages: [],
+    licenceNote: 'SIL OFL 1.1',
+    intro: [
+      'Fonts for the studio editors, in `fonts/` and in the lazy `magic-card-studio-fonts.js` chunk in `dist/`.',
+      'Space Grotesk: https://github.com/floriankarsten/space-grotesk. Space Mono: https://github.com/googlefonts/spacemono.',
+      'Neither font declares a Reserved Font Name. The files are converted to WOFF2 and reduced to the characters the',
+      'editors need (a subset). Under the SIL Open Font License 1.1 that makes them a Modified Version (definitions',
+      'and section 3). They keep their original family names, keep the copyright notice and licence below, are',
+      'distributed under the same licence, and are never sold on their own. The licence covers the fonts only, not',
+      'Magic Card. The same text is in `fonts/OFL.txt`.',
+    ].join('\n'),
+    // fonts/OFL.txt holds one upstream text per font, each under its font name; the name line becomes the heading
+    sections: () => {
+      const [grotesk, mono] = readFileSync(`${root}fonts/OFL.txt`, 'utf8').replace(/\r\n/g, '\n').trimEnd().split(/^Space Mono\n\n/m);
+      return [
+        { heading: 'Space Grotesk', text: grotesk.replace(/^Space Grotesk\n\n/, '').replace(/\n=+\s*$/, '').trimEnd() },
+        { heading: 'Space Mono', text: mono.trimEnd() },
+      ];
+    },
+  },
 ];
 const NOT_BUNDLED = []; // production dependencies that never reach dist/, with a reason in a comment
 
@@ -57,7 +80,8 @@ function render() {
   });
   const sections = COMPONENTS.map((c) => {
     const texts = [...new Set(c.packages.map(licenceText))];
-    let s = `## ${c.title}\n\n${c.intro}\n\n${texts.map(fence).join('\n\n')}\n`;
+    let s = `## ${c.title}\n\n${c.intro}\n\n${texts.map((t) => `${fence(t)}\n`).join('\n')}`;
+    if (c.sections) s += c.sections().map((x) => `### ${x.heading}\n\n${fence(x.text)}\n`).join('\n');
     if (c.extra) s += `\n### ${c.extra.heading}\n\n${fence(readFileSync(c.extra.file, 'utf8').replace(/\r\n/g, '\n').trimEnd())}\n`;
     return s;
   });
