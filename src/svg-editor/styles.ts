@@ -186,9 +186,6 @@ export const editorStyles: CSSResult[] = [
     .work {
       --lw: 260px;
       --iw: 340px;
-      --lx: 0px;
-      --lg: 0px;
-      --mc-lip-pull: var(--lg);
       position: relative;
       flex: 1;
       min-height: 0;
@@ -206,22 +203,15 @@ export const editorStyles: CSSResult[] = [
       grid-template-columns: 56px minmax(0, 1fr) var(--it, var(--iw));
       grid-template-areas: 'rail center insp';
     }
-    /* touch: a lip's longer hit area stays off the stage, so a hidden lip is pulled 4 px to the edge and a shown one 20 px into its panel */
-    @media (pointer: coarse) {
-      .work {
-        --lx: 20px;
-        --lg: 4px;
-      }
-    }
     /*
-     * A hidden panel gives its track to the stage, keeping a 40 px gutter for its lip, but keeps its own width,
+     * A hidden panel gives its whole track to the stage but keeps its own width,
      * so its content never reflows and a nested scroller keeps its place. It slides off its edge.
      */
     .no-side {
-      --lt: calc(40px + var(--lg));
+      --lt: 0px;
     }
     .no-insp {
-      --it: calc(40px + var(--lg));
+      --it: 0px;
     }
     .left {
       --mc-lip-off: -100%;
@@ -236,14 +226,6 @@ export const editorStyles: CSSResult[] = [
     .insp[data-lip='hidden'] {
       width: var(--iw);
       justify-self: end;
-    }
-    .left[data-lip='shown'],
-    .left[data-lip='hidden'] {
-      padding-inline-end: calc(28px + var(--lx));
-    }
-    .insp[data-lip='shown'],
-    .insp[data-lip='hidden'] {
-      padding-inline-start: calc(28px + var(--lx));
     }
     [data-layout='stacked'] .work {
       display: flex;

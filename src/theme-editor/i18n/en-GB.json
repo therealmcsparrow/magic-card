@@ -2011,11 +2011,6 @@
     "note": "Action that replaces a translated legal text with the English original.",
     "max": 20
   },
-  "theme-editor.lips.got-it": {
-    "text": "Got it",
-    "note": "Button that dismisses the one-time hint about the side panel tabs. Means understood.",
-    "max": 10
-  },
   "theme-editor.lips.hide-noun-keys": {
     "text": "Hide {noun} ({keys})",
     "note": "Tooltip on a side panel edge tab. {noun} is the panel name, such as 'variables' or 'preview'; {keys} is the keyboard shortcut, such as Ctrl+B; do not translate it.",
@@ -2055,14 +2050,6 @@
     "max": 35,
     "vars": {
       "keys": "The value that replaces keys in the text.",
-      "noun": "The value that replaces noun in the text."
-    }
-  },
-  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
-    "text": "The {noun} panel is hidden, as you left it. Use the button in the bar to show it.",
-    "note": "Hint at the screen edge. {noun} is the panel name, such as 'variables' or 'preview'.",
-    "max": 130,
-    "vars": {
       "noun": "The value that replaces noun in the text."
     }
   },

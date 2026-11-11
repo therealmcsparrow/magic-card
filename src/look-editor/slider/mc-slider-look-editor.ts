@@ -494,6 +494,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     return html`
       <mc-ui-studio-frame
         studio="look-editor"
+        fixed-drawer
         .scheme=${this.hass?.themes?.darkMode ? 'dark' : 'light'}
         .strings=${this._strings()}
         .selectionLabel=${t('look-editor.mc-slider-look-editor.slider-look')}
@@ -502,7 +503,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
         @mc-frame-drawer=${this._shell.onDrawer}
       >
         ${this._bar()}
-        <div slot="stage" class="stage" @pointerdown=${this._shell.onStage}>${this._tiles()}</div>
+        <div slot="stage" class="stage">${this._tiles()}</div>
         ${this._drawer()}
       </mc-ui-studio-frame>
       <mc-ui-toast .offset=${88} .dismissLabel=${t('look-editor.mc-slider-look-editor.close')} @mc-toast-action=${(e: CustomEvent<{ id: string }>) => e.detail.id === 'undo' && this._undo()}></mc-ui-toast>

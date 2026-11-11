@@ -33,7 +33,7 @@ async function open(parent: ParentNode = document.body, language?: string): Prom
   return el;
 }
 const q = <T extends Element>(el: Ed, s: string): T | null => el.renderRoot.querySelector<T>(s);
-const lip = (el: Ed, id: string): HTMLButtonElement => q<HTMLButtonElement>(el, `.lip[aria-controls="${id}"]`)!;
+const lip = (el: Ed, id: string): HTMLButtonElement => q<HTMLButtonElement>(el, `.topbar button[aria-controls="${id}"]`)!;
 const ctrlBackslash = (init: KeyboardEventInit = {}): KeyboardEvent => new KeyboardEvent('keydown', { key: '\\', code: 'Backslash', ctrlKey: true, bubbles: true, composed: true, cancelable: true, ...init });
 const css = (): string => editorStyles.map((s) => s.cssText).join('\n');
 
@@ -48,31 +48,59 @@ afterEach(() => {
 });
 
 describe('SVG editor panel lips', () => {
-  it('wide: a lip for the side panel and one for the inspector, a status region, the lip after its panel and before the inspector', async () => {
+  it('wide: no lip, no hint and no pin; both panels are shown and the top bar has a toggle for each', async () => {
     const el = await open();
+    expect(el.renderRoot.querySelectorAll('.lip, .lip-hint, [aria-label*="Keep"]').length).toBe(0);
     expect(lip(el, 'side').getAttribute('aria-label')).toBe('Layers and library panel');
-    expect(lip(el, 'inspector').getAttribute('aria-label')).toBe('Inspector panel');
-    expect(q(el, '.lip-status[role="status"]')).not.toBeNull();
-    expect(q(el, '#side')!.nextElementSibling).toBe(lip(el, 'side'));
-    expect(lip(el, 'inspector').nextElementSibling).toBe(q(el, '#inspector'));
+    expect(lip(el, 'inspector').getAttribute('aria-label')).toBe('Inspector');
+    expect(lip(el, 'side').getAttribute('aria-expanded')).toBe('true');
+    expect(lip(el, 'inspector').getAttribute('aria-expanded')).toBe('true');
     expect(q<HTMLElement>(el, '#side')!.dataset.lip).toBe('shown');
-    expect(el.hasAttribute(LIP_HOST_ATTR)).toBe(true);
+    expect(q<HTMLElement>(el, '#inspector')!.dataset.lip).toBe('shown');
+    expect(q(el, '.lip-status[role="status"]')).not.toBeNull();
   });
 
-  it('compact has a lip for the inspector only; stacked has none; a remembered hidden side panel does not apply while it is a sheet', async () => {
-    localStorage.setItem('mc-panels:svg-editor', 'side');
+  it('compact: the side toggle opens and closes the sheet, the inspector keeps its toggle; stacked has neither', async () => {
     const el = await open();
     el.layout = 'compact';
     await el.updateComplete;
-    expect(lip(el, 'side')).toBeNull();
+    expect(lip(el, 'side').getAttribute('aria-expanded')).toBe('false');
+    lip(el, 'side').click();
+    await el.updateComplete;
+    expect(el.overlay).toBe(true);
+    expect(lip(el, 'side').getAttribute('aria-expanded')).toBe('true');
     expect(lip(el, 'inspector')).not.toBeNull();
     el.layout = 'stacked';
     await el.updateComplete;
-    expect(el.renderRoot.querySelectorAll('.lip').length).toBe(0);
-    el.layout = 'wide';
-    await el.updateComplete;
-    expect(q<HTMLElement>(el, '#side')!.dataset.lip).toBe('hidden');
+    expect(lip(el, 'side')).toBeNull();
+    expect(lip(el, 'inspector')).toBeNull();
   });
+
+  it('a panel left hidden by an earlier visit opens shown', async () => {
+    localStorage.setItem('mc-panels:svg-editor', 'side,inspector');
+    const el = await open();
+    expect(q<HTMLElement>(el, '#side')!.dataset.lip).toBe('shown');
+    expect(q<HTMLElement>(el, '#inspector')!.dataset.lip).toBe('shown');
+    expect(q(el, '.lip-hint')).toBeNull();
+  });
+
+  it('the toggles take the Dutch names in a Dutch interface', async () => {
+    const el = await open(document.body, 'nl');
+    expect(lip(el, 'inspector').getAttribute('aria-label')).toBe(t('svg-editor.views.inspector'));
+    expect(lip(el, 'side').getAttribute('aria-label')).toBe(t('svg-editor.views.layers-and-library-panel'));
+  });
+
+  it('a hidden panel gives its whole track to the stage and nothing reserves room for a lip', async () => {
+    const el = await open();
+    lip(el, 'side').click();
+    await el.updateComplete;
+    expect(q(el, '.work')!.classList.contains('no-side')).toBe(true);
+    const flat = css().replace(/\s+/g, ' ');
+    expect(flat).toMatch(/\.no-side \{ --lt: 0px;/);
+    expect(flat).toMatch(/\.no-insp \{ --it: 0px;/);
+    expect(flat).not.toMatch(/padding-inline-(start|end): calc\(28px/);
+  });
+
 
   it('hiding a panel keeps it mounted and inert, gives its track to the stage and remembers it', async () => {
     const el = await open();
@@ -85,23 +113,6 @@ describe('SVG editor panel lips', () => {
     expect(q(el, '.work')!.classList.contains('no-insp')).toBe(true);
     expect(localStorage.getItem('mc-panels:svg-editor')).toBe('inspector');
     expect(lip(el, 'inspector').getAttribute('aria-expanded')).toBe('false');
-  });
-
-  it('a hidden lip sits in the 40 px gutter: at the rail edge for the side panel, at the window edge for the inspector', async () => {
-    localStorage.setItem('mc-panels:svg-editor', 'side,inspector');
-    const el = await open();
-    const style = q<HTMLElement>(el, '.work')!.getAttribute('style')!;
-    expect(style).toMatch(/--mc-lip-at-start:\s*calc\(56px - var\(--lg\)\)/);
-    expect(style).toMatch(/--mc-lip-at-end:\s*calc\(0px - var\(--lg\)\)/);
-    expect(css()).toMatch(/\.no-side\s*\{[^}]*--lt:\s*calc\(40px \+ var\(--lg\)\)/);
-    expect(css()).toMatch(/\.no-insp\s*\{[^}]*--it:\s*calc\(40px \+ var\(--lg\)\)/);
-  });
-
-  it('a shown lip sits inside its panel, clear of the stage and of the panel scrollbar', async () => {
-    const el = await open();
-    const style = q<HTMLElement>(el, '.work')!.getAttribute('style')!;
-    expect(style).toMatch(/--mc-lip-at-start:\s*calc\(56px \+ var\(--lw\) - 28px - var\(--lx\) - 0px - 1px\)/);
-    expect(style).toMatch(/--mc-lip-at-end:\s*calc\(var\(--iw\) - 28px - var\(--lx\) - 1px\)/);
   });
 
   it('a hidden panel keeps its own width and is never squeezed to 0', () => {
@@ -189,35 +200,8 @@ describe('SVG editor panel lips', () => {
     expect(localStorage.getItem('mc-panels:svg-editor')).toBeNull();
   });
 
-  it('opens with the first-open hint when a panel was left hidden', async () => {
-    localStorage.setItem('mc-panels:svg-editor', 'side');
-    const el = await open();
-    expect(q(el, '.lip-hint')).not.toBeNull();
-  });
-
   it('the shortcut help line names Ctrl and Command', () => {
     expect(HELP_KEYS.map((id) => t(id))).toContain('Show or hide panels: Ctrl+\\ or ⌘\\');
   });
 
-  it('takes the Dutch names in a Dutch interface', async () => {
-    const el = await open(document.body, 'nl');
-    expect(lip(el, 'inspector').getAttribute('aria-label')).toBe('Inspectorpaneel');
-  });
-
-  it('the panel padding that clears the lip applies shown and hidden, so a hidden panel never reflows', () => {
-    const flat = css().replace(/\s+/g, ' ');
-    expect(flat).toMatch(/\.left\[data-lip='shown'\], \.left\[data-lip='hidden'\] \{ padding-inline-end: calc\(28px \+ var\(--lx\)\);/);
-    expect(flat).toMatch(/\.insp\[data-lip='shown'\], \.insp\[data-lip='hidden'\] \{ padding-inline-start: calc\(28px \+ var\(--lx\)\);/);
-  });
-
-  it('the hidden gutter grows by the pull-out and the pull-out reaches the lip extension', () => {
-    const flat = css().replace(/\s+/g, ' ');
-    expect(flat).toMatch(/--mc-lip-pull: var\(--lg\)/);
-  });
-
-  it('each panel carries the name of its lip', async () => {
-    const el = await open();
-    expect(q(el, '#side')!.getAttribute('aria-label')).toBe(lip(el, 'side').getAttribute('aria-label'));
-    expect(q(el, '#inspector')!.getAttribute('aria-label')).toBe(lip(el, 'inspector').getAttribute('aria-label'));
-  });
 });

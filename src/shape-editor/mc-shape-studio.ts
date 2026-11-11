@@ -193,7 +193,7 @@ export class McShapeStudio extends LitElement {
   /** The control that had focus when a window opened: focus returns there. */
   private back?: HTMLElement;
   private roving = new RovingFocus({ items: '.pk', orientation: 'both' });
-  /** Panel lips: hide and show the side panel and the inspector, remembered per device; Ctrl/Cmd + backslash toggles the column panels. */
+  /** The side panel column, shown and hidden by the top bar button; Ctrl/Cmd + backslash toggles it and the inspector together. Every opening starts with both shown. */
   private readonly lips = new PanelLips(this, { editor: 'shape-studio', keys: 'manual', panels: lipSpecs(), strings: lipStrings('en') });
   private lipLocale = 'en';
   /** The studio is narrower than the frame's wide width: the side panel is a sheet and the inspector drawer a full-height sheet. */
@@ -207,6 +207,8 @@ export class McShapeStudio extends LitElement {
   private fitZoom = 0;
   private frameKey = '';
   private drawerInit = false;
+  private wasReady = false;
+  private wasNarrow = false;
   private sheetWas = false;
 
   // ── lifecycle ──
@@ -264,8 +266,11 @@ export class McShapeStudio extends LitElement {
       this.lipLocale = language;
       this.lips.setPanels(lipSpecs(), lipStrings(language));
     }
-    // the side panel has a lip only while it is a column beside the stage; below the frame's wide width it is a sheet
+    // the side panel is a column beside the stage; below the frame's wide width it is a sheet
     this.lips.columns({ side: this.ready && !this.narrowFrame });
+    // every opening shows the side panel, whatever an earlier visit left behind
+    if (this.ready && !this.wasReady) this.lips.show('side');
+    this.wasReady = this.ready;
     // the host feeds our own changes back through `value`: only something else (or a new preset) reopens
     const foreign = this.host !== 'mcu' && changed.has('value') && !!this.value && JSON.stringify(this.value.shape_options) !== this.sent;
     if (this.ready && this.opened && (foreign || changed.has('preset'))) this.open();
@@ -297,6 +302,12 @@ export class McShapeStudio extends LitElement {
     if (this.ready && !this.drawerInit) {
       this.drawerInit = true;
       if (!this.narrowFrame) this.frame()?.openDrawer(null, 'selection');
+      this.wasNarrow = this.narrowFrame;
+    } else if (this.ready && this.narrowFrame !== this.wasNarrow) {
+      // the inspector stays open beside the stage; narrowing into the sheet width closes it, and widening opens it again
+      this.wasNarrow = this.narrowFrame;
+      if (this.narrowFrame) this.frame()?.closeDrawer('stage');
+      else this.frame()?.openDrawer(null, 'user');
     }
     // a new frame size is fitted by the canvas, which reports the fit zoom
     const key = `${this.doc.mode}|${this.size.w}|${this.size.h}`;
@@ -543,7 +554,7 @@ export class McShapeStudio extends LitElement {
   private onKey = (e: KeyboardEvent): void => {
     if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash')) {
       e.preventDefault();
-      if (!e.repeat) this.toggleDrawer();
+      if (!e.repeat) this.toggleBoth();
       return;
     }
     if (e.key === 'Escape') {
@@ -1399,13 +1410,24 @@ export class McShapeStudio extends LitElement {
     this.modOnly = (e as CustomEvent<{ on: boolean }>).detail.on;
   };
 
-  /** A press on the stage (not on its float bar) is work on the drawing: an unpinned drawer closes. */
-  private stageDown = (e: PointerEvent): void => {
-    if (e.composedPath().some((n) => n instanceof Element && n.classList.contains('float'))) return;
-    this.frame()?.stageWork();
-  };
+  /** Ctrl/Cmd + backslash shows or hides the side panel and the inspector together; below the wide width it toggles the inspector sheet alone. */
+  private toggleBoth(): void {
+    const f = this.frame();
+    if (!f) return;
+    if (this.narrowFrame) {
+      this.toggleDrawer();
+      return;
+    }
+    if (this.lips.isHidden('side') || !f.drawerOpen) {
+      this.lips.show('side');
+      f.openDrawer(null, 'user');
+    } else {
+      this.lips.hide('side');
+      f.closeDrawer('user');
+    }
+  }
 
-  /** The side panel is a column (wide, unless hidden with its lip) or a sheet opened from the bar (narrow). */
+  /** The side panel is a column (wide, unless hidden from the bar) or a sheet opened from the bar (narrow). */
   get sideShown(): boolean {
     return this.narrowFrame ? this.sheet : !this.lips.isHidden('side');
   }
@@ -1516,10 +1538,10 @@ export class McShapeStudio extends LitElement {
 <span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(true)}></span>
 ${this.lips.status()}
 <div class="skips">${btn(t('shape-editor.mc-shape-studio.skip-to-canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('shape-editor.mc-shape-studio.skip-to-point-fields'), () => this.focusTo('#fx')) : nothing}${btn(t('shape-editor.mc-shape-studio.skip-to-inspector'), () => (this.openDrawer(), void this.updateComplete.then(() => this.focusTo('.insp button, .insp input'))))}</div>
-<mc-ui-studio-frame class=${this.narrowFrame ? 'narrow' : ''} studio="shape-studio" .scheme=${this.scheme} .strings=${this.frameStrings()} .selectionLabel=${this.selectionLabel()} .measure=${this.frameMeasure()} .rulers=${this.ready} @mc-frame-drawer=${this.onFrameDrawer} @mc-frame-modified=${this.onFrameModified} @mc-path-view=${this.onPathView}>
+<mc-ui-studio-frame class=${this.narrowFrame ? 'narrow' : ''} studio="shape-studio" fixed-drawer .scheme=${this.scheme} .strings=${this.frameStrings()} .selectionLabel=${this.selectionLabel()} .measure=${this.frameMeasure()} .rulers=${this.ready} @mc-frame-drawer=${this.onFrameDrawer} @mc-frame-modified=${this.onFrameModified} @mc-path-view=${this.onPathView}>
 <div slot="top" class="fr-bar">${this.top(title)}</div>
-${this.ready ? html`<div class="fr-start" slot="start" ?hidden=${!this.sideShown}><aside class="left" id="side" ?inert=${this.lips.isHidden('side')} data-lip=${this.lips.state('side')} data-dir=${this.lips.dir} aria-label=${t('shape-editor.mc-shape-studio.side-panel')}>${this.narrowFrame ? html`<button type="button" class="side-close btn btn-secondary btn-sm" @click=${() => this.toggleSide()}>${t('shape-editor.mc-shape-studio.close')}</button>` : nothing}${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')], ['library', t('shape-editor.mc-shape-studio.library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>${this.lips.lip('side')}</div>` : nothing}
-<main class="center" slot="stage" @pointerdown=${this.stageDown}>${this.ready ? html`<div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div>` : html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check')}</p>${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.boot())}` : t('shape-editor.mc-shape-studio.loading-the-shape-editor')}</div>`}</main>
+${this.ready ? html`<div class="fr-start" slot="start" ?hidden=${!this.sideShown}><aside class="left" id="side" ?inert=${this.lips.isHidden('side')} data-lip=${this.lips.state('side')} data-dir=${this.lips.dir} aria-label=${t('shape-editor.mc-shape-studio.side-panel')}>${this.narrowFrame ? html`<button type="button" class="side-close btn btn-secondary btn-sm" @click=${() => this.toggleSide()}>${t('shape-editor.mc-shape-studio.close')}</button>` : nothing}${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')], ['library', t('shape-editor.mc-shape-studio.library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside></div>` : nothing}
+<main class="center" slot="stage">${this.ready ? html`<div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div>` : html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('shape-editor.mc-shape-studio.the-shape-editor-could-not-load-check')}</p>${btn(t('shape-editor.mc-shape-studio.try-again'), () => void this.boot())}` : t('shape-editor.mc-shape-studio.loading-the-shape-editor')}</div>`}</main>
 ${this.zoomPill()}
 ${this.ready ? html`<div class="insp" id="inspector" slot="drawer" ?hidden=${this.modOnly && !this.anyModified()}>${inPath ? this.pathInspector() : this.cornersInspector()}${this.modOnly ? nothing : this.previewSection()}</div>` : nothing}
 </mc-ui-studio-frame>

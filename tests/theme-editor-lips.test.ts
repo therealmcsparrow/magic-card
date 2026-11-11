@@ -102,20 +102,22 @@ describe('theme editor variables drawer toggle', () => {
     await settle(ed);
     expect(toggle(root)!.getAttribute('aria-expanded')).toBe('false');
     expect(status(root)).toBe('Variables panel hidden');
-    expect(root.querySelector('.panel-hint')!.textContent).toContain('The variables panel is hidden, as you left it. Use the button in the bar to show it.');
+    expect(root.querySelector('.panel-hint')).toBeNull();
     toggle(root)!.click();
     await settle(ed);
     expect(toggle(root)!.getAttribute('aria-expanded')).toBe('true');
     expect(status(root)).toBe('Variables panel shown');
   });
 
-  it('Got it dismisses the hint', async () => {
+  it('has no pin and no lip: the frame keeps its drawer fixed beside the preview', async () => {
     const { ed, root } = await openEditor();
-    toggle(root)!.click();
+    const frame = ed._frame();
+    expect(frame.hasAttribute('fixed-drawer')).toBe(true);
+    expect(frame.shadowRoot!.querySelector('[data-bp="pin"]')).toBeNull();
+    expect(root.querySelector('.lip, .lip-hint')).toBeNull();
+    root.querySelector<HTMLElement>('.stage')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
     await settle(ed);
-    (root.querySelector('.panel-hint button') as HTMLElement).click();
-    await settle(ed);
-    expect(root.querySelector('.panel-hint')).toBeNull();
+    expect(frame.drawerOpen).toBe(true);
   });
 
   it('Ctrl+\\ toggles the drawer and prevents the default', async () => {

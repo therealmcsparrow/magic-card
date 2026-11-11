@@ -4,7 +4,7 @@ All seven studios share one layout: the Studio, the animation studio, the image 
 
 -   [What you see](#what-you-see)
 -   [The drawer](#the-drawer)
--   [Pin](#pin)
+-   [No pin, no edge buttons](#no-pin-no-edge-buttons)
 -   [Modified only](#modified-only)
 -   [Narrow screens](#narrow-screens)
 -   [Keyboard](#keyboard)
@@ -21,19 +21,13 @@ On a screen 1024 px wide or more:
 
 ## The drawer
 
-The drawer pushes the stage aside, so it never covers your work. Its header names what is selected. Its settings are the ones the studio had before, in the same groups.
+The drawer is the settings panel on the right. It pushes the stage aside, so it never covers your work. Its header names what is selected. Its settings are the ones the studio had before, in the same groups.
 
-## Pin
+## No pin, no edge buttons
 
-The pin button in the drawer header keeps the drawer open.
+No studio has a pin button or an edge button on its panels. At 1024 px wide and more, every studio opens with its side panels showing: Layers, the list or the outline on the left where the studio has one, and the settings on the right. The panels stay open while you work on the stage. Nothing closes them for you.
 
-1.  Press the pin button. It stays pressed.
-2.  Click or drag on the stage. The drawer stays open.
-3.  Press the pin button again. The next click on the stage closes the drawer.
-
-Without the pin, the drawer closes when you work on the stage. The pin is not remembered after you close the studio.
-
-The Studio (the card editor) is the exception. Its inspector has no pin: from 1024 px wide it opens with the Studio, pushes the stage aside and stays open while you work on the stage. Escape and the close button still close it below 1024 px, where it is a sheet.
+Two buttons in the top bar show and hide the panels, as in the Studio: one for Layers (or the list) and one for the settings. Each button carries an icon and a name, and tells screen readers whether its panel is open. A studio with only a settings panel, such as the image animator and the look editors, has just the settings button. Hidden panels are not remembered: the next time you open a studio, both are showing again.
 
 ## Modified only
 
@@ -50,8 +44,8 @@ The Studio's Layers panel and the older breakpoints are unchanged: see [Layout a
 ## Keyboard
 
 -   Tab reaches every control, with a focus ring that the drawer or sheet does not hide.
--   Escape closes an unpinned drawer or a sheet. Focus returns to the control that opened it.
--   In the Studio, Ctrl+\ (Cmd+\ on a Mac) shows or hides the side panels as before. See [Hiding the side panels](layout-and-toolbar.md#hiding-the-side-panels).
+-   Escape closes the drawer when it is a sheet, below 1024 px. Beside the stage it stays open. Focus returns to the control that opened it.
+-   In every studio, Ctrl+\ (Cmd+\ on a Mac) shows or hides both side panels together. See [Hiding the side panels](layout-and-toolbar.md#hiding-the-side-panels).
 -   Drawer movement stops when your device asks for reduced motion.
 
 ## Light, dark and fonts

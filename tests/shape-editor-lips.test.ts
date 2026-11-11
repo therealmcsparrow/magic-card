@@ -6,7 +6,6 @@ import { studioStyles } from '../src/shape-editor/styles';
 import { SHORTCUTS } from '../src/shape-editor/names';
 import { msgIndex } from '../tools/i18n/test-msg';
 import type { McShapeStudio } from '../src/shape-editor/mc-shape-studio';
-import { LIP_HOST_ATTR } from '../src/contracts/ui-kit';
 
 beforeAll(async () => {
   await loadCustomShapes();
@@ -31,7 +30,7 @@ async function mount(language?: string): Promise<McShapeStudio> {
   return el;
 }
 const q = <T extends Element>(el: McShapeStudio, s: string): T | null => el.shadowRoot!.querySelector<T>(s);
-const lip = (el: McShapeStudio, id: string): HTMLButtonElement => q<HTMLButtonElement>(el, `.lip[aria-controls="${id}"]`)!;
+const lip = (el: McShapeStudio, id: string): HTMLButtonElement => q<HTMLButtonElement>(el, `button[aria-controls="${id}"]`)!;
 const ctrlBackslash = (init: KeyboardEventInit = {}): KeyboardEvent => new KeyboardEvent('keydown', { key: '\\', code: 'Backslash', ctrlKey: true, bubbles: true, composed: true, cancelable: true, ...init });
 const css = (): string => studioStyles.map((s) => s.cssText).join('\n');
 const frame = (el: McShapeStudio): HTMLElement & { drawerOpen: boolean } => q<HTMLElement & { drawerOpen: boolean }>(el, 'mc-ui-studio-frame')!;
@@ -41,16 +40,43 @@ const wide = async (el: McShapeStudio): Promise<void> => {
 };
 
 describe('Shape studio panel lips', () => {
-  it('wide: one lip for the side panel after it, a status region; the inspector is the frame drawer without a lip', async () => {
+  it('wide: no lip, no pin and no hint; the side panel and the inspector are open with a toggle each in the top bar', async () => {
     const el = await mount();
     await wide(el);
-    expect(lip(el, 'side').getAttribute('aria-label')).toBe('Side panel');
-    expect(lip(el, 'inspector')).toBeNull();
+    expect(el.shadowRoot!.querySelectorAll('.lip, .lip-hint').length).toBe(0);
+    expect(frame(el).hasAttribute('fixed-drawer')).toBe(true);
+    expect(lip(el, 'side').getAttribute('aria-expanded')).toBe('true');
+    expect(lip(el, 'inspector').getAttribute('aria-expanded')).toBe('true');
+    expect(lip(el, 'inspector').getAttribute('aria-label')).toBe('Inspector panel');
+    expect(frame(el).drawerOpen).toBe(true);
+    expect(q<HTMLElement>(el, '#side')!.dataset.lip).toBe('shown');
     expect(q(el, '.lip-status[role="status"]')).not.toBeNull();
-    expect(q(el, '#side')!.nextElementSibling).toBe(lip(el, 'side'));
-    expect(el.hasAttribute(LIP_HOST_ATTR)).toBe(true);
     expect(q(el, '#inspector')!.getAttribute('slot')).toBe('drawer');
+    expect(frame(el).shadowRoot!.querySelector('[data-bp="pin"]')).toBeNull();
   });
+
+  it('a side panel left hidden by an earlier visit opens shown', async () => {
+    localStorage.setItem('mc-panels:shape-studio', 'side');
+    const el = await mount();
+    await wide(el);
+    expect(q<HTMLElement>(el, '#side')!.dataset.lip).toBe('shown');
+    expect(lip(el, 'side').getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('Ctrl and backslash hide both panels and show both again', async () => {
+    const el = await mount();
+    await wide(el);
+    const stage = q<HTMLElement>(el, '.stage')!;
+    stage.dispatchEvent(ctrlBackslash());
+    await el.updateComplete;
+    expect(frame(el).drawerOpen).toBe(false);
+    expect(lip(el, 'side').getAttribute('aria-expanded')).toBe('false');
+    stage.dispatchEvent(ctrlBackslash());
+    await el.updateComplete;
+    expect(frame(el).drawerOpen).toBe(true);
+    expect(lip(el, 'side').getAttribute('aria-expanded')).toBe('true');
+  });
+
 
   it('hiding the side panel keeps it mounted and inert, and remembers it', async () => {
     const el = await mount();
@@ -62,17 +88,6 @@ describe('Shape studio panel lips', () => {
     expect(side.dataset.lip).toBe('hidden');
     expect(side.hasAttribute('inert')).toBe(true);
     expect(localStorage.getItem('mc-panels:shape-studio')).toBe('side');
-  });
-
-  it('a remembered hidden side panel starts hidden', async () => {
-    localStorage.setItem('mc-panels:shape-studio', 'side');
-    const el = await mount();
-    await wide(el);
-    expect(q<HTMLElement>(el, '#side')!.dataset.lip).toBe('hidden');
-  });
-
-  it('the panel padding that clears the lip applies shown and hidden, so a hidden panel never reflows', () => {
-    expect(css()).toMatch(/\.left\[data-lip=shown\],\.left\[data-lip=hidden\]\{padding-inline-end:28px/);
   });
 
   it('Ctrl and backslash from the stage toggles the inspector drawer', async () => {
@@ -128,15 +143,4 @@ describe('Shape studio panel lips', () => {
     expect(SHORTCUTS).toContain(msgIndex('shape-editor.names.show-or-hide-panels-ctrl-or'));
   });
 
-  it('takes the Dutch names in a Dutch interface', async () => {
-    const el = await mount('nl');
-    await wide(el);
-    expect(lip(el, 'side').getAttribute('aria-label')).toBe('Zijpaneel');
-  });
-
-  it('the side panel carries the name of its lip', async () => {
-    const el = await mount();
-    await wide(el);
-    expect(q(el, '#side')!.getAttribute('aria-label')).toBe(lip(el, 'side').getAttribute('aria-label'));
-  });
 });

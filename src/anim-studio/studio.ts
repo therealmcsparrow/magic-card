@@ -165,8 +165,6 @@ const errorText = (err: unknown): { message: string; errors: FieldError[] } => {
 export const SPLIT_KEY = 'mcas-split';
 /** Collapsed inspector sections (JSON list of ids). */
 export const SECTIONS_KEY = 'mcas-sections';
-/** The earlier Layers choice, 'rail' (collapsed) or 'open': read once to carry a collapsed column over to the panel lips. */
-export const LAYERS_KEY = 'mcas-layers';
 export const SPLIT_DEFAULT = 0.4;
 /** The stage and the timeline each keep at least this height (px). */
 export const SPLIT_MIN_PX = 160;
@@ -328,25 +326,18 @@ export class AnimationStudio extends LitElement {
   @state() private _tile: PreviewTile = 'icon';
   /** The stage's share of the centre column (0-1). */
   @state() private _split = readSplit();
-  /** Panel lips: hide and show Layers and the Inspector column, remembered per device; Ctrl/Cmd + \ toggles the column panels. */
+  /** Layers column state and the Ctrl/Cmd + \ shortcut; the top bar buttons show and hide the panels, nothing is left hidden for the next visit. */
   private readonly _lips = new PanelLips(this, {
     editor: 'anim-studio',
     keys: 'manual',
     panels: lipSpecs(),
     strings: lipStrings('en'),
-    // the earlier Collapse layers choice is carried over once, then forgotten
-    fallback: () => {
-      const old = readStore(LAYERS_KEY);
-      if (old === null) return null;
-      try {
-        localStorage.removeItem(LAYERS_KEY);
-      } catch {
-        /* storage is blocked: nothing was kept either */
-      }
-      return old === 'rail' ? ['layers'] : null;
-    },
   });
   private _lipLocale = 'en';
+  private _wasEditing = false;
+  /** The frame the drawer was last set up for, and whether the studio was narrow then. */
+  private _drawerFrame?: StudioFrameElement;
+  private _drawerNarrow = false;
   /** Below FRAME_WIDE_MIN_PX the Layers column is an overlay that starts closed. */
   @state() private _layersSheet = false;
   private _layersWas = false;
@@ -397,9 +388,11 @@ export class AnimationStudio extends LitElement {
       this._lipLocale = language;
       this._lips.setPanels(lipSpecs(), lipStrings(language));
     }
-    // a panel has a lip only while it is a column: Layers always, the Inspector unless it slides over
     const editing = this._view === 'editor' && !!this._doc;
     this._lips.columns({ layers: editing });
+    // every opening of the editor shows Layers beside the stage, whatever an earlier visit left behind
+    if (editing && !this._wasEditing) this._lips.show('layers');
+    this._wasEditing = editing;
     if (changed.has('library')) this._docs = libraryDocs(this.library);
     if (changed.has('library') || changed.has('_docs')) {
       this._lookup = (id: string) => this._docs.get(id);
@@ -430,6 +423,7 @@ export class AnimationStudio extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
+    this._syncDrawer();
     const full = this._view === 'editor';
     if (full !== this.hasAttribute('editing')) {
       this.toggleAttribute('editing', full);
@@ -1060,7 +1054,7 @@ export class AnimationStudio extends LitElement {
     if (this._view === 'editor') {
       if (mod && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash') && !e.repeat) {
         e.preventDefault();
-        this._toggleDrawer();
+        this._toggleBoth();
         return;
       }
       if (mod && key === 's') {
@@ -1384,6 +1378,49 @@ export class AnimationStudio extends LitElement {
     if (!f) return;
     if (f.drawerOpen) f.closeDrawer('user');
     else f.openDrawer(opener ?? (deepActive() as HTMLElement | null), 'user');
+  }
+
+  /** Ctrl/Cmd + \ shows or hides Layers and the Inspector together; below the wide width it toggles the Inspector sheet alone. */
+  private _toggleBoth(): void {
+    const f = this._frame();
+    if (!f) return;
+    if (this._narrow) {
+      this._toggleDrawer();
+      return;
+    }
+    const show = this._lips.isHidden('layers') || !f.drawerOpen;
+    if (show) {
+      this._lips.show('layers');
+      f.openDrawer(null, 'user');
+    } else {
+      if (this._layersHasFocus()) this._focusSel = '.layers-toggle';
+      this._lips.hide('layers');
+      f.closeDrawer('user');
+    }
+  }
+
+  private _layersHasFocus(): boolean {
+    return !!this.shadowRoot?.querySelector('#layers')?.matches(':focus-within');
+  }
+
+  /** The Inspector opens beside the stage at the wide width and stays; it closes when the window narrows into the sheet width and opens again on widening. */
+  private _syncDrawer(): void {
+    const f = this._view === 'editor' && this._doc ? this._frame() : null;
+    if (!f) {
+      this._drawerFrame = undefined;
+      return;
+    }
+    const narrow = this._narrow;
+    if (f !== this._drawerFrame) {
+      this._drawerFrame = f;
+      this._drawerNarrow = narrow;
+      if (!narrow) f.openDrawer(null, 'user');
+      this._drawerOpen = f.drawerOpen;
+    } else if (narrow !== this._drawerNarrow) {
+      this._drawerNarrow = narrow;
+      if (narrow) f.closeDrawer('stage');
+      else f.openDrawer(null, 'user');
+    }
   }
 
   private _onFrameDrawer = (e: Event): void => {
@@ -1991,9 +2028,8 @@ export class AnimationStudio extends LitElement {
           ${this._editorEl(p.tag, d, { cls: 'panel panel-layers', panel: true })}
         </section>`,
     );
-    const lips = this._lips;
     const sheet = this._narrow;
-    return html`<nav class="layers" id="layers" aria-label=${t('anim-studio.studio.layers-panel')} ?inert=${!sheet && lips.isHidden('layers')} data-lip=${lips.state('layers')} data-dir=${lips.dir}>
+    return html`<nav class="layers" id="layers" aria-label=${t('anim-studio.studio.layers-panel')} ?inert=${!sheet && this._lips.isHidden('layers')} data-lip=${this._lips.state('layers')} data-dir=${this._lips.dir}>
       <div class="layers-head">
         <h2>${t('anim-studio.studio.layers-2')}</h2>
         ${sheet ? html`<button type="button" class="icon-btn layers-close" aria-label=${t('anim-studio.studio.close-layers')} title=${t('anim-studio.studio.close-layers')} @click=${() => this._closeLayersSheet()}>
@@ -2001,8 +2037,7 @@ export class AnimationStudio extends LitElement {
         </button>` : nothing}
       </div>
       <div class="layers-body">${panels.length ? html`${panels}<p class="help layers-help">${t('anim-studio.studio.hide-solo-and-lock-only-change-this')}</p>` : this._renderLayerList(d)}</div>
-    </nav>
-    ${sheet ? nothing : lips.lip('layers')}`;
+    </nav>`;
   }
 
 
@@ -2162,6 +2197,7 @@ export class AnimationStudio extends LitElement {
     return html`<mc-ui-studio-frame
       class=${this._narrow ? 'narrow' : ''}
       studio="anim-studio"
+      fixed-drawer
       .scheme=${this._scheme}
       .strings=${this._frameStrings()}
       .selectionLabel=${label}

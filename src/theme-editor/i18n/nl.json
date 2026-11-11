@@ -1483,10 +1483,6 @@
     "text": "Toon Engels",
     "hash": "f827a651"
   },
-  "theme-editor.lips.got-it": {
-    "text": "Begrepen",
-    "hash": "5ad3dbd1"
-  },
   "theme-editor.lips.hide-noun-keys": {
     "text": "Verberg {noun} ({keys})",
     "hash": "62432946"
@@ -1506,10 +1502,6 @@
   "theme-editor.lips.show-noun-keys": {
     "text": "Toon {noun} ({keys})",
     "hash": "7a362b14"
-  },
-  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
-    "text": "Het paneel {noun} is verborgen, zoals je het had achtergelaten. Gebruik de knop in de balk om het te tonen.",
-    "hash": "fc9c41e5"
   },
   "theme-editor.lips.variables": {
     "text": "variabelen",

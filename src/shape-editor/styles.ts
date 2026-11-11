@@ -25,11 +25,10 @@ mc-ui-studio-frame .switch[aria-checked='true']::after{background:var(--bp-acc-i
 .fr-bar{display:flex;flex:1;align-items:center;min-inline-size:0;block-size:100%}
 .fr-bar .topbar{flex:1;min-inline-size:0}
 [data-layout=compact] .topbar .title,[data-layout=stacked] .topbar .title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.fr-start{position:relative;display:flex;flex-direction:column;flex:1;min-block-size:0;background:var(--bp-sheet);--mc-lip-at-start:calc(100% - 29px)}
+.fr-start{position:relative;display:flex;flex-direction:column;flex:1;min-block-size:0;background:var(--bp-sheet)}
 .fr-start[hidden]{display:none}
 .left{--mc-lip-off:-100%;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;overflow:auto;padding:12px;background:var(--mc-surface)}
 .left>*{flex:none}
-.left[data-lip=shown],.left[data-lip=hidden]{padding-inline-end:28px}
 .side-close{display:none;align-self:flex-start}
 .narrow .side-close{display:inline-flex}
 .insp{display:flex;flex-direction:column;gap:12px;min-inline-size:0;padding:12px}

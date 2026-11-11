@@ -1,7 +1,7 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { FRAME_WIDE_MIN_PX, type FrameMeasure, type FrameModifiedChange, type StudioFrameElement } from '../contracts/ui-kit';
 
-// Wiring both look editors share with <mc-ui-studio-frame>: the width class, the drawer at a wide frame, Modified only and stage work.
+// Wiring both look editors share with <mc-ui-studio-frame>: the width class, the drawer at a wide frame (open and fixed), Modified only and the Ctrl/Cmd + backslash shortcut.
 
 type Host = ReactiveControllerHost & HTMLElement & { renderRoot: HTMLElement | DocumentFragment };
 
@@ -22,6 +22,7 @@ export class FrameShell implements ReactiveController {
   }
 
   hostConnected(): void {
+    this._host.addEventListener('keydown', this._onKey);
     this._observer = new ResizeObserver((entries) => {
       const last = entries[entries.length - 1];
       if (last) this._measure(last.contentRect.width);
@@ -31,6 +32,7 @@ export class FrameShell implements ReactiveController {
   }
 
   hostDisconnected(): void {
+    this._host.removeEventListener('keydown', this._onKey);
     this._observer?.disconnect();
     this._observer = null;
   }
@@ -68,10 +70,14 @@ export class FrameShell implements ReactiveController {
   /** The Settings button follows the drawer, so it re-renders when the drawer opens or closes. */
   readonly onDrawer = (): void => this._host.requestUpdate();
 
-  /** Choosing a look in the tiles is configuring, so only work on the stage itself closes an unpinned drawer. */
-  readonly onStage = (e: Event): void => {
-    if (e.composedPath().some((n) => n instanceof HTMLElement && n.localName === 'mc-ui-tile-group')) return;
-    this.frame()?.stageWork();
+  /** Ctrl/Cmd + backslash shows or hides the settings column. */
+  private readonly _onKey = (e: KeyboardEvent): void => {
+    if (e.defaultPrevented || e.repeat || e.altKey || e.shiftKey || !(e.ctrlKey || e.metaKey) || !(e.key === '\\' || e.code === 'Backslash')) return;
+    const frame = this.frame();
+    if (!frame) return;
+    e.preventDefault();
+    if (frame.drawerOpen) frame.closeDrawer('user');
+    else frame.openDrawer(null, 'user');
   };
 
   /** Settings button: opens the sheet at a narrow frame, toggles the push column at a wide one. */

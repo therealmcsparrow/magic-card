@@ -28,7 +28,7 @@ The kind editors have their own pages: [Keyframes](keyframes.md), [Particles](pa
 
 ## Layers
 
-The Layers column is 240 px wide, or 224 px when the studio is less than 1100 px wide. Its edge button hides it and shows it again; the stage takes the width of a hidden column. See [Hiding the panels](#hiding-the-panels). The studio remembers whether Layers is hidden in this browser.
+The Layers column is 240 px wide, or 224 px when the studio is less than 1100 px wide. The Layers button in the top bar hides it and shows it again; the stage takes the width of a hidden column. See [Hiding the panels](#hiding-the-panels).
 
 For a keyframes animation the column holds three panels:
 
@@ -42,9 +42,9 @@ For path and sequence animations the column lists Element and Icon, with Moves o
 
 ### Hiding the panels
 
-Layers and the inspector each have an edge button on their inner side while they sit beside the stage. Press it to hide the panel: the stage takes its width, and the button stays at the window edge. Press it again to show the panel with its selection and scroll position. The hidden panel keeps its settings and does not change the animation.
+Layers and the inspector each have a button in the top bar. There is no edge button and no pin. From 1024 px wide, both panels are open when you open an animation and stay open while you work on the stage. Press a button to hide its panel: the stage takes its width. Press it again to show the panel with its selection and scroll position. The hidden panel keeps its settings and does not change the animation. Hidden panels are not remembered, so the next animation opens with both showing.
 
-Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows again the panels it hid last. The shortcut works while focus is in the studio. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons.
+Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows them again. The shortcut works while focus is in the studio. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the buttons in the top bar.
 
 If you collapsed Layers in an earlier version, it opens hidden once, with a short hint, and the studio then remembers the new setting instead.
 
@@ -135,8 +135,8 @@ The studio is made for a desktop and works on a tablet:
 -   Everything uses pointer events, so a finger or pen works like a mouse. Handles and points on the stage have touch targets of at least 24 px at any stage scale.
 -   Every action has a button. Nothing depends on hovering.
 -   On the timeline a finger drag scrolls the lanes. Hold for 400 ms and then drag to select keyframes with a box. A quick tap clears the selection.
--   The Layers column has its edge button at every width, so a narrow window can give the stage the whole width.
--   Below 900 px the inspector slides over the editor instead of taking a column, and it has no edge button. The Inspector button in the top bar opens it, and selecting keyframes opens it too. Selecting a target, a part on the stage or a drawing tool keeps the stage in view. The focus moves into the inspector when it opens. Tap outside it, or press Escape, to close it; Escape puts the focus back on the Inspector button.
+-   The Layers button in the top bar works at every width, so a narrow window can give the stage the whole width.
+-   Below 900 px the inspector slides over the editor instead of taking a column. The Inspector button in the top bar opens it, and selecting keyframes opens it too. Selecting a target, a part on the stage or a drawing tool keeps the stage in view. The focus moves into the inspector when it opens. Tap outside it, or press Escape, to close it; Escape puts the focus back on the Inspector button.
 
 There is no phone layout.
 

@@ -229,7 +229,13 @@ export class McImageAnimator extends LitElement {
 
   /** Chooses the scale that shows the whole drawing in the room the stage has, between a quarter and six times. */
   private _fit(width: number, height: number): void {
+    const wasNarrow = this._narrow;
     this._narrow = width > 0 && width < FRAME_WIDE_MIN_PX;
+    // the settings stay open beside the stage; the window narrowing into the sheet width closes them, and widening opens them again
+    if (this._narrow !== wasNarrow && this._frame) {
+      if (this._narrow) this._frame.closeDrawer('stage');
+      else this._frame.openDrawer(null, 'user');
+    }
     const room = Math.max(160, width - (this._narrow ? 0 : 344) - 96);
     const tall = Math.max(160, (height || 640) - 56 - 96 - 56);
     const { width: w, height: h } = this._view;
@@ -387,11 +393,6 @@ export class McImageAnimator extends LitElement {
     if (win && !win.contains(this.shadowRoot?.activeElement ?? null)) (this.renderRoot.querySelector<HTMLElement>('#title') ?? win).focus({ preventScroll: true });
   }
 
-  /** Work on the drawing gives the stage the room back when the drawer is not pinned. */
-  private _onStageWork(): void {
-    this._frame?.stageWork();
-  }
-
   private _toggleDrawer(e: Event): void {
     if (this._drawerOpen) this._frame?.closeDrawer('user');
     else this._frame?.openDrawer(e.currentTarget as HTMLElement, 'user');
@@ -520,6 +521,12 @@ export class McImageAnimator extends LitElement {
   }
 
   private _onKey(e: KeyboardEvent): void {
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash') && !e.repeat && !this._ask && !this._leaving) {
+      e.preventDefault();
+      if (this._drawerOpen) this._frame?.closeDrawer('user');
+      else this._frame?.openDrawer(null, 'user');
+      return;
+    }
     if (e.key === 'Escape') {
       e.stopPropagation();
       if (this._leaving) this._keepEditing();
@@ -587,7 +594,7 @@ export class McImageAnimator extends LitElement {
   private _stageSlot(o: Opened): TemplateResult {
     const { width, height, zoom } = this._view;
     return html`<div slot="stage" class="stage-wrap">
-      <div class="stage" role="group" aria-label=${o.name} style=${`inline-size:${width * zoom}px;block-size:${height * zoom}px`} @pointerdown=${this._onStageWork} @click=${this._onStageClick}></div>
+      <div class="stage" role="group" aria-label=${o.name} style=${`inline-size:${width * zoom}px;block-size:${height * zoom}px`} @click=${this._onStageClick}></div>
       ${o.isNew
         ? nothing
         : html`<div class="saved">
@@ -699,6 +706,7 @@ export class McImageAnimator extends LitElement {
         ${ready
           ? html`<mc-ui-studio-frame
               studio="image-animator"
+              fixed-drawer
               .scheme=${this.hass?.themes?.darkMode ? 'dark' : 'light'}
               .strings=${this._strings()}
               .selectionLabel=${targetName(this._target)}

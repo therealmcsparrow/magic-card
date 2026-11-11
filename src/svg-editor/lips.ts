@@ -31,14 +31,3 @@ export function lipStrings(locale: string): PanelLipStrings {
     gotIt: t('svg-editor.lips.got-it'),
   };
 }
-
-/**
- * Where the lips sit, in the working area's own pixels. A hidden panel's lip lies in its 40 px gutter, at the
- * rail's edge or the window edge (a touch screen's longer hit area is pulled back so it stays out of the stage);
- * a shown one sits inside its panel at the inner edge, clear of the panel's scrollbar and of the stage.
- */
-export function lipTokens(side: 'shown' | 'hidden' | 'off', insp: 'shown' | 'hidden' | 'off', bar: number): string {
-  const start = side === 'hidden' ? 'calc(56px - var(--lg))' : `calc(56px + var(--lw) - 28px - var(--lx) - ${bar}px - 1px)`;
-  const end = insp === 'hidden' ? 'calc(0px - var(--lg))' : 'calc(var(--iw) - 28px - var(--lx) - 1px)';
-  return `--mc-lip-at-start: ${start}; --mc-lip-at-end: ${end}`;
-}

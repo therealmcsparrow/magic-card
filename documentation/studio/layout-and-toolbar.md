@@ -46,7 +46,7 @@ The inspector tabs depend on what is selected:
 
 ## Hiding the side panels
 
-From 1024 px wide, the Studio opens with Layers and the inspector both showing. Neither has an edge button or a pin. Press the Layers button in the top bar to hide or show Layers; it carries only its icon. The inspector stays open, pushes the canvas aside and does not close when you work on the canvas. Layers is about 40 px wider than it used to be, and the inspector still fits beside it at 1024 px.
+From 1024 px wide, the Studio opens with Layers and the inspector both showing. Neither has an edge button or a pin, and the other studios work the same way (see [The studio look](studio-look.md#no-pin-no-edge-buttons)). Press the Layers button in the top bar to hide or show Layers; it carries only its icon. The inspector stays open, pushes the canvas aside and does not close when you work on the canvas. Layers is about 40 px wider than it used to be, and the inspector still fits beside it at 1024 px.
 
 The card sits in the middle of the canvas, across and down, whenever it fits. It stays there when a panel opens or closes and when the window is resized.
 

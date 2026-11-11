@@ -132,7 +132,6 @@ export class McteEditorView extends LitElement {
     _english: { state: true },
     _usedMsg: { state: true },
     _msg: { state: true },
-    _hint: { state: true },
     _dlg: { state: true },
     _banner: { state: true },
     _trial: { state: true },
@@ -179,9 +178,7 @@ export class McteEditorView extends LitElement {
   private _english = false;
   private _usedMsg = '';
   private _msg = '';
-  private _hint = false;
-  private _announce = false;
-  private _hintShown = false;
+  private _wasNarrow = false;
   private _dlg: Dlg = null;
   private _toastRun?: () => void;
   private _banner: Banner | null = null;
@@ -325,7 +322,13 @@ export class McteEditorView extends LitElement {
     // the variables drawer is open when the editor opens on a wide screen; a narrow screen starts on the preview
     if (!this._opened && this._sized && this.draft && !this._narrow && this._frame()) {
       this._opened = true;
+      this._wasNarrow = this._narrow;
       this._frame()?.openDrawer(null, 'selection');
+    } else if (this._opened && this._sized && this._narrow !== this._wasNarrow) {
+      // the variables stay open beside the preview; narrowing into the sheet width closes them, and widening opens them again
+      this._wasNarrow = this._narrow;
+      if (this._narrow) this._frame()?.closeDrawer('stage');
+      else this._frame()?.openDrawer(null, 'user');
     }
   }
 
@@ -1225,17 +1228,13 @@ export class McteEditorView extends LitElement {
     const f = this._frame();
     if (!f) return;
     const panels = t('theme-editor.lips.variables-panel');
-    this._announce = true;
     this._say(f.drawerOpen ? t('theme-editor.lips.panels-hidden', { panels }) : t('theme-editor.lips.panels-shown', { panels }));
     if (f.drawerOpen) f.closeDrawer('user');
     else f.openDrawer(opener ?? null, 'user');
   }
 
   private _onFrameDrawer = (e: Event): void => {
-    const open = (e as CustomEvent<{ open: boolean }>).detail.open;
-    if (!open && this._announce && !this._hintShown) this._hint = true;
-    this._announce = false;
-    this._drawerOpen = open;
+    this._drawerOpen = (e as CustomEvent<{ open: boolean }>).detail.open;
   };
 
   private _onFrameModified = (e: Event): void => {
@@ -1329,6 +1328,7 @@ export class McteEditorView extends LitElement {
     return html`
       <mc-ui-studio-frame
         studio="theme-editor"
+        fixed-drawer
         .scheme=${this._scheme}
         .strings=${this._frameStrings()}
         .selectionLabel=${this._name}
@@ -1338,13 +1338,9 @@ export class McteEditorView extends LitElement {
         @mc-frame-modified=${this._onFrameModified}
       >
         ${this._bar()}
-        <div class="stage" slot="stage" role="region" aria-label=${t('theme-editor.editor-view.preview')} @pointerdown=${() => this._frame()?.stageWork()}>
+        <div class="stage" slot="stage" role="region" aria-label=${t('theme-editor.editor-view.preview')}>
           <div class="stage-note">
             ${this._statusLine()}
-            ${this._hint
-              ? html`<p class="help panel-hint">${t('theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it', { noun: t('theme-editor.lips.variables') })}
-                  <button type="button" class="btn btn-text btn-sm" @click=${() => ((this._hint = false), (this._hintShown = true))}>${t('theme-editor.lips.got-it')}</button></p>`
-              : nothing}
             ${compact ? nothing : html`<p class="help tryhelp" id="try-help">${this._tryHelp()}</p>`}
           </div>
           ${this._previewPanel()}

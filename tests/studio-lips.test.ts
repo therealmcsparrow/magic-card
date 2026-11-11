@@ -34,28 +34,29 @@ afterEach(() => {
   localStorage.clear();
 });
 
-describe('card studio panel lips', () => {
-  it('renders a lip for Layers only, a status region and the Layers id, with the inspector in the frame drawer', async () => {
+const toggle = (root: ShadowRoot): HTMLButtonElement => root.querySelector<HTMLButtonElement>('.layers-toggle')!;
+
+describe('card studio panels without lips', () => {
+  it('renders no lip, keeps the status region and the Layers id, with the inspector in the frame drawer', async () => {
     const { root } = await mount();
-    expect(lip(root, 'layers').getAttribute('aria-label')).toBe('Layers panel');
-    expect(lip(root, 'inspector')).toBeNull();
+    expect(root.querySelector('.lip')).toBeNull();
+    expect(root.querySelector('.lips')).toBeNull();
     expect(root.getElementById('layers')!.getAttribute('aria-label')).toBe('Layers panel');
     expect(root.querySelector('mc-ui-studio-frame > #inspector')!.getAttribute('slot')).toBe('drawer');
-    expect(lip(root, 'layers').title).toBe('Hide layers (Ctrl+\\)');
     expect(root.querySelector('.lip-status[role="status"]')).not.toBeNull();
     expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
   });
 
-  it('hiding Layers keeps the panel mounted and remembers it', async () => {
+  it('hiding Layers with its toggle keeps the panel mounted and remembers it', async () => {
     const { el, root } = await mount();
     const layers = root.querySelector<HTMLElement>('#layers')!;
-    lip(root, 'layers').click();
+    toggle(root).click();
     await el.updateComplete;
     expect(root.querySelector('#layers')).toBe(layers);
     expect(layers.dataset.lip).toBe('hidden');
     expect(layers.hasAttribute('inert')).toBe(true);
     expect(localStorage.getItem('mc-panels:card-studio')).toBe('layers');
-    expect(lip(root, 'layers').getAttribute('aria-expanded')).toBe('false');
+    expect(toggle(root).getAttribute('aria-expanded')).toBe('false');
   });
 
   it('Ctrl and backslash work from inside the studio even though the dialog stops key events', async () => {
@@ -67,19 +68,19 @@ describe('card studio panel lips', () => {
     expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
   });
 
-  it('opens with the remembered state and shows the first-open hint once', async () => {
+  it('every opening shows Layers, whatever an earlier visit left behind', async () => {
     localStorage.setItem('mc-panels:card-studio', 'layers');
     const { root } = await mount();
-    expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
-    expect(root.querySelector('.lip-hint')).not.toBeNull();
+    expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
+    expect(root.querySelector('.lip-hint')).toBeNull();
   });
 
-  it('Preview removes the lips and leaves the remembered state alone', async () => {
-    localStorage.setItem('mc-panels:card-studio', 'layers');
+  it('Preview ignores the shortcut and leaves the hidden state alone', async () => {
     const { el, root } = await mount();
+    toggle(root).click();
+    await el.updateComplete;
     root.querySelector<HTMLButtonElement>('.preview-toggle')!.click();
     await el.updateComplete;
-    expect(root.querySelectorAll('.lip').length).toBe(0);
     const e = ctrlBackslash();
     root.querySelector('mc-studio-canvas')!.dispatchEvent(e);
     await el.updateComplete;
@@ -89,7 +90,7 @@ describe('card studio panel lips', () => {
     expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
   });
 
-  it('Edit on a layer opens the frame drawer that holds the inspector', async () => {
+  it('Edit on a layer keeps the frame drawer open', async () => {
     const { el, root } = await mount();
     const frame = root.querySelector('mc-ui-studio-frame') as HTMLElement & { drawerOpen: boolean };
     root.querySelector('mc-structure-outline')!.dispatchEvent(new CustomEvent('mc-edit-module', { bubbles: true }));
@@ -99,9 +100,9 @@ describe('card studio panel lips', () => {
     expect(localStorage.getItem('mc-panels:card-studio')).toBeNull();
   });
 
-  it('a hidden Layers panel keeps its width: the lip moves to the window edge and the panel stays mounted', () => {
+  it('a hidden Layers panel stays mounted and the studio styles carry no lip layer', () => {
     const css = (Studio.styles as Array<{ cssText: string }>).map((s) => s.cssText).join('\n');
-    expect(css).toMatch(/\.lips\s*\{[^}]*position:\s*absolute/);
+    expect(css).not.toMatch(/\.lips\s*\{/);
     expect(css).not.toMatch(/\[data-lip='hidden'\]\s*\{[^}]*(?:max-)?width:\s*0[;\s]/);
   });
 });
@@ -117,22 +118,15 @@ describe('card studio lip leftovers', () => {
     expect(keys.slice(-4)).toEqual(['Ctrl', '\\', '⌘', '\\']);
   });
 
-  it('the Layers opener carries a 16 px chevron that points the way the panel comes from and mirrors in RTL', async () => {
+  it('the Layers opener has no chevron and still reports its state', async () => {
     const { el, root } = await mount();
-    const btn = root.querySelector<HTMLElement>('.layers-toggle')!;
-    const chev = btn.querySelector<SVGElement>('svg.opener-chevron')!;
-    expect(chev.getAttribute('width')).toBe('16');
-    expect(chev.getAttribute('aria-hidden')).toBe('true');
+    const btn = toggle(root);
+    expect(btn.querySelector('svg')).toBeNull();
     expect(btn.getAttribute('aria-expanded')).toBe('true');
     expect(btn.getAttribute('aria-label')).toBe('Layers');
-    expect(btn.dataset.open).toBe('true');
     btn.click();
     await el.updateComplete;
     expect(btn.getAttribute('aria-expanded')).toBe('false');
     expect(btn.getAttribute('aria-label')).toBe('Layers');
-    expect(btn.dataset.open).toBe('false');
-    const css = (Studio.styles as Array<{ cssText: string }>).map((s) => s.cssText).join('\n');
-    expect(css).toMatch(/\.layers-toggle\[data-open='true'\] \.opener-chevron[^{]*\{[^}]*scaleX\(-1\)/s);
-    expect(css).toMatch(/\.layers-toggle\[data-dir='rtl'\] \.opener-chevron[^{]*\{[^}]*scaleX\(-1\)/s);
   });
 });

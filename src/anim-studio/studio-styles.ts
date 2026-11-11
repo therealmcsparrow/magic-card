@@ -2,14 +2,13 @@ import { css, CSSResult, unsafeCSS } from 'lit';
 import { editorTokens } from '../css/editor-system';
 import { editorPrimitives } from '../ui-kit/css/primitives';
 import { kitTopbar, kitButtonExtras, kitCheck } from '../ui-kit/css/extras';
-import { kitLip } from '../ui-kit/css/lip';
 
 /** The stage and the timeline each keep at least this height (px); studio.ts SPLIT_MIN_PX. */
 const SPLIT_MIN_PX = 160;
 
 /** The animation studio's own layout, on the editor design system (DESIGN.md). */
 export const studioStyles: CSSResult[] = [
-  editorTokens, editorPrimitives, kitTopbar, kitButtonExtras, kitCheck, kitLip,
+  editorTokens, editorPrimitives, kitTopbar, kitButtonExtras, kitCheck,
   css`
     :host {
       display: block;

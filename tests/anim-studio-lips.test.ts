@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { LAYERS_KEY } from '../src/anim-studio/studio';
 import { studioStyles } from '../src/anim-studio/studio-styles';
 
 const rigged = {
@@ -74,18 +73,17 @@ describe('animation studio panels in the frame', () => {
     expect(t.root.querySelector('.layers-head h2')!.textContent).toBe('Layers');
   });
 
-  it('hiding Layers removes the panel from the frame and remembers it per device', async () => {
+  it('hiding Layers removes the panel from the frame; the next opening shows it again', async () => {
     const t = await open(1440);
     layersToggle(t.root).click();
     await t.settle();
     expect(t.root.querySelector('#layers')).toBeNull();
-    expect(localStorage.getItem('mc-panels:anim-studio')).toBe('layers');
     expect(layersToggle(t.root).getAttribute('aria-expanded')).toBe('false');
     t.el.remove();
 
     const again = await open(1440);
-    expect(again.root.querySelector('#layers')).toBeNull();
-    expect(layersToggle(again.root).getAttribute('aria-expanded')).toBe('false');
+    expect(again.root.querySelector('#layers')).not.toBeNull();
+    expect(layersToggle(again.root).getAttribute('aria-expanded')).toBe('true');
   });
 
   it('the Inspector toggle closes and opens the drawer', async () => {
@@ -122,59 +120,35 @@ describe('animation studio panels in the frame', () => {
     expect(frameOf(t.root).drawerOpen).toBe(true);
   });
 
-  describe('the earlier Collapse layers choice (mcas-layers)', () => {
-    it('rail: Layers opens hidden once and the choice is written under the new key', async () => {
-      localStorage.setItem(LAYERS_KEY, 'rail');
-      const t = await open(1440);
-      expect(t.root.querySelector('#layers')).toBeNull();
-      expect(layersToggle(t.root).getAttribute('aria-expanded')).toBe('false');
-      expect(localStorage.getItem('mc-panels:anim-studio')).toBe('layers');
-    });
+  it('a Layers choice left by an earlier visit opens shown', async () => {
+    localStorage.setItem('mc-panels:anim-studio', 'layers');
+    const t = await open(1440);
+    expect(t.root.querySelector('#layers')).not.toBeNull();
+    expect(layersToggle(t.root).getAttribute('aria-expanded')).toBe('true');
+  });
 
-    it('showing Layers keeps it shown on the next open', async () => {
-      localStorage.setItem(LAYERS_KEY, 'rail');
-      const t = await open(1440);
-      layersToggle(t.root).click();
-      await t.settle();
-      expect(localStorage.getItem('mc-panels:anim-studio')).toBeNull();
-      expect(localStorage.getItem(LAYERS_KEY)).toBeNull();
-      t.el.remove();
-      const again = await open(1440);
-      expect(again.root.querySelector('#layers')).not.toBeNull();
-    });
+  it('wide: no lip, no pin and no hint; Layers and the Inspector are open and the frame keeps its drawer fixed', async () => {
+    const t = await open(1440);
+    await t.settle();
+    expect(t.root.querySelectorAll('.lip, .lip-hint').length).toBe(0);
+    const frame = t.root.querySelector('mc-ui-studio-frame')!;
+    expect(frame.hasAttribute('fixed-drawer')).toBe(true);
+    expect(frame.shadowRoot!.querySelector('[data-bp="pin"]')).toBeNull();
+    expect(frameOf(t.root).drawerOpen).toBe(true);
+    expect(drawerToggle(t.root).getAttribute('aria-expanded')).toBe('true');
+    expect(layersToggle(t.root).getAttribute('aria-expanded')).toBe('true');
+  });
 
-    it('open, unknown values and nothing stored leave Layers shown', async () => {
-      for (const v of ['open', 'something else', '']) {
-        document.body.innerHTML = '';
-        localStorage.clear();
-        localStorage.setItem(LAYERS_KEY, v);
-        const t = await open(1440);
-        expect(t.root.querySelector('#layers')).not.toBeNull();
-      }
-    });
-
-    it('a stored panel state wins over the old key', async () => {
-      localStorage.setItem(LAYERS_KEY, 'rail');
-      localStorage.setItem('mc-panels:anim-studio', 'inspector');
-      const t = await open(1440);
-      expect(t.root.querySelector('#layers')).not.toBeNull();
-    });
-
-    it('blocked storage: Layers opens shown and nothing throws', async () => {
-      const real = Object.getOwnPropertyDescriptor(window, 'localStorage')!;
-      let touched = 0;
-      Object.defineProperty(window, 'localStorage', { configurable: true, get: () => { touched++; throw new Error('blocked'); } });
-      try {
-        const t = await open(1440);
-        expect(touched).toBeGreaterThan(0);
-        expect(t.root.querySelector('#layers')).not.toBeNull();
-        layersToggle(t.root).click();
-        await t.settle();
-        expect(t.root.querySelector('#layers')).toBeNull();
-      } finally {
-        Object.defineProperty(window, 'localStorage', real);
-      }
-    });
+  it('Ctrl+\ hides Layers and the Inspector together and shows both again', async () => {
+    const t = await open(1440);
+    t.root.querySelector('mcas-stage')!.dispatchEvent(ctrlBackslash());
+    await t.settle();
+    expect(frameOf(t.root).drawerOpen).toBe(false);
+    expect(t.root.querySelector('#layers')).toBeNull();
+    t.root.querySelector('mcas-stage')!.dispatchEvent(ctrlBackslash());
+    await t.settle();
+    expect(frameOf(t.root).drawerOpen).toBe(true);
+    expect(t.root.querySelector('#layers')).not.toBeNull();
   });
 
   it('the stylesheet: no rail rules and no column tracks of the old layout', () => {

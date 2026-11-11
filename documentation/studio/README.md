@@ -13,7 +13,7 @@ When the Studio closes, focus returns to the Open studio button. The Studio keep
 
 ## Pages
 
--   [The studio look](studio-look.md): the shared layout of all seven studios: top bar, rulers, drawer, pin, Modified only, sheet on narrow screens.
+-   [The studio look](studio-look.md): the shared layout of all seven studios: top bar, rulers, drawer, panel buttons, Modified only, sheet on narrow screens.
 -   [Layout and top bar](layout-and-toolbar.md): the top bar, Layers, canvas, inspector, narrow screens and YAML mode.
 -   [Canvas width](device-widths.md): Narrow, Wide and Panel, matched to the dashboard view.
 -   [Preview](preview.md): run the card on the canvas as on the dashboard, with live actions, and return to editing.

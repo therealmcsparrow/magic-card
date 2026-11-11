@@ -68,7 +68,6 @@ import {
 import { endDrag, stepOrder, groupBlocked, moveMenu, type DragState } from './layers';
 import { PanelLips } from '../ui-kit/controllers/panel-lips';
 import { DirectionController } from '../ui-kit/controllers/direction';
-import { ScrollbarWatch } from '../ui-kit/controllers/scrollbar-width';
 import { lipSpecs, lipStrings } from './lips';
 import { alignItems, combineItems, emptyMenu, pathItems, pointMenu, runMenu, shapeMenu, xferItems } from './menu';
 import { cancel as ptCancel, later as ptLater, openTool, type PtState } from './pathtools';
@@ -263,12 +262,12 @@ export class McSvgEditor extends LitElement implements StageHost {
   private tk = '';
   private tv?: TransformBox;
 
-  /** Panel lips: hide and show the side panel and the inspector, remembered per device; Ctrl/Cmd + backslash toggles the column panels. */
+  /** The side panel and the inspector columns, shown and hidden by the top bar buttons; Ctrl/Cmd + backslash toggles both. Every opening starts with both shown. */
   readonly lips = new PanelLips(this, { editor: 'svg-editor', panels: lipSpecs(), strings: lipStrings('en') });
   private lipLocale = 'en';
-  /** Width of the scrollbar of the side panel, whose inner edge carries its lip. */
-  readonly bar = new ScrollbarWatch(this);
-  private barSig = '';
+  private wasEditing = false;
+  private drawerFrame?: StudioFrameElement;
+  private drawerNarrow = false;
 
   hist?: History<Doc>;
   chunk?: PathCanvasChunk;
@@ -1397,6 +1396,12 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
     const field = this.inField(e);
     const mod = e.ctrlKey || e.metaKey;
+    if (mod && !e.altKey && !e.shiftKey && !e.repeat && this.img && this.frame && (e.key === '\\' || e.code === 'Backslash')) {
+      e.preventDefault();
+      if (this.drawer) this.frame.closeDrawer('user');
+      else this.frame.openDrawer(null, 'user');
+      return;
+    }
     if (e.key === 'Escape') {
       this.escape(e);
       return;
@@ -2153,7 +2158,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       if (this.chipSaid && chip) this.say(chip);
       this.chipSaid = chip;
     }
-    if (changed.has('sel') && this.sel.length && this.img && !this.narrow) this.frame?.openDrawer(null, 'selection');
+    this.syncDrawer();
     if (changed.has('dlg') && changed.get('dlg') && !this.dlg) {
       // the window left the page by state, not through its own close(): nothing else puts focus back
       const a = deepActive();
@@ -2165,11 +2170,6 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { show?(): void }>('mc-ui-menu')?.show?.();
     // a gesture frame changes the drawing only: nothing can have opened since the last update
     if (!(this.hot && changed.size > 0 && [...changed.keys()].every((k) => FRAME_KEYS.has(k as string)))) this.openOverlays();
-    const barSig = `${this.stage}|${this.layout}|${this.overlay}|${this.lips.state('side')}|${this.lips.state('inspector')}`;
-    if (barSig !== this.barSig) {
-      this.barSig = barSig;
-      this.bar.watch(this.renderRoot.querySelector<HTMLElement>('.left'), this.renderRoot.querySelector<HTMLElement>('.work'));
-    }
     if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
   }
 
@@ -2202,9 +2202,15 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.lipLocale = language;
       this.lips.setPanels(lipSpecs(), lipStrings(language));
     }
-    // a panel has a lip only while it is a column beside the stage; the side panel is a sheet in the compact layout
+    // a panel is a column beside the stage in the wide layouts; the side panel is a sheet in the compact layout
     const editing = this.stage === 'edit' && !this.img;
     this.lips.columns({ side: editing && (this.layout === 'wide' || this.layout === 'mid'), inspector: editing && this.layout !== 'stacked' });
+    // every opening shows both panels, whatever an earlier visit left behind
+    if (editing && !this.wasEditing) {
+      this.lips.show('side');
+      this.lips.show('inspector');
+    }
+    this.wasEditing = editing;
     if (changed.has('dlg') && this.dlg && !changed.get('dlg')) this.dlgReturn = deepActive();
     if (changed.has('tool') || changed.has('sel')) this.syncPen();
     if (this.pt && (changed.has('sel') || changed.has('doc'))) ptLater(this);
@@ -2218,6 +2224,24 @@ export class McSvgEditor extends LitElement implements StageHost {
   wrapFocus(end: boolean): void {
     const list = [...this.renderRoot.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), select, textarea, [tabindex="0"]')].filter((el) => !el.classList.contains('sentinel') && !el.closest('[hidden], [data-lip="hidden"]') && el.getClientRects().length > 0);
     (end ? list[list.length - 1] : list[0])?.focus();
+  }
+
+  /** The image drawer opens beside the stage at the wide width and stays; it closes when the window narrows into the sheet width and opens again on widening. */
+  private syncDrawer(): void {
+    const f = this.img && this.stage === 'edit' && !this.img.readOnly ? this.frame : null;
+    if (!f) {
+      this.drawerFrame = undefined;
+      return;
+    }
+    if (f !== this.drawerFrame) {
+      this.drawerFrame = f;
+      this.drawerNarrow = this.narrow;
+      if (!this.narrow) f.openDrawer(null, 'user');
+    } else if (this.narrow !== this.drawerNarrow) {
+      this.drawerNarrow = this.narrow;
+      if (this.narrow) f.closeDrawer('stage');
+      else f.openDrawer(null, 'user');
+    }
   }
 
   /** The studio frame of the image editor, when it is on screen. */

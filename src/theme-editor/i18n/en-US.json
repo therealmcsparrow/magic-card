@@ -1483,10 +1483,6 @@
     "text": "Show English",
     "hash": "f827a651"
   },
-  "theme-editor.lips.got-it": {
-    "text": "Got it",
-    "hash": "5ad3dbd1"
-  },
   "theme-editor.lips.hide-noun-keys": {
     "text": "Hide {noun} ({keys})",
     "hash": "62432946"
@@ -1506,10 +1502,6 @@
   "theme-editor.lips.show-noun-keys": {
     "text": "Show {noun} ({keys})",
     "hash": "7a362b14"
-  },
-  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
-    "text": "The {noun} panel is hidden, as you left it. Use the button in the bar to show it.",
-    "hash": "fc9c41e5"
   },
   "theme-editor.lips.variables": {
     "text": "variables",

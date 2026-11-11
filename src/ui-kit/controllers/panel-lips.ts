@@ -425,7 +425,7 @@ export class PanelLips implements ReactiveController, PanelLipsController {
   private lipEl(id: string): HTMLElement | null {
     const spec = this.panels.find((p) => p.id === id);
     if (!spec) return null;
-    for (const b of Array.from(this.root()?.querySelectorAll<HTMLElement>('.lip') ?? [])) {
+    for (const b of Array.from(this.root()?.querySelectorAll<HTMLElement>('button[aria-controls]') ?? [])) {
       if (b.getAttribute('aria-controls') === spec.controls) return b;
     }
     return null;

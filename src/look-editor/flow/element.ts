@@ -778,6 +778,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
     return html`
       <mc-ui-studio-frame
         studio="look-editor"
+        fixed-drawer
         .scheme=${this.hass?.themes?.darkMode ? 'dark' : 'light'}
         .strings=${this._strings()}
         .selectionLabel=${t('look-editor.element.flow-look')}
@@ -787,7 +788,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
       >
         ${this._bar()}
         ${this._drawer()}
-        <div slot="stage" class="stage" @pointerdown=${this._shell.onStage}>${this._tiles()} ${this._shapeTiles()}</div>
+        <div slot="stage" class="stage">${this._tiles()} ${this._shapeTiles()}</div>
       </mc-ui-studio-frame>
       <div class="sr" role="status" aria-live="polite">${this._announce}</div>
       <mc-ui-toast .offset=${88} .dismissLabel=${t('look-editor.element.dismiss')} @mc-toast-action=${this._undo}></mc-ui-toast>
