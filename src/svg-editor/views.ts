@@ -608,6 +608,7 @@ function stageSection(ed: McSvgEditor, framed: boolean): TemplateResult {
           .transform=${ed.transformBox}
           .contextMenu=${ed.tool === 'select' || ed.tool === 'node'}
           .gridStep=${ed.grid}
+          .fitTop=${framed ? ed.overTop : 0}
           .safeArea=${ed.safeOn ? 2 : undefined}
           .pixelGrid=${ed.pixelGrid}
           .maxPaths=${512}

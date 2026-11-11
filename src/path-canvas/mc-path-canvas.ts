@@ -150,6 +150,8 @@ export class PathCanvas extends LitElement {
   @property({ type: Boolean }) pixelGrid = false;
   /** Grid line spacing in frame units. */
   @property({ type: Number }) gridStep = 1;
+  /** CSS px kept free above the frame when it is fitted (the host floats controls over the top of the stage). */
+  @property({ type: Number }) fitTop = 0;
   @property({ type: Number }) maxPaths = 64;
   @property({ attribute: false }) kinds: readonly AnchorKind[] = ['corner', 'smooth', 'symmetric'];
   @property({ attribute: false }) constrain?: ConstrainPoint;
@@ -314,7 +316,7 @@ export class PathCanvas extends LitElement {
 
   protected updated(changed: Map<string, unknown>): void {
     if (changed.has('overlay')) this.pageListen();
-    if (changed.has('frame') && !this._viewSet) this.fit();
+    if ((changed.has('frame') || changed.has('fitTop')) && !this._viewSet) this.fit();
     if (this._hoverAt && !this._g && (changed.has('mode') || changed.has('transform') || changed.has('paint') || changed.has('paths'))) this.hoverAt(this._hoverAt);
   }
 
@@ -324,7 +326,7 @@ export class PathCanvas extends LitElement {
   fit(): void {
     if (this.overlay) return;
     this.measure();
-    this._view = fitView(this.frame, this._size[0], this._size[1]);
+    this._view = fitView(this.frame, this._size[0], this._size[1], 24, this.fitTop);
     this._viewSet = false;
     this.emitView();
   }

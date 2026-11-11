@@ -28,10 +28,11 @@ export function zoomAt(v: View, zoom: number, at: Pt): View {
   return { zoom: z, x: at[0] - f[0] * z, y: at[1] - f[1] * z };
 }
 
-/** The view that shows `frame` whole, centred, with `margin` CSS px around it. */
-export function fitView(frame: Box, w: number, h: number, margin = 24): View {
-  const zoom = clampZoom(Math.min((w - margin * 2) / frame.w, (h - margin * 2) / frame.h));
-  return { zoom, x: (w - frame.w * zoom) / 2 - frame.x * zoom, y: (h - frame.h * zoom) / 2 - frame.y * zoom };
+/** The view that shows `frame` whole, centred, with `margin` CSS px around it and `top` CSS px kept free above it. */
+export function fitView(frame: Box, w: number, h: number, margin = 24, top = 0): View {
+  const free = Math.max(0, Math.min(top, h - margin * 2 - 1));
+  const zoom = clampZoom(Math.min((w - margin * 2) / frame.w, (h - free - margin * 2) / frame.h));
+  return { zoom, x: (w - frame.w * zoom) / 2 - frame.x * zoom, y: free + (h - free - frame.h * zoom) / 2 - frame.y * zoom };
 }
 
 /** Half the side of a point's hit target, and the half width of a segment's hit band, in CSS px. */

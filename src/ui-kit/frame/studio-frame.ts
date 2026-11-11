@@ -82,6 +82,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
   }
 
   protected firstUpdated(): void {
+    this._width = this.getBoundingClientRect().width;
     if (typeof ResizeObserver === 'undefined') return;
     this._contentObserver = new ResizeObserver(() => this._syncOff());
     for (const el of this.renderRoot.querySelectorAll('.field, .content')) this._contentObserver.observe(el);
@@ -113,7 +114,11 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     this._open = true;
     this._fire<FrameDrawerChange>(FRAME_DRAWER_EVENT, { open: true, reason });
     if (this.narrow) {
-      void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('[data-bp="sheet"] button')?.focus());
+      void this.updateComplete.then(() => {
+        // the width read at connect can be stale: re-read it so a wide frame never steals focus for a sheet that goes away
+        this._width = this.getBoundingClientRect().width;
+        if (this.narrow) this.renderRoot.querySelector<HTMLElement>('[data-bp="sheet"] button')?.focus();
+      });
     }
   }
 

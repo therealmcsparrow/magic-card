@@ -78,6 +78,8 @@ const round2 = (n: number): number => Math.round(n * 100) / 100;
 /** Room around the card, inside the studio frame's stage, that the float bar may use (selection tags and handles hang out there). */
 const CANVAS_ROOM_X = 20;
 const CANVAS_ROOM_Y = 32;
+/** Space kept between the label line and the stage's right edge. */
+const LABEL_EDGE = 8;
 
 /** Events the canvas swallows before they reach the live card (module previews may call services). */
 const BLOCKED = ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'touchstart', 'touchend', 'dblclick', 'contextmenu', 'keyup'];
@@ -1020,6 +1022,22 @@ export class StudioCanvas extends LitElement {
     return { top: r.top + stage.clientTop, left: r.left + stage.clientLeft, width: stage.clientWidth, height: stage.clientHeight };
   }
 
+  /** The label line above the card wraps inside the visible stage when the card is wider than it. */
+  private _fitLabel(canvas: HTMLElement | null | undefined): void {
+    const label = this.shadowRoot?.querySelector<HTMLElement>('.device-label');
+    const stage = canvas ? this._watchStage(canvas) : null;
+    if (!label) return;
+    if (!stage) {
+      label.style.removeProperty('max-inline-size');
+      return;
+    }
+    const at = label.getBoundingClientRect();
+    const full = label.parentElement?.getBoundingClientRect().width ?? at.width;
+    const room = stage.left + stage.width - at.left - LABEL_EDGE;
+    if (room > 0 && room < full) label.style.maxInlineSize = `${Math.floor(room)}px`;
+    else label.style.removeProperty('max-inline-size');
+  }
+
   private _place(): void {
     if (!this.isConnected) return;
     const root = this.shadowRoot;
@@ -1032,6 +1050,7 @@ export class StudioCanvas extends LitElement {
     const canvasEl = root?.querySelector<HTMLElement>('.canvas');
     const toLocal = layoutSpace(inner);
     this._placeColumnHandles(toLocal);
+    this._fitLabel(canvasEl);
     if (!tr) {
       frame.hidden = true;
       bar.hidden = true;
