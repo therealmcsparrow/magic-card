@@ -1553,6 +1553,12 @@ export class StudioCanvas extends LitElement {
         font-size: 0.75rem;
         color: var(--mc-text-2);
       }
+      /* a wrapped label would sit under the selection tag above the card: leave the tag its own line */
+      @media (max-width: 600px) {
+        .device-label {
+          margin-bottom: 26px;
+        }
+      }
       .preview-pause {
         display: inline-flex;
         align-items: center;

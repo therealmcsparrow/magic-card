@@ -1,6 +1,7 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import type { ClipPlay, ImageClip } from '../contracts/image-animation';
 import { t } from './i18n';
+import { defaultClip } from './tracks';
 
 // The clip list of the animator: name a clip, choose what starts it and how it repeats, all from lists and fields.
 
@@ -113,22 +114,38 @@ function stateFields(p: ClipsPanelProps, clip: ImageClip): TemplateResult {
   </div>`;
 }
 
-const clipChanged = (c: ImageClip): boolean =>
-  c.tracks.length > 0 || c.play.on !== 'always' || c.duration !== 2 || c.iterations !== 'infinite' || (c.direction ?? 'normal') !== 'normal';
+const clipChanged = (c: ImageClip): boolean => {
+  const fresh = defaultClip();
+  return (
+    c.tracks.length > 0 ||
+    !!c.morphs?.length ||
+    c.name !== fresh.name ||
+    c.play.on !== 'always' ||
+    c.duration !== fresh.duration ||
+    (c.delay ?? 0) !== 0 ||
+    c.easing !== fresh.easing ||
+    c.iterations !== 'infinite' ||
+    (c.direction ?? 'normal') !== 'normal'
+  );
+};
 
 /** True when any clip differs from a fresh one, or a trigger is being drafted. */
 export const clipsModified = (clips: readonly ImageClip[], drafting?: string): boolean => clips.length > 1 || !!drafting || clips.some(clipChanged);
 
-function details(p: ClipsPanelProps, clip: ImageClip, index: number): TemplateResult {
+/** True when a clip carries effects or morphs, which the target, effect and morph panels hold. */
+export const clipsHaveEffects = (clips: readonly ImageClip[]): boolean => clips.some((c) => c.tracks.length > 0 || !!c.morphs?.length);
+
+function details(p: ClipsPanelProps, clip: ImageClip, index: number): TemplateResult | typeof nothing {
   const forever = clip.iterations === 'infinite';
   const only = p.modifiedOnly === true;
-  const showName = !only;
+  const showName = !only || clip.name !== defaultClip().name;
   const showTrigger = !only || clip.play.on !== 'always' || p.drafting === clip.id;
   const showDuration = !only || clip.duration !== 2;
   const showForever = !only || !forever;
   const showDirection = !only || (clip.direction ?? 'normal') !== 'normal';
   const kinds: TriggerKind[] = ['always', 'hover', 'tap', 'state'];
   const shown = p.drafting === clip.id ? 'state' : clip.play.on;
+  if (only && !(showName || showTrigger || showDuration || showForever || showDirection || !forever || shown === 'state')) return nothing;
   const directions: [NonNullable<ImageClip['direction']>, string][] = [
     ['normal', t('image-animator.clips-panel.forwards')],
     ['reverse', t('image-animator.clips-panel.backwards')],
@@ -193,14 +210,17 @@ export function renderClips(p: ClipsPanelProps): TemplateResult | typeof nothing
   const clip = index < 0 ? undefined : p.clips[index];
   if (p.modifiedOnly === true) {
     if (!clipsModified(p.clips, p.drafting)) return nothing;
+    const list = p.clips.length > 1;
+    const body = clip ? details(p, clip, index) : nothing;
+    if (!list && body === nothing) return nothing;
     return html`<section aria-labelledby="clips-title">
       <h3 id="clips-title">${t('image-animator.clips-panel.clips')}</h3>
-      ${p.clips.length > 1
+      ${list
         ? html`<ul class="clip-list">
             ${p.clips.map((c) => html`<li><button type="button" class="btn btn-secondary" aria-pressed=${c.id === p.selected ? 'true' : 'false'} @click=${() => p.select(c.id)}>${c.name}</button></li>`)}
           </ul>`
         : nothing}
-      ${clip ? details(p, clip, index) : nothing}
+      ${body}
     </section>`;
   }
   return html`<section aria-labelledby="clips-title">

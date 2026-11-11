@@ -837,6 +837,27 @@ export class Studio extends LitElement {
           display: none;
         }
       }
+      /* the opener keeps its icon and chevron on one row at any width */
+      .bar-row .layers-toggle:not([hidden]) {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        inline-size: auto;
+        min-inline-size: 36px;
+        flex-wrap: nowrap;
+        padding-inline: 6px;
+      }
+      /* on a phone the name and template chip drop to their own line instead of running off the right edge */
+      @media (max-width: 600px) {
+        .bar-row > .grp:first-child {
+          flex-wrap: wrap;
+          max-inline-size: 100%;
+        }
+        .bar-row > .grp:first-child .vr {
+          display: none;
+        }
+      }
       @media (max-width: 900px) {
         .preview-toggle .lbl {
           position: absolute;

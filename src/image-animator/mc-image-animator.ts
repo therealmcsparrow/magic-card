@@ -10,7 +10,7 @@ import { defineKitElements } from '../ui-kit/define-parts';
 import { loadStudioFonts } from '../ui-kit';
 import { StudioFrame } from '../ui-kit/frame/studio-frame';
 import { createClip, deleteClip, duplicateClip, moveClip, parseWhen, renameClip, setClipPlay, setClipTiming, type ClipsError, type ClipTiming } from './clips';
-import { clipsModified, renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
+import { clipsHaveEffects, clipsModified, renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
 import { presetChoices, renderEffects, renderTargetList, effectLabel, targetName, type PanelProps } from './effects-panel';
 import { t } from './i18n';
 import { loadImageTools } from './image-loader';
@@ -606,7 +606,9 @@ export class McImageAnimator extends LitElement {
       const changed = !!cp && clipsModified(cp.clips, cp.drafting);
       return html`<div slot="drawer" id="ia-drawer" class="drawer-body" ?inert=${busy}>
         ${this._warnings(o)}
-        ${cp && changed ? renderClips({ ...cp, modifiedOnly: true }) : html`<p class="hint" role="status">${t('image-animator.mc-image-animator.nothing-modified')}</p>`}
+        ${panel && cp && clipsHaveEffects(cp.clips) ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}` : nothing}
+        ${cp && changed ? renderClips({ ...cp, modifiedOnly: true }) : nothing}
+        ${changed ? nothing : html`<p class="hint" role="status">${t('image-animator.mc-image-animator.nothing-modified')}</p>`}
       </div>`;
     }
     return html`<div slot="drawer" id="ia-drawer" class="drawer-body" ?inert=${busy}>

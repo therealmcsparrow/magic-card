@@ -350,6 +350,8 @@ export class AnimationStudio extends LitElement {
   /** Below FRAME_WIDE_MIN_PX the Layers column is an overlay that starts closed. */
   @state() private _layersSheet = false;
   private _layersWas = false;
+  private _barInert = false;
+  private _wrapBack = false;
   /** Modified only is on: the settings show only what changed. */
   @state() private _modOnly = false;
   /** The studio's own width (compact-rows and slide-over breakpoints). */
@@ -442,6 +444,10 @@ export class AnimationStudio extends LitElement {
     // the Layers sheet covers the stage: what lies under it is not reachable by Tab while it is open
     const under = this._narrow && shown;
     for (const el of this.shadowRoot?.querySelectorAll<HTMLElement>('.center > :not(.layers-sheet)') ?? []) el.toggleAttribute('inert', under);
+    // the sheet is modal: the top bar waits too, and goes back to its own state on close or at a wide width
+    const bar = this.shadowRoot?.querySelector<HTMLElement>('.fr-bar');
+    if (bar && (under || this._barInert)) bar.toggleAttribute('inert', under);
+    this._barInert = under;
     if (changed.has('_height') || changed.has('_width') || lipMoved || changed.has('_view') || (changed.has('_doc') && prev?.id !== this._doc?.id)) this._autoSplit();
     else if (changed.has('_doc')) this._autoSplit(true);
     // a shape was drawn: its row is in view in the layers column (a short window scrolls the column)
@@ -1403,6 +1409,20 @@ export class AnimationStudio extends LitElement {
     } else this._lips.toggle('layers');
   }
 
+  /** Tab wraps inside the modal sheet: past the end it goes to Close; back from Close it steps from the end stop. */
+  private _sheetTab(e: KeyboardEvent): void {
+    if (e.key !== 'Tab' || !e.shiftKey) return;
+    if ((e.composedPath()[0] as HTMLElement | undefined)?.classList?.contains('layers-close')) {
+      this._wrapBack = true;
+      this.shadowRoot?.querySelector<HTMLElement>('.sheet-end')?.focus();
+    }
+  }
+
+  private _sheetEnd(): void {
+    if (this._wrapBack) this._wrapBack = false;
+    else this.shadowRoot?.querySelector<HTMLElement>('.layers-close')?.focus();
+  }
+
   /** Close the Layers sheet and give focus back to the bar's Layers button. */
   private _closeLayersSheet(): void {
     this._layersSheet = false;
@@ -2230,7 +2250,7 @@ export class AnimationStudio extends LitElement {
       <output class="zoom-read" slot="zoom">${new Intl.NumberFormat(locale(), { style: 'percent', maximumFractionDigits: 0 }).format(this._stageScale > 0 ? this._stageScale : 1)}</output>
       ${layersShown && !this._narrow ? html`<div class="fr-start" slot="start">${this._renderLayers(d)}</div>` : nothing}
       <div class="center ${panel ? 'with-panel' : ''}" slot="stage" style="--split: ${this._split}${this._narrow ? `;max-inline-size: calc(${this._width}px - 2 * var(--bp-s-6))` : ''}">
-        ${layersShown && this._narrow ? html`<div class="layers-sheet">${this._renderLayers(d)}</div>` : nothing}
+        ${layersShown && this._narrow ? html`<div class="layers-sheet" @keydown=${(e: KeyboardEvent) => this._sheetTab(e)}>${this._renderLayers(d)}<span class="sheet-end" tabindex="0" @focus=${() => this._sheetEnd()}></span></div>` : nothing}
         <mcas-stage
           dir=${this._pseudo ? 'rtl' : nothing}
           .doc=${this._previewDoc(playing, lv)}
