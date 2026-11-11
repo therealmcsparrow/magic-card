@@ -27,6 +27,10 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
   @property({ attribute: false }) measure: FrameMeasure | null = null;
   @property({ attribute: false }) rulers = true;
   @property({ attribute: 'start-mode' }) startMode: 'sheet' | 'rail' = 'sheet';
+  /** Attribute `fixed-drawer`: the drawer has no pin, stays open while the stage is worked on and ignores Escape at 1024 px and wider. */
+  @property({ type: Boolean, attribute: 'fixed-drawer', reflect: true }) fixedDrawer = false;
+  /** Attribute `centre-stage`: the stage content sits in the middle of the stage, both ways, while it fits. */
+  @property({ type: Boolean, attribute: 'centre-stage', reflect: true }) centreStage = false;
 
   @state() private _open = false;
   @state() private _pinned = false;
@@ -108,7 +112,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
   }
 
   stageWork(): void {
-    if (this._open && !this._pinned) this.closeDrawer('stage');
+    if (this._open && !this._pinned && !this.fixedDrawer) this.closeDrawer('stage');
   }
 
   private _fire<T>(name: string, detail: T): void {
@@ -127,7 +131,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
 
   private _onKey = (e: KeyboardEvent): void => {
     if (e.key === 'Escape') {
-      if (e.defaultPrevented || !this._open || (!this.narrow && this._pinned)) return;
+      if (e.defaultPrevented || !this._open || (!this.narrow && (this._pinned || this.fixedDrawer))) return;
       e.preventDefault();
       e.stopPropagation();
       this.closeDrawer('escape');
@@ -288,7 +292,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     return html`<aside data-bp="drawer" class="panel" aria-label=${label} ?hidden=${!this._open} ?inert=${!this._open}>
       <div class="head">
         <h2 title=${this.selectionLabel}>${this.selectionLabel}</h2>
-        <button type="button" class="ib" data-bp="pin" aria-label=${this.strings.pin} title=${this.strings.pin} aria-pressed=${this._pinned ? 'true' : 'false'} @click=${this._togglePin}>${PIN}</button>
+        ${this.fixedDrawer ? nothing : html`<button type="button" class="ib" data-bp="pin" aria-label=${this.strings.pin} title=${this.strings.pin} aria-pressed=${this._pinned ? 'true' : 'false'} @click=${this._togglePin}>${PIN}</button>`}
         <button type="button" class="ib" aria-label=${this.strings.close} title=${this.strings.close} @click=${() => this.closeDrawer('user')}>${glyph('close', 18)}</button>
       </div>
       ${this._filter()}${this._body()}

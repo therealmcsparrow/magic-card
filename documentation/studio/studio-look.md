@@ -33,6 +33,8 @@ The pin button in the drawer header keeps the drawer open.
 
 Without the pin, the drawer closes when you work on the stage. The pin is not remembered after you close the studio.
 
+The Studio (the card editor) is the exception. Its inspector has no pin: from 1024 px wide it opens with the Studio, pushes the stage aside and stays open while you work on the stage. Escape and the close button still close it below 1024 px, where it is a sheet.
+
 ## Modified only
 
 Switch on Modified only at the top of the drawer to show just the fields that differ from their default. Switch it off to see every field again.

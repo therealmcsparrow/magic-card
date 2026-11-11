@@ -15,7 +15,7 @@ import { PanelLips } from '../../ui-kit/controllers/panel-lips';
 import type { PanelLipSpec, PanelLipStrings } from '../../contracts/ui-kit';
 import type { FrameMeasure, StudioFrameElement, StudioFrameStrings } from '../../contracts/studio-frame';
 import { editorSystem } from '../../css/editor-stack';
-import type { StudioCanvas } from './studio-canvas';
+import { canvasHint, type StudioCanvas } from './studio-canvas';
 import { CanvasWidth, CanvasWidthOption, DetectedView, OPTION_IDS, OPTION_LABELS, OPTION_NAMES, autoWidth, detectView, overrideWidth } from './view-detect';
 import { countModules } from './selection';
 
@@ -128,9 +128,18 @@ export class Studio extends LitElement {
     keys: 'manual',
   });
   private _lipLocale = 'en';
-  /** Layers open beside the stage by default from 1280 px; below that the toggle opens it over the stage. */
-  private readonly _wideLayers = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 1280px)') : undefined;
-  private _onViewport = (): void => this.requestUpdate();
+  /** Layers and the inspector open beside the stage from 1024 px; below that they open over it (Layers by its toggle, the inspector as the frame's sheet). */
+  private readonly _wideLayers = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 1024px)') : undefined;
+  /** The inspector was open when Preview began: it comes back when Preview ends. */
+  private _drawerBeforeLive = false;
+  private _onViewport = (): void => {
+    // the inspector is a sheet below 1024 px: close it when the window narrows, open it again when it widens
+    if (this.open && !this._live) {
+      if (this._wideLayers?.matches ?? true) this._openDrawer();
+      else this._frame?.closeDrawer('stage');
+    }
+    this.requestUpdate();
+  };
   @state() private _canvasMeasure: CanvasMeasure | null = null;
   private _lastPath = '';
 
@@ -144,7 +153,7 @@ export class Studio extends LitElement {
     return this.shadowRoot?.querySelector('mc-ui-studio-frame') ?? null;
   }
 
-  /** Layers beside the stage: the remembered panel state at 1280 px and wider, the toggle's own state below. */
+  /** Layers beside the stage: the remembered panel state at 1024 px and wider, the toggle's own state below. */
   private get _layersOpen(): boolean {
     if (this._live) return false;
     return (this._wideLayers?.matches ?? true) ? !this._lips.isHidden('layers') : this._showLayers;
@@ -194,6 +203,8 @@ export class Studio extends LitElement {
     // a panel has a lip only while it is a column beside the canvas (the layout breakpoints below)
     this._lips.suspended = this._live;
     this._lips.columns({ layers: this.open && (this._wideLayers?.matches ?? true), inspector: false });
+    // every opening shows Layers beside the stage, whatever an earlier visit left behind
+    if (changed.has('open') && this.open) this._lips.show('layers');
     this.setAttribute('data-bp-mode', this.hass?.themes?.darkMode ? 'dark' : 'light');
   }
 
@@ -241,9 +252,9 @@ export class Studio extends LitElement {
     if (path && this.open && !this._live) this._frame?.openDrawer(this.shadowRoot?.querySelector<HTMLElement>('.drawer-toggle'), 'selection');
   }
 
-  /** The Layers lip sits at the inner edge of the column while it is shown, at the window edge otherwise. */
-  private _lipTokens(): string {
-    return `--mc-lip-at-start: ${this._lips.isHidden('layers') ? '0px' : 'var(--bp-layers-w)'}`;
+  /** Opens the inspector beside the stage; its opener is the top bar's button, so a close returns focus there. */
+  private _openDrawer(): void {
+    this._frame?.openDrawer(this.shadowRoot?.querySelector<HTMLElement>('.drawer-toggle'), 'user');
   }
 
   private _onCanvasMeasure = (e: Event): void => {
@@ -289,7 +300,9 @@ export class Studio extends LitElement {
   private _onShortcut = (e: KeyboardEvent): void => {
     if (this._live) return;
     const columns = this._lips.active;
+    const inLayers = this._layersHasFocus();
     if (!this._lips.handleKey(e)) return;
+    if (inLayers && columns && this._lips.isHidden('layers')) this._focusSel = '.layers-toggle';
     const frame = this._frame;
     if (!frame) return;
     const show = columns ? !this._lips.isHidden('layers') : !frame.drawerOpen;
@@ -306,6 +319,11 @@ export class Studio extends LitElement {
   };
   private readonly _stageCapture = { handleEvent: (e: Event): void => this._onStagePointerDown(e), capture: true };
 
+  /** Focus sits inside the Layers panel; hiding it from the keyboard must hand focus to its toggle. */
+  private _layersHasFocus(): boolean {
+    return !!this.shadowRoot?.querySelector('#layers')?.matches(':focus-within');
+  }
+
   private _toggleLayers = (): void => {
     if (this._wideLayers?.matches ?? true) this._lips.toggle('layers');
     else this._showLayers = !this._showLayers;
@@ -318,6 +336,7 @@ export class Studio extends LitElement {
     if (this.open && !dlg.open) {
       dlg.showModal();
       this._showLayers = false;
+      if (this._wideLayers?.matches ?? true) this._openDrawer();
       const canvas = this.shadowRoot?.querySelector<StudioCanvas>('mc-studio-canvas');
       canvas?.updateComplete.then(() => canvas.focusCanvas());
     } else if (!this.open && dlg.open) {
@@ -382,7 +401,13 @@ export class Studio extends LitElement {
   private _setLive(on: boolean): void {
     if (on === this._live) return;
     this._live = on;
-    if (on) this._frame?.closeDrawer('user');
+    if (on) {
+      this._drawerBeforeLive = !!this._frame?.drawerOpen;
+      this._frame?.closeDrawer('user');
+    } else if (this._drawerBeforeLive && (this._wideLayers?.matches ?? true)) {
+      this._drawerBeforeLive = false;
+      this._openDrawer();
+    }
     this._focusSel = '.preview-toggle';
     if (!on) this._closeMoreInfo();
   }
@@ -490,12 +515,10 @@ export class Studio extends LitElement {
             title=${t('card-editor.studio.layers-2')}
             aria-controls="layers"
             aria-expanded=${this._layersOpen ? 'true' : 'false'}
-            data-open=${this._layersOpen ? 'true' : 'false'}
-            data-dir=${this._lips.dir}
             ?hidden=${live}
             @click=${this._toggleLayers}
           >
-            <ha-icon icon="mdi:layers-outline"></ha-icon><svg class="opener-chevron" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"></path></svg>
+            <ha-icon icon="mdi:layers-outline"></ha-icon>
           </button>
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
@@ -586,6 +609,8 @@ export class Studio extends LitElement {
           ? html`
               <mc-ui-studio-frame
                 studio="card-studio"
+                fixed-drawer
+                centre-stage
                 class=${live ? 'live' : ''}
                 .scheme=${this.hass?.themes?.darkMode ? 'dark' : 'light'}
                 .strings=${this._frameStrings()}
@@ -621,7 +646,7 @@ export class Studio extends LitElement {
                   : nothing}
                 <mc-inspector slot="drawer" id="inspector" .stateManager=${sm} .hass=${this.hass} variant="studio" .modifiedOnly=${this._modifiedOnly} ?hidden=${live}></mc-inspector>
               </mc-ui-studio-frame>
-              <div class="lips" style=${this._lipTokens()}>${lips.lip('layers')}</div>
+              <div class="foot" aria-hidden="true" ?hidden=${live || mode !== 'form'}>${canvasHint()}</div>
             `
           : html``}
         <slot></slot>
@@ -667,7 +692,8 @@ export class Studio extends LitElement {
         transition: opacity 0.2s ease-out, transform 0.2s ease-out;
       }
       dialog.studio[open] {
-        display: block;
+        display: flex;
+        flex-direction: column;
         opacity: 1;
         transform: none;
       }
@@ -715,18 +741,6 @@ export class Studio extends LitElement {
       .spacer {
         flex: 1;
       }
-      /* the opener's chevron points the way the Layers panel moves, as a lip's does: in when closed, back when open; right to left mirrors both */
-      .layers-toggle .opener-chevron {
-        flex: none;
-        margin-inline-start: 2px;
-      }
-      .layers-toggle[data-open='true'] .opener-chevron,
-      .layers-toggle[data-dir='rtl'] .opener-chevron {
-        transform: scaleX(-1);
-      }
-      .layers-toggle[data-open='true'][data-dir='rtl'] .opener-chevron {
-        transform: none;
-      }
       .more-info-host {
         display: contents;
       }
@@ -762,7 +776,38 @@ export class Studio extends LitElement {
 
       /* the frame lays out the bar, Layers, stage and drawer; these style what sits in them */
       mc-ui-studio-frame {
-        block-size: 100%;
+        flex: 1 1 0;
+        min-block-size: 0;
+        /* a little wider than the other studios' Layers column; the inspector still fits beside it at 1024 px */
+        --bp-layers-w: 280px;
+      }
+      mc-ui-studio-frame[data-bp-w='mid'] {
+        --bp-layers-w: 260px;
+      }
+      /* the shortcut hint: a thin muted bar under the studio, one line, never over the stage */
+      .foot {
+        flex: none;
+        box-sizing: border-box;
+        padding: 3px 16px;
+        border-block-start: 1px solid var(--bp-line);
+        background: var(--bp-sheet);
+        color: var(--bp-mute);
+        font-size: 0.75rem;
+        line-height: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .foot[hidden] {
+        display: none;
+      }
+      kbd {
+        font-family: var(--mc-mono);
+        font-size: 0.75rem;
+        padding: 0 4px;
+        border: 1px solid var(--mc-divider);
+        border-radius: 4px;
+        background: var(--mc-surface-2);
       }
       .bar-row {
         display: flex;
@@ -822,22 +867,7 @@ export class Studio extends LitElement {
       .layers-toggle[hidden] {
         display: none;
       }
-      /* the Layers lip floats over the frame's start column edge */
-      .lips {
-        position: absolute;
-        inset: 0;
-        z-index: 6;
-        pointer-events: none;
-      }
-      .lips > * {
-        pointer-events: auto;
-      }
-      @media (max-width: 1023px) {
-        .lips {
-          display: none;
-        }
-      }
-      /* the opener keeps its icon and chevron on one row at any width */
+      /* the opener keeps its icon on one row at any width */
       .bar-row .layers-toggle:not([hidden]) {
         display: inline-flex;
         flex-direction: row;

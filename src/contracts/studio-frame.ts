@@ -1,8 +1,8 @@
-// Contract: studio frame. Version 1.1.0. Part of the ui kit (re-exported by ./ui-kit from ui-kit 1.4.0).
+// Contract: studio frame. Version 1.2.0 (1.2.0 adds the optional `fixed-drawer` and `centre-stage` attributes). Part of the ui kit (re-exported by ./ui-kit from ui-kit 1.4.0).
 // The shared shell of every studio: top bar, rulers, measured grid stage with a zoom pill, and an end-side drawer (pushes the stage at 1024 px+, full-height sheet below).
 // The frame owns layout, rulers, grid, drawer, pin, "Modified only" and the sheet; the studio owns every field, tool and string (all words come in through `strings`).
 
-export const STUDIO_FRAME_CONTRACT_VERSION = '1.1.0';
+export const STUDIO_FRAME_CONTRACT_VERSION = '1.2.0';
 
 export const UI_STUDIO_FRAME_TAG = 'mc-ui-studio-frame';
 
@@ -94,6 +94,10 @@ export interface StudioFrameElement extends HTMLElement {
    * 'rail': the `start` slot stays an in-flow narrow column (--bp-rail-w, 72px) at every width.
    */
   startMode: 'sheet' | 'rail';
+  /** Attribute `fixed-drawer` (default false): no pin button, the drawer is not closed by stage work or Escape at 1024 px and wider. */
+  fixedDrawer?: boolean;
+  /** Attribute `centre-stage` (default false): the stage content is centred in the stage, horizontally and vertically, while it fits. */
+  centreStage?: boolean;
   readonly drawerOpen: boolean;
   readonly pinned: boolean;
   readonly modifiedOnly: boolean;

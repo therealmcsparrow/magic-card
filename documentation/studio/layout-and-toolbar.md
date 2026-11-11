@@ -46,17 +46,17 @@ The inspector tabs depend on what is selected:
 
 ## Hiding the side panels
 
-Layers and the inspector each have an edge button on their inner side while they sit beside the canvas. Press it to hide the panel. The canvas takes the width the panel gave up, and the button stays at the window edge. Press it again to show the panel with the same selection and scroll position.
+From 1024 px wide, the Studio opens with Layers and the inspector both showing. Neither has an edge button or a pin. Press the Layers button in the top bar to hide or show Layers; it carries only its icon. The inspector stays open, pushes the canvas aside and does not close when you work on the canvas. Layers is about 40 px wider than it used to be, and the inspector still fits beside it at 1024 px.
 
-The edge button is the same size whether its panel is shown or hidden, in every editor. Only its colours change: filled with the accent colour while the panel is hidden.
+The card sits in the middle of the canvas, across and down, whenever it fits. It stays there when a panel opens or closes and when the window is resized.
+
+The shortcut hint is a thin, muted line at the bottom of the Studio, under the canvas. It stays on one line and ends with an ellipsis when the window is too narrow for all of it. It never covers the card.
 
 -   A hidden panel keeps its settings, and nothing changes in the card or the undo history.
--   Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows again the panels it hid last. It works from any field in the Studio, except while Preview is on. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons.
--   The Studio remembers which panels are hidden on this device and opens with them hidden. Other devices are not affected.
--   The first time the Studio opens with a panel hidden, a short hint explains the button and the shortcut. Press Got it to close it.
+-   Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows them again. It works from any field in the Studio, except while Preview is on. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the Layers button.
+-   The Studio always shows Layers when it opens, whatever an earlier visit left behind.
 -   Edit on a layer, or a rename that needs the Layers list, shows a hidden panel again.
--   Where a panel is an overlay (900 px or less) or sits below the canvas (640 px or less), it has no edge button. The Layers button and the inspector keep their own controls there.
--   Preview hides both panels, so their buttons are not shown while it is on. See [Preview](preview.md).
+-   Preview hides both panels and the hint. When Preview ends, the inspector returns. See [Preview](preview.md).
 
 ## Narrow screens
 

@@ -200,6 +200,9 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   :host([data-bp-w="tiny"]) .field {
     padding: 48px var(--bp-s-6) 64px;
   }
+  :host([centre-stage]) .field {
+    display: grid;
+  }
   .content {
     position: relative;
     display: grid;

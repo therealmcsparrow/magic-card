@@ -230,6 +230,19 @@ export function layoutSpace(inner: HTMLElement): (r: DOMRect) => { top: number; 
   });
 }
 
+/** The shortcut hint under the stage: the studio shows it in its footer, the canvas keeps a hidden copy as its description. */
+export function canvasHint(): TemplateResult {
+  return html`${tx('card-editor.studio-canvas.click-a-module-to-select-it-move-moves', {
+      // the named keys are words in the user's language, like the icon editor's hints (Alt+Omhoog)
+      move: html`<kbd>${t('card-editor.studio-canvas.key-alt')}</kbd> + <kbd>${t('card-editor.studio-canvas.up')}</kbd>/<kbd>${t('card-editor.studio-canvas.down')}</kbd>`,
+      remove: html`<kbd>${t('card-editor.studio-canvas.del')}</kbd>`,
+      menu: html`<kbd>${t('card-editor.studio-canvas.key-shift')}</kbd> + <kbd>F10</kbd>`,
+    })}
+    ${tx('card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd', {
+      keys: html`<kbd>${t('card-editor.studio-canvas.key-ctrl')}</kbd> + <kbd>\\</kbd> ${t('card-editor.studio-canvas.key-or')} <kbd>⌘</kbd> + <kbd>\\</kbd>`,
+    })}`;
+}
+
 /**
  * Studio canvas: transparent ground over the frame's grid, device frame and ONE live `<magic-card editMode>`.
  * Click selects, hover outlines modules, a selection frame + floating toolbar track the selection.
@@ -1432,17 +1445,7 @@ export class StudioCanvas extends LitElement {
         : ''}</p>
       ${live
         ? nothing
-        : html`<p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
-        ${tx('card-editor.studio-canvas.click-a-module-to-select-it-move-moves', {
-          // the named keys are words in the user's language, like the icon editor's hints (Alt+Omhoog)
-          move: html`<kbd>${t('card-editor.studio-canvas.key-alt')}</kbd> + <kbd>${t('card-editor.studio-canvas.up')}</kbd>/<kbd>${t('card-editor.studio-canvas.down')}</kbd>`,
-          remove: html`<kbd>${t('card-editor.studio-canvas.del')}</kbd>`,
-          menu: html`<kbd>${t('card-editor.studio-canvas.key-shift')}</kbd> + <kbd>F10</kbd>`,
-        })}
-        ${tx('card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd', {
-          keys: html`<kbd>${t('card-editor.studio-canvas.key-ctrl')}</kbd> + <kbd>\\</kbd> ${t('card-editor.studio-canvas.key-or')} <kbd>⌘</kbd> + <kbd>\\</kbd>`,
-        })}
-      </p>`}
+        : html`<p class="sr-only" id="canvas-hint" ?hidden=${!!this._connectFrom}>${canvasHint()}</p>`}
       <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
       ${this._itemMenu.render()}
       ${this._press ? html`<span class="press-ring" style=${`left:${this._press.x}px;top:${this._press.y}px`} aria-hidden="true"></span>` : nothing}
@@ -1861,21 +1864,7 @@ export class StudioCanvas extends LitElement {
         margin: 4px 2px;
         background: var(--mc-divider);
       }
-      .canvas-hint {
-        position: static;
-        z-index: 3;
-        margin: 12px 0 0;
-        padding: 6px 10px;
-        font-size: 0.75rem;
-        color: var(--mc-text-2);
-        background: var(--mc-surface);
-        border: 1px solid var(--mc-divider);
-        border-radius: var(--mc-radius);
-      }
       @media (max-width: 640px) {
-        .canvas-hint {
-          display: none;
-        }
         /* Stacked studio: the canvas grows to fit the card; the studio workspace does the scrolling. */
         :host {
           grid-template-rows: auto;
