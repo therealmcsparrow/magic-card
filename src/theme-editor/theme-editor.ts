@@ -11,9 +11,11 @@ import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeEditorElement
 import { cloneDoc } from './model';
 import { base } from './styles';
 import { fire } from './util';
+import { loadStudioFonts } from '../ui-kit/fonts/load-lazy';
 import { reasonText } from './start-view';
 import type { CreateDetail } from './start-view';
 import type { Draft } from './editor-view';
+import type { StudioFrameStrings } from '../contracts/studio-frame';
 import './editor-view';
 import './start-view';
 
@@ -81,6 +83,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
 
   connectedCallback(): void {
     super.connectedCallback();
+    void loadStudioFonts();
     window.addEventListener('beforeunload', this._beforeUnload);
     this._offTrial = subscribeTrial(() => this.requestUpdate());
   }
@@ -225,6 +228,31 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
     this.renderRoot.querySelector<UiToastElement>('mc-ui-toast')?.show({ text, duration: NOTICE_MS });
   }
 
+  /** The frame's words, in the editor's language; the list view has no drawer, so only the stage is in use. */
+  private _strings?: { language: string; value: StudioFrameStrings };
+  private _frameStrings(): StudioFrameStrings {
+    const language = locale();
+    if (this._strings?.language !== language) {
+      this._strings = {
+        language,
+        value: {
+          pin: t('theme-editor.editor-view.frame-pin'),
+          modifiedOnly: t('theme-editor.editor-view.only-changed'),
+          noneModified: t('theme-editor.editor-view.frame-none-modified'),
+          close: t('theme-editor.editor-view.frame-close'),
+          drawer: t('theme-editor.editor-view.variables-panel'),
+          zoom: t('theme-editor.editor-view.frame-zoom'),
+        },
+      };
+    }
+    return this._strings.value;
+  }
+
+  /** The scheme follows the Home Assistant theme, never the system setting. */
+  private get _scheme(): 'light' | 'dark' {
+    return (this.hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode ? 'dark' : 'light';
+  }
+
   private _views(): TemplateResult {
     if (this._draft) {
       return html`<mcte-editor-view
@@ -253,6 +281,12 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
         @mcte-recheck=${() => void this._recheck()}
       ></mcte-editor-view>`;
     }
+    return html`<mc-ui-studio-frame studio="theme-editor" .scheme=${this._scheme} .strings=${this._frameStrings()} .rulers=${false} .measure=${null}>
+      <div class="stage" slot="stage">${this._startView()}</div>
+    </mc-ui-studio-frame>`;
+  }
+
+  private _startView(): TemplateResult {
     return html`<mcte-start-view
       .files=${this._files}
       .loaded=${this._loaded}
@@ -318,6 +352,25 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
     mcte-start-view,
       mcte-editor-view {
         height: 100%;
+      }
+      mc-ui-studio-frame {
+        block-size: 100%;
+        --mc-ground: var(--bp-bg);
+        --mc-surface: var(--bp-sheet);
+        --mc-surface-2: var(--bp-surf2);
+        --mc-text: var(--bp-ink);
+        --mc-text-2: var(--bp-mute);
+        --mc-divider: var(--bp-line);
+        --mc-field-border: var(--bp-edge);
+        --mc-accent: var(--bp-acc);
+        --mc-accent-tint: var(--bp-acc-soft);
+        --mc-radius: var(--bp-r-s);
+        --mc-font: var(--bp-font-ui);
+        --mc-mono: var(--bp-font-mono);
+      }
+      .stage {
+        inline-size: 100%;
+        min-inline-size: min(720px, 60vw);
       }
     `,
   ];

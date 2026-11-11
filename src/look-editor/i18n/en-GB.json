@@ -79,6 +79,11 @@
     "note": "Name of a travelling shape on a flow line: a V-shaped arrow mark, like a greater-than sign.",
     "max": 15
   },
+  "look-editor.element.close-inspector": {
+    "text": "Close settings",
+    "note": "Accessible name of the button that closes the look settings panel or sheet.",
+    "max": 20
+  },
   "look-editor.element.colour": {
     "text": "Colour",
     "note": "Field label for a colour picker in the flow line look. A noun.",
@@ -202,6 +207,11 @@
     "note": "Label of the button group (Off, Subtle, Strong) that sets how much the glow flickers. A noun.",
     "max": 15
   },
+  "look-editor.element.flow-look": {
+    "text": "Flow look",
+    "note": "Name of the flow look editor, shown above its settings. Noun phrase.",
+    "max": 20
+  },
   "look-editor.element.gap-px": {
     "text": "Gap (px)",
     "note": "Number field label: space between dashes or dots along the flow line, in pixels (px).",
@@ -236,6 +246,16 @@
     "text": "In pixels",
     "note": "Option in the spacing button group (with Even and Random): shapes are placed a fixed number of pixels apart.",
     "max": 15
+  },
+  "look-editor.element.inspector": {
+    "text": "Look settings",
+    "note": "Accessible name of the look settings panel; the name of the look follows it.",
+    "max": 20
+  },
+  "look-editor.element.keep-inspector-open": {
+    "text": "Keep settings open",
+    "note": "Accessible name of the pin button that keeps the look settings open while you work on the preview.",
+    "max": 25
   },
   "look-editor.element.level-follows-value": {
     "text": "Level follows value",
@@ -274,6 +294,11 @@
     "text": "Marker size (px)",
     "note": "Field label in the flow look editor. Sets the size of the line's start and end markers, in pixels.",
     "max": 30
+  },
+  "look-editor.element.modified-only": {
+    "text": "Modified only",
+    "note": "Label of the switch that shows only the setting groups that differ from their default.",
+    "max": 20
   },
   "look-editor.element.motion": {
     "text": "Motion",
@@ -314,6 +339,11 @@
     "text": "None",
     "note": "Option meaning 'no end marker' or 'no extra effect' in a button group; also the value shown when nothing is set.",
     "max": 10
+  },
+  "look-editor.element.none-modified": {
+    "text": "Nothing here differs from the default",
+    "note": "Shown in the look settings when Modified only is on and no setting differs from its default.",
+    "max": 45
   },
   "look-editor.element.nothing-arrives-while-motion-is-pulse": {
     "text": "Nothing arrives while Motion is Pulse.",
@@ -384,6 +414,11 @@
     "text": "Scale width",
     "note": "Switch label: the line gets thicker as the value rises, up to twice its width at Max. Verb phrase, not a measuring scale.",
     "max": 20
+  },
+  "look-editor.element.settings": {
+    "text": "Settings",
+    "note": "Button in the top bar of a narrow look editor that opens the look settings as a sheet.",
+    "max": 15
   },
   "look-editor.element.shape": {
     "text": "Shape",
@@ -620,6 +655,11 @@
     "note": "Field label in the flow look editor. Sets how tall the zigzags of a zigzag line are, in pixels.",
     "max": 30
   },
+  "look-editor.element.zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the zoom controls group beside the look preview.",
+    "max": 10
+  },
   "look-editor.mc-slider-look-editor.add-evenly": {
     "text": "Add evenly",
     "note": "Button that replaces the gradient stops with a chosen number of stops spread evenly across the slider's range.",
@@ -709,6 +749,11 @@
     "text": "Close",
     "note": "Button that closes the slider look editor panel. A verb, not 'near'.",
     "max": 10
+  },
+  "look-editor.mc-slider-look-editor.close-inspector": {
+    "text": "Close settings",
+    "note": "Accessible name of the button that closes the look settings panel or sheet.",
+    "max": 20
   },
   "look-editor.mc-slider-look-editor.colour-source-source": {
     "text": "Colour source: {source}.",
@@ -826,6 +871,16 @@
     "note": "Help line in the slider look editor reduced-motion notice. Tells the user where the system setting lives on a generic device.",
     "max": 105
   },
+  "look-editor.mc-slider-look-editor.inspector": {
+    "text": "Look settings",
+    "note": "Accessible name of the look settings panel; the name of the look follows it.",
+    "max": 20
+  },
+  "look-editor.mc-slider-look-editor.keep-inspector-open": {
+    "text": "Keep settings open",
+    "note": "Accessible name of the pin button that keeps the look settings open while you work on the preview.",
+    "max": 25
+  },
   "look-editor.mc-slider-look-editor.label": {
     "text": "Label",
     "note": "Section heading for the text labels at the slider ends (for example min and max). A noun.",
@@ -858,6 +913,11 @@
     "text": "Min and max labels",
     "note": "Switch label in the slider look editor. Shows the lowest and highest values at the ends of the track.",
     "max": 30
+  },
+  "look-editor.mc-slider-look-editor.modified-only": {
+    "text": "Modified only",
+    "note": "Label of the switch that shows only the setting groups that differ from their default.",
+    "max": 20
   },
   "look-editor.mc-slider-look-editor.n-3": {
     "text": "{n, plural, one {# stop} other {# stops}}",
@@ -912,6 +972,11 @@
     "text": "None",
     "note": "Summary value shown when the slider has no colour stops, and an option meaning 'no effect' in button groups.",
     "max": 10
+  },
+  "look-editor.mc-slider-look-editor.none-modified": {
+    "text": "Nothing here differs from the default",
+    "note": "Shown in the look settings when Modified only is on and no setting differs from its default.",
+    "max": 45
   },
   "look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": {
     "text": "On a Mac: System Settings, Accessibility, Display.",
@@ -980,6 +1045,11 @@
     "note": "Hint under the Update while dragging switch in the slider look editor. Explains the send rate limit and that the final value is always sent.",
     "max": 160
   },
+  "look-editor.mc-slider-look-editor.settings": {
+    "text": "Settings",
+    "note": "Button in the top bar of a narrow look editor that opens the look settings as a sheet.",
+    "max": 15
+  },
   "look-editor.mc-slider-look-editor.shape": {
     "text": "Shape",
     "note": "Label of the button group choosing the handle shape (Circle, Square, Line). Singular noun.",
@@ -994,6 +1064,11 @@
     "text": "Slider colour",
     "note": "Label of the main colour of the slider fill, used when it does not follow the light.",
     "max": 30
+  },
+  "look-editor.mc-slider-look-editor.slider-look": {
+    "text": "Slider look",
+    "note": "Name of the slider look editor, shown above its settings. Noun phrase.",
+    "max": 20
   },
   "look-editor.mc-slider-look-editor.slider-shape": {
     "text": "Slider shape",
@@ -1161,6 +1236,11 @@
     "note": "Switch label in the slider look editor. Colours the fill with the colour the light is currently showing.",
     "max": 40
   },
+  "look-editor.mc-slider-look-editor.used-by-the-segmented-track-style": {
+    "text": "Used by the Segmented track style.",
+    "note": "Hint under the Segments field of the slider look editor while another track style is chosen. The field has no effect until Segmented is picked.",
+    "max": 45
+  },
   "look-editor.mc-slider-look-editor.value": {
     "text": "Value",
     "note": "Label of the number the slider currently holds, shown on the slider. Noun.",
@@ -1203,6 +1283,11 @@
     "text": "Your system has reduced motion on, so this look stays still.",
     "note": "Notice in the slider look editor when the device asks for reduced motion. Explains why the preview does not animate.",
     "max": 100
+  },
+  "look-editor.mc-slider-look-editor.zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the zoom controls group beside the look preview.",
+    "max": 10
   },
   "look-editor.presets.big-fill": {
     "text": "Big fill",

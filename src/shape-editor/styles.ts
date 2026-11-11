@@ -16,33 +16,30 @@ const layout: CSSResult = css`
 .layer:focus{outline:none}
 h2,h3,h4,p,ul{margin:0}
 .msg{display:grid;justify-items:center;gap:8px;padding:24px;text-align:center}
-.work{--lw:240px;--iw:340px;--lx:0px;--lg:0px;--mc-lip-pull:var(--lg);position:relative;flex:1;min-height:0;display:grid;grid-template-columns:var(--lt,var(--lw)) minmax(0,1fr) var(--it,var(--iw));grid-template-areas:'left center insp';overflow:hidden}
-[data-layout=mid] .work{--lw:220px;--iw:320px}
-[data-layout=compact] .work{--iw:300px;grid-template-columns:minmax(0,1fr) var(--it,var(--iw));grid-template-areas:'center insp'}
-@media(pointer:coarse){.work{--lx:20px;--lg:4px}}
-.no-side{--lt:calc(40px + var(--lg))}
-.no-insp{--it:calc(40px + var(--lg))}
-.left{--mc-lip-off:-100%}
-.insp{--mc-lip-off:100%}
-.left[data-lip=hidden]{width:var(--lw);justify-self:start}
-.insp[data-lip=hidden]{width:var(--iw);justify-self:end}
-.left[data-lip=shown],.left[data-lip=hidden]{padding-inline-end:calc(28px + var(--lx))}
-.insp[data-lip=shown],.insp[data-lip=hidden]{padding-inline-start:calc(28px + var(--lx))}
-[data-layout=stacked] .work{display:flex;flex-direction:column;overflow:auto}
-[data-layout=stacked] .center{order:1;flex:none;overflow:visible}
-[data-layout=stacked] .left,[data-layout=stacked] .insp,.left>*{flex:none}
-[data-layout=stacked] .left{order:2}
-[data-layout=stacked] .insp{order:3}
-.left,.insp{display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto;padding:12px;background:var(--mc-surface)}
-.left{grid-area:left;border-inline-end:1px solid var(--mc-divider)}
-[data-layout=compact] .left{display:none}
+.layer>mc-ui-studio-frame{flex:1;min-block-size:0}
+mc-ui-studio-frame,mc-ui-studio-frame *{--mc-ground:var(--bp-bg);--mc-surface:var(--bp-sheet);--mc-surface-2:var(--bp-surf2);--mc-text:var(--bp-ink);--mc-text-2:var(--bp-mute);--mc-divider:var(--bp-line);--mc-field-border:var(--bp-edge);--mc-accent:var(--bp-acc);--mc-accent-tint:var(--bp-acc-soft);--mc-radius:var(--bp-r-s);--mc-font:var(--bp-font-ui);--mc-mono:var(--bp-font-mono)}
+mc-ui-studio-frame .switch{background:var(--bp-mute)}
+mc-ui-studio-frame .switch::after{background:var(--bp-sheet)}
+mc-ui-studio-frame .switch[aria-checked='true']{background:var(--bp-acc)}
+mc-ui-studio-frame .switch[aria-checked='true']::after{background:var(--bp-acc-ink)}
+.fr-bar{display:flex;flex:1;align-items:center;min-inline-size:0;block-size:100%}
+.fr-bar .topbar{flex:1;min-inline-size:0}
 [data-layout=compact] .topbar .title,[data-layout=stacked] .topbar .title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-[data-layout=compact] .left.sheet{display:flex;position:absolute;z-index:10;top:0;bottom:0;left:0;inset-inline:0 auto;width:min(80vw,280px);box-shadow:var(--mc-shadow-float)}
-.insp{grid-area:insp;border-inline-start:1px solid var(--mc-divider)}
-.center{grid-area:center;display:flex;flex-direction:column;min-width:0;min-height:0}
+.fr-start{position:relative;display:flex;flex-direction:column;flex:1;min-block-size:0;background:var(--bp-sheet)}
+.fr-start[hidden]{display:none}
+.left{--mc-lip-off:-100%;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;overflow:auto;padding:12px;background:var(--mc-surface)}
+.left>*{flex:none}
+.side-close{display:none;align-self:flex-start}
+.narrow .side-close{display:inline-flex}
+.insp{display:flex;flex-direction:column;gap:12px;min-inline-size:0;padding:12px}
+.insp[hidden]{display:none}
+.center{display:flex;flex-direction:column;inline-size:100%;min-inline-size:0;block-size:max(360px,calc(100dvh - var(--bp-bar-h) - var(--bp-ruler) - 120px))}
 .stagewrap{flex:1;min-height:0;display:flex}
+.zoom-pill{display:flex;align-items:center;gap:4px}
+.zoom-pill output{min-inline-size:3.5em;text-align:center;font:.75rem var(--mc-mono)}
 @media(max-width:799px){.stagewrap{flex-direction:column}}
-.stage{position:relative;flex:1 1 auto;min-width:0;min-height:260px;overflow:hidden;background:var(--mc-canvas)}
+.stage{position:relative;flex:1 1 auto;min-width:0;min-height:260px;overflow:hidden;background:var(--mc-surface);border:1px solid var(--bp-line);border-radius:var(--bp-r-m)}
+[data-layout=stacked] .center{flex:none}
 [data-layout=stacked] .stage{flex:none;min-height:max(320px,45vh)}
 .stage{direction:ltr}
 :host([dir=rtl]) .float,:host([dir=rtl]) .dock,:host([dir=rtl]) .scale,:host([dir=rtl]) .empty-stage{direction:rtl}

@@ -463,6 +463,22 @@
     "text": "Fix {c, plural, one {# value} other {# values}} to save",
     "hash": "ab19cd91"
   },
+  "theme-editor.editor-view.frame-close": {
+    "text": "Close variables",
+    "hash": "812b7f31"
+  },
+  "theme-editor.editor-view.frame-none-modified": {
+    "text": "No variables changed yet.",
+    "hash": "78c3ab0b"
+  },
+  "theme-editor.editor-view.frame-pin": {
+    "text": "Keep variables open",
+    "hash": "0c80d837"
+  },
+  "theme-editor.editor-view.frame-zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
+  },
   "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
     "text": "{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.",
     "hash": "20a3300a"
@@ -1459,9 +1475,13 @@
     "text": "Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:",
     "hash": "287e051b"
   },
-  "theme-editor.lips.got-it": {
-    "text": "Got it",
-    "hash": "5ad3dbd1"
+  "theme-editor.legal.english-prevails": {
+    "text": "This is a translation. If it differs from the English text, the English text prevails.",
+    "hash": "c8c30b34"
+  },
+  "theme-editor.legal.show-english": {
+    "text": "Show English",
+    "hash": "f827a651"
   },
   "theme-editor.lips.hide-noun-keys": {
     "text": "Hide {noun} ({keys})",
@@ -1482,10 +1502,6 @@
   "theme-editor.lips.show-noun-keys": {
     "text": "Show {noun} ({keys})",
     "hash": "7a362b14"
-  },
-  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
-    "text": "The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.",
-    "hash": "cca8a786"
   },
   "theme-editor.lips.variables": {
     "text": "variables",

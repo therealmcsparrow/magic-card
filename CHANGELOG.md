@@ -26,7 +26,20 @@ A pre-release. Install Magic Card Utils 2026.11.2-beta.1 (or newer) first, then 
 
 See [Animate a library image](documentation/images/animating-images.md).
 
-## Unreleased
+## 2026.11.03-beta.2 (2026-11-11)
+
+A pre-release. Install Magic Card Utils 2026.11.2-beta.2 (or newer) first, then update Magic Card.
+
+### Improved
+-   **One look for all seven studios.** The Studio, animation studio, image animator, image editor, look editor, shape editor and theme editor now share a thin top bar, rulers, a measured grid and a zoom pill. Settings sit in a drawer on the right that pushes the stage aside instead of covering it. Nothing was removed: every field, button, menu item and shortcut is still there.
+-   **Both panels open.** At 1024 px wide and more, every studio opens with its side panels showing, with no pin and no edge buttons. Top bar buttons show or hide each panel.
+-   **Modified only.** Show only the fields that differ from their default.
+-   **Narrow screens.** Below 1024 px wide the drawer becomes a full-height sheet with a close button.
+-   **Keyboard.** Ctrl+\ (Cmd+\ on a Mac) shows or hides the side panels in every studio. Escape closes a sheet and returns focus to where you were.
+-   **Light and dark.** The studios follow Home Assistant's light or dark mode.
+-   **Bundled fonts.** Space Grotesk and Space Mono load from your Home Assistant when a studio opens. No outside site is asked. Licences are in THIRD-PARTY-NOTICES.md.
+
+See [The studio look](documentation/studio/studio-look.md).
 
 ### Documentation
 -   **Fifteen more complete dashboards.** Gallery dashboards 26 to 40: ten futuristic and five steampunk machine walls, each a sections view made only of Magic Cards. One large machine fills the screen, with the controls built into it, and an alarm changes the whole wall. Each page has desktop, alarm and phone pictures, install steps and a list of the entities it uses. The picture files are in `_assets`, with their sources. See [Complete dashboards](documentation/gallery/dashboards/README.md).

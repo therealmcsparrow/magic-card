@@ -1,7 +1,7 @@
 import { UI_KIT_CONTRACT_REVISION, UI_KIT_CONTRACT_VERSION, type UiKitModule } from '../contracts/ui-kit';
 import { defineUiKit } from './define';
 
-// The ui-kit Module (contract ui-kit 1.3.0): CSS parts, template helpers, controllers, glyphs and three elements.
+// The ui-kit Module (contract ui-kit 1.4.0): CSS parts, template helpers, controllers, glyphs and the elements.
 export * from './css';
 export * from './templates';
 export * from './controllers';
@@ -14,5 +14,8 @@ export { UiToast } from './elements/toast';
 export { UiDisclosure } from './elements/disclosure';
 export { UiTileGroup } from './elements/tile-group';
 export { UiChipGroup } from './elements/chip-group';
+export { StudioFrame } from './frame/studio-frame';
+export { frameStyles } from './frame/frame-styles';
+export { loadStudioFonts } from './fonts/load';
 
 export const uiKit: UiKitModule = { version: UI_KIT_CONTRACT_VERSION, revision: UI_KIT_CONTRACT_REVISION, defineUiKit };

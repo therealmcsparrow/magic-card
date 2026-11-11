@@ -62,6 +62,12 @@ const settle = async (el: Ed): Promise<void> => {
   await new Promise((r) => setTimeout(r, 20));
   await el.updateComplete;
 };
+
+const openLayers = async (el: Ed): Promise<void> => {
+  const tab = [...el.renderRoot.querySelectorAll<HTMLButtonElement>('[role=tab]')].find((b) => b.textContent!.trim() === 'Layers');
+  tab?.click();
+  await settle(el);
+};
 const text = (el: Ed): string => el.renderRoot.textContent ?? '';
 const shape = (el: Ed, id: string): Shape => el.doc.shapes.find((s) => s.id === id)!;
 const part = (s: Shape): { m: string; d: Map<string, string>; i: string[] } | undefined => (s.look as any)?.part;
@@ -275,10 +281,12 @@ describe('imported part layers: the canvas', () => {
 describe('imported part layers: the layer list and the inspector', () => {
   it('shows the part as a layer with its lock on, and the reason where the colours would be', async () => {
     const { el } = await open(WITH_PART);
+    await openLayers(el);
     const row = el.renderRoot.querySelector('[role=treeitem][data-id="win"]')!;
     expect(row).toBeTruthy();
     expect(row.querySelector('button[aria-label="Imported part stays locked: imported parts cannot be edited."]')).toBeTruthy();
     expect(row.querySelector('button[aria-label^="Unlock"]')).toBeNull();
+    [...el.renderRoot.querySelectorAll<HTMLButtonElement>('[role=tab]')].find((b) => b.textContent!.trim() === 'Inspector')?.click();
     el.select(['win']);
     await settle(el);
     expect(el.renderRoot.querySelector('#fill-kind')).toBeNull();

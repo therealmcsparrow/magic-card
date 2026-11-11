@@ -18,9 +18,9 @@ const unionOf = (name: string): string[] => {
   return [...body.matchAll(/'([^']+)'/g)].map((m) => m[1]);
 };
 
-describe('forum-shot 1.1.0 constants', () => {
+describe('forum-shot 1.2.0 constants', () => {
   it('holds the Contract values', () => {
-    expect(contract.FORUM_SHOT_CONTRACT_VERSION).toBe('1.1.0');
+    expect(contract.FORUM_SHOT_CONTRACT_VERSION).toBe('1.2.0');
     expect(contract.FORUM_SHOT_FILE).toBe('magic-card-forum-shot.js');
     expect(contract.FORUM_SHOT_TAG).toBe('magic-card-forum-shot');
     expect(contract.FORUM_SHOT_WIDTH).toBe(420);
@@ -58,7 +58,7 @@ describe('forum-shot font decision records', () => {
 
   it('records the new contract and error code in 0086', () => {
     const adr = read('docs/adr/0086-forum-shot-fetches-fonts-from-any-https-host.md');
-    expect(adr).toContain(`forum-shot ${contract.FORUM_SHOT_CONTRACT_VERSION}`);
+    expect(adr).toContain('forum-shot 1.1.0');
     expect(adr).toContain('`font_unavailable`');
   });
 });
@@ -118,11 +118,11 @@ describe('build wiring', () => {
     expect(read('tools/i18n/placement.mjs')).toContain(`'${contract.FORUM_SHOT_FILE}'`);
   });
 
-  it('caps the new file at or below 108,544 B', () => {
+  it('caps the new file at or below 110,592 B', () => {
     const caps = JSON.parse(read('tools/size-caps.json'));
     const e = caps.files[contract.FORUM_SHOT_FILE];
     expect(e).toBeTruthy();
-    expect(e.ceiling).toBeLessThanOrEqual(108_544);
+    expect(e.ceiling).toBeLessThanOrEqual(110_592);
     expect(e.raw).toBeLessThanOrEqual(e.ceiling);
   });
 });

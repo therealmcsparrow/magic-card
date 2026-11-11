@@ -230,8 +230,21 @@ export function layoutSpace(inner: HTMLElement): (r: DOMRect) => { top: number; 
   });
 }
 
+/** The shortcut hint under the stage: the studio shows it in its footer, the canvas keeps a hidden copy as its description. */
+export function canvasHint(): TemplateResult {
+  return html`${tx('card-editor.studio-canvas.click-a-module-to-select-it-move-moves', {
+      // the named keys are words in the user's language, like the icon editor's hints (Alt+Omhoog)
+      move: html`<kbd>${t('card-editor.studio-canvas.key-alt')}</kbd> + <kbd>${t('card-editor.studio-canvas.up')}</kbd>/<kbd>${t('card-editor.studio-canvas.down')}</kbd>`,
+      remove: html`<kbd>${t('card-editor.studio-canvas.del')}</kbd>`,
+      menu: html`<kbd>${t('card-editor.studio-canvas.key-shift')}</kbd> + <kbd>F10</kbd>`,
+    })}
+    ${tx('card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd', {
+      keys: html`<kbd>${t('card-editor.studio-canvas.key-ctrl')}</kbd> + <kbd>\\</kbd> ${t('card-editor.studio-canvas.key-or')} <kbd>⌘</kbd> + <kbd>\\</kbd>`,
+    })}`;
+}
+
 /**
- * Studio canvas: dotted ground, device frame and ONE live `<magic-card editMode>`.
+ * Studio canvas: transparent ground over the frame's grid, device frame and ONE live `<magic-card editMode>`.
  * Click selects, hover outlines modules, a selection frame + floating toolbar track the selection.
  */
 @customElement('mc-studio-canvas')
@@ -936,10 +949,33 @@ export class StudioCanvas extends LitElement {
     const wait = card ? card.updateComplete : Promise.resolve(true);
     wait.then(() => requestAnimationFrame(() => {
       this._placeQueued = false;
+      if (!this.isConnected) return;
       this._measureFill();
       if (!this.live) this._place();
+      this._reportMeasure();
     }));
   };
+
+  private _measureKey = '';
+
+  /** Tells the studio frame the artwork's size and the selection box (relative to the artwork's top-left) for its rulers and callouts. */
+  private _reportMeasure(): void {
+    const root = this.shadowRoot;
+    const inner = root?.querySelector<HTMLElement>('.canvas-inner');
+    const device = root?.querySelector<HTMLElement>('.device');
+    if (!inner || !device) return;
+    const tr = this.live ? null : this._rectOf(this._sel);
+    const box = tr ? layoutSpace(inner)(tr) : null;
+    const detail = {
+      width: Math.round(device.offsetWidth),
+      height: Math.round(inner.offsetHeight),
+      selection: box ? { x: Math.round(box.left), y: Math.round(box.top), width: Math.round(box.width), height: Math.round(box.height) } : null,
+    };
+    const key = JSON.stringify(detail);
+    if (key === this._measureKey) return;
+    this._measureKey = key;
+    this.dispatchEvent(new CustomEvent('mc-canvas-measure', { detail, bubbles: true, composed: true }));
+  }
 
   private _measureFill(): void {
     const w = Math.round(this.shadowRoot?.querySelector<HTMLElement>('.device')?.clientWidth ?? 0);
@@ -957,6 +993,7 @@ export class StudioCanvas extends LitElement {
   }
 
   private _place(): void {
+    if (!this.isConnected) return;
     const root = this.shadowRoot;
     const inner = root?.querySelector<HTMLElement>('.canvas-inner');
     const frame = root?.querySelector<HTMLElement>('.sel-frame');
@@ -1019,7 +1056,13 @@ export class StudioCanvas extends LitElement {
       const docked = !pos;
       if (docked !== this._docked) {
         const buttons = [...bar.querySelectorAll('button')];
-        const index = buttons.findIndex((b) => b === root?.activeElement);
+        let active: Element | null = null;
+        try {
+          active = root?.activeElement ?? null;
+        } catch {
+          // focus left in a torn-down tree: nothing to carry over
+        }
+        const index = buttons.findIndex((b) => b === active);
         if (index >= 0) this._barFocus = { index, from: bar };
       }
       this._docked = docked;
@@ -1360,7 +1403,7 @@ export class StudioCanvas extends LitElement {
       >
         <div class="canvas-inner">
           <div class="device ${wd.borderless ? 'borderless' : ''}" style="--device-w:${wd.px === null ? '100%' : `${wd.px}px`}" @transitionend=${this._queuePlace}>
-            <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span>${this._tabState
+            <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} ${t('card-editor.studio-canvas.unit-px')}${squeezed}` : ''}</span>${this._tabState
               ? html`<span class="state-chip" role="status">${t('card-editor.studio-canvas.showing-state', { state: this._tabState === 'hover' ? t('card-editor.studio-canvas.hover') : this._tabState === 'active' ? t('card-editor.studio-canvas.active-tab') : t('card-editor.studio-canvas.disabled-tab') })}</span>`
               : nothing}<span class="device-note">${wd.canMatch
               ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('card-editor.studio-canvas.match-view')}</button>`
@@ -1402,18 +1445,7 @@ export class StudioCanvas extends LitElement {
         : ''}</p>
       ${live
         ? nothing
-        : html`<p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
-        ${tx('card-editor.studio-canvas.click-a-module-to-select-it-move-moves', {
-          // the named keys are words in the user's language, like the icon editor's hints (Alt+Omhoog)
-          move: html`<kbd>Alt</kbd> + <kbd>${t('card-editor.studio-canvas.up')}</kbd>/<kbd>${t('card-editor.studio-canvas.down')}</kbd>`,
-          remove: html`<kbd>${t('card-editor.studio-canvas.del')}</kbd>`,
-          menu: html`<kbd>Shift</kbd> + <kbd>F10</kbd>`,
-        })}
-        ${tx('card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd', {
-          ctrl: html`<kbd>Ctrl</kbd> + <kbd>\\</kbd>`,
-          cmd: html`<kbd>⌘</kbd> + <kbd>\\</kbd>`,
-        })}
-      </p>`}
+        : html`<p class="sr-only" id="canvas-hint" ?hidden=${!!this._connectFrom}>${canvasHint()}</p>`}
       <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
       ${this._itemMenu.render()}
       ${this._press ? html`<span class="press-ring" style=${`left:${this._press.x}px;top:${this._press.y}px`} aria-hidden="true"></span>` : nothing}
@@ -1473,9 +1505,9 @@ export class StudioCanvas extends LitElement {
         grid-row: 2;
         overflow: auto;
         min-height: 0;
-        background-color: var(--mc-canvas);
-        background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1.2px);
-        background-size: 16px 16px;
+        /* the studio frame draws the grid; this room keeps the selection tags and handles from being clipped */
+        margin: -32px -20px;
+        padding: 32px 20px;
       }
       /* The canvas always shows a ring when the keyboard is on it; the selection frame inside it marks what is selected. */
       .canvas:focus-visible {
@@ -1485,11 +1517,9 @@ export class StudioCanvas extends LitElement {
       }
       .canvas-inner {
         position: relative;
-        min-height: 100%;
-        padding: 56px 24px 96px;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
       }
       .device {
         width: var(--device-w, 400px);
@@ -1525,6 +1555,12 @@ export class StudioCanvas extends LitElement {
         margin-bottom: 8px;
         font-size: 0.75rem;
         color: var(--mc-text-2);
+      }
+      /* a wrapped label would sit under the selection tag above the card: leave the tag its own line */
+      @media (max-width: 600px) {
+        .device-label {
+          margin-bottom: 26px;
+        }
       }
       .preview-pause {
         display: inline-flex;
@@ -1828,34 +1864,13 @@ export class StudioCanvas extends LitElement {
         margin: 4px 2px;
         background: var(--mc-divider);
       }
-      .canvas-hint {
-        position: absolute;
-        left: 16px;
-        inset-inline: 16px auto;
-        bottom: 16px;
-        z-index: 3;
-        max-width: calc(100% - 32px);
-        margin: 0;
-        padding: 6px 10px;
-        font-size: 0.75rem;
-        color: var(--mc-text-2);
-        background: var(--mc-surface);
-        border: 1px solid var(--mc-divider);
-        border-radius: var(--mc-radius);
-      }
       @media (max-width: 640px) {
-        .canvas-hint {
-          display: none;
-        }
         /* Stacked studio: the canvas grows to fit the card; the studio workspace does the scrolling. */
         :host {
           grid-template-rows: auto;
         }
         .canvas {
           overflow: visible;
-        }
-        .canvas-inner {
-          padding: 56px 16px 64px;
         }
       }
       kbd {

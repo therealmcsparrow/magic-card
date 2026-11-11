@@ -59,6 +59,7 @@ export function slotView(x: ImageExt, slot: 'canvas' | 'reference' | 'transfer' 
 }
 
 /** What follows the bar: the size meter, the file input of Import, the reference picture's pill and panel, and the conflict notice. */
+/** Reference, import and conflict UI that floats on the stage; the Text tool (railTool) lives in the tool rail. */
 export function barTail(x: ImageExt): TemplateResult {
   return html`${meter(x)}<input id="img-import" type="file" hidden accept=".svg,image/svg+xml" @change=${(e: Event) => {
       const i = e.target as HTMLInputElement;
@@ -212,6 +213,7 @@ export function tooBigWin(x: ImageExt): TemplateResult {
 
 // ── view-only workspace ──
 
+/** The view-only editor shown when the image is readOnly: layer list, canvas and the reason notice. */
 export function viewer(x: ImageExt): TemplateResult {
   const s = x.shell;
   const sel = s.sel.length === 1 ? s.doc.shapes.find((l) => l.id === s.sel[0]) : undefined;

@@ -463,6 +463,22 @@
     "text": "Herstel {c, plural, one {# waarde} other {# waarden}} om op te slaan",
     "hash": "ab19cd91"
   },
+  "theme-editor.editor-view.frame-close": {
+    "text": "Variabelen sluiten",
+    "hash": "812b7f31"
+  },
+  "theme-editor.editor-view.frame-none-modified": {
+    "text": "Nog geen variabelen gewijzigd.",
+    "hash": "78c3ab0b"
+  },
+  "theme-editor.editor-view.frame-pin": {
+    "text": "Variabelen open houden",
+    "hash": "0c80d837"
+  },
+  "theme-editor.editor-view.frame-zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
+  },
   "theme-editor.editor-view.help-the-revert-button-stays-at-the-edge": {
     "text": "{help} De knop Terugzetten blijft aan de rand van het scherm. Om {other, select, dark {donker} other {licht}} te proberen, zet je je profiel op {other, select, dark {donker} other {licht}}.",
     "hash": "20a3300a"
@@ -1459,9 +1475,13 @@
     "text": "Je configuration.yaml laadt thema's op een andere manier, dus de editor kan niet zeker weten of hij zijn bestanden kan zien. Met deze regels weet je dat zeker:",
     "hash": "287e051b"
   },
-  "theme-editor.lips.got-it": {
-    "text": "Begrepen",
-    "hash": "5ad3dbd1"
+  "theme-editor.legal.english-prevails": {
+    "text": "This is a translation. If it differs from the English text, the English text prevails.",
+    "hash": "c8c30b34"
+  },
+  "theme-editor.legal.show-english": {
+    "text": "Toon Engels",
+    "hash": "f827a651"
   },
   "theme-editor.lips.hide-noun-keys": {
     "text": "Verberg {noun} ({keys})",
@@ -1482,10 +1502,6 @@
   "theme-editor.lips.show-noun-keys": {
     "text": "Toon {noun} ({keys})",
     "hash": "7a362b14"
-  },
-  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
-    "text": "Het paneel {noun} is verborgen, zoals je het had achtergelaten. Gebruik de pijl aan de rand om het te tonen.",
-    "hash": "cca8a786"
   },
   "theme-editor.lips.variables": {
     "text": "variabelen",

@@ -28,9 +28,9 @@ Warnings (for example an icon that reaches outside the safe area), import messag
 
 ## Side panels
 
-Above 900 px wide, the Layers and Library panel sits on the left of the canvas and the inspector on the right. Each has an edge button on its inner side. Press it to hide the panel, so the canvas takes its width; press it again to show the panel as it was, with the same selection. Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown, and shows again the panels it hid last. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons. The editor remembers hidden panels on this device.
+Above 900 px wide, the Layers and Library panel sits on the left of the canvas and the inspector on the right. Both are open when the editor opens and stay open while you work. There are no edge buttons and no pin. Two buttons in the top bar, one for Layers and Library and one for the Inspector, hide and show the panels, so the canvas takes their width; press one again to show its panel as it was, with the same selection. Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown, and shows them again when both are hidden. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the buttons. Hidden panels are not remembered; the next time you open the editor both are showing. The image editor has one panel, the Inspector and Layers drawer on the right, with the same Inspector button and shortcut.
 
-Between 641 and 900 px the inspector keeps its edge button, and the Layers and Library panel opens as a sheet from the toolbar with no edge button. At 640 px and below, the panels stack under the canvas and have no edge buttons. The tool rail and the top bar stay as they are at every width.
+Between 641 and 900 px the Layers and Library button in the top bar opens that panel as a sheet, and the inspector stays a column. At 640 px and below, the panels stack under the canvas and the buttons are not shown. The tool rail and the top bar stay as they are at every width.
 
 ## Limits
 

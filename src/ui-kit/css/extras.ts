@@ -250,7 +250,7 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
     background: var(--mc-surface);
     box-shadow: var(--mc-shadow-float);
   }
-  .toolbar [role='separator'] {
+  .toolbar .sep {
     align-self: stretch;
     width: 1px;
     margin: 4px;
@@ -271,7 +271,7 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
     border-inline-color: var(--mc-divider);
     overflow-y: auto;
   }
-  .rail [role='separator'][aria-orientation='horizontal'] {
+  .rail .sep[data-dir='horizontal'] {
     width: 24px;
     height: 1px;
     margin: 4px 0;
@@ -303,7 +303,7 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
       padding: 0 8px;
       overflow-x: auto;
     }
-    .rail [role='separator'][aria-orientation='horizontal'] {
+    .rail .sep[data-dir='horizontal'] {
       width: 1px;
       height: 24px;
       margin: 0 4px;

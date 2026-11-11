@@ -4823,6 +4823,10 @@
     "text": "Kaarten gebruiken hem als",
     "hash": "8239a9a2"
   },
+  "anim-studio.studio.close-layers": {
+    "text": "Lagen sluiten",
+    "hash": "0cbb5e46"
+  },
   "anim-studio.studio.count": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}}",
     "hash": "bb6b3c12"
@@ -4943,6 +4947,30 @@
     "text": "Een getekend pad volgen",
     "hash": "e32896a6"
   },
+  "anim-studio.studio.frame-close": {
+    "text": "Inspecteur sluiten",
+    "hash": "5ac712f4"
+  },
+  "anim-studio.studio.frame-modified-only": {
+    "text": "Alleen gewijzigd",
+    "hash": "d5f0ab19"
+  },
+  "anim-studio.studio.frame-none-modified": {
+    "text": "Nog geen gewijzigde velden.",
+    "hash": "d94a7e00"
+  },
+  "anim-studio.studio.frame-pin": {
+    "text": "Inspecteur open houden",
+    "hash": "a35fcfe5"
+  },
+  "anim-studio.studio.frame-settings": {
+    "text": "Instellingen",
+    "hash": "74a883a0"
+  },
+  "anim-studio.studio.frame-zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
+  },
   "anim-studio.studio.got-it": {
     "text": "Begrepen",
     "hash": "5ad3dbd1"
@@ -5058,6 +5086,10 @@
   "anim-studio.studio.loading-the-kind-editor": {
     "text": "De {kind}-editor laden…",
     "hash": "fde35e3f"
+  },
+  "anim-studio.studio.modified-count": {
+    "text": "{modified} van {total} instellingen gewijzigd",
+    "hash": "dda20829"
   },
   "anim-studio.studio.more-presets-could-not-load-the-built-in": {
     "text": "Meer voorinstellingen konden niet laden. De ingebouwde voorinstellingen werken nog.",
@@ -5210,6 +5242,10 @@
   "anim-studio.studio.repeat-count": {
     "text": "Aantal herhalingen",
     "hash": "bc9e8a55"
+  },
+  "anim-studio.studio.reset-field": {
+    "text": "{field} terugzetten",
+    "hash": "81e563cb"
   },
   "anim-studio.studio.restore-unsaved-changes": {
     "text": "Niet-opgeslagen wijzigingen herstellen?",

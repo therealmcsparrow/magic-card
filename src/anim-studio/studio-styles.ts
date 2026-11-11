@@ -115,6 +115,78 @@ export const studioStyles: CSSResult[] = [
       color: var(--mc-text-2);
     }
 
+    /* the studio frame: its palette maps onto the studio's tokens, so every field inherits the soft-blueprint look */
+    mc-ui-studio-frame,
+    mc-ui-studio-frame * {
+      --mc-ground: var(--bp-bg);
+      --mc-surface: var(--bp-sheet);
+      --mc-surface-2: var(--bp-surf2);
+      --mc-text: var(--bp-ink);
+      --mc-text-2: var(--bp-mute);
+      --mc-divider: var(--bp-line);
+      --mc-field-border: var(--bp-edge);
+      --mc-accent: var(--bp-acc);
+      --mc-accent-tint: var(--bp-acc-soft);
+      --mc-radius: var(--bp-r-s);
+      --mc-font: var(--bp-font-ui);
+      --mc-mono: var(--bp-font-mono);
+    }
+    .shell > mc-ui-studio-frame {
+      min-block-size: 0;
+    }
+    .fr-bar {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      gap: var(--bp-s-3);
+      min-inline-size: 0;
+      block-size: 100%;
+    }
+    .fr-bar .spacer {
+      flex: 1;
+    }
+    .fr-bar {
+      flex-wrap: wrap;
+      gap: 4px var(--bp-s-3);
+      block-size: auto;
+      padding-block: 4px;
+    }
+    .fr-bar .grp {
+      flex: 0 1 auto;
+      flex-wrap: wrap;
+    }
+    .fr-bar .doc-name {
+      font-size: var(--bp-t-bar);
+    }
+    .fr-start {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-block-size: 0;
+      background: var(--bp-sheet);
+    }
+    /* narrow: Layers is a sheet over the stage area, so the top bar stays in view */
+    .layers-sheet {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: flex;
+      flex-direction: column;
+      background: var(--bp-sheet);
+    }
+    /* the stage and the timeline fill the frame's stage area (its bar, ruler and padding taken off) */
+    .center {
+      inline-size: 100%;
+      block-size: max(360px, calc(100dvh - var(--bp-bar-h) - var(--bp-ruler) - 120px));
+      background: var(--mc-surface);
+      border: 1px solid var(--bp-line);
+      border-radius: var(--bp-r-m);
+      box-shadow: var(--bp-shadow-card);
+    }
+    .insp .ctx {
+      margin-inline: -16px;
+    }
+
     /* library */
     :host([editing]) {
       position: fixed;
@@ -239,57 +311,14 @@ export const studioStyles: CSSResult[] = [
 
     /* editor (layout v2): layers | centre (stage, splitter, timeline) | inspector, exactly the
        viewport; only the layers list, the timeline lanes and the inspector scroll */
-    .workspace {
-      --layers-w: 240px;
-      --insp-w: 320px;
-      position: relative;
-      display: grid;
-      grid-template-columns: var(--lw, var(--layers-w)) minmax(0, 1fr) var(--iw, var(--insp-w));
-      min-height: 0;
-      min-width: 0;
-      overflow: hidden;
-    }
-    .workspace.compact {
-      --layers-w: 224px;
-      --insp-w: 288px;
-    }
-    .workspace.dense {
-      --layers-w: 208px;
-    }
-    .workspace.slide {
-      grid-template-columns: var(--lw, var(--layers-w)) minmax(0, 1fr);
-    }
-    /*
-     * A hidden panel gives its track to the stage but keeps its own width, so its content never reflows and a
-     * nested scroller keeps its place (WebKit loses it in a 0 px item). It slides off its edge.
-     */
-    .no-layers {
-      --lw: 0px;
-    }
-    .no-inspector {
-      --iw: 0px;
-    }
-    .layers {
-      --mc-lip-off: -100%;
-    }
-    .inspector {
-      --mc-lip-off: 100%;
-    }
-    .layers[data-lip='hidden'] {
-      width: var(--layers-w);
-    }
-    .inspector[data-lip='hidden'] {
-      width: var(--insp-w);
-      justify-self: end;
-    }
     .layers {
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
       min-height: 0;
       min-width: 0;
       overflow: hidden;
-      background: var(--mc-surface);
-      border-inline-end: 1px solid var(--mc-divider);
+      flex: 1;
+      min-block-size: 0;
     }
     .layers-head {
       display: flex;
@@ -410,6 +439,7 @@ export const studioStyles: CSSResult[] = [
     }
     .center {
       display: grid;
+      position: relative;
       grid-template-rows: minmax(0, 1fr);
       min-height: 0;
       min-width: 0;
@@ -465,50 +495,17 @@ export const studioStyles: CSSResult[] = [
       outline: 2px solid var(--mc-accent);
       outline-offset: -2px;
     }
-    .inspector:focus {
+    .insp:focus {
       outline: none;
     }
-    .inspector {
+    .insp {
       /* the containing block of the panels' absolutely placed bits (sr-only text): they scroll with it */
       position: relative;
-      background: var(--mc-surface);
-      border-inline-start: 1px solid var(--mc-divider);
-      overflow-y: auto;
-      overscroll-behavior: contain;
       min-height: 0;
       min-width: 0;
       padding: 0 16px 16px;
       display: flex;
       flex-direction: column;
-    }
-    .workspace.slide .inspector {
-      position: absolute;
-      top: 0;
-      right: 0;
-      inset-inline: auto 0;
-      bottom: 0;
-      width: min(var(--insp-w), 100%);
-      z-index: 8;
-      transform: translateX(100%);
-      visibility: hidden;
-      transition:
-        transform 0.2s ease-out,
-        visibility 0s linear 0.2s;
-    }
-    .workspace.slide .inspector[data-dir='rtl'] {
-      transform: translateX(-100%);
-    }
-    .workspace.slide.insp-open .inspector {
-      transform: none;
-      visibility: visible;
-      box-shadow: var(--mc-shadow-float);
-      transition: transform 0.2s ease-out;
-    }
-    .insp-scrim {
-      position: absolute;
-      inset: 0;
-      z-index: 7;
-      background: rgba(0, 0, 0, 0.16);
     }
     .ctx {
       position: sticky;
@@ -536,6 +533,27 @@ export const studioStyles: CSSResult[] = [
     }
     .ctx-note {
       padding-top: 16px;
+    }
+    .field-head:has(.reset-field) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .reset-field {
+      inline-size: 28px;
+      block-size: 28px;
+      min-inline-size: 28px;
+    }
+    .mod-count {
+      margin: 0;
+      padding-block: 12px 4px;
+      padding-inline: 16px;
+    }
+    .zoom-read {
+      font-family: var(--mc-font-mono, ui-monospace, monospace);
+      font-size: 0.75rem;
+      padding-inline: 8px;
     }
     /* collapsible inspector sections: the kit's section head (h3 + .sector-btn) on the studio's flat rule between sections */
     .sec {
@@ -624,7 +642,7 @@ export const studioStyles: CSSResult[] = [
       display: block;
       min-width: 0;
     }
-    .inspector > .panel + .panel {
+    .insp > .panel + .panel {
       border-top: 1px solid var(--mc-divider);
     }
 
@@ -682,6 +700,13 @@ export const studioStyles: CSSResult[] = [
       box-shadow: var(--mc-shadow-float);
       font-size: 0.8125rem;
       pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .splitter::before,
+      .layer {
+        transition: none;
+      }
     }
 
     @media (max-width: 760px) {

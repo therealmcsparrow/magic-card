@@ -4823,6 +4823,10 @@
     "text": "Cards use it as",
     "hash": "8239a9a2"
   },
+  "anim-studio.studio.close-layers": {
+    "text": "Close layers",
+    "hash": "0cbb5e46"
+  },
   "anim-studio.studio.count": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}}",
     "hash": "bb6b3c12"
@@ -4943,6 +4947,30 @@
     "text": "Follow a drawn path",
     "hash": "e32896a6"
   },
+  "anim-studio.studio.frame-close": {
+    "text": "Close inspector",
+    "hash": "5ac712f4"
+  },
+  "anim-studio.studio.frame-modified-only": {
+    "text": "Modified only",
+    "hash": "d5f0ab19"
+  },
+  "anim-studio.studio.frame-none-modified": {
+    "text": "No changed fields yet.",
+    "hash": "d94a7e00"
+  },
+  "anim-studio.studio.frame-pin": {
+    "text": "Keep inspector open",
+    "hash": "a35fcfe5"
+  },
+  "anim-studio.studio.frame-settings": {
+    "text": "Settings",
+    "hash": "74a883a0"
+  },
+  "anim-studio.studio.frame-zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
+  },
   "anim-studio.studio.got-it": {
     "text": "Got it",
     "hash": "5ad3dbd1"
@@ -5058,6 +5086,10 @@
   "anim-studio.studio.loading-the-kind-editor": {
     "text": "Loading the {kind} editor…",
     "hash": "fde35e3f"
+  },
+  "anim-studio.studio.modified-count": {
+    "text": "{modified} of {total} settings changed",
+    "hash": "dda20829"
   },
   "anim-studio.studio.more-presets-could-not-load-the-built-in": {
     "text": "More presets could not load. The built-in presets still work.",
@@ -5210,6 +5242,10 @@
   "anim-studio.studio.repeat-count": {
     "text": "Repeat count",
     "hash": "bc9e8a55"
+  },
+  "anim-studio.studio.reset-field": {
+    "text": "Reset {field}",
+    "hash": "81e563cb"
   },
   "anim-studio.studio.restore-unsaved-changes": {
     "text": "Restore unsaved changes?",

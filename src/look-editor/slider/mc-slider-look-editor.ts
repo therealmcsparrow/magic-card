@@ -2,6 +2,7 @@ import { LitElement, css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import type { HomeAssistant, SliderModuleConfig } from '../../types';
 import { LOOK_UNDO_TOAST_MS, SLIDER_LOOK_EDITOR_TAG, type SliderLookEditorElement } from '../../contracts/look-editor';
+import type { StudioFrameStrings } from '../../contracts/ui-kit';
 import { SLIDER_LOOK_DEFAULTS } from '../../contracts/slider-look.defaults';
 import type { SliderStop, SliderThumb, SliderTrackStyle } from '../../contracts/slider-look';
 import { editorSystem } from '../../css/editor-stack';
@@ -12,6 +13,8 @@ import { seg } from '../../ui-kit/templates/choice';
 import { notice } from '../../ui-kit/templates/status';
 import { numericControl } from '../../utils/entity-control';
 import { entityStateColor } from '../../utils/entity-color';
+import { loadStudioFonts } from '../../ui-kit';
+import { FrameShell, LOOK_STAGE_MEASURE } from '../frame-shell';
 import { t } from '../i18n';
 import { SLIDER_PRESETS, TRACK_TILES } from './presets';
 import {
@@ -25,6 +28,13 @@ import {
 type Bag = Record<string, unknown>;
 type Section = 'track' | 'thumb' | 'value' | 'shape' | 'stops';
 const AUTO_ATTRS = new Set(['brightness', 'color_temp', 'color_temp_kelvin']);
+const SECTION_KEYS: Record<Section, readonly string[]> = {
+  track: ['fill_mode', 'slider_color_to', 'use_entity_color', 'track_style', 'track_thickness', 'track_radius', 'segments', 'segment_gap', 'glass_blur', 'show_icon', 'icon', 'icon_position', 'live'],
+  thumb: ['thumb', 'thumb_size', 'thumb_border', 'thumb_glow', 'thumb_border_color', 'thumb_icon'],
+  value: ['show_value', 'value_position', 'ticks', 'tick_every', 'show_limits'],
+  shape: ['track_shape', 'track_shape_options'],
+  stops: ['stops', 'snap'],
+};
 
 export class SliderLookEditor extends LitElement implements SliderLookEditorElement {
   static styles = [
@@ -33,32 +43,47 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     css`
       :host {
         display: block;
-        min-width: 0;
+        min-inline-size: 0;
       }
-      .look {
+      mc-ui-studio-frame {
+        min-block-size: 26rem;
+        --mc-ground: var(--bp-bg);
+        --mc-surface: var(--bp-sheet);
+        --mc-text: var(--bp-ink);
+        --mc-text-2: var(--bp-mute);
+        --mc-divider: var(--bp-line);
+        --mc-canvas: var(--bp-bg);
+      }
+      .stage {
+        padding: 16px;
+        min-inline-size: 0;
+      }
+      .drawer {
         display: grid;
         gap: 12px;
+        min-inline-size: 0;
+      }
+      .drawer p {
+        margin: 0;
       }
       .bar {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
-        justify-content: space-between;
+        padding-inline: 12px;
+        min-inline-size: 0;
       }
       .bar .status {
         margin: 0;
-        flex: 1 1 12em;
-      }
-      .bar .btns {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
+        flex: 1 1 8em;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
       }
       .body {
         display: grid;
         gap: 12px;
-        padding-top: 8px;
+        padding-block-start: 8px;
       }
       .two {
         display: grid;
@@ -82,10 +107,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
         align-items: end;
       }
       .inline .input {
-        width: 6rem;
-      }
-      .look p {
-        margin: 0;
+        inline-size: 6rem;
       }
     `,
   ];
@@ -103,6 +125,12 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
 
   /** Sections opened here when the host passes no onToggle (a bare mount). */
   private _own = new Set<string>();
+  private readonly _shell = new FrameShell(this);
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    void loadStudioFonts();
+  }
   /** The user closed Track and fill, which is open by itself while a look key is set. */
   @state() private _trackClosed = false;
   @state() private _undoLabel = '';
@@ -315,7 +343,18 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     </div>`;
   }
 
-  private _section(name: Section, heading: string, summary: string, body: TemplateResult): TemplateResult {
+  /** A group of keys is shown while Modified only is off, or when one of its keys is set. */
+  private _shows(keys: string | readonly string[]): boolean {
+    return !this._shell.modifiedOnly || (typeof keys === 'string' ? [keys] : keys).some((k) => (this._c as Bag)[k] !== undefined);
+  }
+
+  /** The field (or fields) of these keys, left out of the DOM while Modified only hides them. */
+  private _when(keys: string | readonly string[], body: TemplateResult | typeof nothing): TemplateResult | typeof nothing {
+    return this._shows(keys) ? body : nothing;
+  }
+
+  private _section(name: Section, heading: string, summary: string, body: TemplateResult): TemplateResult | typeof nothing {
+    if (!this._shows(SECTION_KEYS[name])) return nothing;
     return html`<mc-ui-disclosure
       level="5"
       .heading=${heading}
@@ -391,18 +430,51 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     return `${t('look-editor.mc-slider-look-editor.your-system-has-reduced-motion-on-so')} ${where}`;
   }
 
-  protected render(): TemplateResult {
+  private _strings(): StudioFrameStrings {
+    return {
+      pin: t('look-editor.mc-slider-look-editor.keep-inspector-open'),
+      modifiedOnly: t('look-editor.mc-slider-look-editor.modified-only'),
+      noneModified: t('look-editor.mc-slider-look-editor.none-modified'),
+      close: t('look-editor.mc-slider-look-editor.close-inspector'),
+      drawer: t('look-editor.mc-slider-look-editor.inspector'),
+      zoom: t('look-editor.mc-slider-look-editor.zoom'),
+    };
+  }
+
+  /** The bar above the stage: look status, inline Undo, Reset look, and Settings to open the drawer. */
+  private _bar(): TemplateResult {
+    const narrow = this._shell.narrow;
+    return html`<div slot="top" class="bar">
+      <p class="help status" id="sl-status">${this._status()}</p>
+      ${this.undo ? html`<button type="button" class="btn secondary sm" data-role="undo" @click=${() => this._undo()}>${this._undoLabel || t('look-editor.mc-slider-look-editor.undo-look-change')}</button>` : nothing}
+      <button type="button" class="btn secondary sm" data-role="reset" ?disabled=${!hasLookKeys(this._c)} @click=${() => this._reset()}>${t('look-editor.mc-slider-look-editor.reset-look')}</button>
+      <button
+        type="button"
+        class="btn secondary sm"
+        data-role="settings"
+        aria-haspopup=${narrow ? 'dialog' : nothing}
+        aria-expanded=${this._shell.frame()?.drawerOpen ? 'true' : 'false'}
+        @click=${this._shell.onSettings}
+      >${t('look-editor.mc-slider-look-editor.settings')}</button>
+    </div>`;
+  }
+
+  private _tiles(): TemplateResult {
+    const style = this._c.track_style ?? 'standard';
+    return html`<mc-ui-tile-group
+      .label=${t('look-editor.mc-slider-look-editor.track-style')}
+      .items=${TRACK_TILES.map((x) => ({ value: x.value, label: this._styleLabel(x.value), preview: x.preview }))}
+      .value=${style}
+      @mc-pick=${(e: CustomEvent<{ value: string }>) => this._set({ track_style: e.detail.value === 'standard' ? undefined : e.detail.value })}
+    ></mc-ui-tile-group>`;
+  }
+
+  private _drawer(): TemplateResult {
     const c = this._c;
     const status = lookStatus(c);
     const chipValue = status.kind === 'preset' ? status.id : undefined;
-    return html`<div class="look">
-      <div class="bar">
-        <p class="help status" id="sl-status">${this._status()}</p>
-        <div class="btns">
-          ${this.undo ? html`<button type="button" class="btn secondary sm" @click=${() => this._undo()}>${this._undoLabel || t('look-editor.mc-slider-look-editor.undo-look-change')}</button>` : nothing}
-          <button type="button" class="btn secondary sm" data-role="reset" ?disabled=${!hasLookKeys(c)} @click=${() => this._reset()}>${t('look-editor.mc-slider-look-editor.reset-look')}</button>
-        </div>
-      </div>
+    const sections = [this._trackSection(), this._thumbSection(), this._valueSection(), this._shapeSection(), this._stopsSection()];
+    return html`<div slot="drawer" class="drawer">
       <mc-ui-chip-group
         .label=${t('look-editor.mc-slider-look-editor.presets')}
         .items=${SLIDER_PRESETS.map((p) => ({ value: p.id, label: t(p.label), description: t(p.description), preview: p.preview }))}
@@ -413,12 +485,32 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
         ? notice({ tone: 'warn', text: t('look-editor.mc-slider-look-editor.the-slider-look-could-not-be-loaded-so') })
         : nothing}
       ${this._rm ? notice({ tone: 'info', text: this._rmText() }) : nothing}
-      ${this._trackSection()} ${this._thumbSection()} ${this._valueSection()} ${this._shapeSection()} ${this._stopsSection()}
-      <mc-ui-toast .offset=${88} .dismissLabel=${t('look-editor.mc-slider-look-editor.close')} @mc-toast-action=${(e: CustomEvent<{ id: string }>) => e.detail.id === 'undo' && this._undo()}></mc-ui-toast>
+      ${this._shell.modifiedOnly && sections.every((x) => x === nothing) ? html`<p class="help" role="status">${t('look-editor.mc-slider-look-editor.none-modified')}</p>` : nothing}
+      ${sections}
     </div>`;
   }
 
-  private _trackSection(): TemplateResult {
+  protected render(): TemplateResult {
+    return html`
+      <mc-ui-studio-frame
+        studio="look-editor"
+        fixed-drawer
+        .scheme=${this.hass?.themes?.darkMode ? 'dark' : 'light'}
+        .strings=${this._strings()}
+        .selectionLabel=${t('look-editor.mc-slider-look-editor.slider-look')}
+        .measure=${LOOK_STAGE_MEASURE}
+        @mc-frame-modified=${this._shell.onModified}
+        @mc-frame-drawer=${this._shell.onDrawer}
+      >
+        ${this._bar()}
+        <div slot="stage" class="stage">${this._tiles()}</div>
+        ${this._drawer()}
+      </mc-ui-studio-frame>
+      <mc-ui-toast .offset=${88} .dismissLabel=${t('look-editor.mc-slider-look-editor.close')} @mc-toast-action=${(e: CustomEvent<{ id: string }>) => e.detail.id === 'undo' && this._undo()}></mc-ui-toast>
+    `;
+  }
+
+  private _trackSection(): TemplateResult | typeof nothing {
     const c = this._c;
     const style = c.track_style ?? 'standard';
     const mode = c.fill_mode ?? 'solid';
@@ -435,34 +527,31 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       t('look-editor.mc-slider-look-editor.track-and-fill'),
       `${this._styleLabel(style)} · ${this._fillSource()}`,
       html`
-        <div class="field">
+        ${this._when('fill_mode', html`<div class="field">
           <div class="field-head"><span class="lbl">${t('look-editor.mc-slider-look-editor.fill')}</span></div>
           ${seg({ role: 'radiogroup', label: t('look-editor.mc-slider-look-editor.fill'), full: true, items: fillItems, value: mode, onChange: (v) => this._set({ fill_mode: v === 'solid' ? undefined : v }) })}
           ${mode === 'auto' && !this._autoOk ? html`<p class="help" role="status">${t('look-editor.mc-slider-look-editor.auto-works-with-brightness-and-colour')}</p>` : nothing}
           ${mode === 'auto' ? html`<p class="help">${t('look-editor.mc-slider-look-editor.brightness-dark-to-bright-in-the-slider')}</p>` : nothing}
           <p class="help" id="sl-source">${t('look-editor.mc-slider-look-editor.colour-source-source', { source: this._fillSource() })} ${t("look-editor.mc-slider-look-editor.the-light-s-colour-if-that-is-on-or")}</p>
-        </div>
-        ${mode === 'gradient' ? this._color('slider_color_to', t('look-editor.mc-slider-look-editor.end-colour')) : nothing}
-        ${this._switch('use_entity_color', t("look-editor.mc-slider-look-editor.use-the-light-s-colour"), !!c.use_entity_color, { disabled: !!lightReason && !c.use_entity_color, help: lightReason || t('look-editor.mc-slider-look-editor.falls-back-to-slider-colour-when-the') })}
-        ${c.use_entity_color ? html`<p class="help">${t('look-editor.mc-slider-look-editor.following-the-light')} <button type="button" class="btn sm ghost" @click=${() => this._set({ use_entity_color: undefined })}>${t('look-editor.mc-slider-look-editor.use-own-colour')}</button></p>` : nothing}
-        <mc-ui-tile-group
-          .label=${t('look-editor.mc-slider-look-editor.track-style')}
-          .items=${TRACK_TILES.map((x) => ({ value: x.value, label: this._styleLabel(x.value), preview: x.preview }))}
-          .value=${style}
-          @mc-pick=${(e: CustomEvent<{ value: string }>) => this._set({ track_style: e.detail.value === 'standard' ? undefined : e.detail.value })}
-        ></mc-ui-tile-group>
+        </div>`)}
+        ${mode === 'gradient' ? this._when('slider_color_to', this._color('slider_color_to', t('look-editor.mc-slider-look-editor.end-colour'))) : nothing}
+        ${this._when('use_entity_color', html`${this._switch('use_entity_color', t("look-editor.mc-slider-look-editor.use-the-light-s-colour"), !!c.use_entity_color, { disabled: !!lightReason && !c.use_entity_color, help: lightReason || t('look-editor.mc-slider-look-editor.falls-back-to-slider-colour-when-the') })}
+        ${c.use_entity_color ? html`<p class="help">${t('look-editor.mc-slider-look-editor.following-the-light')} <button type="button" class="btn sm ghost" @click=${() => this._set({ use_entity_color: undefined })}>${t('look-editor.mc-slider-look-editor.use-own-colour')}</button></p>` : nothing}`)}
         <div class="two">
-          ${this._num('track_thickness', t('look-editor.mc-slider-look-editor.thickness-px'), { placeholder: th, min: 2, max: 96, help: (c.track_thickness ?? th) < 6 ? t('look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px') : undefined })}
-          ${this._num('track_radius', t('look-editor.mc-slider-look-editor.track-corners-px'), { placeholder: style === 'pill' ? 999 : style === 'big-fill' ? 20 : t('look-editor.mc-slider-look-editor.auto-2'), min: 0, max: 48 })}
+          ${this._when('track_thickness', this._num('track_thickness', t('look-editor.mc-slider-look-editor.thickness-px'), { placeholder: th, min: 2, max: 96, help: (c.track_thickness ?? th) < 6 ? t('look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px') : undefined }))}
+          ${this._when('track_radius', this._num('track_radius', t('look-editor.mc-slider-look-editor.track-corners-px'), { placeholder: style === 'pill' ? 999 : style === 'big-fill' ? 20 : t('look-editor.mc-slider-look-editor.auto-2'), min: 0, max: 48 }))}
         </div>
-        <p class="help">${t("look-editor.mc-slider-look-editor.the-module-s-own-corners-are-in-the")}</p>
-        ${style === 'segmented' ? html`<div class="two">${this._num('segments', t('look-editor.mc-slider-look-editor.segments'), { placeholder: t('look-editor.mc-slider-look-editor.auto-2'), min: 2, max: 20 })}${this._num('segment_gap', t('look-editor.mc-slider-look-editor.gap-px'), { placeholder: SLIDER_LOOK_DEFAULTS.segment_gap, min: 1, max: 8 })}</div>` : nothing}
-        ${style === 'glass' ? this._switch('glass_blur', t('look-editor.mc-slider-look-editor.blur-behind'), !!c.glass_blur, { help: t('look-editor.mc-slider-look-editor.blurs-what-is-behind-the-track-off-gives') }) : nothing}
+        ${this._when('track_radius', html`<p class="help">${t("look-editor.mc-slider-look-editor.the-module-s-own-corners-are-in-the")}</p>`)}
+        <div class="two">
+          ${this._when('segments', this._num('segments', t('look-editor.mc-slider-look-editor.segments'), { placeholder: t('look-editor.mc-slider-look-editor.auto-2'), min: 2, max: 20, disabled: style !== 'segmented', help: style !== 'segmented' ? t('look-editor.mc-slider-look-editor.used-by-the-segmented-track-style') : undefined }))}
+          ${this._when('segment_gap', this._num('segment_gap', t('look-editor.mc-slider-look-editor.gap-px'), { placeholder: SLIDER_LOOK_DEFAULTS.segment_gap, min: 1, max: 8, disabled: style !== 'segmented' }))}
+        </div>
+        ${style === 'glass' ? this._when('glass_blur', this._switch('glass_blur', t('look-editor.mc-slider-look-editor.blur-behind'), !!c.glass_blur, { help: t('look-editor.mc-slider-look-editor.blurs-what-is-behind-the-track-off-gives') })) : nothing}
         ${style === 'big-fill'
           ? html`
-              ${this._switch('show_icon', t('look-editor.mc-slider-look-editor.entity-icon'), c.show_icon !== false, { write: (v) => ({ show_icon: v ? undefined : false }) })}
-              ${c.show_icon !== false ? this._icon('icon', t('look-editor.mc-slider-look-editor.icon')) : nothing}
-              <div class="field">
+              ${this._when('show_icon', this._switch('show_icon', t('look-editor.mc-slider-look-editor.entity-icon'), c.show_icon !== false, { write: (v) => ({ show_icon: v ? undefined : false }) }))}
+              ${c.show_icon !== false ? this._when('icon', this._icon('icon', t('look-editor.mc-slider-look-editor.icon'))) : nothing}
+              ${this._when('icon_position', html`<div class="field">
                 <div class="field-head"><span class="lbl">${t('look-editor.mc-slider-look-editor.icon-position')}</span></div>
                 ${seg({
                   role: 'radiogroup',
@@ -476,15 +565,15 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
                   onChange: (v) => this._set({ icon_position: v === 'start' ? undefined : v }),
                 })}
                 ${vertical ? nothing : html`<p class="help">${t('look-editor.mc-slider-look-editor.centre-needs-a-vertical-slider')}</p>`}
-              </div>
+              </div>`)}
             `
           : nothing}
-        ${this._switch('live', t('look-editor.mc-slider-look-editor.update-while-dragging'), !!c.live, { help: t('look-editor.mc-slider-look-editor.sends-at-most-4-changes-a-second-the') })}
+        ${this._when('live', this._switch('live', t('look-editor.mc-slider-look-editor.update-while-dragging'), !!c.live, { help: t('look-editor.mc-slider-look-editor.sends-at-most-4-changes-a-second-the') }))}
       `,
     );
   }
 
-  private _thumbSection(): TemplateResult {
+  private _thumbSection(): TemplateResult | typeof nothing {
     const c = this._c;
     const thumb = c.thumb ?? 'line';
     const shaped = thumb === 'circle' || thumb === 'pill' || thumb === 'square';
@@ -495,7 +584,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       t('look-editor.mc-slider-look-editor.handle'),
       this._thumbLabel(thumb),
       html`
-        ${seg({
+        ${this._when('thumb', html`${seg({
           role: 'radiogroup',
           label: t('look-editor.mc-slider-look-editor.handle'),
           full: true,
@@ -507,23 +596,23 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
             if (movedValue) this._toast(t('look-editor.mc-slider-look-editor.value-shown-beside-the-slider-because'), false);
           },
         })}
-        ${thumb === 'none' ? html`<p class="help">${t('look-editor.mc-slider-look-editor.the-track-still-moves-and-can-be-used')}</p>` : nothing}
+        ${thumb === 'none' ? html`<p class="help">${t('look-editor.mc-slider-look-editor.the-track-still-moves-and-can-be-used')}</p>` : nothing}`)}
         ${levelUnreadable(c) ? notice({ tone: 'warn', text: t('look-editor.mc-slider-look-editor.with-no-handle-and-no-value-shown-the') }) : nothing}
         ${shaped
           ? html`
-              ${this._num('thumb_size', t('look-editor.mc-slider-look-editor.size-px'), { placeholder: size, min: 4, max: 64, help: (c.thumb_size ?? size) < 24 ? t('look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px') : thumb === 'pill' ? t('look-editor.mc-slider-look-editor.the-long-side-the-short-side-is-0-57') : undefined })}
+              ${this._when('thumb_size', this._num('thumb_size', t('look-editor.mc-slider-look-editor.size-px'), { placeholder: size, min: 4, max: 64, help: (c.thumb_size ?? size) < 24 ? t('look-editor.mc-slider-look-editor.the-touch-area-stays-at-least-40-px') : thumb === 'pill' ? t('look-editor.mc-slider-look-editor.the-long-side-the-short-side-is-0-57') : undefined }))}
               <div class="two">
-                ${this._num('thumb_border', t('look-editor.mc-slider-look-editor.border-px'), { placeholder: 0, min: 0, max: 6 })}
-                ${this._num('thumb_glow', t('look-editor.mc-slider-look-editor.glow-px'), { placeholder: 0, min: 0, max: 30 })}
+                ${this._when('thumb_border', this._num('thumb_border', t('look-editor.mc-slider-look-editor.border-px'), { placeholder: 0, min: 0, max: 6 }))}
+                ${this._when('thumb_glow', this._num('thumb_glow', t('look-editor.mc-slider-look-editor.glow-px'), { placeholder: 0, min: 0, max: 30 }))}
               </div>
-              ${this._color('thumb_border_color', t('look-editor.mc-slider-look-editor.border-colour'))} ${this._icon('thumb_icon', t('look-editor.mc-slider-look-editor.icon'))}
+              ${this._when('thumb_border_color', this._color('thumb_border_color', t('look-editor.mc-slider-look-editor.border-colour')))} ${this._when('thumb_icon', this._icon('thumb_icon', t('look-editor.mc-slider-look-editor.icon')))}
             `
           : nothing}
       `,
     );
   }
 
-  private _valueSection(): TemplateResult {
+  private _valueSection(): TemplateResult | typeof nothing {
     const c = this._c;
     const pos = valuePosition(c);
     const options = (['beside', 'bubble', 'track', 'hidden'] as ValuePosition[]).map((v) => ({ value: v, label: this._positionLabel(v) }));
@@ -532,7 +621,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       t('look-editor.mc-slider-look-editor.value-display'),
       this._positionLabel(pos),
       html`
-        ${field({
+        ${this._when(['show_value', 'value_position'], html`${field({
           id: 'sl-where',
           label: t('look-editor.mc-slider-look-editor.where'),
           control: this._select(
@@ -552,15 +641,15 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
           ),
         })}
         <p class="help" id="sl-where-help">${t('look-editor.mc-slider-look-editor.hidden-is-the-same-as-turning-show-value')} ${t('look-editor.mc-slider-look-editor.touch-screens-have-no-hover-so-the-value')}</p>
-        ${this._refused ? html`<p class="help error" role="status">${t('look-editor.mc-slider-look-editor.hidden-needs-a-handle')}</p>` : nothing}
-        ${this._switch('ticks', t('look-editor.mc-slider-look-editor.ticks'), !!c.ticks)}
-        ${c.ticks ? this._num('tick_every', t('look-editor.mc-slider-look-editor.tick-every'), { placeholder: t('look-editor.mc-slider-look-editor.auto-2'), min: 0, max: 100000, step: 0.1 }) : nothing}
-        ${this._switch('show_limits', t('look-editor.mc-slider-look-editor.min-and-max-labels'), !!c.show_limits)}
+        ${this._refused ? html`<p class="help error" role="status">${t('look-editor.mc-slider-look-editor.hidden-needs-a-handle')}</p>` : nothing}`)}
+        ${this._when('ticks', this._switch('ticks', t('look-editor.mc-slider-look-editor.ticks'), !!c.ticks))}
+        ${c.ticks ? this._when('tick_every', this._num('tick_every', t('look-editor.mc-slider-look-editor.tick-every'), { placeholder: t('look-editor.mc-slider-look-editor.auto-2'), min: 0, max: 100000, step: 0.1 })) : nothing}
+        ${this._when('show_limits', this._switch('show_limits', t('look-editor.mc-slider-look-editor.min-and-max-labels'), !!c.show_limits))}
       `,
     );
   }
 
-  private _shapeSection(): TemplateResult {
+  private _shapeSection(): TemplateResult | typeof nothing {
     const c = this._c;
     return this._section(
       'shape',
@@ -583,7 +672,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     this._set({ stops: stops.length ? stops : undefined });
   }
 
-  private _stopsSection(): TemplateResult {
+  private _stopsSection(): TemplateResult | typeof nothing {
     const c = this._c;
     const stops = readStops(c);
     const { min, max, step } = this._range;
@@ -593,8 +682,8 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       t('look-editor.mc-slider-look-editor.stops'),
       stops.length ? t('look-editor.mc-slider-look-editor.n-3', { n: stops.length }) : t('look-editor.mc-slider-look-editor.none'),
       html`
-        ${this._switch('snap', t('look-editor.mc-slider-look-editor.snap-to-stops'), !!c.snap)}
-        ${stops.map((s, i) => {
+        ${this._when('snap', this._switch('snap', t('look-editor.mc-slider-look-editor.snap-to-stops'), !!c.snap))}
+        ${this._when('stops', html`${stops.map((s, i) => {
           const bad = !stopInRange(s, min, max);
           const errId = `sl-stop-${i}-err`;
           return html`<div class="stop" role="group" aria-label=${t('look-editor.mc-slider-look-editor.stop-n', { n: i + 1 })}>
@@ -646,7 +735,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
           </div>
           <p class="help" id="sl-evenly-help">${t('look-editor.mc-slider-look-editor.replaces-the-stops-with-this-many-spread', { min, max })}</p>
         </div>
-        ${stops.length >= MAX_STOPS ? html`<p class="help">${t('look-editor.mc-slider-look-editor.n-stops-is-the-most', { n: MAX_STOPS })}</p>` : nothing}
+        ${stops.length >= MAX_STOPS ? html`<p class="help">${t('look-editor.mc-slider-look-editor.n-stops-is-the-most', { n: MAX_STOPS })}</p>` : nothing}`)}
       `,
     );
   }

@@ -63,6 +63,10 @@
     "text": "Winkelhaak",
     "hash": "c9143fa6"
   },
+  "look-editor.element.close-inspector": {
+    "text": "Instellingen sluiten",
+    "hash": "0ccfef82"
+  },
   "look-editor.element.colour": {
     "text": "Kleur",
     "hash": "3a9dfa58"
@@ -159,6 +163,10 @@
     "text": "Flikkering",
     "hash": "ba3baf3d"
   },
+  "look-editor.element.flow-look": {
+    "text": "Flowlook",
+    "hash": "2d2cba6f"
+  },
   "look-editor.element.gap-px": {
     "text": "Tussenruimte (px)",
     "hash": "b80d9421"
@@ -186,6 +194,14 @@
   "look-editor.element.in-pixels": {
     "text": "In pixels",
     "hash": "ed6e9ee9"
+  },
+  "look-editor.element.inspector": {
+    "text": "Lookinstellingen",
+    "hash": "8139cf4d"
+  },
+  "look-editor.element.keep-inspector-open": {
+    "text": "Instellingen open houden",
+    "hash": "23a9037e"
   },
   "look-editor.element.level-follows-value": {
     "text": "Niveau volgt de waarde",
@@ -215,6 +231,10 @@
     "text": "Markeringsgrootte (px)",
     "hash": "1b9e6fc5"
   },
+  "look-editor.element.modified-only": {
+    "text": "Alleen gewijzigd",
+    "hash": "d5f0ab19"
+  },
   "look-editor.element.motion": {
     "text": "Beweging",
     "hash": "8ca34424"
@@ -238,6 +258,10 @@
   "look-editor.element.none": {
     "text": "Geen",
     "hash": "dc937b59"
+  },
+  "look-editor.element.none-modified": {
+    "text": "Hier wijkt niets af van de standaard",
+    "hash": "75578f99"
   },
   "look-editor.element.nothing-arrives-while-motion-is-pulse": {
     "text": "Er komt niets aan zolang Beweging op Puls staat.",
@@ -294,6 +318,10 @@
   "look-editor.element.scale-width": {
     "text": "Dikte schalen",
     "hash": "afd9d571"
+  },
+  "look-editor.element.settings": {
+    "text": "Instellingen",
+    "hash": "74a883a0"
   },
   "look-editor.element.shape": {
     "text": "Vorm",
@@ -475,6 +503,10 @@
     "text": "Zigzaghoogte (px)",
     "hash": "adcbd509"
   },
+  "look-editor.element.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
+  },
   "look-editor.mc-slider-look-editor.add-evenly": {
     "text": "Gelijkmatig toevoegen",
     "hash": "44e90e5e"
@@ -546,6 +578,10 @@
   "look-editor.mc-slider-look-editor.close": {
     "text": "Sluiten",
     "hash": "7d9eb7ac"
+  },
+  "look-editor.mc-slider-look-editor.close-inspector": {
+    "text": "Instellingen sluiten",
+    "hash": "0ccfef82"
   },
   "look-editor.mc-slider-look-editor.colour-source-source": {
     "text": "Kleurbron: {source}.",
@@ -635,6 +671,14 @@
     "text": "Zet verminderde beweging aan in de systeeminstellingen (Toegankelijkheid).",
     "hash": "d89cf4a3"
   },
+  "look-editor.mc-slider-look-editor.inspector": {
+    "text": "Lookinstellingen",
+    "hash": "8139cf4d"
+  },
+  "look-editor.mc-slider-look-editor.keep-inspector-open": {
+    "text": "Instellingen open houden",
+    "hash": "23a9037e"
+  },
   "look-editor.mc-slider-look-editor.label": {
     "text": "Label",
     "hash": "0e66373f"
@@ -658,6 +702,10 @@
   "look-editor.mc-slider-look-editor.min-and-max-labels": {
     "text": "Min- en maxlabels",
     "hash": "297de253"
+  },
+  "look-editor.mc-slider-look-editor.modified-only": {
+    "text": "Alleen gewijzigd",
+    "hash": "d5f0ab19"
   },
   "look-editor.mc-slider-look-editor.n-3": {
     "text": "{n, plural, one {# stop} other {# stops}}",
@@ -686,6 +734,10 @@
   "look-editor.mc-slider-look-editor.none": {
     "text": "Geen",
     "hash": "dc937b59"
+  },
+  "look-editor.mc-slider-look-editor.none-modified": {
+    "text": "Hier wijkt niets af van de standaard",
+    "hash": "75578f99"
   },
   "look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": {
     "text": "Op een Mac: Systeeminstellingen, Toegankelijkheid, Scherm.",
@@ -735,6 +787,10 @@
     "text": "Verstuurt hooguit 4 wijzigingen per seconde. De eindwaarde gaat altijd mee als je loslaat. Standaard uit.",
     "hash": "629d26d6"
   },
+  "look-editor.mc-slider-look-editor.settings": {
+    "text": "Instellingen",
+    "hash": "74a883a0"
+  },
   "look-editor.mc-slider-look-editor.shape": {
     "text": "Vorm",
     "hash": "e0e49270"
@@ -746,6 +802,10 @@
   "look-editor.mc-slider-look-editor.slider-colour": {
     "text": "Kleur van de schuifregelaar",
     "hash": "fe395e28"
+  },
+  "look-editor.mc-slider-look-editor.slider-look": {
+    "text": "Sliderlook",
+    "hash": "1cbab1ed"
   },
   "look-editor.mc-slider-look-editor.slider-shape": {
     "text": "Vorm van de schuifregelaar",
@@ -875,6 +935,10 @@
     "text": "Kleur van het licht gebruiken",
     "hash": "91199ad5"
   },
+  "look-editor.mc-slider-look-editor.used-by-the-segmented-track-style": {
+    "text": "Geldt voor baanstijl Gesegmenteerd.",
+    "hash": "488e3532"
+  },
   "look-editor.mc-slider-look-editor.value": {
     "text": "Waarde",
     "hash": "8e37953d"
@@ -906,6 +970,10 @@
   "look-editor.mc-slider-look-editor.your-system-has-reduced-motion-on-so": {
     "text": "Je systeem heeft verminderde beweging aan, dus dit uiterlijk blijft stilstaan.",
     "hash": "244c5d4f"
+  },
+  "look-editor.mc-slider-look-editor.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
   },
   "look-editor.presets.big-fill": {
     "text": "Grote vulling",

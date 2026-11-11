@@ -24,6 +24,12 @@ const settle = async (el: Ed): Promise<void> => {
   await new Promise((r) => setTimeout(r, 20));
   await el.updateComplete;
 };
+
+const openLayers = async (el: Ed): Promise<void> => {
+  const tab = [...el.renderRoot.querySelectorAll<HTMLButtonElement>('[role=tab]')].find((b) => b.textContent!.trim() === 'Layers');
+  tab?.click();
+  await settle(el);
+};
 const svg = (inner: string): string => `<svg viewBox="0 0 400 300">${inner}</svg>`;
 const CLIP = '<defs><clipPath id="c"><rect x="0" y="0" width="50" height="50"/></clipPath></defs>';
 const A = '<path id="a" data-name="First" d="M0 0H100V100H0Z" fill="#ff0000"/>';
@@ -79,6 +85,7 @@ afterEach(() => {
 describe('imported parts: Unlock', () => {
   it('names the reason on the layer button instead of a pressed Unlock, and says it when pressed, with no undo step', async () => {
     const { el } = await open(WITH_PART);
+    await openLayers(el);
     const row = el.renderRoot.querySelector('[role=treeitem][data-id="win"]')!;
     const lock = row.querySelector<HTMLButtonElement>('button[aria-label*="stays locked"]')!;
     expect(lock).toBeTruthy();

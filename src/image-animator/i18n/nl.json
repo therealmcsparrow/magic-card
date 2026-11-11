@@ -275,6 +275,10 @@
     "text": "Sluiten",
     "hash": "7d9eb7ac"
   },
+  "image-animator.mc-image-animator.close-settings": {
+    "text": "Instellingen sluiten",
+    "hash": "0ccfef82"
+  },
   "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
     "text": "Magic Card Utils is niet bereikbaar. Je werk is veilig.",
     "hash": "3ba3f12b"
@@ -315,9 +319,21 @@
     "text": "Verder bewerken",
     "hash": "e76fd2ad"
   },
+  "image-animator.mc-image-animator.keep-settings-open": {
+    "text": "Instellingen openhouden",
+    "hash": "23a9037e"
+  },
+  "image-animator.mc-image-animator.modified-only": {
+    "text": "Alleen gewijzigd",
+    "hash": "d5f0ab19"
+  },
   "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
     "text": "Nog niet in de bibliotheek. Opslaan voegt het toe als {name}.",
     "hash": "53da3716"
+  },
+  "image-animator.mc-image-animator.nothing-modified": {
+    "text": "Niets wijkt hier af van de standaard",
+    "hash": "75578f99"
   },
   "image-animator.mc-image-animator.opening-the-image": {
     "text": "De afbeelding wordt geopend…",
@@ -342,6 +358,10 @@
   "image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": {
     "text": "Bezig met opslaan… Het venster sluit zodra dat klaar is.",
     "hash": "1ca4d921"
+  },
+  "image-animator.mc-image-animator.settings": {
+    "text": "Instellingen",
+    "hash": "74a883a0"
   },
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
     "text": "De opgeslagen animatie van deze afbeelding is niet geldig, dus je kunt hem hier niet animeren.",
@@ -390,6 +410,10 @@
   "image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": {
     "text": "Je afbeeldingenbibliotheek is groter dan 50 MiB. Een grote bibliotheek kan oudere apparaten vertragen. Je kunt nog steeds opslaan.",
     "hash": "dd014dcf"
+  },
+  "image-animator.mc-image-animator.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
   },
   "image-animator.morph-panel.add-morph": {
     "text": "Overgang toevoegen",

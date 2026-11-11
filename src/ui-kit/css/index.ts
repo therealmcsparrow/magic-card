@@ -5,4 +5,5 @@ export { kitToast } from './toast';
 export { kitSlider } from './slider';
 export { kitRow } from './rows';
 export { kitLip } from './lip';
+export { kitBlueprint } from './blueprint';
 export { rtlSheet, inlineSides, type InlineSideProp } from './rtl';

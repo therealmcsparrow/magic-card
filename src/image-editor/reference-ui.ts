@@ -83,7 +83,7 @@ export function refPanel(x: ImageExt): TemplateResult | typeof nothing {
     ${x.ref
       ? html`<div class="ref-grid">
             ${switchRow({ id: 'ref-show', label: t('image-editor.reference-ui.show'), checked: x.shown, onChange: (v) => ((x.shown = v), sh.requestUpdate()) })}
-            ${field({ id: 'ref-op', label: t('image-editor.reference-ui.opacity'), control: html`<div class="ref-op"><input id="ref-op" type="range" min="0" max="100" step="1" .value=${String(a.o)} @input=${(e: Event) => setAlign(x, { o: Number((e.target as HTMLInputElement).value) })} /><span aria-hidden="true">${a.o} %</span></div>` })}
+            ${field({ id: 'ref-op', label: t('image-editor.reference-ui.opacity'), control: html`<div class="ref-op"><input id="ref-op" type="range" aria-label=${t('image-editor.reference-ui.opacity')} min="0" max="100" step="1" .value=${String(a.o)} @input=${(e: Event) => setAlign(x, { o: Number((e.target as HTMLInputElement).value) })} /><span aria-hidden="true">${a.o} %</span></div>` })}
             ${num('ref-x', t('image-editor.reference-ui.x'), a.x, (n) => setAlign(x, { x: n }))}
             ${num('ref-y', t('image-editor.reference-ui.y'), a.y, (n) => setAlign(x, { y: n }))}
             ${num('ref-s', t('image-editor.reference-ui.scale'), a.s, (n) => setAlign(x, { s: n }))}

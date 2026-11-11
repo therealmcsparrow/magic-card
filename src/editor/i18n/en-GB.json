@@ -5159,6 +5159,11 @@
     "note": "Status badge in the inspector for the selected item; the structure outline shows it as a row badge.",
     "max": 35
   },
+  "card-editor.inspector.layer-name": {
+    "text": "Layer name",
+    "note": "Label of the field that renames the selected module in the Layers list. The name is only for the editor.",
+    "max": 20
+  },
   "card-editor.inspector.layout-layout": {
     "text": "layout {layout}",
     "note": "Lower-case caption in the inspector, shown mid-line after other details. {layout} is the layout name, such as a column ratio; do not translate it. The selection key is the capitalised twin.",
@@ -7775,9 +7780,9 @@
     }
   },
   "card-editor.structure-outline.n": {
-    "text": "{n, plural, one {module} other {modules}}",
-    "note": "The noun alone, without the number, which the outline shows separately. {n} is 0 or more; give every plural form your language needs.",
-    "max": 15,
+    "text": "{n, plural, one {# module} other {# modules}}",
+    "note": "Screen reader text of a column or tab count in the outline: the number with the noun, for example 1 module or 5 modules. Plural forms follow the count.",
+    "max": 20,
     "vars": {
       "n": "The count the text is about."
     }
@@ -8001,6 +8006,26 @@
     "note": "Preview state option: show the card as it looks while the pointer is over it.",
     "max": 10
   },
+  "card-editor.studio-canvas.key-alt": {
+    "text": "Alt",
+    "note": "Name of the Alt key in a small keyboard badge; use the word on the key cap.",
+    "max": 10
+  },
+  "card-editor.studio-canvas.key-ctrl": {
+    "text": "Ctrl",
+    "note": "Name of the Control key in a small keyboard badge; use the word on the key cap.",
+    "max": 10
+  },
+  "card-editor.studio-canvas.key-or": {
+    "text": "or",
+    "note": "The word between two alternative keyboard shortcuts, such as Ctrl+B or ⌘B.",
+    "max": 10
+  },
+  "card-editor.studio-canvas.key-shift": {
+    "text": "Shift",
+    "note": "Name of the Shift key in a small keyboard badge; use the word on the key cap.",
+    "max": 10
+  },
   "card-editor.studio-canvas.layers-here-n": {
     "text": "Layers here ({n})",
     "note": "Button or heading listing the layers stacked at the clicked point. {n} is how many layers, 2 or more.",
@@ -8130,12 +8155,11 @@
     "max": 30
   },
   "card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd": {
-    "text": "Show or hide panels: {ctrl} or {cmd}.",
-    "note": "Keyboard help. {ctrl} and {cmd} are complete shortcuts for Windows or Linux and for a Mac, such as Ctrl+B and ⌘B; do not translate them.",
+    "text": "Show or hide panels: {keys}.",
+    "note": "Keyboard help. {keys} is the complete shortcut for this computer, such as Ctrl+B or ⌘B; do not translate it.",
     "max": 60,
     "vars": {
-      "cmd": "The value that replaces cmd in the text.",
-      "ctrl": "The value that replaces ctrl in the text."
+      "keys": "The value that replaces keys in the text."
     }
   },
   "card-editor.studio-canvas.showing-state": {
@@ -8153,6 +8177,11 @@
     "vars": {
       "px": "The value that replaces px in the text."
     }
+  },
+  "card-editor.studio-canvas.unit-px": {
+    "text": "px",
+    "note": "Unit symbol for pixels, shown after the preview width. Keep it short.",
+    "max": 10
   },
   "card-editor.studio-canvas.up": {
     "text": "Up",
@@ -8228,6 +8257,11 @@
     "note": "Title of the full-screen studio editor, shown in its header and as its accessible name.",
     "max": 30
   },
+  "card-editor.studio.modified-only": {
+    "text": "Modified only",
+    "note": "Label of the switch that shows only the settings that differ from their default.",
+    "max": 20
+  },
   "card-editor.studio.mods": {
     "text": "{mods, plural, one {# module} other {# modules}}",
     "note": "Studio status text counting the modules in the card, for example 1 module or 5 modules. Plural forms follow the count.",
@@ -8235,6 +8269,11 @@
     "vars": {
       "mods": "The count the text is about."
     }
+  },
+  "card-editor.studio.nothing-modified": {
+    "text": "Nothing here differs from the default",
+    "note": "Shown in the settings panel when Modified only is on and no setting differs from its default.",
+    "max": 45
   },
   "card-editor.studio.panels-hidden": {
     "text": "{panels} hidden",
@@ -8251,6 +8290,11 @@
     "vars": {
       "panels": "The value that replaces panels in the text."
     }
+  },
+  "card-editor.studio.pin-panel": {
+    "text": "Pin the panel",
+    "note": "Accessible name of the button that keeps the settings panel open while you work on the card.",
+    "max": 20
   },
   "card-editor.studio.preview": {
     "text": "Preview",
@@ -8320,6 +8364,11 @@
   "card-editor.studio.yaml": {
     "text": "YAML",
     "note": "Option in the editor mode switch: edit the card as YAML code. Keep the acronym; counterpart of Form.",
+    "max": 10
+  },
+  "card-editor.studio.zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the zoom controls group beside the preview.",
     "max": 10
   },
   "card-editor.sync-indicator.overridden": {

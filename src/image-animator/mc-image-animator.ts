@@ -2,11 +2,15 @@ import { LitElement, html, nothing, type PropertyValues, type TemplateResult } f
 import { property, state } from 'lit/decorators.js';
 import type { ImageAnimation, ImageClip } from '../contracts/image-animation';
 import { IMAGE_ANIMATOR_SAVED_EVENT, type ImageAnimatorSaved } from '../contracts/image-animator';
+import { FRAME_WIDE_MIN_PX, UI_STUDIO_FRAME_TAG, type FrameDrawerChange, type FrameMeasure, type FrameModifiedChange, type StudioFrameElement, type StudioFrameStrings } from '../contracts/studio-frame';
 import type { HomeAssistant } from '../types';
 import { editorSystem } from '../css/editor-stack';
 import { kitButtonExtras } from '../ui-kit/css/extras';
+import { defineKitElements } from '../ui-kit/define-parts';
+import { loadStudioFonts } from '../ui-kit';
+import { StudioFrame } from '../ui-kit/frame/studio-frame';
 import { createClip, deleteClip, duplicateClip, moveClip, parseWhen, renameClip, setClipPlay, setClipTiming, type ClipsError, type ClipTiming } from './clips';
-import { renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
+import { clipsHaveEffects, clipsModified, renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
 import { presetChoices, renderEffects, renderTargetList, effectLabel, targetName, type PanelProps } from './effects-panel';
 import { t } from './i18n';
 import { loadImageTools } from './image-loader';
@@ -59,6 +63,13 @@ export class McImageAnimator extends LitElement {
   @state() private _clipId = '';
   @state() private _drafting = '';
   @state() private _clipMessage = '';
+  /** The drawing's size in its own units and the scale it is shown at, so the rulers read in drawing units. */
+  @state() private _view = { width: 100, height: 100, zoom: 1 };
+  @state() private _drawerOpen = false;
+  @state() private _narrow = false;
+  @state() private _modifiedOnly = false;
+  private _frame?: StudioFrameElement;
+  private _observer?: ResizeObserver;
   /** The drawing and animation as last saved or opened; anything else is unsaved. */
   private _clean = '';
   private _started?: Promise<void>;
@@ -70,7 +81,23 @@ export class McImageAnimator extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    defineKitElements([[UI_STUDIO_FRAME_TAG, StudioFrame]]);
+    void loadStudioFonts();
+    document.addEventListener('keydown', this._onDocKey);
     this._started ??= this._open();
+  }
+
+  /** The shortcut also works while focus rests on the page behind the window, for example right after the sheet opens. */
+  private _onDocKey = (e: KeyboardEvent): void => {
+    if (!e.defaultPrevented) this._shortcut(e);
+  };
+
+  private _shortcut(e: KeyboardEvent): boolean {
+    if (!((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash') && !e.repeat && !this._ask && !this._leaving)) return false;
+    e.preventDefault();
+    if (this._drawerOpen) this._frame?.closeDrawer('user');
+    else this._frame?.openDrawer(null, 'user');
+    return true;
   }
 
   /** Memoised: every caller waits for the same open. */
@@ -184,14 +211,51 @@ export class McImageAnimator extends LitElement {
   }
 
   disconnectedCallback(): void {
+    document.removeEventListener('keydown', this._onDocKey);
     this._preview?.release();
     this._preview = undefined;
+    this._observer?.disconnect();
+    this._observer = undefined;
+    this._frame = undefined;
     super.disconnectedCallback();
   }
 
   protected updated(changed: PropertyValues): void {
     if (changed.has('_phase')) this.renderRoot.querySelector<HTMLElement>('h2')?.focus();
     if (this._phase === 'ready' && !this._svg) this._mountCanvas();
+    if (this._phase === 'ready') this._watchFrame();
+  }
+
+  /** Once the frame is on screen: follows its size for the sheet and the drawing scale, and opens the drawer when there is room for it. */
+  private _watchFrame(): void {
+    const frame = this.renderRoot.querySelector<StudioFrameElement>(UI_STUDIO_FRAME_TAG);
+    if (!frame || frame === this._frame) return;
+    this._observer?.disconnect();
+    this._frame = frame;
+    this._observer = new ResizeObserver((entries) => {
+      const r = entries[entries.length - 1]?.contentRect;
+      if (r) this._fit(r.width, r.height);
+    });
+    this._observer.observe(frame);
+    const box = frame.getBoundingClientRect();
+    this._fit(box.width, box.height);
+    if (!this._narrow) frame.openDrawer(this.renderRoot.querySelector<HTMLElement>('.settings'), 'user');
+  }
+
+  /** Chooses the scale that shows the whole drawing in the room the stage has, between a quarter and six times. */
+  private _fit(width: number, height: number): void {
+    const wasNarrow = this._narrow;
+    this._narrow = width > 0 && width < FRAME_WIDE_MIN_PX;
+    // the settings stay open beside the stage; the window narrowing into the sheet width closes them, and widening opens them again
+    if (this._narrow !== wasNarrow && this._frame) {
+      if (this._narrow) this._frame.closeDrawer('stage');
+      else this._frame.openDrawer(null, 'user');
+    }
+    const room = Math.max(160, width - (this._narrow ? 0 : 344) - 96);
+    const tall = Math.max(160, (height || 640) - 56 - 96 - 56);
+    const { width: w, height: h } = this._view;
+    const zoom = Math.round(Math.min(6, Math.max(0.25, Math.min(room / w, tall / h))) * 100) / 100;
+    if (zoom !== this._view.zoom) this._view = { ...this._view, zoom };
   }
 
   /** Puts the working drawing on the canvas. Its markup was sanitised when the image was opened. */
@@ -203,6 +267,10 @@ export class McImageAnimator extends LitElement {
     const svg = stage.querySelector('svg');
     if (!svg) return;
     this._svg = svg as unknown as SVGSVGElement;
+    const box = (svg.getAttribute('viewBox') ?? '').trim().split(/[\s,]+/).map(Number);
+    const [w, h] = box.length === 4 ? [box[2], box[3]] : [Number(svg.getAttribute('width')), Number(svg.getAttribute('height'))];
+    this._view = { ...this._view, width: w > 0 ? w : 100, height: h > 0 ? h : 100 };
+    this._fit(this._frame?.clientWidth ?? 0, this._frame?.clientHeight ?? 0);
     this._targets = listTargets(this._svg);
     this._replay();
   }
@@ -332,7 +400,41 @@ export class McImageAnimator extends LitElement {
 
   private _onStageClick(e: Event): void {
     if (!this._svg) return;
+    const before = this._target?.ref;
     this._pick(pickTarget(this._svg, e.target instanceof Element ? e.target : null));
+    if (this._target?.ref !== before && !this._narrow) this._frame?.openDrawer(null, 'selection');
+    // The stage click moves focus to the drawing's host outside the dialog; Escape and Tab need it back inside.
+    const win = this.renderRoot.querySelector<HTMLElement>('.window');
+    if (win && !win.contains(this.shadowRoot?.activeElement ?? null)) (this.renderRoot.querySelector<HTMLElement>('#title') ?? win).focus({ preventScroll: true });
+  }
+
+  private _toggleDrawer(e: Event): void {
+    if (this._drawerOpen) this._frame?.closeDrawer('user');
+    else this._frame?.openDrawer(e.currentTarget as HTMLElement, 'user');
+  }
+
+  private _strings(): StudioFrameStrings {
+    return {
+      pin: t('image-animator.mc-image-animator.keep-settings-open'),
+      modifiedOnly: t('image-animator.mc-image-animator.modified-only'),
+      noneModified: t('image-animator.mc-image-animator.nothing-modified'),
+      close: t('image-animator.mc-image-animator.close-settings'),
+      drawer: t('image-animator.mc-image-animator.settings'),
+      zoom: t('image-animator.mc-image-animator.zoom'),
+    };
+  }
+
+  /** The drawing's size for the rulers and the picked part's box for the callout, both in drawing units. */
+  private _measure(): FrameMeasure {
+    let selection: FrameMeasure['selection'] = null;
+    try {
+      const b = this._target.element && 'getBBox' in this._target.element ? (this._target.element as unknown as SVGGraphicsElement).getBBox() : undefined;
+      if (b && b.width > 0 && b.height > 0) selection = { x: b.x, y: b.y, width: b.width, height: b.height };
+    } catch {
+      selection = null;
+    }
+    const { width, height, zoom } = this._view;
+    return { width, height, grid: 10, selection, zoom };
   }
 
   private _pickRef(ref: ImageTarget['ref']): void {
@@ -434,6 +536,7 @@ export class McImageAnimator extends LitElement {
   }
 
   private _onKey(e: KeyboardEvent): void {
+    if (this._shortcut(e)) return;
     if (e.key === 'Escape') {
       e.stopPropagation();
       if (this._leaving) this._keepEditing();
@@ -441,11 +544,13 @@ export class McImageAnimator extends LitElement {
       else this._close();
       return;
     }
-    if (e.key !== 'Tab') return;
-    const scope = (this._leaving || this._ask ? this.renderRoot.querySelector('.confirm') : null) ?? this.renderRoot;
-    const items = [...scope.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((x) => !x.closest('[inert]'));
+    if (e.key !== 'Tab' || e.defaultPrevented) return;
+    const asking = !!(this._leaving || this._ask);
+    if (!asking && this._drawerOpen && this._narrow) return;
+    const items = asking ? [...(this.renderRoot.querySelector('.confirm')?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [])] : this._tabStops();
     if (!items.length) return;
-    const active = this.shadowRoot?.activeElement as HTMLElement | null | undefined;
+    let active = this.shadowRoot?.activeElement as HTMLElement | null | undefined;
+    if (active && active === this._frame) active = (active.shadowRoot?.activeElement as HTMLElement | null) ?? active;
     const first = items[0];
     const last = items[items.length - 1];
     const outside = !items.includes(active as HTMLElement);
@@ -456,6 +561,22 @@ export class McImageAnimator extends LitElement {
       e.preventDefault();
       first.focus();
     }
+  }
+
+  /** Every control in tab order, through the frame's own buttons and the content slotted into it. */
+  private _tabStops(): HTMLElement[] {
+    const frame = this._frame;
+    if (!frame?.shadowRoot) return [];
+    const out: HTMLElement[] = [];
+    const add = (el: HTMLElement): void => {
+      if (el.matches(FOCUSABLE) && !el.closest('[inert]')) out.push(el);
+      for (const c of el.querySelectorAll<HTMLElement>(FOCUSABLE)) if (!c.closest('[inert]')) out.push(c);
+    };
+    for (const n of frame.shadowRoot.querySelectorAll<HTMLElement>('button, slot')) {
+      if (n instanceof HTMLSlotElement) for (const el of n.assignedElements({ flatten: true }) as HTMLElement[]) add(el);
+      else if (!n.closest('[inert], [hidden]')) out.push(n);
+    }
+    return out;
   }
 
   private _problem(reason: FailReason): string {
@@ -479,26 +600,44 @@ export class McImageAnimator extends LitElement {
     }
   }
 
-  private _body(): TemplateResult {
-    const o = this._opened;
-    if (this._phase === 'opening') return html`<p role="status">${t('image-animator.mc-image-animator.opening-the-image')}</p>`;
-    if (this._phase === 'failed' || !o) return html`<p class="problem" role="alert">${this._problem(this._reason ?? 'failed')}</p>`;
-    const clips = o.animation?.clips.length ?? 0;
+  /** The stage: the playing drawing and, for a saved image, how it looks as last saved. */
+  private _stageSlot(o: Opened): TemplateResult {
+    const { width, height, zoom } = this._view;
+    return html`<div slot="stage" class="stage-wrap">
+      <div class="stage" role="group" aria-label=${o.name} style=${`inline-size:${width * zoom}px;block-size:${height * zoom}px`} @click=${this._onStageClick}></div>
+      ${o.isNew
+        ? nothing
+        : html`<div class="saved">
+            <span>${t('image-animator.mc-image-animator.as-saved')}</span>
+            <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
+          </div>`}
+    </div>`;
+  }
+
+  private _drawerSlot(o: Opened): TemplateResult {
     const panel = this._panel();
-    return html`<div class="work">
-        <div class="canvas">
-          <div class="stage" role="group" aria-label=${o.name} @click=${this._onStageClick}></div>
-          ${o.isNew
-            ? nothing
-            : html`<div class="saved">
-                <span>${t('image-animator.mc-image-animator.as-saved')}</span>
-                <mc-svg-image .hass=${this.hass} .ref=${`mcu-image:${o.id}`} .description=${o.name}></mc-svg-image>
-              </div>`}
-        </div>
-        <div class="side" ?inert=${this._saving || !!this._ask || !!this._leaving}>${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}</div>
-      </div>
+    const clips = o.animation?.clips.length ?? 0;
+    const busy = this._saving || !!this._ask || !!this._leaving;
+    if (this._modifiedOnly) {
+      const cp = panel ? this._clipsPanel() : undefined;
+      const changed = !!cp && clipsModified(cp.clips, cp.drafting);
+      return html`<div slot="drawer" id="ia-drawer" class="drawer-body" ?inert=${busy}>
+        ${this._warnings(o)}
+        ${panel && cp && clipsHaveEffects(cp.clips) ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}` : nothing}
+        ${cp && changed ? renderClips({ ...cp, modifiedOnly: true }) : nothing}
+        ${changed ? nothing : html`<p class="hint" role="status">${t('image-animator.mc-image-animator.nothing-modified')}</p>`}
+      </div>`;
+    }
+    return html`<div slot="drawer" id="ia-drawer" class="drawer-body" ?inert=${busy}>
       ${this._warnings(o)}
-      <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>`;
+      ${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}
+      <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>
+    </div>`;
+  }
+
+  private _body(): TemplateResult {
+    if (this._phase === 'opening') return html`<p role="status">${t('image-animator.mc-image-animator.opening-the-image')}</p>`;
+    return html`<p class="problem" role="alert">${this._problem(this._reason ?? 'failed')}</p>`;
   }
 
   private _heavyLine(r: HeavyReason): string {
@@ -569,18 +708,45 @@ export class McImageAnimator extends LitElement {
 
   protected render(): TemplateResult {
     const o = this._opened;
+    const ready = this._phase === 'ready' && !!o;
+    const title = html`<h2 id="title" tabindex="-1">${o ? t('image-animator.mc-image-animator.animate-name', { name: o.name }) : t('image-animator.mc-image-animator.animate-image')}</h2>`;
+    const close = html`<button class="btn btn-secondary close" type="button" @click=${this._close}>${t('image-animator.mc-image-animator.close')}</button>`;
     return html`<div class="backdrop" @click=${this._close} aria-hidden="true"></div>
       <div class="window" role="dialog" aria-modal="true" aria-labelledby="title" @keydown=${this._onKey}>
-        <header>
-          <h2 id="title" tabindex="-1">${o ? t('image-animator.mc-image-animator.animate-name', { name: o.name }) : t('image-animator.mc-image-animator.animate-image')}</h2>
-          <button class="btn btn-secondary" type="button" @click=${this._close}>${t('image-animator.mc-image-animator.close')}</button>
-        </header>
-        <div class="body">${this._body()}</div>
+        ${ready
+          ? html`<mc-ui-studio-frame
+              studio="image-animator"
+              fixed-drawer
+              .scheme=${this.hass?.themes?.darkMode ? 'dark' : 'light'}
+              .strings=${this._strings()}
+              .selectionLabel=${targetName(this._target)}
+              .measure=${this._measure()}
+              @mc-frame-drawer=${(e: CustomEvent<FrameDrawerChange>) => (this._drawerOpen = e.detail.open)}
+              @mc-frame-modified=${(e: CustomEvent<FrameModifiedChange>) => (this._modifiedOnly = e.detail.on)}
+            >
+              <div slot="top" class="bar">
+                ${title}
+                ${this._status()}
+                <button
+                  class="btn btn-secondary settings"
+                  type="button"
+                  aria-label=${t('image-animator.mc-image-animator.settings')}
+                  aria-controls="ia-drawer"
+                  aria-expanded=${this._drawerOpen ? 'true' : 'false'}
+                  aria-haspopup=${this._narrow ? 'dialog' : nothing}
+                  @click=${this._toggleDrawer}
+                >
+                  ${t('image-animator.mc-image-animator.settings')}
+                </button>
+                ${close}
+                <button class="btn btn-primary" type="button" ?disabled=${!o.canSave || this._saving || !!this._ask || !!this._leaving} @click=${this._save}>${t('image-animator.mc-image-animator.save')}</button>
+              </div>
+              ${this._stageSlot(o)} ${this._drawerSlot(o)}
+            </mc-ui-studio-frame>`
+          : html`<header>${title}${close}</header>
+              <div class="body">${this._body()}</div>
+              <footer>${this._status()}<button class="btn btn-primary" type="button" disabled>${t('image-animator.mc-image-animator.save')}</button></footer>`}
         ${this._confirmBox()} ${this._leaveBox()}
-        <footer>
-          ${this._status()}
-          <button class="btn btn-primary" type="button" ?disabled=${!o?.canSave || this._saving || !!this._ask || !!this._leaving} @click=${this._save}>${t('image-animator.mc-image-animator.save')}</button>
-        </footer>
       </div>`;
   }
 }

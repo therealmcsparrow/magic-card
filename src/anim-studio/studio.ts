@@ -35,12 +35,11 @@ import { applyLayerView, hiddenCount, pruneLayerView, selectionKeys, selectionLo
 import { lockBanner, lockBannerStyles } from './editors/lock-banner';
 import { stageParticlesOf } from './stage-particles';
 import type { UiMenuElement, UiMenuEntry, UiMenuPick, UiWindowElement } from '../contracts/ui-kit';
+import { FRAME_WIDE_MIN_PX, UI_STUDIO_FRAME_TAG, type FrameMeasure, type StudioFrameElement, type StudioFrameStrings } from '../contracts/studio-frame';
 import { deepActive, studioWindow } from './window';
 import { validationText } from './validation-text';
 import { sectionHead } from '../ui-kit/templates/layout';
-import { kitLip } from '../ui-kit/css/lip';
 import { PanelLips } from '../ui-kit/controllers/panel-lips';
-import { ScrollbarWatch } from '../ui-kit/controllers/scrollbar-width';
 import type { PanelLipSpec, PanelLipStrings } from '../contracts/ui-kit';
 import { seg } from '../ui-kit/templates/choice';
 import { field } from '../ui-kit/templates/field';
@@ -48,6 +47,7 @@ import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../con
 import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
 import { t, tr, m, locale, type MessageId } from './i18n';
+import { loadStudioFonts } from '../ui-kit/fonts/load-lazy';
 import { setPseudoRtl } from './pseudo-toggle';
 
 // The animation studio `<magic-card-animation-studio>`: library and editor. The host does the storage; the studio emits
@@ -165,8 +165,6 @@ const errorText = (err: unknown): { message: string; errors: FieldError[] } => {
 export const SPLIT_KEY = 'mcas-split';
 /** Collapsed inspector sections (JSON list of ids). */
 export const SECTIONS_KEY = 'mcas-sections';
-/** The earlier Layers choice, 'rail' (collapsed) or 'open': read once to carry a collapsed column over to the panel lips. */
-export const LAYERS_KEY = 'mcas-layers';
 export const SPLIT_DEFAULT = 0.4;
 /** The stage and the timeline each keep at least this height (px). */
 export const SPLIT_MIN_PX = 160;
@@ -284,7 +282,7 @@ const labelsLoad = labelsReady().then((ok) => (labelsState = ok ? 'ready' : 'fai
 const LABELS_FAILED = 'The studio texts (magic-card-i18n-labels.js) could not be loaded. Reload the page.';
 
 export class AnimationStudio extends LitElement {
-  static styles = [...studioStyles, kitLip, lockBannerStyles];
+  static styles = [...studioStyles, lockBannerStyles];
 
   @property({ attribute: false }) hass?: Record<string, unknown>;
   /** The library: documents as a list or by id (the panel passes `{ [id]: doc }`). */
@@ -328,36 +326,32 @@ export class AnimationStudio extends LitElement {
   @state() private _tile: PreviewTile = 'icon';
   /** The stage's share of the centre column (0-1). */
   @state() private _split = readSplit();
-  /** Panel lips: hide and show Layers and the Inspector column, remembered per device; Ctrl/Cmd + \ toggles the column panels. */
+  /** Layers column state and the Ctrl/Cmd + \ shortcut; the top bar buttons show and hide the panels, nothing is left hidden for the next visit. */
   private readonly _lips = new PanelLips(this, {
     editor: 'anim-studio',
+    keys: 'manual',
     panels: lipSpecs(),
     strings: lipStrings('en'),
-    // the earlier Collapse layers choice is carried over once, then forgotten
-    fallback: () => {
-      const old = readStore(LAYERS_KEY);
-      if (old === null) return null;
-      try {
-        localStorage.removeItem(LAYERS_KEY);
-      } catch {
-        /* storage is blocked: nothing was kept either */
-      }
-      return old === 'rail' ? ['layers'] : null;
-    },
   });
   private _lipLocale = 'en';
-  private _lipSig = '';
-  /** Width of the scrollbar the Inspector lip faces (the stage's), measured. */
-  private readonly _bar = new ScrollbarWatch(this);
-  /** The lips' vertical centre: the middle of the stage row, kept inside the working box. */
-  @state() private _lipTop?: number;
+  private _wasEditing = false;
+  /** The frame the drawer was last set up for, and whether the studio was narrow then. */
+  private _drawerFrame?: StudioFrameElement;
+  private _drawerNarrow = false;
+  /** Below FRAME_WIDE_MIN_PX the Layers column is an overlay that starts closed. */
+  @state() private _layersSheet = false;
+  private _layersWas = false;
+  private _barInert = false;
+  private _wrapBack = false;
+  /** Modified only is on: the settings show only what changed. */
+  @state() private _modOnly = false;
   /** The studio's own width (compact-rows and slide-over breakpoints). */
   @state() private _width = 0;
   @state() private _height = 0;
   /** The user set the split (dragged, keys, or remembered): no automatic split. */
   private _userSplit = readStore(SPLIT_KEY) !== null;
-  /** Below SLIDE_BELOW: the inspector slide-over is open. */
-  @state() private _inspOpen = false;
+  /** The drawer is open (mirrors the frame). */
+  @state() private _drawerOpen = false;
   /** Collapsed inspector sections. */
   @state() private _collapsed = readCollapsed();
   private _ro?: ResizeObserver;
@@ -373,11 +367,6 @@ export class AnimationStudio extends LitElement {
   /** A deep link waiting for its document. */
   private _wantId?: string;
   private _focusSel?: string;
-  /** The last input was a pointer: opening the editor does not move focus (no stray ring). */
-  private _pointer = false;
-  private _onPointer = (): void => {
-    this._pointer = true;
-  };
 
   // ── host data ──
 
@@ -394,9 +383,11 @@ export class AnimationStudio extends LitElement {
       this._lipLocale = language;
       this._lips.setPanels(lipSpecs(), lipStrings(language));
     }
-    // a panel has a lip only while it is a column: Layers always, the Inspector unless it slides over
     const editing = this._view === 'editor' && !!this._doc;
-    this._lips.columns({ layers: editing, inspector: editing && !this._slideOver });
+    this._lips.columns({ layers: editing });
+    // every opening of the editor shows Layers beside the stage, whatever an earlier visit left behind
+    if (editing && !this._wasEditing) this._lips.show('layers');
+    this._wasEditing = editing;
     if (changed.has('library')) this._docs = libraryDocs(this.library);
     if (changed.has('library') || changed.has('_docs')) {
       this._lookup = (id: string) => this._docs.get(id);
@@ -427,6 +418,7 @@ export class AnimationStudio extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
+    this._syncDrawer();
     const full = this._view === 'editor';
     if (full !== this.hasAttribute('editing')) {
       this.toggleAttribute('editing', full);
@@ -435,23 +427,28 @@ export class AnimationStudio extends LitElement {
     // the automatic split: on open and resize; an edit only grows the timeline (no jumping stage)
     const prev = changed.get('_doc') as AnimationDoc | undefined;
     // (the layers column opening or closing changes the timeline's width: lanes or its keyframe list)
-    const lipMoved = this._lipsChanged();
+    const shown = this._layersShown;
+    const lipMoved = shown !== this._layersWas || changed.has('_drawerOpen');
+    this._layersWas = shown;
+    // the Layers sheet covers the stage: what lies under it is not reachable by Tab while it is open
+    const under = this._narrow && shown;
+    for (const el of this.shadowRoot?.querySelectorAll<HTMLElement>('.center > :not(.layers-sheet)') ?? []) el.toggleAttribute('inert', under);
+    // the sheet is modal: the top bar waits too, and goes back to its own state on close or at a wide width
+    const bar = this.shadowRoot?.querySelector<HTMLElement>('.fr-bar');
+    if (bar && (under || this._barInert)) bar.toggleAttribute('inert', under);
+    this._barInert = under;
     if (changed.has('_height') || changed.has('_width') || lipMoved || changed.has('_view') || (changed.has('_doc') && prev?.id !== this._doc?.id)) this._autoSplit();
     else if (changed.has('_doc')) this._autoSplit(true);
-    // the slide-over takes the focus when it opens (its scrim covers the rest)
-    if (changed.has('_inspOpen') && this._inspOpen && this._slideOver) this._focusSel ??= 'aside.inspector';
     // a shape was drawn: its row is in view in the layers column (a short window scrolls the column)
     if (changed.has('_doc') && this._doc && prev && prev.id === this._doc.id && (this._doc.rig?.shapes?.length ?? 0) > (prev.rig?.shapes?.length ?? 0)) {
       const shapes = this._doc.rig?.shapes ?? [];
       const id = shapes[shapes.length - 1].id;
       void this._revealShape(id);
     }
-    // measured when the layout can have moved (not on each playhead tick)
-    if (lipMoved || changed.has('_view') || changed.has('_width') || changed.has('_height') || changed.has('_split') || changed.has('_stageRect') || changed.has('_doc')) this._placeLips();
     // the inspector shows something else: start at its top (its head in view); edits of the same
     // key or target keep the scroll
     if (changed.has('_selection') && selectionSubject(changed.get('_selection') as StudioSelection | undefined) !== selectionSubject(this._selection)) {
-      const aside = this.shadowRoot?.querySelector<HTMLElement>('aside.inspector');
+      const aside = this.shadowRoot?.querySelector<HTMLElement>('.insp');
       if (aside) aside.scrollTop = 0;
     }
     if (this._focusSel) {
@@ -487,44 +484,11 @@ export class AnimationStudio extends LitElement {
     }
   }
 
-  /** The hidden panels changed since the last call: the timeline's width changed with them. */
-  private _lipsChanged(): boolean {
-    const sig = `${this._lips.state('layers')}${this._lips.state('inspector')}`;
-    const changed = sig !== this._lipSig;
-    this._lipSig = sig;
-    return changed;
-  }
-
-  /** Where the lips sit: the stage row's middle, and the scrollbar the Inspector lip faces. */
-  private _placeLips(): void {
-    const root = this.shadowRoot;
-    const ws = root?.querySelector<HTMLElement>('.workspace');
-    const stage = root?.querySelector<HTMLElement>('mcas-stage');
-    this._bar.watch(stage ?? null, ws ?? null);
-    if (!ws || !stage) return;
-    const w = ws.getBoundingClientRect();
-    const s = stage.getBoundingClientRect();
-    if (!w.height || !s.height) return;
-    // half the tab (36 px) plus the 8 px margin keep it on screen at any split
-    const mid = s.top - w.top + s.height / 2;
-    const top = Math.round(Math.min(Math.max(mid, 44), Math.max(44, w.height - 44)));
-    if (top !== this._lipTop) this._lipTop = top;
-  }
-
-  /** Lip positions from each window edge: a shown panel's lip at its inner edge, a hidden panel's at the edge. */
-  private _lipTokens(): string {
-    const lips = this._lips;
-    const start = lips.isHidden('layers') ? '0px' : 'var(--layers-w)';
-    const end = lips.isHidden('inspector') ? '0px' : 'var(--insp-w)';
-    const top = this._lipTop === undefined ? '' : `; --mc-lip-top: ${this._lipTop}px`;
-    return `--mc-lip-at-start: ${start}; --mc-lip-at-end: calc(${end} + ${this._bar.width}px)${top}`;
-  }
-
   connectedCallback(): void {
     super.connectedCallback();
+    void loadStudioFonts();
     void labelsLoad.then(() => (this._labels = labelsState));
     this.addEventListener('keydown', this._onKeydown);
-    this.addEventListener('pointerdown', this._onPointer);
     window.addEventListener('beforeunload', this._onBeforeUnload);
     // a new animation left unsaved last time (a known one is offered when it opens)
     const draft = this._doc || this._dialog ? undefined : readDraft(draftKey());
@@ -554,7 +518,6 @@ export class AnimationStudio extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this._onKeydown);
-    this.removeEventListener('pointerdown', this._onPointer);
     window.removeEventListener('beforeunload', this._onBeforeUnload);
     this._ro?.disconnect();
     this._ro = undefined;
@@ -841,9 +804,9 @@ export class AnimationStudio extends LitElement {
     this._time = 0;
     this._selection = NO_SELECTION;
     this._preview = undefined;
-    this._inspOpen = false;
+    this._drawerOpen = false;
     this._view = 'editor';
-    if (!this._pointer) this._focusSel = '.back';
+    this._focusSel = '.back';
     if (announce && !isNew) this._select(doc.id);
     // changes to it that were not saved last time
     const draft = isNew ? undefined : readDraft(draftKey(doc.id));
@@ -901,6 +864,8 @@ export class AnimationStudio extends LitElement {
   @state() private _time = 0;
   /** The preview card's size (the path overlay covers it). */
   @state() private _stageRect?: { width: number; height: number };
+  /** The preview's scale in the stage canvas, for the frame's rulers. */
+  @state() private _stageScale = 1;
   /** The moving element's box at rest within the preview card (the path overlay's subject). */
   @state() private _subjectRect?: { x: number; y: number; width: number; height: number };
   /** The stage geometry for panels (`.stage`). */
@@ -1075,11 +1040,15 @@ export class AnimationStudio extends LitElement {
   }
 
   private _onKeydown = (e: KeyboardEvent): void => {
-    this._pointer = false;
     if (e.defaultPrevented || this._dialog) return;
     const key = e.key.toLowerCase();
     const mod = (e.ctrlKey || e.metaKey) && !e.altKey;
     if (this._view === 'editor') {
+      if (mod && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash') && !e.repeat) {
+        e.preventDefault();
+        this._toggleBoth();
+        return;
+      }
       if (mod && key === 's') {
         e.preventDefault();
         void this.save();
@@ -1100,18 +1069,19 @@ export class AnimationStudio extends LitElement {
         return;
       }
       if (e.key === 'Escape' && !isTyping(e)) {
-        if (this._inspOpen && this._slideOver) {
+        if (this._narrow && this._layersSheet) {
           e.preventDefault();
-          this._inspOpen = false;
-          this._focusSel = '.insp-toggle';
-        } else if (this._selection.kind !== 'none') {
+          this._closeLayersSheet();
+          return;
+        }
+        if (this._selection.kind !== 'none') {
           e.preventDefault();
           // focus inside the inspector would be lost with its panel: it goes to the inspector itself
-          const aside = this.shadowRoot?.querySelector('aside.inspector');
+          const aside = this.shadowRoot?.querySelector('.insp');
           const active = this.shadowRoot?.activeElement;
           const inAside = !!aside && !!active && (aside === active || aside.contains(active));
           this._setSelection(NO_SELECTION);
-          if (inAside || !active) this._focusSel = 'aside.inspector';
+          if (inAside || !active) this._focusSel = '.insp';
         }
       }
       return;
@@ -1279,38 +1249,42 @@ export class AnimationStudio extends LitElement {
     ];
     const shown = filterDocs(all, this._query).filter((d) => this._kind === 'all' || d.kind === this._kind);
     const picked = all.filter((d) => this._picked.has(d.id));
-    return html`
-      <main class="lib">
+    const searchBlock = all.length
+      ? field({
+          id: 'lib-search',
+          label: t('anim-studio.studio.search-animations'),
+          control: html`<div class="with-icon search">
+            <ha-icon icon="mdi:magnify"></ha-icon>
+            <input
+              id="lib-search"
+              class="input"
+              type="search"
+              aria-keyshortcuts="/"
+              .value=${live(this._query)}
+              @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
+            />
+          </div>`,
+        })
+      : nothing;
+    return this._frameHost(
+      html`
+      <header class="fr-bar" slot="top">
+        <strong class="doc-name">${t('anim-studio.studio.my-animations')}</strong>
+        <span class="spacer"></span>
+        <div class="grp bar">
+          <button type="button" class="btn btn-secondary btn-sm" ?disabled=${!shown.length} @click=${() => this._export(picked.length ? picked : shown)}>
+            <ha-icon icon="mdi:export-variant"></ha-icon>${picked.length ? t('anim-studio.studio.export-n-selected', { n: picked.length }) : t('anim-studio.studio.export-all')}
+          </button>
+          ${this._renderNewButton()}
+          <button type="button" class="btn btn-secondary btn-sm" @click=${() => void this._openTransfer({ type: 'import' })}>
+            <ha-icon icon="mdi:import"></ha-icon>${t('anim-studio.studio.import')}
+          </button>
+          ${this._drawerToggle()}
+        </div>
+      </header>
+      <main class="lib" slot="stage">
         <div class="lib-inner">
-          ${
-            all.length
-              ? html`${field({
-                  id: 'lib-search',
-                  label: t('anim-studio.studio.search-animations'),
-                  control: html`<div class="with-icon search">
-                    <ha-icon icon="mdi:magnify"></ha-icon>
-                    <input
-                      id="lib-search"
-                      class="input"
-                      type="search"
-                      aria-keyshortcuts="/"
-                      .value=${live(this._query)}
-                      @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
-                    />
-                  </div>`,
-                })}
-                <div class="kinds">${seg({ role: 'radiogroup', label: t('anim-studio.studio.kind'), value: this._kind, items: kinds.map((k) => ({ value: k.id, label: k.label })), onChange: (v) => (this._kind = v) })}</div>`
-              : nothing
-          }
-          <div class="bar">
-            <button type="button" class="btn btn-secondary" ?disabled=${!shown.length} @click=${() => this._export(picked.length ? picked : shown)}>
-              <ha-icon icon="mdi:export-variant"></ha-icon>${picked.length ? t('anim-studio.studio.export-n-selected', { n: picked.length }) : t('anim-studio.studio.export-all')}
-            </button>
-            ${this._renderNewButton()}
-            <button type="button" class="btn btn-secondary" @click=${() => void this._openTransfer({ type: 'import' })}>
-              <ha-icon icon="mdi:import"></ha-icon>${t('anim-studio.studio.import')}
-            </button>
-          </div>
+          ${searchBlock}
           ${
             all.length
               ? html`<div role="status" aria-live="polite" class="help">${t('anim-studio.studio.count-animations', { n: shown.length })}</div>
@@ -1325,7 +1299,13 @@ export class AnimationStudio extends LitElement {
           }
         </div>
       </main>
-    `;
+      <div class="insp" id="inspector" slot="drawer" tabindex="-1">
+        <div class="kinds">${seg({ role: 'radiogroup', label: t('anim-studio.studio.kind'), value: this._kind, items: kinds.map((k) => ({ value: k.id, label: k.label })), onChange: (v) => (this._kind = v) })}</div>
+      </div>
+    `,
+      t('anim-studio.studio.my-animations'),
+      false,
+    );
   }
 
   // ── render: editor ──
@@ -1335,9 +1315,32 @@ export class AnimationStudio extends LitElement {
     return list.length ? html`${list.map((e) => html`<p class="help error" id="err-${path}">${validationText(e.message)}</p>`)}` : nothing;
   }
 
+  /** Settings that differ from their starting values, computed once per render of the settings form. */
+  private _modNow: Set<string> = new Set();
+
+  /** Puts one setting back to its starting value; shown only while that setting differs. */
+  private _resetButton(key: string, label: string): TemplateResult | typeof nothing {
+    if (!this._modNow.has(key)) return nothing;
+    const name = t('anim-studio.studio.reset-field', { field: label });
+    return html`<button type="button" class="icon-btn reset-field" aria-label=${name} title=${name} @click=${() => this._resetField(key)}>
+      <ha-icon icon="mdi:restore"></ha-icon>
+    </button>`;
+  }
+
+  private _resetField(key: string): void {
+    const d = this._doc;
+    if (!d) return;
+    const def = newAnimationDoc(d.kind, d.id);
+    if (key === 'iterations') this._customRepeat = false;
+    const patch: Partial<AnimationDoc> =
+      key === 'direction' ? { direction: undefined } : ({ [key]: (def as unknown as Record<string, unknown>)[key] } as Partial<AnimationDoc>);
+    this._set(patch, key);
+    this._focusSel = `.field [id="${key === 'iterations' ? 'f-repeat' : key === 'direction' ? 'f-dir' : `f-${key}`}"], .target [aria-checked="true"]`;
+  }
+
   private _field(label: string, id: string, control: TemplateResult, path?: string, help?: string | TemplateResult): TemplateResult {
     return html`<div class="field">
-      <div class="field-head"><label for=${id}>${label}</label></div>
+      <div class="field-head"><label for=${id}>${label}</label>${path ? this._resetButton(path, label) : nothing}</div>
       ${control} ${help ? html`<p class="help">${help}</p>` : nothing} ${path ? this._fieldErrors(path) : nothing}
     </div>`;
   }
@@ -1353,19 +1356,112 @@ export class AnimationStudio extends LitElement {
 
   // ── layout v2: sections, layers, inspector, splitter ──
 
-  /** Narrower layers and inspector columns, so the timeline keeps its lanes (1000 to 1100 px). */
-  private get _compact(): boolean {
-    return this._width > 0 && this._width < COMPACT_BELOW && !this._slideOver;
+  /** The studio is narrower than the frame's wide width: the drawer and Layers are sheets. */
+  private get _narrow(): boolean {
+    return this._width > 0 && this._width < FRAME_WIDE_MIN_PX;
   }
 
-  private get _slideOver(): boolean {
-    return this._width > 0 && this._width < SLIDE_BELOW;
+  private _frame(): StudioFrameElement | null {
+    return this.shadowRoot?.querySelector<StudioFrameElement>(UI_STUDIO_FRAME_TAG) ?? null;
+  }
+
+  private _toggleDrawer(opener?: HTMLElement | null): void {
+    const f = this._frame();
+    if (!f) return;
+    if (f.drawerOpen) f.closeDrawer('user');
+    else f.openDrawer(opener ?? (deepActive() as HTMLElement | null), 'user');
+  }
+
+  /** Ctrl/Cmd + \ shows or hides Layers and the Inspector together; below the wide width it toggles the Inspector sheet alone. */
+  private _toggleBoth(): void {
+    const f = this._frame();
+    if (!f) return;
+    if (this._narrow) {
+      this._toggleDrawer();
+      return;
+    }
+    const show = this._lips.isHidden('layers') || !f.drawerOpen;
+    if (show) {
+      this._lips.show('layers');
+      f.openDrawer(null, 'user');
+    } else {
+      if (this._layersHasFocus()) this._focusSel = '.layers-toggle';
+      this._lips.hide('layers');
+      f.closeDrawer('user');
+    }
+  }
+
+  private _layersHasFocus(): boolean {
+    return !!this.shadowRoot?.querySelector('#layers')?.matches(':focus-within');
+  }
+
+  /** The Inspector opens beside the stage at the wide width and stays; it closes when the window narrows into the sheet width and opens again on widening. */
+  private _syncDrawer(): void {
+    const f = this._view === 'editor' && this._doc ? this._frame() : null;
+    if (!f) {
+      this._drawerFrame = undefined;
+      return;
+    }
+    const narrow = this._narrow;
+    if (f !== this._drawerFrame) {
+      this._drawerFrame = f;
+      this._drawerNarrow = narrow;
+      if (!narrow) f.openDrawer(null, 'user');
+      this._drawerOpen = f.drawerOpen;
+    } else if (narrow !== this._drawerNarrow) {
+      this._drawerNarrow = narrow;
+      if (narrow) f.closeDrawer('stage');
+      else f.openDrawer(null, 'user');
+    }
+  }
+
+  private _onFrameDrawer = (e: Event): void => {
+    this._drawerOpen = (e as CustomEvent<{ open: boolean }>).detail.open;
+  };
+
+  private _onFrameModified = (e: Event): void => {
+    this._modOnly = (e as CustomEvent<{ on: boolean }>).detail.on;
+  };
+
+  /** Layers is shown as a column (wide, unless hidden) or as the overlay opened from the bar (narrow). */
+  private get _layersShown(): boolean {
+    return this._narrow ? this._layersSheet : !this._lips.isHidden('layers');
+  }
+
+  private _toggleLayers(): void {
+    if (this._narrow) {
+      if (this._layersSheet) this._closeLayersSheet();
+      else {
+        this._layersSheet = true;
+        void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>('.layers-close')?.focus());
+      }
+    } else this._lips.toggle('layers');
+  }
+
+  /** Tab wraps inside the modal sheet: past the end it goes to Close; back from Close it steps from the end stop. */
+  private _sheetTab(e: KeyboardEvent): void {
+    if (e.key !== 'Tab' || !e.shiftKey) return;
+    if ((e.composedPath()[0] as HTMLElement | undefined)?.classList?.contains('layers-close')) {
+      this._wrapBack = true;
+      this.shadowRoot?.querySelector<HTMLElement>('.sheet-end')?.focus();
+    }
+  }
+
+  private _sheetEnd(): void {
+    if (this._wrapBack) this._wrapBack = false;
+    else this.shadowRoot?.querySelector<HTMLElement>('.layers-close')?.focus();
+  }
+
+  /** Close the Layers sheet and give focus back to the bar's Layers button. */
+  private _closeLayersSheet(): void {
+    this._layersSheet = false;
+    void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>('.layers-toggle')?.focus());
   }
 
   private _setSelection(sel: StudioSelection): void {
     this._selection = sel;
-    // tablet portrait: only picked keys open the slide-over (tools and stage taps keep the stage in view)
-    if (this._slideOver && sel.kind === 'keys') this._inspOpen = true;
+    // a selection opens the drawer; on a narrow screen only picked keys open the sheet (tools and stage taps keep the stage in view)
+    if (sel.kind !== 'none' && (!this._narrow || sel.kind === 'keys')) this._frame()?.openDrawer(null, 'selection');
   }
 
   private _onSelection = (e: Event): void => {
@@ -1412,8 +1508,28 @@ export class AnimationStudio extends LitElement {
       : nothing;
   }
 
+  /** The settings that differ from the kind's starting values (the model default), whatever was saved. */
+  private _modified(d: AnimationDoc, withContent = true): Set<string> {
+    const base: AnimationDoc = newAnimationDoc(d.kind, d.id);
+    const out = new Set<string>();
+    if (d.name !== base.name) out.add('name');
+    if (d.duration !== base.duration) out.add('duration');
+    if (d.easing !== base.easing) out.add('easing');
+    if (d.iterations !== base.iterations) out.add('iterations');
+    if ((d.direction ?? 'normal') !== (base.direction ?? 'normal')) out.add('direction');
+    if (d.target !== base.target) out.add('target');
+    if (d.origin !== base.origin) out.add('origin');
+    if (!withContent) return out;
+    const rest = (x: AnimationDoc): string => JSON.stringify({ ...x, name: '', duration: 0, easing: '', iterations: 0, direction: undefined, target: 'element', origin: '' });
+    if (rest(d) !== rest(base)) out.add('content');
+    return out;
+  }
+
   /** The animation settings (nothing selected): name, timing, what moves, in collapsible sections. */
   private _renderForm(d: AnimationDoc): TemplateResult {
+    this._modNow = this._modified(d, false);
+    const mod = this._modOnly ? this._modNow : undefined;
+    const show = (...keys: string[]): boolean => !mod || keys.some((k) => mod.has(k));
     const easingOpts = EASINGS.map((e) => ({ value: e.id, label: tl(e.label) }));
     if (!EASINGS.some((e) => e.id === d.easing)) easingOpts.push({ value: d.easing, label: d.easing });
     const it = String(d.iterations);
@@ -1437,8 +1553,8 @@ export class AnimationStudio extends LitElement {
     const timing = html`
       ${
         d.kind === 'sequence'
-          ? html`<p class="help">${t('anim-studio.studio.a-sequence-lasts-as-long-as-its-steps')}</p>`
-          : this._field(
+          ? mod ? nothing : html`<p class="help">${t('anim-studio.studio.a-sequence-lasts-as-long-as-its-steps')}</p>`
+          : !show('duration') ? nothing : this._field(
               t('anim-studio.studio.duration'),
               'f-duration',
               html`<div class="suffix">
@@ -1462,13 +1578,13 @@ export class AnimationStudio extends LitElement {
             )
       }
       <div class="two">
-        ${this._field(
+        ${!show('easing') ? nothing : this._field(
           t('anim-studio.studio.easing'),
           'f-easing',
           this._selectEl('f-easing', d.easing, easingOpts, (v) => this._set({ easing: v }, 'easing')),
           'easing',
         )}
-        ${this._field(
+        ${!show('iterations') ? nothing : this._field(
           t('anim-studio.studio.repeat'),
           'f-repeat',
           this._selectEl('f-repeat', custom ? 'custom' : it, repeatOpts, (v) => {
@@ -1484,7 +1600,7 @@ export class AnimationStudio extends LitElement {
         )}
       </div>
       ${
-        custom
+        custom && show('iterations')
           ? this._field(
               t('anim-studio.studio.repeat-count'),
               'f-count',
@@ -1503,7 +1619,7 @@ export class AnimationStudio extends LitElement {
             )
           : nothing
       }
-      ${this._field(
+      ${!show('direction') ? nothing : this._field(
         t('anim-studio.studio.direction'),
         'f-dir',
         this._selectEl('f-dir', d.direction ?? 'normal', tr(DIRECTIONS), (v) =>
@@ -1512,15 +1628,18 @@ export class AnimationStudio extends LitElement {
         'direction',
       )}
     `;
+    const keys = ['name', ...(d.kind === 'sequence' ? [] : ['duration']), 'easing', 'iterations', 'direction', ...(moves ? ['target'] : []), ...(d.kind === 'keyframes' ? ['origin'] : [])];
+    const changed = keys.filter((k) => this._modNow.has(k)).length;
     return html`
-      ${this._section('anim', t('anim-studio.studio.animation'), KIND_ICON[d.kind], name, { errors: this._hasErrors(['name']) })}
-      ${this._section('timing', t('anim-studio.studio.timing'), 'mdi:timer-outline', timing, { errors: this._hasErrors(['duration', 'easing', 'iterations', 'direction']) })}
-      ${moves ? this._section('moves', t('anim-studio.studio.what-moves'), 'mdi:cursor-move', this._renderMoves(d), { errors: this._hasErrors(['target', 'origin']) }) : nothing}
+      ${mod && changed ? html`<p class="help mod-count" role="status">${t('anim-studio.studio.modified-count', { modified: changed, total: keys.length })}</p>` : nothing}
+      ${show('name') ? this._section('anim', t('anim-studio.studio.animation'), KIND_ICON[d.kind], name, { errors: this._hasErrors(['name']) }) : nothing}
+      ${show('duration', 'easing', 'iterations', 'direction') ? this._section('timing', t('anim-studio.studio.timing'), 'mdi:timer-outline', timing, { errors: this._hasErrors(['duration', 'easing', 'iterations', 'direction']) }) : nothing}
+      ${moves && show('target', 'origin') ? this._section('moves', t('anim-studio.studio.what-moves'), 'mdi:cursor-move', this._renderMoves(d, mod), { errors: this._hasErrors(['target', 'origin']) }) : nothing}
     `;
   }
 
   /** Target (element / icon) and transform origin of the document's own keyframes. */
-  private _renderMoves(d: AnimationDoc): TemplateResult {
+  private _renderMoves(d: AnimationDoc, mod?: Set<string>): TemplateResult {
     const originOpts = ORIGINS.map((o) => ({
       value: o,
       label: ORIGIN_GRID.includes(o) ? t(ORIGIN_NAMES[ORIGIN_GRID.indexOf(o)]) : o.charAt(0).toUpperCase() + o.slice(1),
@@ -1534,8 +1653,8 @@ export class AnimationStudio extends LitElement {
       this._focusSel = '.target [aria-checked="true"]';
     };
     return html`
-      <div class="field">
-        <div class="field-head"><span class="lbl" id="l-target">${t('anim-studio.studio.target')}</span></div>
+      ${mod && !mod.has('target') ? nothing : html`<div class="field">
+        <div class="field-head"><span class="lbl" id="l-target">${t('anim-studio.studio.target')}</span>${this._resetButton('target', t('anim-studio.studio.target'))}</div>
         <div class="seg full target" role="radiogroup" aria-labelledby="l-target" @keydown=${onTargetKey}>
           ${(['element', 'icon'] as const).map((tg) => {
             const on = tg === target;
@@ -1552,9 +1671,9 @@ export class AnimationStudio extends LitElement {
         </div>
         <p class="help">${t("anim-studio.studio.icon-moves-only-the-module-s-icon-cards")}</p>
         ${this._fieldErrors('target')}
-      </div>
+      </div>`}
       ${
-        d.kind === 'keyframes'
+        d.kind === 'keyframes' && (!mod || mod.has('origin'))
           ? this._field(
               t('anim-studio.studio.origin'),
               'f-origin',
@@ -1702,6 +1821,7 @@ export class AnimationStudio extends LitElement {
     if (!this._stageRect || this._stageRect.width !== width || this._stageRect.height !== height) this._stageRect = { width, height };
     if (JSON.stringify(subject) !== JSON.stringify(this._subjectRect)) this._subjectRect = subject;
     const { scale, viewBox, screen } = (e as CustomEvent).detail ?? {};
+    if (Number.isFinite(scale) && scale > 0 && scale !== this._stageScale) this._stageScale = scale;
     const info: StageInfo = {
       rect: { width, height },
       scale: Number.isFinite(scale) && scale > 0 ? scale : 1,
@@ -1900,25 +2020,26 @@ export class AnimationStudio extends LitElement {
           ${this._editorEl(p.tag, d, { cls: 'panel panel-layers', panel: true })}
         </section>`,
     );
-    const lips = this._lips;
-    return html`<nav class="layers" id="layers" aria-label=${t('anim-studio.studio.layers-panel')} ?inert=${lips.isHidden('layers')} data-lip=${lips.state('layers')} data-dir=${lips.dir}>
+    const sheet = this._narrow;
+    return html`<nav class="layers" id="layers" aria-label=${t('anim-studio.studio.layers-panel')} ?inert=${!sheet && this._lips.isHidden('layers')} data-lip=${this._lips.state('layers')} data-dir=${this._lips.dir}>
       <div class="layers-head">
         <h2>${t('anim-studio.studio.layers-2')}</h2>
+        ${sheet ? html`<button type="button" class="icon-btn layers-close" aria-label=${t('anim-studio.studio.close-layers')} title=${t('anim-studio.studio.close-layers')} @click=${() => this._closeLayersSheet()}>
+          <ha-icon icon="mdi:close"></ha-icon>
+        </button>` : nothing}
       </div>
       <div class="layers-body">${panels.length ? html`${panels}<p class="help layers-help">${t('anim-studio.studio.hide-solo-and-lock-only-change-this')}</p>` : this._renderLayerList(d)}</div>
-    </nav>
-    ${lips.lip('layers')}`;
+    </nav>`;
   }
 
 
   // ── inspector ──
 
-  /** The inspector's context line for a selection (what it shows), with the way back to the animation settings. */
-  private _renderContext(d: AnimationDoc): TemplateResult {
+  /** What the selection is, as the drawer header and the context line name it. */
+  private _selectionWhat(d: AnimationDoc): string {
     const sel = this._selection;
     const n = sel.keys?.length ?? 0;
-    const what =
-      sel.kind === 'keys'
+    return sel.kind === 'keys'
         ? `${t('anim-studio.studio.count', { count: n })}${sel.target ? ` · ${targetLabel(d, sel.target)}` : ''}`
         : sel.kind === 'target' && sel.target
           ? (sel.targets?.length ?? 0) > 1
@@ -1927,6 +2048,11 @@ export class AnimationStudio extends LitElement {
           : sel.kind === 'tool'
             ? t('anim-studio.studio.tool-tool', { tool: sel.tool ?? '' })
             : '';
+  }
+
+  /** The inspector's context line for a selection, with the way back to the animation settings. */
+  private _renderContext(d: AnimationDoc): TemplateResult {
+    const what = this._selectionWhat(d);
     return html`<div class="ctx">
       <button type="button" class="btn btn-text btn-sm ctx-back" title=${t('anim-studio.studio.animation-settings-esc')} @click=${() => this._setSelection(NO_SELECTION)}>
         <ha-icon icon="mdi:arrow-left"></ha-icon>${t('anim-studio.studio.animation')}
@@ -1970,11 +2096,13 @@ export class AnimationStudio extends LitElement {
     const kind = KIND_EDITORS[d.kind].place === 'inspector' ? this._renderKindSlot(d) : nothing;
     // the kind's own editor (path, particles, steps) first: what is edited most, without scrolling
     if (sel.kind === 'none') {
+      // Modified only: the kind's own editor and the panels show once the animation's content differs from the saved one
+      const content = !this._modOnly || this._modified(d).has('content');
       // with nothing selected, panels (states...) are collapsible sections like the settings above them
-      const sections = panelsFor('inspector', d, sel)
+      const sections = !content ? [] : panelsFor('inspector', d, sel)
         .filter((p) => editorDefined(p.tag))
         .map((p) => this._section(`panel-${p.tag}`, t(p.title), PANEL_ICON[p.tag] ?? 'mdi:puzzle-outline', this._editorEl(p.tag, d, { cls: 'panel panel-inspector', panel: true })));
-      return html`${this._renderErrors()} ${kind} ${this._renderForm(d)} ${sections}`;
+      return html`${this._renderErrors()} ${content ? kind : nothing} ${this._renderForm(d)} ${sections}`;
     }
     // every panel under its own titled, collapsible section
     const sections = panelsFor('inspector', d, sel)
@@ -2004,21 +2132,110 @@ export class AnimationStudio extends LitElement {
     return sel.kind === 'tool' || ((sel.kind === 'target' || sel.kind === 'keys') && !!sel.target && /^(part|group|shape):/.test(sel.target));
   }
 
+  /** The frame's strings, in the studio's language (one object per language, so the frame re-renders only when it changes). */
+  private _frameStrings(): StudioFrameStrings {
+    const language = locale();
+    if (this._strings?.language !== language) {
+      this._strings = {
+        language,
+        value: {
+          pin: t('anim-studio.studio.frame-pin'),
+          modifiedOnly: t('anim-studio.studio.frame-modified-only'),
+          noneModified: t('anim-studio.studio.frame-none-modified'),
+          close: t('anim-studio.studio.frame-close'),
+          drawer: t('anim-studio.studio.inspector-2'),
+          zoom: t('anim-studio.studio.frame-zoom'),
+        },
+      };
+    }
+    return this._strings.value;
+  }
+  private _strings?: { language: string; value: StudioFrameStrings };
+
+  /** The scheme follows the Home Assistant theme, never the system setting. */
+  private get _scheme(): 'light' | 'dark' {
+    const themes = (this.hass as { themes?: { darkMode?: boolean } } | undefined)?.themes;
+    return themes?.darkMode ? 'dark' : 'light';
+  }
+
+  /** The preview card's size and scale for the frame's rulers and grid. */
+  private _measure(): FrameMeasure {
+    const r = this._stageRect;
+    const zoom = this._stageScale > 0 ? this._stageScale : 1;
+    const s = this._selection.kind !== 'none' ? this._subjectRect : undefined;
+    const selection = s && [s.x, s.y, s.width, s.height].every(Number.isFinite) ? { x: s.x / zoom, y: s.y / zoom, width: s.width / zoom, height: s.height / zoom } : null;
+    return { width: r?.width || 400, height: r?.height || 240, grid: 20, selection, zoom };
+  }
+
+  /** The drawer toggle of the bar: on a narrow screen the Settings button that opens the sheet. */
+  private _drawerToggle(): TemplateResult {
+    const narrow = this._narrow;
+    const label = narrow ? t('anim-studio.studio.frame-settings') : t('anim-studio.studio.inspector-2');
+    return html`<button
+      type="button"
+      class="icon-btn insp-toggle"
+      aria-controls="inspector"
+      aria-expanded=${this._drawerOpen ? 'true' : 'false'}
+      aria-haspopup=${narrow ? 'dialog' : nothing}
+      aria-label=${label}
+      title=${label}
+      @click=${(e: Event) => this._toggleDrawer(e.currentTarget as HTMLElement)}
+    >
+      <ha-icon icon="mdi:tune-variant"></ha-icon>
+    </button>`;
+  }
+
+  private _frameHost(inner: unknown, label: string, rulers = true): TemplateResult {
+    return html`<mc-ui-studio-frame
+      class=${this._narrow ? 'narrow' : ''}
+      studio="anim-studio"
+      fixed-drawer
+      .scheme=${this._scheme}
+      .strings=${this._frameStrings()}
+      .selectionLabel=${label}
+      .measure=${rulers ? this._measure() : null}
+      .rulers=${rulers}
+      @selection-change=${this._onSelection}
+      @mc-frame-drawer=${this._onFrameDrawer}
+      @mc-frame-modified=${this._onFrameModified}
+      @preview-change=${this._onPreviewChange}
+      @layer-view-change=${this._onLayerView}
+      @emitter-change=${this._onEmitter}
+      >${inner}</mc-ui-studio-frame
+    >`;
+  }
+
   private _renderEditor(d: AnimationDoc): TemplateResult {
     const dirty = this.dirty;
     const panel = KIND_EDITORS[d.kind].place === 'panel';
-    const slide = this._slideOver;
-    const lips = this._lips;
     const lv = this._viewOf(d);
     const playing = this._playable ?? d;
     const hidden = hiddenCount(playing, lv);
-    return html`
-      <header class="topbar">
+    const layersShown = this._layersShown;
+    const name = d.name.trim() || t('anim-studio.studio.untitled-animation');
+    const what = this._selectionWhat(d);
+    const label = what ? `${name} · ${what}` : name;
+    // Modified only with nothing changed: no drawer content, so the frame shows its own note
+    const empty = this._modOnly && this._selection.kind === 'none' && !this._modified(d).size && !this._saveError && !this._errors.length;
+    return this._frameHost(
+      html`
+      <header class="fr-bar" slot="top">
         <div class="grp">
           <button type="button" class="btn btn-secondary btn-sm back" @click=${() => this._back()}><ha-icon icon="mdi:arrow-left"></ha-icon>${t('anim-studio.studio.library')}</button>
           <span class="vr" aria-hidden="true"></span>
+          <button
+            type="button"
+            class="icon-btn layers-toggle"
+            aria-controls="layers"
+            aria-expanded=${layersShown ? 'true' : 'false'}
+            aria-label=${t('anim-studio.studio.layers-2')}
+            title=${t('anim-studio.studio.layers-2')}
+            @click=${() => this._toggleLayers()}
+          >
+            <ha-icon icon="mdi:layers-outline"></ha-icon>
+          </button>
           <div class="title">
-            <strong class="doc-name">${d.name.trim() || t('anim-studio.studio.untitled-animation')}</strong>
+            <strong class="doc-name">${name}</strong>
             <span class="chip kind"><ha-icon icon=${KIND_ICON[d.kind]}></ha-icon>${t(KIND_LABEL[d.kind])}</span>
             ${!this._saved ? html`<span class="chip is-accent">${t('anim-studio.studio.new')}</span>` : dirty ? html`<span class="chip is-warn">${t('anim-studio.studio.unsaved-changes')}</span>` : nothing}
           </div>
@@ -2046,21 +2263,7 @@ export class AnimationStudio extends LitElement {
           >
             <ha-icon icon="mdi:redo"></ha-icon>
           </button>
-          ${
-            slide
-              ? html`<button
-                  type="button"
-                  class="icon-btn insp-toggle"
-                  aria-controls="inspector"
-                  aria-expanded=${this._inspOpen ? 'true' : 'false'}
-                  aria-label=${t('anim-studio.studio.inspector-2')}
-                  title=${t('anim-studio.studio.inspector-2')}
-                  @click=${() => (this._inspOpen = !this._inspOpen)}
-                >
-                  <ha-icon icon="mdi:tune-variant"></ha-icon>
-                </button>`
-              : nothing
-          }
+          ${this._drawerToggle()}
           <button
             type="button"
             class="btn btn-primary btn-sm save"
@@ -2072,64 +2275,57 @@ export class AnimationStudio extends LitElement {
           </button>
         </div>
       </header>
-      <div
-        @preview-change=${this._onPreviewChange}
-        @layer-view-change=${this._onLayerView}
-        @emitter-change=${this._onEmitter}
-        style=${this._lipTokens()}
-        class="workspace ${lips.isHidden('layers') ? 'no-layers' : ''} ${lips.isHidden('inspector') ? 'no-inspector' : ''} ${this._compact ? 'compact' : ''} ${this._width > 0 && this._width < RAIL_BELOW ? 'dense' : ''} ${slide ? 'slide' : ''} ${slide && this._inspOpen ? 'insp-open' : ''}"
-      >
-        ${this._renderLayers(d)}
-        <div class="center ${panel ? 'with-panel' : ''}" style="--split: ${this._split}">
-          <mcas-stage
-            dir=${this._pseudo ? 'rtl' : nothing}
-            .doc=${this._previewDoc(playing, lv)}
-            .layerView=${lv}
-            .hiddenLayers=${hidden}
-            .stageParticles=${hidden ? stageParticlesOf(playing) : undefined}
-            .lookup=${this._lookup}
-            .hass=${this.hass}
-            .tile=${this._tile}
-            .preview=${this._preview}
-            .subjectTarget=${d.kind === 'keyframes' && this._selection.kind !== 'none' ? this._selection.target : undefined}
-            .zoomIcon=${this._zoomIcon(d)}
-            @stage-tile=${(e: CustomEvent) => (this._tile = e.detail.tile)}
-            @stage-time=${(e: CustomEvent) => (this._time = e.detail.time)}
-            @stage-rect=${this._onStageRect}
-          >
-            ${d.kind === 'path' && editorDefined(PATH_HOST_TAG) ? this._editorEl(PATH_HOST_TAG, d, { slot: 'canvas', stageRect: this._stageRect, subjectRect: this._subjectRect }) : nothing}
-            ${this._panels('stage-tool', d, { slot: 'overlay', stageRect: this._stageRect, subjectRect: this._subjectRect })}
-          </mcas-stage>
-          ${
-            panel
-              ? html`<div
-                    class="splitter"
-                    role="separator"
-                    tabindex="0"
-                    aria-orientation="horizontal"
-                    aria-label=${t('anim-studio.studio.stage-height')}
-                    aria-valuemin="15"
-                    aria-valuemax="80"
-                    aria-valuenow=${Math.round(this._split * 100)}
-                    title=${t('anim-studio.studio.drag-to-resize-the-stage-double-click')}
-                    @pointerdown=${this._onSplitDown}
-                    @pointermove=${this._onSplitMove}
-                    @pointerup=${this._onSplitUp}
-                    @pointercancel=${this._onSplitUp}
-                    @keydown=${this._onSplitKey}
-                    @dblclick=${() => this._resetSplit()}
-                  ></div>
-                  ${this._renderKindSlot(d)}`
-              : nothing
-          }
-        </div>
-        ${lips.lip('inspector')}
-        <aside class="inspector" id="inspector" tabindex="-1" ?inert=${lips.isHidden('inspector')} data-lip=${lips.state('inspector')} data-dir=${lips.dir} aria-label=${t('anim-studio.studio.inspector-panel')}>
-          ${this._renderInspector(d)}
-        </aside>
-        ${slide && this._inspOpen ? html`<div class="insp-scrim" @click=${() => (this._inspOpen = false)}></div>` : nothing}
+      <output class="zoom-read" slot="zoom">${new Intl.NumberFormat(locale(), { style: 'percent', maximumFractionDigits: 0 }).format(this._stageScale > 0 ? this._stageScale : 1)}</output>
+      ${layersShown && !this._narrow ? html`<div class="fr-start" slot="start">${this._renderLayers(d)}</div>` : nothing}
+      <div class="center ${panel ? 'with-panel' : ''}" slot="stage" style="--split: ${this._split}${this._narrow ? `;max-inline-size: calc(${this._width}px - 2 * var(--bp-s-6))` : ''}">
+        ${layersShown && this._narrow ? html`<div class="layers-sheet" @keydown=${(e: KeyboardEvent) => this._sheetTab(e)}>${this._renderLayers(d)}<span class="sheet-end" tabindex="0" @focus=${() => this._sheetEnd()}></span></div>` : nothing}
+        <mcas-stage
+          dir=${this._pseudo ? 'rtl' : nothing}
+          .doc=${this._previewDoc(playing, lv)}
+          .layerView=${lv}
+          .hiddenLayers=${hidden}
+          .stageParticles=${hidden ? stageParticlesOf(playing) : undefined}
+          .lookup=${this._lookup}
+          .hass=${this.hass}
+          .tile=${this._tile}
+          .preview=${this._preview}
+          .subjectTarget=${d.kind === 'keyframes' && this._selection.kind !== 'none' ? this._selection.target : undefined}
+          .zoomIcon=${this._zoomIcon(d)}
+          @pointerdown=${() => this._frame()?.stageWork()}
+          @stage-tile=${(e: CustomEvent) => (this._tile = e.detail.tile)}
+          @stage-time=${(e: CustomEvent) => (this._time = e.detail.time)}
+          @stage-rect=${this._onStageRect}
+        >
+          ${d.kind === 'path' && editorDefined(PATH_HOST_TAG) ? this._editorEl(PATH_HOST_TAG, d, { slot: 'canvas', stageRect: this._stageRect, subjectRect: this._subjectRect }) : nothing}
+          ${this._panels('stage-tool', d, { slot: 'overlay', stageRect: this._stageRect, subjectRect: this._subjectRect })}
+        </mcas-stage>
+        ${
+          panel
+            ? html`<div
+                  class="splitter"
+                  role="separator"
+                  tabindex="0"
+                  aria-orientation="horizontal"
+                  aria-label=${t('anim-studio.studio.stage-height')}
+                  aria-valuemin="15"
+                  aria-valuemax="80"
+                  aria-valuenow=${Math.round(this._split * 100)}
+                  title=${t('anim-studio.studio.drag-to-resize-the-stage-double-click')}
+                  @pointerdown=${this._onSplitDown}
+                  @pointermove=${this._onSplitMove}
+                  @pointerup=${this._onSplitUp}
+                  @pointercancel=${this._onSplitUp}
+                  @keydown=${this._onSplitKey}
+                  @dblclick=${() => this._resetSplit()}
+                ></div>
+                ${this._renderKindSlot(d)}`
+            : nothing
+        }
       </div>
-    `;
+      ${empty ? nothing : html`<div class="insp" id="inspector" slot="drawer" tabindex="-1">${this._renderInspector(d)}</div>`}
+    `,
+      label,
+    );
   }
 
   // ── dialogs (kit windows) ──

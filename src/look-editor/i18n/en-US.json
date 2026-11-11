@@ -63,6 +63,10 @@
     "text": "Chevron",
     "hash": "c9143fa6"
   },
+  "look-editor.element.close-inspector": {
+    "text": "Close settings",
+    "hash": "0ccfef82"
+  },
   "look-editor.element.colour": {
     "text": "Color",
     "hash": "3a9dfa58"
@@ -159,6 +163,10 @@
     "text": "Flicker",
     "hash": "ba3baf3d"
   },
+  "look-editor.element.flow-look": {
+    "text": "Flow look",
+    "hash": "2d2cba6f"
+  },
   "look-editor.element.gap-px": {
     "text": "Gap (px)",
     "hash": "b80d9421"
@@ -186,6 +194,14 @@
   "look-editor.element.in-pixels": {
     "text": "In pixels",
     "hash": "ed6e9ee9"
+  },
+  "look-editor.element.inspector": {
+    "text": "Look settings",
+    "hash": "8139cf4d"
+  },
+  "look-editor.element.keep-inspector-open": {
+    "text": "Keep settings open",
+    "hash": "23a9037e"
   },
   "look-editor.element.level-follows-value": {
     "text": "Level follows value",
@@ -215,6 +231,10 @@
     "text": "Marker size (px)",
     "hash": "1b9e6fc5"
   },
+  "look-editor.element.modified-only": {
+    "text": "Modified only",
+    "hash": "d5f0ab19"
+  },
   "look-editor.element.motion": {
     "text": "Motion",
     "hash": "8ca34424"
@@ -238,6 +258,10 @@
   "look-editor.element.none": {
     "text": "None",
     "hash": "dc937b59"
+  },
+  "look-editor.element.none-modified": {
+    "text": "Nothing here differs from the default",
+    "hash": "75578f99"
   },
   "look-editor.element.nothing-arrives-while-motion-is-pulse": {
     "text": "Nothing arrives while Motion is Pulse.",
@@ -294,6 +318,10 @@
   "look-editor.element.scale-width": {
     "text": "Scale width",
     "hash": "afd9d571"
+  },
+  "look-editor.element.settings": {
+    "text": "Settings",
+    "hash": "74a883a0"
   },
   "look-editor.element.shape": {
     "text": "Shape",
@@ -475,6 +503,10 @@
     "text": "Zigzag height (px)",
     "hash": "adcbd509"
   },
+  "look-editor.element.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
+  },
   "look-editor.mc-slider-look-editor.add-evenly": {
     "text": "Add evenly",
     "hash": "44e90e5e"
@@ -546,6 +578,10 @@
   "look-editor.mc-slider-look-editor.close": {
     "text": "Close",
     "hash": "7d9eb7ac"
+  },
+  "look-editor.mc-slider-look-editor.close-inspector": {
+    "text": "Close settings",
+    "hash": "0ccfef82"
   },
   "look-editor.mc-slider-look-editor.colour-source-source": {
     "text": "Color source: {source}.",
@@ -635,6 +671,14 @@
     "text": "In your system settings, turn on reduced motion (Accessibility).",
     "hash": "d89cf4a3"
   },
+  "look-editor.mc-slider-look-editor.inspector": {
+    "text": "Look settings",
+    "hash": "8139cf4d"
+  },
+  "look-editor.mc-slider-look-editor.keep-inspector-open": {
+    "text": "Keep settings open",
+    "hash": "23a9037e"
+  },
   "look-editor.mc-slider-look-editor.label": {
     "text": "Label",
     "hash": "0e66373f"
@@ -658,6 +702,10 @@
   "look-editor.mc-slider-look-editor.min-and-max-labels": {
     "text": "Min and max labels",
     "hash": "297de253"
+  },
+  "look-editor.mc-slider-look-editor.modified-only": {
+    "text": "Modified only",
+    "hash": "d5f0ab19"
   },
   "look-editor.mc-slider-look-editor.n-3": {
     "text": "{n, plural, one {# stop} other {# stops}}",
@@ -686,6 +734,10 @@
   "look-editor.mc-slider-look-editor.none": {
     "text": "None",
     "hash": "dc937b59"
+  },
+  "look-editor.mc-slider-look-editor.none-modified": {
+    "text": "Nothing here differs from the default",
+    "hash": "75578f99"
   },
   "look-editor.mc-slider-look-editor.on-a-mac-system-settings-accessibility": {
     "text": "On a Mac: System Settings, Accessibility, Display.",
@@ -735,6 +787,10 @@
     "text": "Sends at most 4 changes a second. The final value always goes out when you let go. Off by default.",
     "hash": "629d26d6"
   },
+  "look-editor.mc-slider-look-editor.settings": {
+    "text": "Settings",
+    "hash": "74a883a0"
+  },
   "look-editor.mc-slider-look-editor.shape": {
     "text": "Shape",
     "hash": "e0e49270"
@@ -746,6 +802,10 @@
   "look-editor.mc-slider-look-editor.slider-colour": {
     "text": "Slider color",
     "hash": "fe395e28"
+  },
+  "look-editor.mc-slider-look-editor.slider-look": {
+    "text": "Slider look",
+    "hash": "1cbab1ed"
   },
   "look-editor.mc-slider-look-editor.slider-shape": {
     "text": "Slider shape",
@@ -875,6 +935,10 @@
     "text": "Use the light's color",
     "hash": "91199ad5"
   },
+  "look-editor.mc-slider-look-editor.used-by-the-segmented-track-style": {
+    "text": "Used by the Segmented track style.",
+    "hash": "488e3532"
+  },
   "look-editor.mc-slider-look-editor.value": {
     "text": "Value",
     "hash": "8e37953d"
@@ -906,6 +970,10 @@
   "look-editor.mc-slider-look-editor.your-system-has-reduced-motion-on-so": {
     "text": "Your system has reduced motion on, so this look stays still.",
     "hash": "244c5d4f"
+  },
+  "look-editor.mc-slider-look-editor.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
   },
   "look-editor.presets.big-fill": {
     "text": "Big fill",

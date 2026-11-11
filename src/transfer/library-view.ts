@@ -25,6 +25,17 @@ import type { TransferPanel } from './panel';
 // <mc-library-view>: the saved animations, shapes and icons (and My theme presets) in one list, from "Magic Card Utils"
 // and "This card" (read only). Rename and delete need an admin. Import saves into Magic Card Utils, else fires `mc-transfer-import`.
 
+/** Fired in 'mcu-panel' when a row is picked, so the host can show it in its inspector. 'preset' covers the look and animation lists; `svg` is an icon's sanitised markup. */
+const LIBRARY_SELECT_EVENT = 'mc-library-select';
+interface LibrarySelectDetail {
+  id: string;
+  name: string;
+  kind: 'preset' | 'icon' | 'shape' | 'image';
+  svg?: string;
+  thumb?: string;
+  path?: string;
+}
+
 interface Row {
   id: string;
   name: string;
@@ -137,6 +148,8 @@ export class LibraryView extends LitElement {
 
   /** 'mcu-panel': the Magic Card Utils Library tab (all four kinds, no "This card", New / Edit fire mc-library-open). */
   @property({ type: String }) context: LibraryViewContext = 'card-editor';
+  /** In 'mcu-panel': the id of the item the host shows in its inspector; that row is marked. */
+  @property({ type: String }) selectedId = '';
 
   @state() private _kind: TransferKind = 'animation';
   @state() private _source: Source = 'mcu';
@@ -203,6 +216,20 @@ export class LibraryView extends LitElement {
 
   private get _panelCtx(): boolean {
     return this.context === 'mcu-panel';
+  }
+
+  /** Tells the host which item was picked (its inspector shows it). An icon's markup is read first; the other kinds carry what the row already has. */
+  private async _select(r: Row): Promise<void> {
+    const kind = this._kind;
+    const detail: LibrarySelectDetail = { id: r.id, name: r.name, kind: kind === 'icon' || kind === 'shape' || kind === 'image' ? kind : 'preset' };
+    if (kind === 'icon') detail.svg = (await this._src.getIcon(this.hass, r.id).catch(() => undefined))?.svg;
+    if (kind === 'image') {
+      const src = r.src as ImageSummary;
+      const thumb = this._ix?.row(src)?.thumb;
+      if (thumb) detail.thumb = thumb;
+      if (src.thumb) detail.path = src.thumb;
+    }
+    this.dispatchEvent(new CustomEvent<LibrarySelectDetail>(LIBRARY_SELECT_EVENT, { detail, bubbles: true, composed: true }));
   }
 
   private _open(kind: 'icon' | 'shape' | 'image', id?: string): void {
@@ -627,6 +654,7 @@ export class LibraryView extends LitElement {
       sub,
       lead: thumb ?? x?.thumb,
       check,
+      selected: this._panelCtx && !!this.selectedId && this.selectedId === r.id,
       content:
         this._mapping?.id === r.id
           ? html`<mc-map-entities .value=${this._mapping.data} .entities=${this._entityIds()} @mc-map-apply=${(ev: CustomEvent<{ data: unknown }>) => void this._mapSave(r, this._mapping!.item, ev.detail.data)} @mc-map-cancel=${() => (this._mapping = undefined)}></mc-map-entities>`
@@ -634,7 +662,9 @@ export class LibraryView extends LitElement {
           ? input(t('transfer.library-view.new-name-for-name', { name: r.name }), r.name, (v) => void this._rename(r, v))
           : e === 'duplicate'
             ? input(this._word('copy_label', { name: r.name }), this._word('copy_name', { name: r.name }), (v) => void this._duplicate(r, v))
-            : undefined,
+            : this._panelCtx
+              ? html`<button type="button" class="name" aria-current=${this.selectedId === r.id ? 'true' : 'false'} @click=${() => void this._select(r)}><bdi>${r.name}</bdi><small>${sub}</small></button>`
+              : undefined,
       actions: [
         ...(edit ? [act(image && !this._admin ? this._word('view', { name: r.name }) : t('transfer.library-view.edit-name', { name: r.name }), image && !this._admin ? 'mdi:eye-outline' : 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape' | 'image', r.id))] : []),
         ...(can && !e && image?.bindings ? [act(t('transfer.library-view.map-entities-for-name', { name: r.name }), 'mdi:link-variant', () => void this._mapOpen(r))] : []),

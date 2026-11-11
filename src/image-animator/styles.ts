@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-// Layout of the image animator window; look and tokens come from the editor stack.
+// Layout of the image animator window inside the studio frame; the frame's blueprint tokens reach the slotted content.
 export const animatorStyles = css`
   :host {
     position: fixed;
@@ -25,6 +25,18 @@ export const animatorStyles = css`
     box-shadow: var(--mc-shadow-float);
     overflow: hidden;
   }
+  mc-ui-studio-frame {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    min-inline-size: 0;
+  }
+  @media (max-width: 1100px) {
+    .window {
+      inset: 0;
+      border: 0;
+      border-radius: 0;
+    }
+  }
   header,
   footer {
     display: flex;
@@ -32,59 +44,64 @@ export const animatorStyles = css`
     align-items: center;
     gap: 8px 12px;
     padding: 8px 12px;
-  }
-  header {
     border-block-end: 1px solid var(--mc-divider);
   }
   footer {
     border-block-start: 1px solid var(--mc-divider);
+    border-block-end: 0;
+  }
+  .bar {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   h2 {
-    flex: 1 1 auto;
-    min-width: 0;
+    flex: 0 1 auto;
+    min-inline-size: 0;
     margin: 0;
     font-size: 1rem;
     font-weight: 600;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  header h2 {
+    flex: 1 1 auto;
   }
   h2:focus {
     outline: none;
   }
+  .bar .status {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar .btn {
+    flex: none;
+  }
   .body {
     flex: 1 1 auto;
-    min-height: 0;
-    display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
-    gap: 8px;
+    min-block-size: 0;
     padding: 12px;
   }
-  .work {
-    min-height: 0;
+  .stage-wrap {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(14rem, 22rem);
-    gap: 12px;
-  }
-  .canvas {
-    min-height: 0;
-    display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
-    gap: 8px;
+    justify-items: start;
+    gap: 40px;
   }
   .stage {
-    min-height: 12rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    background: var(--mc-ground);
-    overflow: hidden;
+    display: block;
     cursor: crosshair;
     touch-action: manipulation;
   }
   .stage svg {
     display: block;
-    max-width: 100%;
-    max-height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
   }
   .stage [data-mc-picked] {
     outline: 2px dashed var(--mc-accent, currentColor);
@@ -95,21 +112,21 @@ export const animatorStyles = css`
     align-items: center;
     gap: 8px;
     font-size: 0.8125rem;
-    color: var(--mc-text-2);
+    color: var(--bp-mute, var(--mc-text-2));
   }
   .saved mc-svg-image {
     display: block;
-    width: 4rem;
-    height: 4rem;
+    inline-size: 4rem;
+    block-size: 4rem;
   }
-  .side {
-    min-height: 0;
-    overflow: auto;
+  .drawer-body {
     display: grid;
     align-content: start;
-    gap: 12px;
+    gap: 16px;
+    padding: 4px 4px 16px;
+    color: var(--bp-ink, var(--mc-text));
   }
-  .side h3 {
+  .drawer-body h3 {
     margin: 0 0 4px;
     font-size: 0.875rem;
     font-weight: 600;
@@ -118,33 +135,34 @@ export const animatorStyles = css`
     list-style: none;
     margin: 0;
     padding: 0;
-    max-height: 12rem;
+    max-block-size: 12rem;
     overflow: auto;
     display: grid;
     gap: 2px;
   }
   .target {
-    width: 100%;
-    min-height: 32px;
+    inline-size: 100%;
+    min-block-size: 32px;
     padding-inline: 8px;
     text-align: start;
     border: 1px solid transparent;
     border-radius: 6px;
     background: none;
-    color: var(--mc-text);
+    color: inherit;
     font: inherit;
     cursor: pointer;
     overflow-wrap: anywhere;
   }
   .target[aria-pressed='true'] {
-    border-color: var(--mc-accent, currentColor);
-    background: var(--mc-ground);
+    border-color: var(--bp-acc, var(--mc-accent, currentColor));
+    background: var(--bp-acc-soft, var(--mc-ground));
     font-weight: 600;
   }
   .target:focus-visible,
   .effects button:focus-visible,
-  .ia-row :is(select, input, button):focus-visible {
-    outline: 2px solid var(--mc-accent, currentColor);
+  .ia-row :is(select, input, button):focus-visible,
+  .bar .btn:focus-visible {
+    outline: 2px solid var(--bp-acc, var(--mc-accent, currentColor));
     outline-offset: 2px;
   }
   .effects,
@@ -162,23 +180,17 @@ export const animatorStyles = css`
   .ia-row label {
     flex: 1 0 100%;
     font-size: 0.8125rem;
-    color: var(--mc-text-2);
+    color: var(--bp-mute, var(--mc-text-2));
   }
-  .ia-row :is(select, input) {
+  .ia-row :is(select, input:not([type='checkbox'])) {
     flex: 1 1 8rem;
-    min-width: 0;
-    min-height: 32px;
-  }
-  @media (max-width: 700px) {
-    .work {
-      grid-template-columns: minmax(0, 1fr);
-      overflow: auto;
-    }
+    min-inline-size: 0;
+    min-block-size: 32px;
   }
   p {
     margin: 0;
     font-size: 0.8125rem;
-    color: var(--mc-text-2);
+    color: var(--bp-mute, var(--mc-text-2));
   }
   p.problem {
     color: var(--mc-danger-ink, var(--mc-text));
@@ -186,7 +198,7 @@ export const animatorStyles = css`
   }
   .status {
     flex: 1 1 12em;
-    min-width: 0;
+    min-inline-size: 0;
   }
   .confirm {
     display: flex;
@@ -195,7 +207,7 @@ export const animatorStyles = css`
     justify-content: flex-end;
     gap: 8px 12px;
     padding: 12px 16px;
-    border-top: 1px solid var(--mc-border, currentColor);
+    border-block-start: 1px solid var(--mc-border, currentColor);
   }
   .confirm p {
     flex: 1 1 16em;
@@ -207,5 +219,13 @@ export const animatorStyles = css`
   .warnings ul {
     margin: 0 0 8px;
     padding-inline-start: 20px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .window,
+    .window * {
+      transition: none;
+      animation: none;
+      scroll-behavior: auto;
+    }
   }
 `;

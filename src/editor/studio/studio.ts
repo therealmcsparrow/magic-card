@@ -5,15 +5,17 @@ import type { EditorStateManager } from '../state/editor-state';
 import type { Inspector } from '../inspector/inspector';
 import type { StructureOutline } from './structure-outline';
 import type { Selection } from './selection';
-import { selectionKey } from './selection';
+import { describeSelection, selectionFromPath, selectionKey } from './selection';
 import { kitTopbar } from '../../ui-kit/css/extras';
 import { kitLip } from '../../ui-kit/css/lip';
+import { kitBlueprint } from '../../ui-kit/css/blueprint';
+import { defineUiKit, loadStudioFonts } from '../../ui-kit';
 import { readDirection } from '../../ui-kit/controllers/direction';
 import { PanelLips } from '../../ui-kit/controllers/panel-lips';
-import { ScrollbarWatch } from '../../ui-kit/controllers/scrollbar-width';
 import type { PanelLipSpec, PanelLipStrings } from '../../contracts/ui-kit';
+import type { FrameMeasure, StudioFrameElement, StudioFrameStrings } from '../../contracts/studio-frame';
 import { editorSystem } from '../../css/editor-stack';
-import type { StudioCanvas } from './studio-canvas';
+import { canvasHint, type StudioCanvas } from './studio-canvas';
 import { CanvasWidth, CanvasWidthOption, DetectedView, OPTION_IDS, OPTION_LABELS, OPTION_NAMES, autoWidth, detectView, overrideWidth } from './view-detect';
 import { countModules } from './selection';
 
@@ -24,6 +26,19 @@ import './template-bar';
 import '../inspector/inspector';
 import '../modes/yaml-editor';
 import { t, m, type MessageIndex } from '../i18n';
+
+/** What the live canvas reports about the artwork (the canvas's `mc-canvas-measure` event). */
+interface CanvasMeasure {
+  width: number;
+  height: number;
+  selection: FrameMeasure['selection'];
+}
+
+/** Grid step of the stage in px. */
+const GRID_PX = 16;
+/** Artwork size used until the canvas has measured itself. */
+const FALLBACK_W = 400;
+const FALLBACK_H = 600;
 
 const MODES: Array<{ id: EditorMode; label: MessageIndex }> = [
   { id: 'form', label: m('card-editor.studio.form') },
@@ -95,6 +110,8 @@ export class Studio extends LitElement {
   /** The user's pick; null = follow the view. Lives as long as this dialog. */
   @state() private _override: CanvasWidthOption | null = null;
   @state() private _showLayers = false;
+  /** Modified only mirrors the frame's switch, which starts off at every opening. */
+  @state() private _modifiedOnly = false;
   /**
    * Preview: the canvas card runs live (real actions) and the studio is read-only. Layers, inspector and
    * the YAML editor stay mounted (hidden), so leaving brings everything back as it was. Never kept across openings.
@@ -108,20 +125,39 @@ export class Studio extends LitElement {
     editor: 'card-studio',
     panels: lipSpecs(),
     strings: lipStrings('en'),
+    keys: 'manual',
   });
   private _lipLocale = 'en';
-  /** Width of the scrollbar the lips face (the canvas or the YAML scroller), measured. */
-  private readonly _bar = new ScrollbarWatch(this);
-  private _barSig = '';
-  private readonly _wideLayers = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 901px)') : undefined;
-  private readonly _wideInspector = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 641px)') : undefined;
-  private _onViewport = (): void => this.requestUpdate();
+  /** Layers and the inspector open beside the stage from 1024 px; below that they open over it (Layers by its toggle, the inspector as the frame's sheet). */
+  private readonly _wideLayers = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 1024px)') : undefined;
+  /** The inspector was open when Preview began: it comes back when Preview ends. */
+  private _drawerBeforeLive = false;
+  private _onViewport = (): void => {
+    // the inspector is a sheet below 1024 px: close it when the window narrows, open it again when it widens
+    if (this.open && !this._live) {
+      if (this._wideLayers?.matches ?? true) this._openDrawer();
+      else this._frame?.closeDrawer('stage');
+    }
+    this.requestUpdate();
+  };
+  @state() private _canvasMeasure: CanvasMeasure | null = null;
+  private _lastPath = '';
 
   private _unsubscribe?: () => void;
   private _subscribedTo?: EditorStateManager;
   private _focusSel: string | null = null;
   /** The Layers overlay was opened for a rename from the canvas (it closes again afterwards). */
   private _layersForRename = false;
+
+  private get _frame(): StudioFrameElement | null {
+    return this.shadowRoot?.querySelector('mc-ui-studio-frame') ?? null;
+  }
+
+  /** Layers beside the stage: the remembered panel state at 1024 px and wider, the toggle's own state below. */
+  private get _layersOpen(): boolean {
+    if (this._live) return false;
+    return (this._wideLayers?.matches ?? true) ? !this._lips.isHidden('layers') : this._showLayers;
+  }
 
   get inspector(): Inspector | null {
     return this.shadowRoot?.querySelector('mc-inspector') ?? null;
@@ -133,15 +169,17 @@ export class Studio extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    defineUiKit();
+    void loadStudioFonts();
     this._wideLayers?.addEventListener?.('change', this._onViewport);
-    this._wideInspector?.addEventListener?.('change', this._onViewport);
+    this.addEventListener('keydown', this._onShortcut, { capture: true });
     if (this.stateManager && !this._unsubscribe) this._subscribe();
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this._wideLayers?.removeEventListener?.('change', this._onViewport);
-    this._wideInspector?.removeEventListener?.('change', this._onViewport);
+    this.removeEventListener('keydown', this._onShortcut, { capture: true });
     this._unsubscribe?.();
     this._unsubscribe = undefined;
     this._subscribedTo = undefined;
@@ -153,6 +191,7 @@ export class Studio extends LitElement {
     if ((changed.has('open') && this.open) || changed.has('lovelace')) this._detect();
     // every opening and closing starts in editing (here, so it costs no second update)
     if (changed.has('open')) {
+      this._modifiedOnly = false;
       this._live = false;
       if (this.open) this._lips.restore();
     }
@@ -163,10 +202,10 @@ export class Studio extends LitElement {
     }
     // a panel has a lip only while it is a column beside the canvas (the layout breakpoints below)
     this._lips.suspended = this._live;
-    this._lips.columns({
-      layers: this.open && (this._wideLayers?.matches ?? true),
-      inspector: this.open && (this._wideInspector?.matches ?? true),
-    });
+    this._lips.columns({ layers: this.open && (this._wideLayers?.matches ?? true), inspector: false });
+    // every opening shows Layers beside the stage, whatever an earlier visit left behind
+    if (changed.has('open') && this.open) this._lips.show('layers');
+    this.setAttribute('data-bp-mode', this.hass?.themes?.darkMode ? 'dark' : 'light');
   }
 
   private _detect(): void {
@@ -201,34 +240,94 @@ export class Studio extends LitElement {
       this.shadowRoot?.querySelector<HTMLElement>(this._focusSel)?.focus();
       this._focusSel = null;
     }
-    this._watchScrollbar();
+    this._followSelection();
   }
 
-  /**
-   * Where the lips sit, measured from each window edge: a shown panel's lip at its inner edge, a hidden
-   * panel's at the window edge. The canvas scrollbar is at the inline end, so the end lip stays clear of it.
-   */
-  private _lipTokens(): string {
-    const lips = this._lips;
-    const start = lips.isHidden('layers') ? '0px' : 'var(--lpw)';
-    const end = lips.isHidden('inspector') ? '0px' : 'var(--ipw)';
-    return `--mc-lip-at-start: ${start}; --mc-lip-at-end: calc(${end} + ${this._bar.width}px)`;
+  /** A new selection opens the drawer; an open or pinned drawer just follows it. */
+  private _followSelection(): void {
+    const path = this._state?.selectedPath ?? null;
+    const key = path ? JSON.stringify(path) : '';
+    if (key === this._lastPath) return;
+    this._lastPath = key;
+    if (path && this.open && !this._live) this._frame?.openDrawer(this.shadowRoot?.querySelector<HTMLElement>('.drawer-toggle'), 'selection');
   }
 
-  /** The scroller on the canvas side of the lips: the canvas in Form mode and Preview, the YAML view otherwise. */
-  private _watchScrollbar(retry = true): void {
-    // only a layout change moves the scroller; its size changes are the observer's
-    const sig = `${this.open}|${this._state?.editorMode}|${this._live}|${this._lips.state('layers')}|${this._lips.state('inspector')}|${retry}`;
-    if (retry && sig === this._barSig) return;
-    if (retry) this._barSig = sig;
-    const root = this.shadowRoot;
-    const canvas = root?.querySelector<StudioCanvas>('mc-studio-canvas');
-    const inner = canvas?.shadowRoot?.querySelector<HTMLElement>('.canvas');
-    // the canvas renders on its own schedule: look again once it has
-    if (canvas && !inner && retry) void canvas.updateComplete.then(() => this._watchScrollbar(false));
-    const scroller = inner ?? root?.querySelector<HTMLElement>('.center-alt') ?? null;
-    this._bar.watch(scroller, root?.querySelector<HTMLElement>('.workspace') ?? null);
+  /** Opens the inspector beside the stage; its opener is the top bar's button, so a close returns focus there. */
+  private _openDrawer(): void {
+    this._frame?.openDrawer(this.shadowRoot?.querySelector<HTMLElement>('.drawer-toggle'), 'user');
   }
+
+  private _onCanvasMeasure = (e: Event): void => {
+    this._canvasMeasure = (e as CustomEvent<CanvasMeasure>).detail;
+  };
+
+  /** Rulers, grid and callouts: the artwork's size, or the width of the chosen view until the canvas has measured itself. */
+  private _measure(mode: EditorMode): FrameMeasure | null {
+    if (mode !== 'form' && !this._live) return null;
+    const c = this._canvasMeasure;
+    return {
+      width: c?.width || this._width.px || FALLBACK_W,
+      height: c?.height || FALLBACK_H,
+      grid: GRID_PX,
+      selection: c?.selection ?? null,
+      zoom: 1,
+    };
+  }
+
+  private _frameStrings(): StudioFrameStrings {
+    return {
+      pin: t('card-editor.studio.pin-panel'),
+      modifiedOnly: t('card-editor.studio.modified-only'),
+      noneModified: t('card-editor.studio.nothing-modified'),
+      close: t('card-editor.item-menu.close'),
+      drawer: t('card-editor.studio.inspector-panel'),
+      zoom: t('card-editor.studio.zoom'),
+    };
+  }
+
+  private _selectionLabel(s: EditorState): string {
+    return describeSelection(s.config, selectionFromPath(s.selectedPath ?? null)).title;
+  }
+
+  private _toggleDrawer = (e: Event): void => {
+    const frame = this._frame;
+    if (!frame) return;
+    if (frame.drawerOpen) frame.closeDrawer('user');
+    else frame.openDrawer(e.currentTarget as HTMLElement, 'user');
+  };
+
+  /** Ctrl/Cmd + \ shows or hides Layers and the inspector drawer together; below the Layers column it toggles the drawer alone. */
+  private _onShortcut = (e: KeyboardEvent): void => {
+    if (this._live) return;
+    const columns = this._lips.active;
+    const inLayers = this._layersHasFocus();
+    if (!this._lips.handleKey(e)) return;
+    if (inLayers && columns && this._lips.isHidden('layers')) this._focusSel = '.layers-toggle';
+    const frame = this._frame;
+    if (!frame) return;
+    const show = columns ? !this._lips.isHidden('layers') : !frame.drawerOpen;
+    if (show) frame.openDrawer(null, 'user');
+    else frame.closeDrawer('user');
+  };
+
+  /** Work on the stage closes an unpinned drawer. Captured on the frame, because modules stop the event before the canvas sees it and the canvas only covers the card. */
+  private _onStagePointerDown = (e: Event): void => {
+    const path = e.composedPath();
+    const onStage = path.some((n) => n instanceof HTMLElement && (n.dataset?.bp === 'stage' || n.slot === 'stage'));
+    if (!onStage || path.some((n) => n instanceof HTMLElement && n.dataset?.bp === 'zoom')) return;
+    this._frame?.stageWork();
+  };
+  private readonly _stageCapture = { handleEvent: (e: Event): void => this._onStagePointerDown(e), capture: true };
+
+  /** Focus sits inside the Layers panel; hiding it from the keyboard must hand focus to its toggle. */
+  private _layersHasFocus(): boolean {
+    return !!this.shadowRoot?.querySelector('#layers')?.matches(':focus-within');
+  }
+
+  private _toggleLayers = (): void => {
+    if (this._wideLayers?.matches ?? true) this._lips.toggle('layers');
+    else this._showLayers = !this._showLayers;
+  };
 
   private _syncOpen(): void {
     this._closeMoreInfo();
@@ -237,6 +336,7 @@ export class Studio extends LitElement {
     if (this.open && !dlg.open) {
       dlg.showModal();
       this._showLayers = false;
+      if (this._wideLayers?.matches ?? true) this._openDrawer();
       const canvas = this.shadowRoot?.querySelector<StudioCanvas>('mc-studio-canvas');
       canvas?.updateComplete.then(() => canvas.focusCanvas());
     } else if (!this.open && dlg.open) {
@@ -250,17 +350,22 @@ export class Studio extends LitElement {
 
   /** Layers "Edit": the module is selected; hide the Layers overlay (narrow) and focus the inspector. */
   private _onEditModule = (): void => {
-    if (this._showLayers && window.matchMedia?.('(max-width: 900px)').matches) this._showLayers = false;
-    // Edit is an explicit "edit this": a hidden Inspector column comes back first
-    if (this._lips.isHidden('inspector')) void this._lips.reveal('inspector').then(() => this.inspector?.focusInspector());
-    else this.inspector?.focusInspector();
+    if (!(this._wideLayers?.matches ?? true)) this._showLayers = false;
+    // Edit is an explicit "edit this": the drawer opens first
+    this._frame?.openDrawer(this.shadowRoot?.querySelector<HTMLElement>('.drawer-toggle'), 'user');
+    // the frame shows the drawer (and queues its own focus) on its update; the inspector takes focus after both
+    void (async () => {
+      await (this._frame as (StudioFrameElement & { updateComplete?: Promise<unknown> }) | null)?.updateComplete;
+      await this.inspector?.updateComplete;
+      this.inspector?.focusInspector();
+    })();
   };
 
   /** Rename from the canvas menu: the Layers field (the overlay opens when narrow); focus returns to the canvas. */
   private _onRenameRequest = async (e: Event): Promise<void> => {
     const d = (e as CustomEvent<{ sel: Selection; returnFocus?: HTMLElement }>).detail;
     if (!d) return;
-    if (!this._showLayers && window.matchMedia?.('(max-width: 900px)').matches) {
+    if (!this._showLayers && !(this._wideLayers?.matches ?? true)) {
       this._showLayers = true;
       this._layersForRename = true;
     }
@@ -296,6 +401,13 @@ export class Studio extends LitElement {
   private _setLive(on: boolean): void {
     if (on === this._live) return;
     this._live = on;
+    if (on) {
+      this._drawerBeforeLive = !!this._frame?.drawerOpen;
+      this._frame?.closeDrawer('user');
+    } else if (this._drawerBeforeLive && (this._wideLayers?.matches ?? true)) {
+      this._drawerBeforeLive = false;
+      this._openDrawer();
+    }
     this._focusSel = '.preview-toggle';
     if (!on) this._closeMoreInfo();
   }
@@ -341,7 +453,7 @@ export class Studio extends LitElement {
       return;
     }
     if (e.key !== 'Escape') return;
-    if (!this._live && this._showLayers && window.matchMedia?.('(max-width: 900px)').matches) {
+    if (!this._live && this._showLayers && !(this._wideLayers?.matches ?? true)) {
       e.preventDefault();
       this._showLayers = false;
       this._focusSel = '.layers-toggle';
@@ -391,7 +503,7 @@ export class Studio extends LitElement {
     const sm = this.stateManager!;
     const live = this._live;
     return html`
-      <header class="topbar">
+      <div slot="top" class="bar-row">
         <div class="grp">
           <button type="button" class="btn btn-secondary btn-sm" @click=${this._close}>
             <ha-icon class="back-arrow" icon="mdi:arrow-left"></ha-icon>${t('card-editor.studio.back-to-dialog')}
@@ -402,13 +514,11 @@ export class Studio extends LitElement {
             aria-label=${t('card-editor.studio.layers-2')}
             title=${t('card-editor.studio.layers-2')}
             aria-controls="layers"
-            aria-expanded=${this._showLayers ? 'true' : 'false'}
-            data-open=${this._showLayers ? 'true' : 'false'}
-            data-dir=${this._lips.dir}
+            aria-expanded=${this._layersOpen ? 'true' : 'false'}
             ?hidden=${live}
-            @click=${() => { this._showLayers = !this._showLayers; }}
+            @click=${this._toggleLayers}
           >
-            <ha-icon icon="mdi:layers-outline"></ha-icon><svg class="opener-chevron" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"></path></svg>
+            <ha-icon icon="mdi:layers-outline"></ha-icon>
           </button>
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
@@ -463,11 +573,15 @@ export class Studio extends LitElement {
             ?disabled=${live || !sm.canUndo()} @click=${() => sm.undo()}><ha-icon icon="mdi:undo"></ha-icon></button>
           <button type="button" class="icon-btn" aria-label=${t('card-editor.studio.redo-ctrl-y')} title=${t('card-editor.studio.redo-ctrl-y')}
             ?disabled=${live || !sm.canRedo()} @click=${() => sm.redo()}><ha-icon icon="mdi:redo"></ha-icon></button>
+          <button type="button" class="icon-btn drawer-toggle" aria-label=${t('card-editor.studio.inspector-panel')} title=${t('card-editor.studio.inspector-panel')}
+            aria-controls="inspector" aria-expanded=${this._frame?.drawerOpen ? 'true' : 'false'} ?hidden=${live} @click=${this._toggleDrawer}>
+            <ha-icon icon="mdi:tune-variant"></ha-icon>
+          </button>
           <button type="button" class="btn btn-primary btn-sm" @click=${this._close}>
             <ha-icon icon="mdi:check"></ha-icon>${t('card-editor.studio.done')}
           </button>
         </div>
-      </header>
+      </div>
     `;
   }
 
@@ -493,10 +607,23 @@ export class Studio extends LitElement {
         ${this._lips.status()}
         ${s && sm && this.open
           ? html`
-              ${this._renderTopbar(s, mode)}
-              <div class="workspace ${live ? 'live' : ''} ${lips.isHidden('layers') ? 'no-layers' : ''} ${lips.isHidden('inspector') ? 'no-inspector' : ''}"
-                style=${this._lipTokens()}>
-                <nav class="panel layers" id="layers" aria-label=${t('card-editor.studio.layers-panel')} ?hidden=${live} ?inert=${live || lips.isHidden('layers')}
+              <mc-ui-studio-frame
+                studio="card-studio"
+                fixed-drawer
+                centre-stage
+                class=${live ? 'live' : ''}
+                .scheme=${this.hass?.themes?.darkMode ? 'dark' : 'light'}
+                .strings=${this._frameStrings()}
+                .selectionLabel=${this._selectionLabel(s)}
+                .measure=${this._measure(mode)}
+                .rulers=${mode === 'form' || live}
+                @mc-frame-drawer=${() => this.requestUpdate()}
+                @mc-frame-modified=${(e: CustomEvent<{ on: boolean }>) => { this._modifiedOnly = e.detail.on; }}
+                @mc-canvas-measure=${this._onCanvasMeasure}
+                @pointerdown=${this._stageCapture}
+              >
+                ${this._renderTopbar(s, mode)}
+                <nav slot="start" class="layers" id="layers" aria-label=${t('card-editor.studio.layers-panel')} ?hidden=${!this._layersOpen} ?inert=${!this._layersOpen}
                   data-lip=${lips.state('layers')} data-dir=${lips.dir}>
                   <div class="panel-title">
                     <h2>${t('card-editor.studio.layers-2')}</h2>
@@ -505,27 +632,21 @@ export class Studio extends LitElement {
                   <mc-structure-outline .stateManager=${sm} variant="layers" @mc-edit-module=${this._onEditModule}
                     @mc-status=${this._onStatus} @mc-rename-done=${this._onRenameDone}></mc-structure-outline>
                 </nav>
-                ${lips.lip('layers')}
-                <div class="center">
-                  ${mode === 'form' || live
-                    ? html`<mc-studio-canvas .stateManager=${sm} .hass=${this.hass} .width=${this._width} .live=${live} @mc-match-view=${this._onMatchView}
-                        @mc-edit-module=${this._onEditModule} @mc-rename-request=${this._onRenameRequest}
-                        @mc-studio-more-info=${this._onMoreInfo}></mc-studio-canvas>`
-                    : nothing}
-                  ${mode === 'yaml'
-                    ? html`
-                        <div class="center-alt" ?hidden=${live}>
-                          <div class="yaml-view"><mc-yaml-editor .stateManager=${sm} .hass=${this.hass}></mc-yaml-editor></div>
-                        </div>
-                      `
-                    : nothing}
-                </div>
-                ${lips.lip('inspector')}
-                <aside class="panel inspector" id="inspector" aria-label=${t('card-editor.studio.inspector-panel')} ?hidden=${live} ?inert=${live || lips.isHidden('inspector')}
-                  data-lip=${lips.state('inspector')} data-dir=${lips.dir}>
-                  <mc-inspector .stateManager=${sm} .hass=${this.hass} variant="studio"></mc-inspector>
-                </aside>
-              </div>
+                ${mode === 'form' || live
+                  ? html`<mc-studio-canvas slot="stage" .stateManager=${sm} .hass=${this.hass} .width=${this._width} .live=${live} @mc-match-view=${this._onMatchView}
+                      @mc-edit-module=${this._onEditModule} @mc-rename-request=${this._onRenameRequest}
+                      @mc-studio-more-info=${this._onMoreInfo}></mc-studio-canvas>`
+                  : nothing}
+                ${mode === 'yaml'
+                  ? html`
+                      <div slot="stage" class="center-alt" ?hidden=${live}>
+                        <div class="yaml-view"><mc-yaml-editor .stateManager=${sm} .hass=${this.hass}></mc-yaml-editor></div>
+                      </div>
+                    `
+                  : nothing}
+                <mc-inspector slot="drawer" id="inspector" .stateManager=${sm} .hass=${this.hass} variant="studio" .modifiedOnly=${this._modifiedOnly} ?hidden=${live}></mc-inspector>
+              </mc-ui-studio-frame>
+              <div class="foot" aria-hidden="true" ?hidden=${live || mode !== 'form'}>${canvasHint()}</div>
             `
           : html``}
         <slot></slot>
@@ -538,9 +659,17 @@ export class Studio extends LitElement {
     editorSystem,
     kitTopbar,
     kitLip,
+    kitBlueprint,
     css`
       :host {
         display: contents;
+        /* the studio's own chrome and the inspector read the soft-blueprint palette */
+        --mc-ground: var(--bp-bg);
+        --mc-surface: var(--bp-sheet);
+        --mc-text: var(--bp-ink);
+        --mc-text-2: var(--bp-mute);
+        --mc-divider: var(--bp-line);
+        --mc-canvas: var(--bp-bg);
       }
       dialog.studio {
         width: 100vw;
@@ -554,6 +683,7 @@ export class Studio extends LitElement {
         inset: 0;
         background: var(--mc-ground);
         color: var(--mc-text);
+        font-family: var(--bp-font-ui);
         font-size: 0.875rem;
         line-height: 1.5;
         overflow: hidden;
@@ -562,8 +692,8 @@ export class Studio extends LitElement {
         transition: opacity 0.2s ease-out, transform 0.2s ease-out;
       }
       dialog.studio[open] {
-        display: grid;
-        grid-template-rows: auto minmax(0, 1fr);
+        display: flex;
+        flex-direction: column;
         opacity: 1;
         transform: none;
       }
@@ -611,21 +741,6 @@ export class Studio extends LitElement {
       .spacer {
         flex: 1;
       }
-      .layers-toggle {
-        display: none;
-      }
-      /* the opener's chevron points the way the Layers panel moves, as a lip's does: in when closed, back when open; right to left mirrors both */
-      .layers-toggle .opener-chevron {
-        flex: none;
-        margin-inline-start: 2px;
-      }
-      .layers-toggle[data-open='true'] .opener-chevron,
-      .layers-toggle[data-dir='rtl'] .opener-chevron {
-        transform: scaleX(-1);
-      }
-      .layers-toggle[data-open='true'][data-dir='rtl'] .opener-chevron {
-        transform: none;
-      }
       .more-info-host {
         display: contents;
       }
@@ -659,51 +774,62 @@ export class Studio extends LitElement {
         cursor: default;
       }
 
-      /* workspace */
-      .workspace {
-        --lpw: 240px;
-        --ipw: 340px;
-        position: relative;
-        display: grid;
-        grid-template-columns: var(--lw, var(--lpw)) minmax(0, 1fr) var(--iw, var(--ipw));
-        min-height: 0;
+      /* the frame lays out the bar, Layers, stage and drawer; these style what sits in them */
+      mc-ui-studio-frame {
+        flex: 1 1 0;
+        min-block-size: 0;
+        /* a little wider than the other studios' Layers column; the inspector still fits beside it at 1024 px */
+        --bp-layers-w: 280px;
       }
-      /*
-       * A hidden panel gives its track to the canvas but keeps its own width, so its content never reflows
-       * and a nested scroller keeps its place (WebKit loses it in a 0 px item). It slides off its edge.
-       */
-      .no-layers {
-        --lw: 0px;
+      mc-ui-studio-frame[data-bp-w='mid'] {
+        --bp-layers-w: 260px;
       }
-      .no-inspector {
-        --iw: 0px;
-      }
-      .layers {
-        --mc-lip-off: -100%;
-      }
-      .inspector {
-        --mc-lip-off: 100%;
-      }
-      .layers[data-lip='hidden'] {
-        width: var(--lpw);
-      }
-      .inspector[data-lip='hidden'] {
-        width: var(--ipw);
-        justify-self: end;
-      }
-      .panel {
-        background: var(--mc-surface);
-        min-height: 0;
-        min-width: 0;
-        overflow-y: auto;
-      }
-      .layers {
-        border-inline-end: 1px solid var(--mc-divider);
-        padding: 12px 8px;
-      }
-      .inspector {
-        border-inline-start: 1px solid var(--mc-divider);
+      /* the shortcut hint: a thin muted bar under the studio, one line, never over the stage */
+      .foot {
+        flex: none;
+        box-sizing: border-box;
+        padding: 3px 16px;
+        border-block-start: 1px solid var(--bp-line);
+        background: var(--bp-sheet);
+        color: var(--bp-mute);
+        font-size: 0.75rem;
+        line-height: 20px;
+        white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .foot[hidden] {
+        display: none;
+      }
+      kbd {
+        font-family: var(--mc-mono);
+        font-size: 0.75rem;
+        padding: 0 4px;
+        border: 1px solid var(--mc-divider);
+        border-radius: 4px;
+        background: var(--mc-surface-2);
+      }
+      .bar-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 8px;
+        flex: 1;
+        min-width: 0;
+        padding-block: 4px;
+      }
+      .bar-row > * {
+        flex: none;
+      }
+      .bar-row > .spacer {
+        flex: 1 1 0;
+      }
+      .layers {
+        box-sizing: border-box;
+        block-size: 100%;
+        min-block-size: 0;
+        overflow-y: auto;
+        padding: 12px 8px;
       }
       .panel-title {
         display: flex;
@@ -718,17 +844,16 @@ export class Studio extends LitElement {
         font-weight: 500;
         color: var(--mc-text-2);
       }
-      .center {
-        position: relative;
-        display: grid;
-        grid-template-rows: minmax(0, 1fr);
-        min-height: 0;
-        min-width: 0;
+      mc-studio-canvas {
+        inline-size: 100%;
+      }
+      mc-inspector {
+        display: block;
+        block-size: 100%;
+        min-block-size: 0;
       }
       .center-alt {
-        padding: 24px;
-        overflow: auto;
-        min-height: 0;
+        inline-size: 100%;
       }
       .yaml-view {
         max-width: 760px;
@@ -738,52 +863,32 @@ export class Studio extends LitElement {
         border-radius: var(--mc-radius-lg);
         overflow: hidden;
       }
-
-      /* Preview: one column, the canvas takes the width; layers and inspector stay mounted, out of the layout */
-      .workspace.live {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .workspace.live .layers,
-      .workspace.live .inspector,
+      .drawer-toggle[hidden],
       .layers-toggle[hidden] {
         display: none;
       }
-
-      @media (max-width: 1180px) {
-        .workspace {
-          --lpw: 220px;
-          --ipw: 320px;
+      /* the opener keeps its icon on one row at any width */
+      .bar-row .layers-toggle:not([hidden]) {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        inline-size: auto;
+        min-inline-size: 36px;
+        flex-wrap: nowrap;
+        padding-inline: 6px;
+      }
+      /* on a phone the name and template chip drop to their own line instead of running off the right edge */
+      @media (max-width: 600px) {
+        .bar-row > .grp:first-child {
+          flex-wrap: wrap;
+          max-inline-size: 100%;
+        }
+        .bar-row > .grp:first-child .vr {
+          display: none;
         }
       }
       @media (max-width: 900px) {
-        .workspace {
-          --ipw: 340px;
-          grid-template-columns: minmax(0, 1fr) var(--iw, var(--ipw));
-        }
-        .layers {
-          display: none;
-          position: absolute;
-          z-index: 7;
-          left: 0;
-          inset-inline: 0 auto;
-          top: 0;
-          bottom: 0;
-          width: 260px;
-          box-shadow: var(--mc-shadow-float);
-        }
-        .show-layers .layers {
-          display: block;
-        }
-        .layers-toggle {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 2px;
-          width: auto;
-          min-width: 40px;
-          padding-inline: 8px;
-        }
-        /* the label drops out of sight, the button keeps its name; the notice takes its own line under the buttons */
         .preview-toggle .lbl {
           position: absolute;
           width: 1px;
@@ -792,40 +897,8 @@ export class Studio extends LitElement {
           clip-path: inset(50%);
           white-space: nowrap;
         }
-        .grp.end {
-          flex-wrap: wrap;
-        }
         .live-chip {
-          order: 9;
-          flex: 1 0 100%;
           white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-      @media (max-height: 480px) {
-        .inspector {
-          overflow-y: auto;
-        }
-      }
-      @media (max-width: 640px) {
-        .workspace {
-          grid-template-columns: minmax(0, 1fr);
-          grid-template-rows: auto auto;
-          align-content: start;
-          overflow-y: auto;
-        }
-        .center {
-          grid-template-rows: auto;
-          min-height: 320px;
-        }
-        .inspector {
-          border-inline-start: 0;
-          border-top: 1px solid var(--mc-divider);
-          overflow: visible;
-        }
-        .layers {
-          max-width: 100%;
         }
       }
     `,

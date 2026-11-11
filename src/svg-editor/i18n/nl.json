@@ -1339,6 +1339,10 @@
     "text": "Invoegen",
     "hash": "8aa318eb"
   },
+  "svg-editor.views.inspector": {
+    "text": "Inspecteur",
+    "hash": "da188e3b"
+  },
   "svg-editor.views.inspector-panel": {
     "text": "Inspectorpaneel",
     "hash": "20f92072"
@@ -1362,6 +1366,10 @@
   "svg-editor.views.keep-editing": {
     "text": "Verder bewerken",
     "hash": "e76fd2ad"
+  },
+  "svg-editor.views.keep-the-inspector-open": {
+    "text": "Inspecteur openhouden",
+    "hash": "a35fcfe5"
   },
   "svg-editor.views.keep-your-own-icons-for-every-dashboard": {
     "text": "Bewaar je eigen pictogrammen voor elk dashboard met de gratis Magic Card Utils-add-on. Tot dan wordt wat je tekent alleen in deze kaart opgeslagen.",
@@ -1451,6 +1459,10 @@
     "text": "Maximaliseren",
     "hash": "1c9fcada"
   },
+  "svg-editor.views.modified-only": {
+    "text": "Alleen gewijzigd",
+    "hash": "d5f0ab19"
+  },
   "svg-editor.views.move-alt-up-down-in-or-out-of-a-group": {
     "text": "Verplaatsen: Alt+Omhoog / Omlaag. In of uit een groep: Alt+Shift+Rechts / Links.",
     "hash": "32dfcfab"
@@ -1510,6 +1522,10 @@
   "svg-editor.views.nothing-here-yet": {
     "text": "Hier staat nog niets",
     "hash": "49abaf80"
+  },
+  "svg-editor.views.nothing-modified": {
+    "text": "Niets wijkt hier af van de standaard.",
+    "hash": "b23be145"
   },
   "svg-editor.views.nothing-selected-pick-a-layer-or-click-a": {
     "text": "Niets geselecteerd. Kies een laag, of klik op een vorm.",
@@ -1686,6 +1702,10 @@
   "svg-editor.views.selected-point": {
     "text": "Geselecteerd punt",
     "hash": "53f29419"
+  },
+  "svg-editor.views.settings": {
+    "text": "Instellingen",
+    "hash": "74a883a0"
   },
   "svg-editor.views.shape-actions": {
     "text": "Vormacties",
@@ -1911,6 +1931,10 @@
     "text": "Gebruikt als mcu:{id}",
     "hash": "68edf118"
   },
+  "svg-editor.views.w-x-h-units": {
+    "text": "{w} x {h} eenheden",
+    "hash": "86219fc5"
+  },
   "svg-editor.views.what-do-you-want-to-start-from": {
     "text": "Waarmee wil je beginnen?",
     "hash": "39da86e9"
@@ -1934,6 +1958,10 @@
   "svg-editor.views.y": {
     "text": "Y",
     "hash": "18f5384d"
+  },
+  "svg-editor.views.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
   },
   "svg-editor.views.zoom-in": {
     "text": "Inzoomen",

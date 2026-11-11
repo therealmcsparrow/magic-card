@@ -73,9 +73,9 @@ Each value is a field with a label. You can reach every field with the keyboard,
 
 ## Side panels
 
-Above 900 px wide, the left sidebar (Draw and Messages) sits beside the canvas and the inspector sits on the right. Each has an edge button on its inner side. Press it to hide the panel, so the canvas takes its width; press it again to show the panel as it was. Ctrl+\ (Cmd+\ on a Mac) hides both when either is shown, and shows again the panels it hid last. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons. The editor remembers hidden panels on this device.
+From 1024 px wide, the left sidebar (Draw and Messages) sits beside the canvas and the inspector sits on the right. Both are open when the editor opens and stay open while you work on the canvas. There are no edge buttons and no pin. Two buttons in the top bar, the sidebar button and the Inspector button, hide and show the panels, so the canvas takes their width; press one again to show its panel as it was. Ctrl+\ (Cmd+\ on a Mac) hides both when either is shown, and shows them again when both are hidden. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the buttons. Hidden panels are not remembered; the next time you open the editor both are showing.
 
-Between 641 and 900 px the inspector keeps its edge button, and the sidebar opens from the toolbar with no edge button. At 640 px and below the panels stack under the canvas, with no edge buttons.
+Below 1024 px the sidebar and the inspector are sheets that open from the top bar buttons. At 640 px and below the panels stack under the canvas.
 
 ## Related
 

@@ -909,7 +909,7 @@ export class StructureOutline extends LitElement {
             ${this._renaming === key ? this._renderRename(sel, t('card-editor.structure-outline.column-name')) : html`<span class="text"><span class="name">${name}</span>${this._containerEntity(col, { row: ri, col: ci })}</span>`}
             ${this._hiddenMark(col)}
             ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title=${t('card-editor.structure-outline.own-module-list-not-synced-with-the')}></ha-icon><span class="sr-only">${t('card-editor.structure-outline.own-module-list-not-synced-with-the-2')}</span>` : nothing}
-            <span class="chip is-count">${n}<span class="sr-only"> ${t('card-editor.structure-outline.n', { n })}</span></span>
+            <span class="chip is-count"><span aria-hidden="true">${n}</span><span class="sr-only">${t('card-editor.structure-outline.n', { n })}</span></span>
             ${renderLayerCount(countLayers(modules))}
           </div>
           <button
@@ -1115,7 +1115,7 @@ export class StructureOutline extends LitElement {
                   : html`<span class="text"><span class="name">${label}</span>${isTabs ? nothing : this._containerEntity(entry ?? {}, { row: owner.row, col: owner.col, module: owner.module, child: owner.child, slot })}</span>`}
                 ${this._hiddenMark(entry)}
                 ${isTabs ? nothing : html`<span class="slot-glyph">${renderLayoutGlyph(weights, slot)}</span>`}
-                <span class="chip is-count">${n}<span class="sr-only"> ${t('card-editor.structure-outline.n', { n })}</span></span>
+                <span class="chip is-count"><span aria-hidden="true">${n}</span><span class="sr-only">${t('card-editor.structure-outline.n', { n })}</span></span>
                 ${renderLayerCount(countLayers(list))}
               </div>
               <button

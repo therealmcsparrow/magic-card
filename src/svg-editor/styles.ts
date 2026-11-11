@@ -186,9 +186,6 @@ export const editorStyles: CSSResult[] = [
     .work {
       --lw: 260px;
       --iw: 340px;
-      --lx: 0px;
-      --lg: 0px;
-      --mc-lip-pull: var(--lg);
       position: relative;
       flex: 1;
       min-height: 0;
@@ -206,22 +203,15 @@ export const editorStyles: CSSResult[] = [
       grid-template-columns: 56px minmax(0, 1fr) var(--it, var(--iw));
       grid-template-areas: 'rail center insp';
     }
-    /* touch: a lip's longer hit area stays off the stage, so a hidden lip is pulled 4 px to the edge and a shown one 20 px into its panel */
-    @media (pointer: coarse) {
-      .work {
-        --lx: 20px;
-        --lg: 4px;
-      }
-    }
     /*
-     * A hidden panel gives its track to the stage, keeping a 40 px gutter for its lip, but keeps its own width,
+     * A hidden panel gives its whole track to the stage but keeps its own width,
      * so its content never reflows and a nested scroller keeps its place. It slides off its edge.
      */
     .no-side {
-      --lt: calc(40px + var(--lg));
+      --lt: 0px;
     }
     .no-insp {
-      --it: calc(40px + var(--lg));
+      --it: 0px;
     }
     .left {
       --mc-lip-off: -100%;
@@ -236,14 +226,6 @@ export const editorStyles: CSSResult[] = [
     .insp[data-lip='hidden'] {
       width: var(--iw);
       justify-self: end;
-    }
-    .left[data-lip='shown'],
-    .left[data-lip='hidden'] {
-      padding-inline-end: calc(28px + var(--lx));
-    }
-    .insp[data-lip='shown'],
-    .insp[data-lip='hidden'] {
-      padding-inline-start: calc(28px + var(--lx));
     }
     [data-layout='stacked'] .work {
       display: flex;
@@ -338,7 +320,8 @@ export const editorStyles: CSSResult[] = [
       align-self: flex-start;
       max-width: 100%;
     }
-    .toolbar .zoom {
+    .toolbar .zoom,
+    .zoomp .zoom {
       min-width: 4ch;
       text-align: center;
       font: 0.75rem var(--mc-mono);
@@ -646,6 +629,110 @@ export const editorStyles: CSSResult[] = [
     @media (max-width: 300px) {
       .bool-grid {
         grid-template-columns: 1fr;
+      }
+    }
+    /* the image editor inside <mc-ui-studio-frame>: the frame lays out the bar, rail, stage and drawer */
+    mc-ui-studio-frame {
+      flex: 1;
+      min-block-size: 0;
+      --bp-layers-w: 56px;
+    }
+    .ftop,
+    .zoomp {
+      display: contents;
+    }
+    .frail {
+      display: flex;
+      justify-content: center;
+      padding-block: 8px;
+    }
+    .frail .rail {
+      flex-direction: column;
+      inline-size: 56px;
+      padding: 0;
+      border: 0;
+      overflow: visible;
+    }
+    .zoomp {
+      pointer-events: auto;
+    }
+    .center.fstage {
+      grid-area: auto;
+      inline-size: 100%;
+      min-inline-size: 0;
+      max-inline-size: 100%;
+      min-block-size: max(320px, calc(100vh - 220px));
+      padding: 0;
+    }
+    .dims {
+      font: 0.75rem var(--mc-mono);
+      opacity: 0.75;
+    }
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-block-end: 12px;
+    }
+    .tabs [role='tab'] {
+      flex: 1;
+      min-block-size: 32px;
+      border: 1px solid var(--mc-divider);
+      border-radius: var(--mc-radius);
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+    .tabs [aria-selected='true'] {
+      background: var(--bp-acc-soft);
+      color: var(--bp-acc);
+    }
+    mc-ui-studio-frame .switch {
+      background: var(--bp-mute);
+    }
+    mc-ui-studio-frame .switch::after {
+      background: var(--bp-sheet);
+    }
+    mc-ui-studio-frame .switch[aria-checked='true'] {
+      background: var(--bp-acc);
+    }
+    mc-ui-studio-frame .switch[aria-checked='true']::after {
+      background: var(--bp-acc-ink);
+    }
+    .insp .seg {
+      flex-wrap: wrap;
+      overflow-x: visible;
+    }
+    .insp .seg > button {
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+    .ftop .topbar {
+      flex: 1 1 0;
+      min-width: 0;
+      flex-wrap: wrap;
+      row-gap: 4px;
+      min-height: 0;
+      padding: 0;
+      padding-block: 4px;
+      border: 0;
+      background: none;
+    }
+    .tabs [role='tab']:focus-visible {
+      outline: 2px solid var(--mc-accent);
+      outline-offset: 2px;
+    }
+    .drawer-body .insp,
+    .drawer-body .layers {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .insp,
+      .tabs [role='tab'] {
+        transition: none;
       }
     }
     @media (forced-colors: active) {

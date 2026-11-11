@@ -3831,6 +3831,10 @@
     "text": "Hidden on dashboard",
     "hash": "7930f82a"
   },
+  "card-editor.inspector.layer-name": {
+    "text": "Layer name",
+    "hash": "b6db8b76"
+  },
   "card-editor.inspector.layout-layout": {
     "text": "layout {layout}",
     "hash": "4d732400"
@@ -5748,8 +5752,8 @@
     "hash": "0d10d652"
   },
   "card-editor.structure-outline.n": {
-    "text": "{n, plural, one {module} other {modules}}",
-    "hash": "6bc7bbc0"
+    "text": "{n, plural, one {# module} other {# modules}}",
+    "hash": "a59f96c2"
   },
   "card-editor.structure-outline.name-actions": {
     "text": "{name} actions",
@@ -5891,6 +5895,22 @@
     "text": "Hover",
     "hash": "c76ae86a"
   },
+  "card-editor.studio-canvas.key-alt": {
+    "text": "Alt",
+    "hash": "c91da2e0"
+  },
+  "card-editor.studio-canvas.key-ctrl": {
+    "text": "Ctrl",
+    "hash": "e2ee2909"
+  },
+  "card-editor.studio-canvas.key-or": {
+    "text": "or",
+    "hash": "7175517a"
+  },
+  "card-editor.studio-canvas.key-shift": {
+    "text": "Shift",
+    "hash": "2e544a29"
+  },
   "card-editor.studio-canvas.layers-here-n": {
     "text": "Layers here ({n})",
     "hash": "16a6bb69"
@@ -5976,8 +5996,8 @@
     "hash": "b6ea7fb6"
   },
   "card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd": {
-    "text": "Show or hide panels: {ctrl} or {cmd}.",
-    "hash": "0c01a4f9"
+    "text": "Show or hide panels: {keys}.",
+    "hash": "ccf407b6"
   },
   "card-editor.studio-canvas.showing-state": {
     "text": "Showing: {state}",
@@ -5986,6 +6006,10 @@
   "card-editor.studio-canvas.shown-at-px-px": {
     "text": ", shown at {px} px",
     "hash": "72dc4b9f"
+  },
+  "card-editor.studio-canvas.unit-px": {
+    "text": "px",
+    "hash": "6ee2cc10"
   },
   "card-editor.studio-canvas.up": {
     "text": "Up",
@@ -6043,9 +6067,17 @@
     "text": "Magic Card studio",
     "hash": "6dfced21"
   },
+  "card-editor.studio.modified-only": {
+    "text": "Modified only",
+    "hash": "d5f0ab19"
+  },
   "card-editor.studio.mods": {
     "text": "{mods, plural, one {# module} other {# modules}}",
     "hash": "aea4e5f9"
+  },
+  "card-editor.studio.nothing-modified": {
+    "text": "Nothing here differs from the default",
+    "hash": "75578f99"
   },
   "card-editor.studio.panels-hidden": {
     "text": "{panels} hidden",
@@ -6054,6 +6086,10 @@
   "card-editor.studio.panels-shown": {
     "text": "{panels} shown",
     "hash": "755f1a3b"
+  },
+  "card-editor.studio.pin-panel": {
+    "text": "Pin the panel",
+    "hash": "d5b1453b"
   },
   "card-editor.studio.preview": {
     "text": "Preview",
@@ -6102,6 +6138,10 @@
   "card-editor.studio.yaml": {
     "text": "YAML",
     "hash": "9b6e8abe"
+  },
+  "card-editor.studio.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
   },
   "card-editor.sync-indicator.overridden": {
     "text": "Overridden",

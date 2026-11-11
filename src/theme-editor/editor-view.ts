@@ -6,16 +6,14 @@ import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { glyph } from '../ui-kit/glyphs';
-import { kitLip } from '../ui-kit/css/lip';
-import { inlineSides } from '../ui-kit/css/rtl';
 import { DirectionController } from '../ui-kit/controllers/direction';
-import { PanelLips } from '../ui-kit/controllers/panel-lips';
-import { lipSpecs, lipStrings } from './lips';
 import { outsideOf } from './outside';
 import { cloneDoc, docErrors, isDirty, previewVars, removeVar, resolveTheme, setVar, validateValue } from './model';
 import type { DocError } from './model';
 import { closeDialog, dialog, openDialog } from './dialogs';
 import type { UiToastElement } from '../contracts/ui-kit';
+import { FRAME_WIDE_MIN_PX, UI_STUDIO_FRAME_TAG } from '../contracts/studio-frame';
+import type { FrameMeasure, StudioFrameElement, StudioFrameStrings } from '../contracts/studio-frame';
 import { base } from './styles';
 import { hasWrap } from '../i18n/pseudo-hook';
 import { englishOf } from '../i18n/english-of';
@@ -96,8 +94,6 @@ interface Toast {
 
 const CORE_GROUPS: CatalogueGroupId[] = ['primary', 'backgrounds', 'text', 'states', 'sizes', 'chrome', 'other'];
 const CARD_GROUPS: CatalogueGroupId[] = ['magic-card', 'tile', 'mushroom', 'bubble-card', 'ultra-card', 'button-card'];
-const WIDE = 1024;
-const SHORT = 500;
 const TOAST_MS = 10_000;
 const HINT_DELAY_MS = 800;
 
@@ -130,7 +126,7 @@ export class McteEditorView extends LitElement {
     _query: { state: true },
     _q: { state: true },
     _onlyChanged: { state: true },
-    _panel: { state: true },
+    _drawerOpen: { state: true },
     _saving: { state: true },
     _savedAt: { state: true },
     _english: { state: true },
@@ -143,9 +139,9 @@ export class McteEditorView extends LitElement {
     _hints: { state: true },
     _w: { state: true },
     _h: { state: true },
-    _stackH: { state: true },
     _stripOpen: { state: true },
     _menu: { state: true },
+    _menuPos: { state: true },
     _rawPrefill: { state: true },
     _renameValue: { state: true },
     _renameError: { state: true },
@@ -176,12 +172,13 @@ export class McteEditorView extends LitElement {
   private _query = '';
   private _q = '';
   private _onlyChanged = false;
-  private _panel: 'vars' | 'preview' = 'vars';
+  private _drawerOpen = false;
   private _saving = false;
   private _savedAt = '';
   private _english = false;
   private _usedMsg = '';
   private _msg = '';
+  private _wasNarrow = false;
   private _dlg: Dlg = null;
   private _toastRun?: () => void;
   private _banner: Banner | null = null;
@@ -190,9 +187,9 @@ export class McteEditorView extends LitElement {
   private _hints = new Map<string, FieldHint>();
   private _w = 1280;
   private _h = 800;
-  private _stackH = 0;
   private _stripOpen = true;
   private _menu = false;
+  private _menuPos = { top: 0, end: 0 };
   private _rawPrefill = '';
   private _renameValue = '';
   private _renameError = '';
@@ -203,11 +200,10 @@ export class McteEditorView extends LitElement {
   private _usedLink = false;
   private _pinned = new Set<string>();
 
-  /** Panel lip: hides and shows the Variables pane beside the preview (wide layout only), remembered per device. */
-  private readonly _lips = new PanelLips(this, { editor: 'theme-editor', panels: lipSpecs(), strings: lipStrings('en') });
-  private _lipLocale = 'en';
   private _ro?: ResizeObserver;
-  private _stackRo?: ResizeObserver;
+  private _strings?: { language: string; value: StudioFrameStrings };
+  private _opened = false;
+  private _sized = typeof ResizeObserver === 'undefined';
   private _unsub?: () => void;
   private _hintTimer?: ReturnType<typeof setTimeout>;
   private _msgTimer?: ReturnType<typeof setTimeout>;
@@ -236,10 +232,12 @@ export class McteEditorView extends LitElement {
       this._ro = new ResizeObserver(([e]) => {
         const r = e.contentRect;
         if (r.width) this._w = Math.round(r.width);
+        this._sized = true;
         if (r.height) this._h = Math.round(r.height);
       });
       this._ro.observe(this);
     }
+    this.addEventListener('keydown', this._onKey);
   }
 
   /** Keeps the editor's chrome on the HA theme while a trial applies the draft to the whole page. */
@@ -264,20 +262,13 @@ export class McteEditorView extends LitElement {
 
   disconnectedCallback(): void {
     this._ro?.disconnect();
-    this._stackRo?.disconnect();
+    this.removeEventListener('keydown', this._onKey);
     this._unsub?.();
     for (const t of [this._hintTimer, this._msgTimer, this._qTimer]) clearTimeout(t);
     super.disconnectedCallback();
   }
 
   protected willUpdate(changed: PropertyValues): void {
-    const language = locale();
-    if (language !== this._lipLocale) {
-      this._lipLocale = language;
-      this._lips.setPanels(lipSpecs(), lipStrings(language));
-    }
-    // the pane has a lip only while it is a column beside the preview; below 1024 px it is a tab
-    this._lips.columns({ variables: !!this.draft && this._layout === 'wide' });
     if (changed.has('draft') && this.draft) this._load(this.draft);
     if (changed.has('hass') && isTrialActive() && getTrial()?.name === this._name) syncTrialMode(this._doc, this.hass);
   }
@@ -328,20 +319,18 @@ export class McteEditorView extends LitElement {
         fire(this, 'mcte-dirty', { dirty });
       }
     }
-    const stack = this.renderRoot.querySelector<HTMLElement>('.stack');
-    if (stack !== this._stackEl) {
-      this._stackRo?.disconnect();
-      this._stackEl = stack;
-      if (stack && typeof ResizeObserver !== 'undefined') {
-        this._stackRo = new ResizeObserver(() => {
-          const h = Math.round(stack.getBoundingClientRect().height);
-          if (h !== this._stackH) this._stackH = h;
-        });
-        this._stackRo.observe(stack);
-      }
+    // the variables drawer is open when the editor opens on a wide screen; a narrow screen starts on the preview
+    if (!this._opened && this._sized && this.draft && !this._narrow && this._frame()) {
+      this._opened = true;
+      this._wasNarrow = this._narrow;
+      this._frame()?.openDrawer(null, 'selection');
+    } else if (this._opened && this._sized && this._narrow !== this._wasNarrow) {
+      // the variables stay open beside the preview; narrowing into the sheet width closes them, and widening opens them again
+      this._wasNarrow = this._narrow;
+      if (this._narrow) this._frame()?.closeDrawer('stage');
+      else this._frame()?.openDrawer(null, 'user');
     }
   }
-  private _stackEl: HTMLElement | null = null;
 
   // ── derived ──
 
@@ -375,12 +364,9 @@ export class McteEditorView extends LitElement {
     return null;
   }
 
-  private get _layout(): 'wide' | 'mid' | 'narrow' {
-    return this._w >= WIDE ? 'wide' : this._w >= 600 ? 'mid' : 'narrow';
-  }
-
-  private get _sticky(): boolean {
-    return this._layout !== 'wide' && this._h >= SHORT && (this._stackH === 0 || this._stackH <= this._h * 0.4);
+  /** Narrower than the frame's wide width: the drawer is a sheet opened from the bar. */
+  private get _narrow(): boolean {
+    return this._w < FRAME_WIDE_MIN_PX;
   }
 
   private _say(text: string): void {
@@ -567,7 +553,7 @@ export class McteEditorView extends LitElement {
     for (const r of rows) seen.add(r.entry.name);
     const q = this._q;
     return rows.filter((r) => {
-      if (this._onlyChanged && !isSetAnywhere(this._doc, r.entry.name)) return false;
+      if (this._onlyChanged && !this._isModified(r.entry.name)) return false;
       if (!q) return true;
       const value = String(ownValue(this._doc, this._scope, r.entry.name) ?? ownValue(this._doc, 'shared', r.entry.name) ?? '').toLowerCase();
       return r.entry.name.toLowerCase().includes(q) || fold(r.custom ? r.entry.name : t(r.entry.label)).includes(fold(q)) || value.includes(q);
@@ -589,10 +575,10 @@ export class McteEditorView extends LitElement {
     const name = parts[0] === 'modes' ? parts.slice(2).join('.') : parts.join('.');
     const group = entryByName(name)?.group ?? 'other';
     this._setScope(scope);
-    this._panel = 'vars';
     this._query = '';
     this._q = '';
     this._open = new Set(this._open).add(group);
+    this._frame()?.openDrawer(null, 'user');
     void this.updateComplete.then(() => {
       const g = this.renderRoot.querySelector<HTMLElement & { focusField(n: string): void }>(`mcte-field-group[data-id="${group}"]`);
       g?.focusField(name);
@@ -658,7 +644,7 @@ export class McteEditorView extends LitElement {
     }
     this._say(r.text);
     if (r.action === 'recheck') {
-      this._panel = 'vars';
+      this._frame()?.openDrawer(null, 'user');
       void this.updateComplete.then(() => this.renderRoot.querySelector('mcte-include-notice')?.scrollIntoView({ block: 'nearest' }));
     }
   }
@@ -681,7 +667,7 @@ export class McteEditorView extends LitElement {
         dismiss,
       ],
     };
-    this._panel = 'vars';
+    this._frame()?.openDrawer(null, 'user');
     void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.banner .title')?.focus());
   }
 
@@ -873,7 +859,12 @@ export class McteEditorView extends LitElement {
 
   // ── keyboard ──
 
-  private _onKey(e: KeyboardEvent): void {
+  private _onKey = (e: KeyboardEvent): void => {
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash') && !e.repeat) {
+      e.preventDefault();
+      this._toggleDrawer();
+      return;
+    }
     const inDialog = e.composedPath().some((n) => n instanceof HTMLDialogElement);
     if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 's' && !inDialog) {
       e.preventDefault();
@@ -892,7 +883,7 @@ export class McteEditorView extends LitElement {
       this._menu = false;
       this.renderRoot.querySelector<HTMLElement>('.more')?.focus();
     }
-  }
+  };
 
   private _menuKey(e: KeyboardEvent): void {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
@@ -953,17 +944,27 @@ export class McteEditorView extends LitElement {
     </button>`;
   }
 
+  /** The bar clips what hangs out of it, so the menu is fixed to the viewport, under its button. */
+  private _toggleMenu(button: HTMLElement): void {
+    if (!this._menu) {
+      const r = button.getBoundingClientRect();
+      const rtl = getComputedStyle(this).direction === 'rtl';
+      this._menuPos = { top: Math.round(r.bottom + 4), end: Math.max(0, Math.round(rtl ? r.left : window.innerWidth - r.right)) };
+    }
+    this._menu = !this._menu;
+  }
+
   private _menuEl(): TemplateResult {
     const compact = this._w < 640;
     const canDelete = !this._isNew && !!this._file && this.draft.editable;
     return html`<div class="menuwrap" @focusout=${(e: FocusEvent) => {
       if (this._menu && !(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node | null)) this._menu = false;
     }}>
-      <button type="button" class="icon-btn more" aria-label=${t('theme-editor.editor-view.more-actions')} aria-haspopup="menu" aria-expanded=${this._menu ? 'true' : 'false'} @click=${() => (this._menu = !this._menu)}>
+      <button type="button" class="icon-btn more" aria-label=${t('theme-editor.editor-view.more-actions')} aria-haspopup="menu" aria-expanded=${this._menu ? 'true' : 'false'} @click=${(e: Event) => this._toggleMenu(e.currentTarget as HTMLElement)}>
         ${glyph('dotsHorizontal')}
       </button>
       ${this._menu
-        ? html`<div class="menu" role="menu" aria-label=${t('theme-editor.editor-view.more-actions')} @keydown=${this._menuKey}>
+        ? html`<div class="menu" role="menu" style="inset-block-start: ${this._menuPos.top}px; inset-inline-end: ${this._menuPos.end}px" aria-label=${t('theme-editor.editor-view.more-actions')} @keydown=${this._menuKey}>
             ${compact ? html`${this._tryButton(true)}<p class="help tryhelp-menu" id="try-help">${this._tryHelp()}</p>` : nothing}
             ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
             <button type="button" role="menuitem" @click=${() => this._presetDlg('export')}>${t('theme-editor.editor-view.export-theme')}</button>
@@ -1000,42 +1001,60 @@ export class McteEditorView extends LitElement {
     </div>`;
   }
 
-  private _header(): TemplateResult {
+  /** The bar of the frame: Back, the theme and its state, the trial and preset buttons, the drawer toggle, Save and the more menu. */
+  private _bar(): TemplateResult {
     const compact = this._w < 640;
-    return html`<header class="hdr">
-      <div class="left">
-        <button type="button" class="btn btn-text back" @click=${() => this._back()}>${glyph('arrowLeft')} ${t('theme-editor.editor-view.themes')}</button>
-        <h2 class="tname" tabindex="-1">${this._name}</h2>
-        <div class="chips">${this._chips()}</div>
-      </div>
-      <div class="right">
-        ${this.backend?.presets && this._w >= 640 ? html`<button type="button" class="btn btn-secondary savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
+    const label = t('theme-editor.lips.variables-panel');
+    const keys = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘\\' : 'Ctrl+\\';
+    const noun = t('theme-editor.lips.variables');
+    const title = `${(this._drawerOpen ? t('theme-editor.lips.hide-noun-keys', { noun, keys }) : t('theme-editor.lips.show-noun-keys', { noun, keys }))} - ${t('theme-editor.lips.shortcut-keys', { keys })}`;
+    return html`<header class="fr-bar" slot="top" aria-label=${t('theme-editor.editor-view.editor-panels')}>
+      <button type="button" class="btn btn-text btn-sm back" @click=${() => this._back()}>${glyph('arrowLeft')} <span class="back-label">${t('theme-editor.editor-view.themes')}</span></button>
+      <span class="vr" aria-hidden="true"></span>
+      <h2 class="tname" tabindex="-1">${this._name}</h2>
+      <div class="chips">${this._chips()}</div>
+      <span class="spacer"></span>
+      <div class="grp">
+        ${this.backend?.presets && !compact ? html`<button type="button" class="btn btn-secondary btn-sm savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
+        ${compact ? nothing : this._tryButton()}
+        <button
+          type="button"
+          class="icon-btn vars-toggle"
+          aria-controls="vars"
+          aria-expanded=${this._drawerOpen ? 'true' : 'false'}
+          aria-haspopup=${this._narrow ? 'dialog' : nothing}
+          aria-label=${label}
+          aria-keyshortcuts=${keys.startsWith('Ctrl') ? 'Control+Backslash' : 'Meta+Backslash'}
+          title=${title}
+          @click=${(e: Event) => this._toggleDrawer(e.currentTarget as HTMLElement)}
+        >
+          ${glyph('palette')}
+        </button>
         <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         ${this._menuEl()}
       </div>
-      <div class="row2">
-        <div class="ctrls">
-          ${this._hasModes
-            ? html`<span class="lbl sr-only" id="edit-lbl">${t('theme-editor.editor-view.editing')}</span>
-                <mcte-mode-switch
-                  label=${t('theme-editor.editor-view.edit-variables-for')}
-                  .value=${this._scope}
-                  .options=${[
-                    { value: 'shared', label: scopeLabel('shared') },
-                    { value: 'light', label: scopeLabel('light') },
-                    { value: 'dark', label: scopeLabel('dark') },
-                  ]}
-                  @mcte-change=${(e: CustomEvent) => this._setScope(e.detail.value as Scope)}
-                ></mcte-mode-switch>`
-            : this.draft.editable
-              ? html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this._openDlg('add-modes')}>${t('theme-editor.editor-view.add-light-and-dark-modes')}</button>`
-              : nothing}
-          ${compact ? nothing : this._tryButton()}
-        </div>
-        ${this._statusLine()}
-      </div>
-      ${compact ? nothing : html`<p class="help tryhelp" id="try-help">${this._tryHelp()}</p>`}
     </header>`;
+  }
+
+  /** Scope switch, the status line and what the open theme is doing: the top of the drawer. */
+  private _scopeRow(): TemplateResult {
+    return html`<div class="scope">
+      ${this._hasModes
+        ? html`<span class="lbl sr-only" id="edit-lbl">${t('theme-editor.editor-view.editing')}</span>
+            <mcte-mode-switch
+              label=${t('theme-editor.editor-view.edit-variables-for')}
+              .value=${this._scope}
+              .options=${[
+                { value: 'shared', label: scopeLabel('shared') },
+                { value: 'light', label: scopeLabel('light') },
+                { value: 'dark', label: scopeLabel('dark') },
+              ]}
+              @mcte-change=${(e: CustomEvent) => this._setScope(e.detail.value as Scope)}
+            ></mcte-mode-switch>`
+        : this.draft.editable
+          ? html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this._openDlg('add-modes')}>${t('theme-editor.editor-view.add-light-and-dark-modes')}</button>`
+          : nothing}
+    </div>`;
   }
 
   /** Values that point at another website: the preview and Try on dashboard load them at once, so say so (not by colour alone). */
@@ -1132,9 +1151,9 @@ export class McteEditorView extends LitElement {
   }
 
   private _varsPanel(): TemplateResult {
-    const n = this._errors.length;
-    void n;
     return html`
+      ${this._narrow ? this._strip() : nothing}
+      ${this._scopeRow()}
       ${this.include && this.include.state !== 'ok'
         ? html`<mcte-include-notice .status=${this.include} .checking=${this.checking} .result=${this.checkResult}></mcte-include-notice>`
         : this.checkResult
@@ -1156,7 +1175,6 @@ export class McteEditorView extends LitElement {
             @keydown=${(e: KeyboardEvent) => e.key === 'Escape' && this._query && (e.stopPropagation(), this._search(''))}
           />
         </div>
-        <label class="switch-row"><input type="checkbox" .checked=${this._onlyChanged} @change=${(e: Event) => (this._onlyChanged = (e.target as HTMLInputElement).checked)} /> ${t('theme-editor.editor-view.only-changed')}</label>
       </div>
       <p class="help status" role="status" aria-live="polite">${t('theme-editor.editor-view.editing-scope-previewing-mode', { scope: scopeLabel(this._scope), mode: scopeLabel(this._mode) })}</p>
       ${this._scope === 'shared' && this._hasModes
@@ -1177,7 +1195,7 @@ export class McteEditorView extends LitElement {
   }
 
   private _previewPanel(): TemplateResult {
-    return html`<mcte-theme-preview
+    return html`<mcte-theme-preview class="preview"
       .doc=${this._previewDoc}
       .mode=${this._mode}
       .hass=${this.hass}
@@ -1197,46 +1215,76 @@ export class McteEditorView extends LitElement {
         <button type="button" class="btn btn-text btn-sm" aria-expanded=${this._stripOpen ? 'true' : 'false'} @click=${() => (this._stripOpen = !this._stripOpen)}>
           ${this._stripOpen ? t('theme-editor.editor-view.hide-live-strip') : t('theme-editor.editor-view.show-live-strip')}
         </button>
-        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._panel = 'preview')}>${t('theme-editor.editor-view.open-preview')}</button>
+        <button type="button" class="btn btn-text btn-sm" @click=${() => this._frame()?.closeDrawer('user')}>${t('theme-editor.editor-view.open-preview')}</button>
       </div>
     </div>`;
   }
 
-  private _body(): TemplateResult {
-    const layout = this._layout;
-    const sticky = this._sticky;
-    if (layout === 'wide') {
-      const lips = this._lips;
-      const hidden = lips.isHidden('variables');
-      return html`<div class="cols ${hidden ? 'no-vars' : ''}" style="--mc-lip-at-start: ${hidden ? '0px' : 'var(--vw)'}">
-        <section class="pane vars" id="vars-pane" role="region" aria-label=${t('theme-editor.editor-view.variables-panel')} ?inert=${hidden} data-lip=${lips.state('variables')} data-dir=${lips.dir}>${this._varsPanel()}</section>
-        ${lips.lip('variables')}
-        <section class="pane prev" role="region" aria-label=${t('theme-editor.editor-view.preview')}>${this._previewPanel()}</section>
-      </div>`;
+  private _frame(): StudioFrameElement | null {
+    return this.renderRoot?.querySelector<StudioFrameElement>(UI_STUDIO_FRAME_TAG) ?? null;
+  }
+
+  private _toggleDrawer(opener?: HTMLElement | null): void {
+    const f = this._frame();
+    if (!f) return;
+    const panels = t('theme-editor.lips.variables-panel');
+    this._say(f.drawerOpen ? t('theme-editor.lips.panels-hidden', { panels }) : t('theme-editor.lips.panels-shown', { panels }));
+    if (f.drawerOpen) f.closeDrawer('user');
+    else f.openDrawer(opener ?? null, 'user');
+  }
+
+  private _onFrameDrawer = (e: Event): void => {
+    this._drawerOpen = (e as CustomEvent<{ open: boolean }>).detail.open;
+  };
+
+  private _onFrameModified = (e: Event): void => {
+    this._onlyChanged = (e as CustomEvent<{ on: boolean }>).detail.on;
+  };
+
+  /** The frame's strings, in the editor's language (one object per language, so the frame re-renders only when it changes). */
+  private _frameStrings(): StudioFrameStrings {
+    const language = locale();
+    if (this._strings?.language !== language) {
+      this._strings = {
+        language,
+        value: {
+          pin: t('theme-editor.editor-view.frame-pin'),
+          modifiedOnly: t('theme-editor.editor-view.only-changed'),
+          noneModified: t('theme-editor.editor-view.frame-none-modified'),
+          close: t('theme-editor.editor-view.frame-close'),
+          drawer: t('theme-editor.editor-view.variables'),
+          zoom: t('theme-editor.editor-view.frame-zoom'),
+        },
+      };
     }
-    return html`
-      <div class="stack ${sticky ? 'sticky' : ''}">
-        ${this._header()}
-        <div class="tabs">
-          <mcte-mode-switch
-            full
-            kind="tablist"
-            label=${t('theme-editor.editor-view.editor-panels')}
-            .value=${this._panel}
-            .options=${[
-              { value: 'vars', label: t('theme-editor.editor-view.variables'), controls: 'panel-vars' },
-              { value: 'preview', label: t('theme-editor.editor-view.preview'), controls: 'panel-preview' },
-            ]}
-            @mcte-change=${(e: CustomEvent) => (this._panel = e.detail.value)}
-          ></mcte-mode-switch>
-        </div>
-      </div>
-      ${this._panel === 'vars' ? this._strip() : nothing}
-      <div class="panes">
-        <section id="panel-vars" class="pane" role="tabpanel" aria-label=${t('theme-editor.editor-view.variables')} ?hidden=${this._panel !== 'vars'}>${this._varsPanel()}</section>
-        <section id="panel-preview" class="pane" role="tabpanel" aria-label=${t('theme-editor.editor-view.preview')} ?hidden=${this._panel !== 'preview'}>${this._previewPanel()}</section>
-      </div>
-    `;
+    return this._strings.value;
+  }
+
+  /** The scheme follows the Home Assistant theme, never the system setting. */
+  private get _scheme(): 'light' | 'dark' {
+    return browserMode(this.hass) === 'dark' ? 'dark' : 'light';
+  }
+
+  /** The preview's room on the stage for the rulers: the editor's size less the drawer, bar and the frame's padding. */
+  private _measure(): FrameMeasure {
+    const push = this._drawerOpen && !this._narrow ? 360 : 0;
+    const width = Math.max(240, this._w - push - 96);
+    const height = Math.max(200, this._h - 200);
+    return { width, height, grid: 24, selection: null, zoom: 1 };
+  }
+
+  /** A variable is modified when the theme sets it in some scope. A new theme starts from its starter values, so only what differs from them counts until it is saved. */
+  private _isModified(name: string): boolean {
+    if (this._saved) return isSetAnywhere(this._doc, name);
+    return (['shared', 'light', 'dark'] as const).some((sc) => {
+      const v = ownValue(this._doc, sc, name);
+      return v !== undefined && v !== ownValue(this._baseline, sc, name);
+    });
+  }
+
+  /** With Modified only on and nothing changed, no drawer content is drawn and the frame shows its own note. */
+  private get _nothingModified(): boolean {
+    return this._onlyChanged && !allKeys(this._doc).some((k) => this._isModified(k)) && !this._banner && !this._rawPending && !(this.include && this.include.state !== 'ok') && !this.checkResult;
   }
 
   private _dialog(): TemplateResult | typeof nothing {
@@ -1276,14 +1324,30 @@ export class McteEditorView extends LitElement {
 
   protected render(): TemplateResult {
     if (!this.draft) return html``;
-    const layout = this._layout;
+    const compact = this._w < 640;
     return html`
-      <div class="root ${layout} ${this._sticky ? 'is-sticky' : ''} ${this._h < SHORT ? 'short' : ''}" @keydown=${this._onKey}>
-        ${layout === 'wide' ? html`<div class="stack">${this._header()}</div>` : nothing}
-        ${this._body()}
-      </div>
+      <mc-ui-studio-frame
+        studio="theme-editor"
+        fixed-drawer
+        .scheme=${this._scheme}
+        .strings=${this._frameStrings()}
+        .selectionLabel=${this._name}
+        .measure=${this._measure()}
+        .rulers=${true}
+        @mc-frame-drawer=${this._onFrameDrawer}
+        @mc-frame-modified=${this._onFrameModified}
+      >
+        ${this._bar()}
+        <div class="stage" slot="stage" role="region" aria-label=${t('theme-editor.editor-view.preview')}>
+          <div class="stage-note">
+            ${this._statusLine()}
+            ${compact ? nothing : html`<p class="help tryhelp" id="try-help">${this._tryHelp()}</p>`}
+          </div>
+          ${this._previewPanel()}
+        </div>
+        ${this._nothingModified ? nothing : html`<div class="vars" id="vars" slot="drawer">${this._varsPanel()}</div>`}
+      </mc-ui-studio-frame>
       <p class="sr-only" role="status">${this._msg}</p>
-      ${this._lips.status()}
       <mc-ui-toast .offset=${this._trial ? 88 : 16} @mc-toast-action=${() => this._toastRun?.()}></mc-ui-toast>
       ${this._dialog()}
       <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine} .include=${this.include}></mcte-preset-dialog>
@@ -1292,165 +1356,122 @@ export class McteEditorView extends LitElement {
 
   static styles = [
     base,
-    kitLip,
     css`
       :host {
         display: block;
         height: 100%;
-        background: var(--mc-ground);
         position: relative;
       }
-      .root {
-        height: 100%;
+      mc-ui-studio-frame {
+        block-size: 100%;
+        --mc-ground: var(--bp-bg);
+        --mc-surface: var(--bp-sheet);
+        --mc-surface-2: var(--bp-surf2);
+        --mc-text: var(--bp-ink);
+        --mc-text-2: var(--bp-mute);
+        --mc-divider: var(--bp-line);
+        --mc-field-border: var(--bp-edge);
+        --mc-accent: var(--bp-acc);
+        --mc-accent-tint: var(--bp-acc-soft);
+        --mc-radius: var(--bp-r-s);
+        --mc-font: var(--bp-font-ui);
+        --mc-mono: var(--bp-font-mono);
+      }
+      .fr-bar {
         display: flex;
-        flex-direction: column;
-        min-height: 0;
+        flex: 1;
+        align-items: center;
+        gap: var(--bp-s-3);
+        min-inline-size: 0;
+        block-size: 100%;
       }
-      .root:not(.wide):not(.is-sticky) {
-        overflow: auto;
-        display: block;
+      .fr-bar .spacer {
+        flex: 1;
       }
-      .stack {
-        background: var(--mc-surface);
-        border-bottom: 1px solid var(--mc-divider);
+      .fr-bar .grp {
+        display: flex;
         flex: none;
-      }
-      .hdr {
-        display: flex;
-        flex-wrap: wrap;
         align-items: center;
-        gap: 8px 16px;
-        padding: 8px 12px;
-        justify-content: space-between;
+        gap: var(--bp-s-3);
       }
-      .left {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 4px 10px;
-        min-width: 0;
-        flex: 1 1 auto;
+      .vr {
+        flex: none;
+        inline-size: 1px;
+        block-size: 20px;
+        background: var(--bp-line);
       }
       .tname {
-        font-size: 1rem;
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        font-size: var(--bp-t-bar);
         font-weight: 500;
-        overflow-wrap: anywhere;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .chips {
         display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
+        flex: none;
+        gap: var(--bp-s-3);
+        white-space: nowrap;
       }
-      .left {
-        flex: 1 1 0;
-      }
-      .row2 {
-        flex: 1 0 100%;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 4px 16px;
-      }
-      .ctrls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        align-items: center;
-      }
-      .line {
-        flex: 1 1 200px;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 4px 8px;
-        min-height: 40px;
+      @media (max-width: 479px) {
+        .back-label,
+        .vr {
+          position: absolute;
+          inline-size: 1px;
+          block-size: 1px;
+          overflow: hidden;
+          clip: rect(0 0 0 0);
+          white-space: nowrap;
+        }
       }
       a.btn {
         text-decoration: none;
-      }
-      /* Short viewports (200% zoom on a laptop): the long hint is read through the Try button's description only. */
-      .short .tryhelp {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        white-space: nowrap;
-      }
-      .short .hdr {
-        padding: 4px 12px;
-        gap: 4px 12px;
-      }
-      .right {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        justify-content: flex-end;
-        flex: none;
-      }
-      .tryhelp {
-        flex: 1 0 100%;
-      }
-      .tryhelp-menu {
-        padding: 0 12px 8px;
-        max-width: 280px;
       }
       .menuwrap {
         position: relative;
       }
       .menu {
-        ${inlineSides('inset', 'auto', '0')}
-        top: calc(100% + 4px);
-        min-width: 220px;
-        max-width: calc(100vw - 24px);
-        z-index: 4;
+        position: fixed;
+        min-inline-size: 220px;
+        max-inline-size: calc(100vw - 24px);
+        z-index: 40;
       }
-      .cols {
-        flex: 1 1 auto;
-        min-height: 0;
+      .tryhelp-menu {
+        padding: 0 12px 8px;
+        max-inline-size: 280px;
+      }
+      .stage {
         display: grid;
-        --vw: 440px;
-        position: relative;
-        grid-template-columns: var(--cw, var(--vw)) minmax(0, 1fr);
+        gap: var(--bp-s-5);
+        align-content: start;
+        inline-size: 100%;
       }
-      /* the hidden pane gives its track to the preview but keeps its own width, so its content never reflows */
-      .no-vars {
-        --cw: 0px;
+      .stage-note {
+        display: grid;
+        gap: var(--bp-s-2);
+      }
+      .line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 8px;
+        min-block-size: 32px;
+      }
+      .preview {
+        display: block;
+        min-inline-size: 0;
       }
       .vars {
-        --mc-lip-off: -100%;
-      }
-      .vars[data-lip='hidden'] {
-        width: var(--vw);
-      }
-      .pane {
         display: grid;
-        gap: 12px;
+        gap: var(--bp-s-6);
         align-content: start;
-        padding: 12px;
-        min-width: 0;
+        padding: var(--bp-s-6);
+        min-inline-size: 0;
       }
-      .cols .pane {
-        overflow: auto;
-        min-height: 0;
-      }
-      .cols .vars {
-        border-inline-end: 1px solid var(--mc-divider);
-      }
-      .cols .prev {
-        padding: 0;
-      }
-      .sticky {
-        position: relative;
-      }
-      .root.is-sticky .panes {
-        flex: 1 1 auto;
-        min-height: 0;
-        overflow: auto;
-      }
-      .tabs {
-        padding: 0 12px 8px;
+      .scope:empty {
+        display: none;
       }
       .tools {
         display: flex;
@@ -1466,25 +1487,22 @@ export class McteEditorView extends LitElement {
         gap: 8px;
       }
       .sect {
-        margin-top: 8px;
+        margin-block-start: 8px;
         font-size: 0.9375rem;
         font-weight: 500;
         color: var(--mc-text-2);
       }
       .strip {
-        flex: none;
         position: sticky;
-        top: 0;
+        inset-block-start: 0;
         z-index: 3;
-        padding: 6px 12px;
-        background: var(--mc-surface);
-        border-bottom: 1px solid var(--mc-divider);
-      }
-      .strip {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 4px 12px;
+        padding: 6px 0;
+        background: var(--mc-surface);
+        border-block-end: 1px solid var(--mc-divider);
       }
       .strip-bar {
         display: flex;
@@ -1501,7 +1519,7 @@ export class McteEditorView extends LitElement {
         border-radius: var(--mc-radius-lg);
         background: var(--lovelace-background, var(--primary-background-color));
         color: var(--primary-text-color);
-        min-height: 44px;
+        min-block-size: 44px;
       }
       .mini-tile {
         display: flex;
@@ -1514,8 +1532,8 @@ export class McteEditorView extends LitElement {
         font-size: 0.8125rem;
       }
       .mini-tile .dot {
-        width: 24px;
-        height: 24px;
+        inline-size: 24px;
+        block-size: 24px;
         border-radius: 50%;
         background: var(--primary-color);
       }
@@ -1533,14 +1551,14 @@ export class McteEditorView extends LitElement {
         font-size: 0.9375rem;
       }
       .status {
-        min-height: 1.2em;
+        min-block-size: 1.2em;
       }
-      .wide .hdr {
-        flex-wrap: wrap;
-      }
-      @media (max-width: 479px) {
-        .hdr {
-          padding: 6px 8px;
+      @media (prefers-reduced-motion: reduce) {
+        .spin,
+        .strip,
+        .stage {
+          animation: none;
+          transition: none;
         }
       }
     `,
