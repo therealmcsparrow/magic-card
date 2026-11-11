@@ -419,7 +419,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
         class="btn btn-text btn-sm"
         data-role="settings"
         aria-haspopup=${narrow ? 'dialog' : nothing}
-        aria-expanded=${narrow ? nothing : this._shell.frame()?.drawerOpen ? 'true' : 'false'}
+        aria-expanded=${this._shell.frame()?.drawerOpen ? 'true' : 'false'}
         @click=${this._shell.onSettings}
       >${t('look-editor.element.settings')}</button>
     </div>`;

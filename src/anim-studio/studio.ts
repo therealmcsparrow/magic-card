@@ -367,11 +367,6 @@ export class AnimationStudio extends LitElement {
   /** A deep link waiting for its document. */
   private _wantId?: string;
   private _focusSel?: string;
-  /** The last input was a pointer: opening the editor does not move focus (no stray ring). */
-  private _pointer = false;
-  private _onPointer = (): void => {
-    this._pointer = true;
-  };
 
   // ── host data ──
 
@@ -494,7 +489,6 @@ export class AnimationStudio extends LitElement {
     void loadStudioFonts();
     void labelsLoad.then(() => (this._labels = labelsState));
     this.addEventListener('keydown', this._onKeydown);
-    this.addEventListener('pointerdown', this._onPointer);
     window.addEventListener('beforeunload', this._onBeforeUnload);
     // a new animation left unsaved last time (a known one is offered when it opens)
     const draft = this._doc || this._dialog ? undefined : readDraft(draftKey());
@@ -524,7 +518,6 @@ export class AnimationStudio extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this._onKeydown);
-    this.removeEventListener('pointerdown', this._onPointer);
     window.removeEventListener('beforeunload', this._onBeforeUnload);
     this._ro?.disconnect();
     this._ro = undefined;
@@ -813,7 +806,7 @@ export class AnimationStudio extends LitElement {
     this._preview = undefined;
     this._drawerOpen = false;
     this._view = 'editor';
-    if (!this._pointer) this._focusSel = '.back';
+    this._focusSel = '.back';
     if (announce && !isNew) this._select(doc.id);
     // changes to it that were not saved last time
     const draft = isNew ? undefined : readDraft(draftKey(doc.id));
@@ -1047,7 +1040,6 @@ export class AnimationStudio extends LitElement {
   }
 
   private _onKeydown = (e: KeyboardEvent): void => {
-    this._pointer = false;
     if (e.defaultPrevented || this._dialog) return;
     const key = e.key.toLowerCase();
     const mod = (e.ctrlKey || e.metaKey) && !e.altKey;

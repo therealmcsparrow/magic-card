@@ -30,6 +30,13 @@ export const animatorStyles = css`
     min-block-size: 0;
     min-inline-size: 0;
   }
+  @media (max-width: 1100px) {
+    .window {
+      inset: 0;
+      border: 0;
+      border-radius: 0;
+    }
+  }
   header,
   footer {
     display: flex;

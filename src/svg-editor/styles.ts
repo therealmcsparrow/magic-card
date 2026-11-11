@@ -699,11 +699,22 @@ export const editorStyles: CSSResult[] = [
     mc-ui-studio-frame .switch[aria-checked='true']::after {
       background: var(--bp-acc-ink);
     }
+    .insp .seg {
+      flex-wrap: wrap;
+      overflow-x: visible;
+    }
+    .insp .seg > button {
+      flex: 1 1 auto;
+      justify-content: center;
+    }
     .ftop .topbar {
-      flex: 1 0 auto;
-      flex-wrap: nowrap;
+      flex: 1 1 0;
+      min-width: 0;
+      flex-wrap: wrap;
+      row-gap: 4px;
       min-height: 0;
       padding: 0;
+      padding-block: 4px;
       border: 0;
       background: none;
     }

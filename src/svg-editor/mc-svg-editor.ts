@@ -2140,18 +2140,21 @@ export class McSvgEditor extends LitElement implements StageHost {
     read();
   }
 
-  /** The top bar is one row: when its words do not fit the window, the secondary buttons keep their glyph only. */
+  /** The top bar is one row where it can be: when its words do not fit the window, the secondary buttons keep their glyph only. */
   private checkBar(): void {
     const w = this.getBoundingClientRect().width;
-    const bar = this.renderRoot.querySelector<HTMLElement>('.ftop .topbar');
+    const bar = this.renderRoot.querySelector<HTMLElement>('.ftop .topbar, header.topbar');
     if (!w || !bar) return;
+    const first = bar.firstElementChild as HTMLElement | null;
+    const last = bar.lastElementChild as HTMLElement | null;
+    const wrapped = !!first && !!last && last.offsetTop > first.offsetTop + first.offsetHeight / 2;
     if (this.crowdW && w > this.crowdW + 320) this.crowdW = 0;
-    else if (!this.crowdW && bar.getBoundingClientRect().right > this.getBoundingClientRect().right + 1) this.crowdW = w;
+    else if (!this.crowdW && (wrapped || bar.getBoundingClientRect().right > this.getBoundingClientRect().right + 1)) this.crowdW = w;
   }
 
   protected updated(changed: PropertyValues): void {
     this.watchField();
-    if (this.img) this.checkBar();
+    this.checkBar();
     // the Saved chip takes no focus: a change of it is said once
     const chip = this.savedLabel;
     if (chip !== this.chipSaid) {

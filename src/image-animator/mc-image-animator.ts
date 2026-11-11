@@ -83,7 +83,21 @@ export class McImageAnimator extends LitElement {
     super.connectedCallback();
     defineKitElements([[UI_STUDIO_FRAME_TAG, StudioFrame]]);
     void loadStudioFonts();
+    document.addEventListener('keydown', this._onDocKey);
     this._started ??= this._open();
+  }
+
+  /** The shortcut also works while focus rests on the page behind the window, for example right after the sheet opens. */
+  private _onDocKey = (e: KeyboardEvent): void => {
+    if (!e.defaultPrevented) this._shortcut(e);
+  };
+
+  private _shortcut(e: KeyboardEvent): boolean {
+    if (!((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash') && !e.repeat && !this._ask && !this._leaving)) return false;
+    e.preventDefault();
+    if (this._drawerOpen) this._frame?.closeDrawer('user');
+    else this._frame?.openDrawer(null, 'user');
+    return true;
   }
 
   /** Memoised: every caller waits for the same open. */
@@ -197,6 +211,7 @@ export class McImageAnimator extends LitElement {
   }
 
   disconnectedCallback(): void {
+    document.removeEventListener('keydown', this._onDocKey);
     this._preview?.release();
     this._preview = undefined;
     this._observer?.disconnect();
@@ -521,12 +536,7 @@ export class McImageAnimator extends LitElement {
   }
 
   private _onKey(e: KeyboardEvent): void {
-    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === '\\' || e.code === 'Backslash') && !e.repeat && !this._ask && !this._leaving) {
-      e.preventDefault();
-      if (this._drawerOpen) this._frame?.closeDrawer('user');
-      else this._frame?.openDrawer(null, 'user');
-      return;
-    }
+    if (this._shortcut(e)) return;
     if (e.key === 'Escape') {
       e.stopPropagation();
       if (this._leaving) this._keepEditing();

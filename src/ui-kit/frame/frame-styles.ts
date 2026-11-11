@@ -202,6 +202,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   }
   :host([centre-stage]) .field {
     display: grid;
+    padding-inline: 8px;
   }
   .content {
     position: relative;
@@ -226,6 +227,10 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     color: var(--bp-acc-ink);
     font: var(--bp-t-meta) var(--bp-font-mono);
     white-space: nowrap;
+  }
+  :host([centre-stage]) [data-bp="callout"] output {
+    inset-block-start: auto;
+    inset-block-end: -20px;
   }
   [data-bp="width-callout"] {
     position: absolute;

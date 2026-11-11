@@ -453,7 +453,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
         class="btn secondary sm"
         data-role="settings"
         aria-haspopup=${narrow ? 'dialog' : nothing}
-        aria-expanded=${narrow ? nothing : this._shell.frame()?.drawerOpen ? 'true' : 'false'}
+        aria-expanded=${this._shell.frame()?.drawerOpen ? 'true' : 'false'}
         @click=${this._shell.onSettings}
       >${t('look-editor.mc-slider-look-editor.settings')}</button>
     </div>`;
