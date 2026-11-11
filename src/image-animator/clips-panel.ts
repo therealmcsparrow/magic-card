@@ -20,6 +20,8 @@ export interface ClipsPanelProps {
   drafting: string;
   /** The last thing that went wrong or worked, shown in a live region. */
   message: string;
+  /** Leave out the timing and trigger fields that still hold their defaults. */
+  modifiedOnly?: boolean;
   select(id: string): void;
   create(name: string): void;
   rename(id: string, name: string): void;
@@ -113,6 +115,11 @@ function stateFields(p: ClipsPanelProps, clip: ImageClip): TemplateResult {
 
 function details(p: ClipsPanelProps, clip: ImageClip, index: number): TemplateResult {
   const forever = clip.iterations === 'infinite';
+  const only = p.modifiedOnly === true;
+  const showTrigger = !only || clip.play.on !== 'always' || p.drafting === clip.id;
+  const showDuration = !only || clip.duration !== 2;
+  const showForever = !only || !forever;
+  const showDirection = !only || (clip.direction ?? 'normal') !== 'normal';
   const kinds: TriggerKind[] = ['always', 'hover', 'tap', 'state'];
   const shown = p.drafting === clip.id ? 'state' : clip.play.on;
   const directions: [NonNullable<ImageClip['direction']>, string][] = [
@@ -126,33 +133,41 @@ function details(p: ClipsPanelProps, clip: ImageClip, index: number): TemplateRe
       <label id="clip-name-label" for="clip-name">${t('image-animator.clips-panel.clip-name')}</label>
       <input id="clip-name" type="text" maxlength="64" .value=${clip.name} @change=${(e: Event) => p.rename(clip.id, (e.target as HTMLInputElement).value)} />
     </div>
-    <div class="ia-row">
+    ${showTrigger
+      ? html`<div class="ia-row">
       <label for="clip-trigger">${t('image-animator.clips-panel.starts-when')}</label>
       <select id="clip-trigger" .value=${shown} @change=${(e: Event) => p.setTrigger(clip.id, (e.target as HTMLSelectElement).value as TriggerKind)}>
         ${kinds.map((k) => html`<option value=${k} ?selected=${k === shown}>${triggerLabel(k)}</option>`)}
       </select>
-    </div>
+    </div>`
+      : nothing}
     ${shown === 'state' ? stateFields(p, clip) : nothing}
-    <div class="ia-row">
+    ${showDuration
+      ? html`<div class="ia-row">
       <label for="clip-duration">${t('image-animator.clips-panel.duration-seconds')}</label>
       <input id="clip-duration" type="number" min="0.05" max="600" step="0.05" .value=${String(clip.duration)} @change=${(e: Event) => p.setTiming(clip.id, { duration: Number((e.target as HTMLInputElement).value) })} />
-    </div>
-    <div class="ia-row">
+    </div>`
+      : nothing}
+    ${showForever
+      ? html`<div class="ia-row">
       <label for="clip-forever">${t('image-animator.clips-panel.repeat-forever')}</label>
       <input id="clip-forever" type="checkbox" .checked=${forever} @change=${(e: Event) => p.setTiming(clip.id, { iterations: (e.target as HTMLInputElement).checked ? 'infinite' : 1 })} />
-    </div>
+    </div>`
+      : nothing}
     ${forever
       ? nothing
       : html`<div class="ia-row">
           <label for="clip-repeats">${t('image-animator.clips-panel.repeats')}</label>
           <input id="clip-repeats" type="number" min="0.01" max="1000" step="1" .value=${String(clip.iterations)} @change=${(e: Event) => p.setTiming(clip.id, { iterations: Number((e.target as HTMLInputElement).value) })} />
         </div>`}
-    <div class="ia-row">
+    ${showDirection
+      ? html`<div class="ia-row">
       <label for="clip-direction">${t('image-animator.clips-panel.direction')}</label>
       <select id="clip-direction" .value=${clip.direction ?? 'normal'} @change=${(e: Event) => p.setTiming(clip.id, { direction: (e.target as HTMLSelectElement).value as NonNullable<ImageClip['direction']> })}>
         ${directions.map(([k, text]) => html`<option value=${k} ?selected=${k === (clip.direction ?? 'normal')}>${text}</option>`)}
       </select>
-    </div>
+    </div>`
+      : nothing}
     <div class="ia-row">
       <button type="button" class="btn btn-secondary" ?disabled=${index === 0} @click=${() => p.move(clip.id, -1)}>${t('image-animator.clips-panel.move-up')}</button>
       <button type="button" class="btn btn-secondary" ?disabled=${index === p.clips.length - 1} @click=${() => p.move(clip.id, 1)}>${t('image-animator.clips-panel.move-down')}</button>

@@ -373,6 +373,11 @@
     "note": "Button that closes the image animator window.",
     "max": 10
   },
+  "image-animator.mc-image-animator.close-settings": {
+    "text": "Close settings",
+    "note": "Accessible name of the button that closes the settings drawer or sheet.",
+    "max": 20
+  },
   "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
     "text": "Could not reach Magic Card Utils. Your work is safe.",
     "note": "Error in the image animator when the image library does not answer or refuses a call.",
@@ -438,6 +443,16 @@
     "note": "Button that leaves the discard question and returns to the animator.",
     "max": 20
   },
+  "image-animator.mc-image-animator.keep-settings-open": {
+    "text": "Keep settings open",
+    "note": "Accessible name of the pin button that keeps the settings drawer open while you work on the picture.",
+    "max": 24
+  },
+  "image-animator.mc-image-animator.modified-only": {
+    "text": "Modified only",
+    "note": "Label of the switch that shows only the clip settings that differ from their default.",
+    "max": 20
+  },
   "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
     "text": "Not in the library yet. Save adds it as {name}.",
     "note": "Status line while an uploaded drawing is open but not saved. Saving adds it to the image library. {name} is the name it will get.",
@@ -445,6 +460,11 @@
     "vars": {
       "name": "Name the new library image will get."
     }
+  },
+  "image-animator.mc-image-animator.nothing-modified": {
+    "text": "Nothing here differs from the default",
+    "note": "Shown in the settings drawer when Modified only is on and no setting differs from its default.",
+    "max": 45
   },
   "image-animator.mc-image-animator.opening-the-image": {
     "text": "Opening the image…",
@@ -475,6 +495,11 @@
     "text": "Saving… The window closes when it is done.",
     "note": "Status line while a save runs after the user asked to close; the window closes once the save is done.",
     "max": 64
+  },
+  "image-animator.mc-image-animator.settings": {
+    "text": "Settings",
+    "note": "Name of the settings drawer and of the bar button that opens it on a narrow screen.",
+    "max": 16
   },
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
     "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
@@ -541,6 +566,11 @@
     "text": "Your image library is over 50 MiB. A large library can slow down older devices. You can still save.",
     "note": "Warning when the images in the library add up to 50 MiB or more; saving is not blocked.",
     "max": 138
+  },
+  "image-animator.mc-image-animator.zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the zoom control group on the stage.",
+    "max": 12
   },
   "image-animator.morph-panel.add-morph": {
     "text": "Add morph",

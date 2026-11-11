@@ -275,6 +275,10 @@
     "text": "Close",
     "hash": "7d9eb7ac"
   },
+  "image-animator.mc-image-animator.close-settings": {
+    "text": "Close settings",
+    "hash": "0ccfef82"
+  },
   "image-animator.mc-image-animator.could-not-reach-magic-card-utils-your": {
     "text": "Could not reach Magic Card Utils. Your work is safe.",
     "hash": "3ba3f12b"
@@ -315,9 +319,21 @@
     "text": "Keep editing",
     "hash": "e76fd2ad"
   },
+  "image-animator.mc-image-animator.keep-settings-open": {
+    "text": "Keep settings open",
+    "hash": "23a9037e"
+  },
+  "image-animator.mc-image-animator.modified-only": {
+    "text": "Modified only",
+    "hash": "d5f0ab19"
+  },
   "image-animator.mc-image-animator.not-in-the-library-yet-save-adds-it-as": {
     "text": "Not in the library yet. Save adds it as {name}.",
     "hash": "53da3716"
+  },
+  "image-animator.mc-image-animator.nothing-modified": {
+    "text": "Nothing here differs from the default",
+    "hash": "75578f99"
   },
   "image-animator.mc-image-animator.opening-the-image": {
     "text": "Opening the image…",
@@ -342,6 +358,10 @@
   "image-animator.mc-image-animator.saving-the-window-closes-when-it-is-done": {
     "text": "Saving… The window closes when it is done.",
     "hash": "1ca4d921"
+  },
+  "image-animator.mc-image-animator.settings": {
+    "text": "Settings",
+    "hash": "74a883a0"
   },
   "image-animator.mc-image-animator.the-saved-animation-of-this-image-is-not": {
     "text": "The saved animation of this image is not valid, so the image cannot be animated here.",
@@ -390,6 +410,10 @@
   "image-animator.mc-image-animator.your-image-library-is-over-50-mib-a-large": {
     "text": "Your image library is over 50 MiB. A large library can slow down older devices. You can still save.",
     "hash": "dd014dcf"
+  },
+  "image-animator.mc-image-animator.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
   },
   "image-animator.morph-panel.add-morph": {
     "text": "Add morph",
