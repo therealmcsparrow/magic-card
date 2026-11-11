@@ -33,6 +33,7 @@ export function slider(o: SliderOptions): TemplateResult {
     <input
       id=${o.id}
       type="range"
+      aria-label=${o.label}
       min=${o.min}
       max=${o.max}
       step=${o.step}

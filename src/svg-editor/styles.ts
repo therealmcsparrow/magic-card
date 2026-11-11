@@ -675,7 +675,9 @@ export const editorStyles: CSSResult[] = [
       pointer-events: auto;
     }
     .center.fstage {
-      min-inline-size: 100%;
+      inline-size: 100%;
+      min-inline-size: 0;
+      max-inline-size: 100%;
       min-block-size: max(320px, calc(100vh - 220px));
       padding: 0;
     }
@@ -699,8 +701,28 @@ export const editorStyles: CSSResult[] = [
       cursor: pointer;
     }
     .tabs [aria-selected='true'] {
-      background: var(--mc-accent-tint);
-      color: var(--mc-accent-ink);
+      background: var(--bp-acc-soft);
+      color: var(--bp-acc);
+    }
+    mc-ui-studio-frame .switch {
+      background: var(--bp-mute);
+    }
+    mc-ui-studio-frame .switch::after {
+      background: var(--bp-sheet);
+    }
+    mc-ui-studio-frame .switch[aria-checked='true'] {
+      background: var(--bp-acc);
+    }
+    mc-ui-studio-frame .switch[aria-checked='true']::after {
+      background: var(--bp-acc-ink);
+    }
+    .ftop .topbar {
+      flex: 1 0 auto;
+      flex-wrap: nowrap;
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      background: none;
     }
     .tabs [role='tab']:focus-visible {
       outline: 2px solid var(--mc-accent);

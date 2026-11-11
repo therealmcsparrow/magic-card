@@ -628,7 +628,7 @@ function floatBar(ed: McSvgEditor): TemplateResult {
     ${ed.img ? nothing : zoomGroup(ed)}
     ${ed.img ? ed.img.previewButton() : html`<button type="button" class="btn btn-secondary btn-sm" data-pv aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}>${t('svg-editor.views.preview')}</button>`}
     ${btn(t('svg-editor.views.grid-size', { size: ed.grid }), 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'", text: true })}${btn(t('svg-editor.views.snap-to-grid'), 'magnet', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}
-    <span role="separator" aria-orientation="vertical"></span>
+    <span class="sep" aria-hidden="true" data-dir="vertical"></span>
     ${menuBtn('align')}${menuBtn('combine')}${menuBtn('path')}
   </div>`;
 }

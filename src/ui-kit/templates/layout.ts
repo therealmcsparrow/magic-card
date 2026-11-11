@@ -61,7 +61,7 @@ export function toolbar(o: { label: string; orientation: 'horizontal' | 'vertica
   >
     ${o.items.map((it) =>
       it === 'divider'
-        ? html`<span role="separator" aria-orientation=${o.orientation === 'horizontal' ? 'vertical' : 'horizontal'}></span>`
+        ? html`<span class="sep" aria-hidden="true" data-dir=${o.orientation === 'horizontal' ? 'vertical' : 'horizontal'}></span>`
         : button(o.kind === 'float' && !it.iconOnly ? { ...it, size: 'sm' } : { ...it, size: it.iconOnly && o.kind === 'float' ? 'sm' : it.size }),
     )}
   </div>`;

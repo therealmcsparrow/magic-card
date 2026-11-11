@@ -18,6 +18,10 @@ h2,h3,h4,p,ul{margin:0}
 .msg{display:grid;justify-items:center;gap:8px;padding:24px;text-align:center}
 .layer>mc-ui-studio-frame{flex:1;min-block-size:0}
 mc-ui-studio-frame,mc-ui-studio-frame *{--mc-ground:var(--bp-bg);--mc-surface:var(--bp-sheet);--mc-surface-2:var(--bp-surf2);--mc-text:var(--bp-ink);--mc-text-2:var(--bp-mute);--mc-divider:var(--bp-line);--mc-field-border:var(--bp-edge);--mc-accent:var(--bp-acc);--mc-accent-tint:var(--bp-acc-soft);--mc-radius:var(--bp-r-s);--mc-font:var(--bp-font-ui);--mc-mono:var(--bp-font-mono)}
+mc-ui-studio-frame .switch{background:var(--bp-mute)}
+mc-ui-studio-frame .switch::after{background:var(--bp-sheet)}
+mc-ui-studio-frame .switch[aria-checked='true']{background:var(--bp-acc)}
+mc-ui-studio-frame .switch[aria-checked='true']::after{background:var(--bp-acc-ink)}
 .fr-bar{display:flex;flex:1;align-items:center;min-inline-size:0;block-size:100%}
 .fr-bar .topbar{flex:1;min-inline-size:0}
 [data-layout=compact] .topbar .title,[data-layout=stacked] .topbar .title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
