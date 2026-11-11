@@ -1390,7 +1390,7 @@ export class StudioCanvas extends LitElement {
       >
         <div class="canvas-inner">
           <div class="device ${wd.borderless ? 'borderless' : ''}" style="--device-w:${wd.px === null ? '100%' : `${wd.px}px`}" @transitionend=${this._queuePlace}>
-            <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span>${this._tabState
+            <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} ${t('card-editor.studio-canvas.unit-px')}${squeezed}` : ''}</span>${this._tabState
               ? html`<span class="state-chip" role="status">${t('card-editor.studio-canvas.showing-state', { state: this._tabState === 'hover' ? t('card-editor.studio-canvas.hover') : this._tabState === 'active' ? t('card-editor.studio-canvas.active-tab') : t('card-editor.studio-canvas.disabled-tab') })}</span>`
               : nothing}<span class="device-note">${wd.canMatch
               ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('card-editor.studio-canvas.match-view')}</button>`
@@ -1435,13 +1435,12 @@ export class StudioCanvas extends LitElement {
         : html`<p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
         ${tx('card-editor.studio-canvas.click-a-module-to-select-it-move-moves', {
           // the named keys are words in the user's language, like the icon editor's hints (Alt+Omhoog)
-          move: html`<kbd>Alt</kbd> + <kbd>${t('card-editor.studio-canvas.up')}</kbd>/<kbd>${t('card-editor.studio-canvas.down')}</kbd>`,
+          move: html`<kbd>${t('card-editor.studio-canvas.key-alt')}</kbd> + <kbd>${t('card-editor.studio-canvas.up')}</kbd>/<kbd>${t('card-editor.studio-canvas.down')}</kbd>`,
           remove: html`<kbd>${t('card-editor.studio-canvas.del')}</kbd>`,
-          menu: html`<kbd>Shift</kbd> + <kbd>F10</kbd>`,
+          menu: html`<kbd>${t('card-editor.studio-canvas.key-shift')}</kbd> + <kbd>F10</kbd>`,
         })}
         ${tx('card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd', {
-          ctrl: html`<kbd>Ctrl</kbd> + <kbd>\\</kbd>`,
-          cmd: html`<kbd>⌘</kbd> + <kbd>\\</kbd>`,
+          keys: html`<kbd>${t('card-editor.studio-canvas.key-ctrl')}</kbd> + <kbd>\\</kbd> ${t('card-editor.studio-canvas.key-or')} <kbd>⌘</kbd> + <kbd>\\</kbd>`,
         })}
       </p>`}
       <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>

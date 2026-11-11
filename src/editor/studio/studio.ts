@@ -110,6 +110,8 @@ export class Studio extends LitElement {
   /** The user's pick; null = follow the view. Lives as long as this dialog. */
   @state() private _override: CanvasWidthOption | null = null;
   @state() private _showLayers = false;
+  /** Modified only mirrors the frame's switch, which starts off at every opening. */
+  @state() private _modifiedOnly = false;
   /**
    * Preview: the canvas card runs live (real actions) and the studio is read-only. Layers, inspector and
    * the YAML editor stay mounted (hidden), so leaving brings everything back as it was. Never kept across openings.
@@ -176,6 +178,7 @@ export class Studio extends LitElement {
     if ((changed.has('open') && this.open) || changed.has('lovelace')) this._detect();
     // every opening and closing starts in editing (here, so it costs no second update)
     if (changed.has('open')) {
+      this._modifiedOnly = false;
       this._live = false;
       if (this.open) this._lips.restore();
     }
@@ -564,6 +567,7 @@ export class Studio extends LitElement {
                 .measure=${this._measure(mode)}
                 .rulers=${mode === 'form' || live}
                 @mc-frame-drawer=${() => this.requestUpdate()}
+                @mc-frame-modified=${(e: CustomEvent<{ on: boolean }>) => { this._modifiedOnly = e.detail.on; }}
                 @mc-canvas-measure=${this._onCanvasMeasure}
               >
                 ${this._renderTopbar(s, mode)}
@@ -589,7 +593,7 @@ export class Studio extends LitElement {
                       </div>
                     `
                   : nothing}
-                <mc-inspector slot="drawer" id="inspector" .stateManager=${sm} .hass=${this.hass} variant="studio" ?hidden=${live}></mc-inspector>
+                <mc-inspector slot="drawer" id="inspector" .stateManager=${sm} .hass=${this.hass} variant="studio" .modifiedOnly=${this._modifiedOnly} ?hidden=${live}></mc-inspector>
               </mc-ui-studio-frame>
               <div class="lips" style=${this._lipTokens()}>${lips.lip('layers')}</div>
             `

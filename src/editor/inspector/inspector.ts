@@ -51,6 +51,7 @@ import { onStatus } from '../layers/bg-status';
 import { moveLayer, turnOnLowPower } from '../layers/layer-actions';
 import type { MoveTo } from '../layers/placement-model';
 import { withEditorKey } from '../../utils/editor-key';
+import { skipField, withModifiedOnly } from '../../utils/modified-only';
 import {
   CardUpdate,
   CardPatch,
@@ -119,6 +120,8 @@ export class Inspector extends LitElement {
   @property({ attribute: false }) stateManager?: EditorStateManager;
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ reflect: true }) variant: 'pane' | 'studio' = 'pane';
+  /** Studio drawer: show only fields whose key is set (the default is the key being absent). Off in the dialog pane. */
+  @property({ attribute: false }) modifiedOnly = false;
 
   @state() private _state?: EditorState;
   @state() private _tabs: Record<Kind, EditorTab> = { card: 'general', row: 'general', column: 'general', module: 'general', slot: 'general' };
@@ -130,6 +133,10 @@ export class Inspector extends LitElement {
   /** Card Design tab: which design is edited (Default, Hover or a rule id) and the groups the user toggled. */
   @state() private _designView = 'default';
   @state() private _designOpen = new Map<string, boolean>();
+
+  /** Modified only: labels of fields the user edited since the selection, tab or filter changed; they stay while at default. */
+  private _keep = new Set<string>();
+  private _keepKey = '';
 
   private _unsubscribe?: () => void;
   private _subscribedTo?: EditorStateManager;
@@ -156,6 +163,12 @@ export class Inspector extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('stateManager') && this.stateManager !== this._subscribedTo) this._subscribe();
+    const sel = this._selection();
+    const keepKey = `${this._state?.selectedPath ?? ''}|${this._activeTab(sel, this._tabsFor(sel))}|${this.modifiedOnly}`;
+    if (keepKey !== this._keepKey) {
+      this._keepKey = keepKey;
+      this._keep = new Set();
+    }
   }
 
   protected updated(): void {
@@ -442,8 +455,8 @@ export class Inspector extends LitElement {
             })}
           </div>
         </div>
-        <div class="insp-body" role="tabpanel" tabindex="0" id="panel-${tab}" aria-labelledby="tab-${tab}">
-          ${this._renderBody(config, sel, tab)}
+        <div class="insp-body" role="tabpanel" tabindex="0" id="panel-${tab}" aria-labelledby="tab-${tab}" @input=${this._onTouch} @change=${this._onTouch} @click=${this._onTouch}>
+          ${this._renderFiltered(config, sel, tab)}
         </div>
       </div>
     `;
@@ -526,6 +539,46 @@ export class Inspector extends LitElement {
             ? html`${dot}<span class="hidden-note"><ha-icon icon="mdi:eye-off-outline"></ha-icon>${t('card-editor.inspector.hidden-on-dashboard')}</span>`
             : nothing}</p>
         </div>
+      </div>
+    `;
+  }
+
+  /** Modified only: a field the user touches keeps its place until the selection, tab or filter changes. */
+  private _onTouch = (e: Event): void => {
+    if (!this.modifiedOnly) return;
+    for (const el of e.composedPath()) {
+      if (!(el instanceof HTMLElement) || !(el.classList.contains('mc-field') || el.classList.contains('switch-row'))) continue;
+      const label = el.querySelector('label')?.textContent?.trim();
+      if (label) this._keep.add(label);
+      return;
+    }
+  };
+
+  /** The body, with Modified only on: fields at their default are not rendered (never hidden), so they cannot take focus. */
+  private _renderFiltered(config: MagicCardConfig, sel: Selection, tab: EditorTab): TemplateResult {
+    if (!this.modifiedOnly) return this._renderBody(config, sel, tab);
+    const { value, count } = withModifiedOnly(this._keep, () => this._renderBody(config, sel, tab));
+    return html`${value}${count.shown === 0 && count.skipped > 0
+      ? html`<p class="help" role="status">${t('card-editor.studio.nothing-modified')}</p>`
+      : nothing}`;
+  }
+
+  /** Studio drawer, General tab: the editor-only layer name, the same one the Layers tree renames. */
+  private _renderLayerName(sel: Extract<Selection, { kind: 'module' }>, mod: CardModule): TemplateResult | typeof nothing {
+    if (this.variant !== 'studio') return nothing;
+    const label = t('card-editor.inspector.layer-name');
+    const current = layerName(mod);
+    if (skipField(label, current)) return nothing;
+    return html`
+      <div class="mc-field">
+        <div class="field-head"><label for="layer-name">${label}</label></div>
+        <input
+          id="layer-name"
+          class="input"
+          type="text"
+          .value=${current ?? ''}
+          @change=${(e: Event) => this.stateManager?.setLayerName(sel, (e.target as HTMLInputElement).value)}
+        />
       </div>
     `;
   }
@@ -659,7 +712,7 @@ export class Inspector extends LitElement {
     }
     const body = withEditorKey(selectionKey(sel), () => moduleEditors.render(tab, mod, this.hass, onChange, template, resolveEntitySource(config, sel), layerContext(config, sel)));
     // the Layer group's order buttons and the Low-power button leave as events (they need the list and the card)
-    return html`<div class="mod-body" @mc-layer-move=${(e: CustomEvent<{ to: MoveTo }>) => { if (sm) moveLayer(sm, sel, e.detail.to); }} @mc-layers-low-power=${() => { if (sm) turnOnLowPower(sm); }}>${this._renderChildListSync(config, sel)}${body}</div>`;
+    return html`<div class="mod-body" @mc-layer-move=${(e: CustomEvent<{ to: MoveTo }>) => { if (sm) moveLayer(sm, sel, e.detail.to); }} @mc-layers-low-power=${() => { if (sm) turnOnLowPower(sm); }}>${this._renderChildListSync(config, sel)}${tab === 'general' ? this._renderLayerName(sel, mod) : nothing}${body}</div>`;
   }
 
   /**

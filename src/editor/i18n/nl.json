@@ -3831,6 +3831,10 @@
     "text": "Verborgen op dashboard",
     "hash": "7930f82a"
   },
+  "card-editor.inspector.layer-name": {
+    "text": "Laagnaam",
+    "hash": "b6db8b76"
+  },
   "card-editor.inspector.layout-layout": {
     "text": "indeling {layout}",
     "hash": "4d732400"
@@ -5748,8 +5752,8 @@
     "hash": "0d10d652"
   },
   "card-editor.structure-outline.n": {
-    "text": "{n, plural, one {module} other {modules}}",
-    "hash": "6bc7bbc0"
+    "text": "{n, plural, one {# module} other {# modules}}",
+    "hash": "a59f96c2"
   },
   "card-editor.structure-outline.name-actions": {
     "text": "Acties voor {name}",
@@ -5891,6 +5895,22 @@
     "text": "Hover",
     "hash": "c76ae86a"
   },
+  "card-editor.studio-canvas.key-alt": {
+    "text": "Alt",
+    "hash": "c91da2e0"
+  },
+  "card-editor.studio-canvas.key-ctrl": {
+    "text": "Ctrl",
+    "hash": "e2ee2909"
+  },
+  "card-editor.studio-canvas.key-or": {
+    "text": "of",
+    "hash": "7175517a"
+  },
+  "card-editor.studio-canvas.key-shift": {
+    "text": "Shift",
+    "hash": "2e544a29"
+  },
   "card-editor.studio-canvas.layers-here-n": {
     "text": "Lagen hier ({n})",
     "hash": "16a6bb69"
@@ -5976,8 +5996,8 @@
     "hash": "b6ea7fb6"
   },
   "card-editor.studio-canvas.show-or-hide-panels-ctrl-or-cmd": {
-    "text": "Panelen tonen of verbergen: {ctrl} of {cmd}.",
-    "hash": "0c01a4f9"
+    "text": "Panelen tonen of verbergen: {keys}.",
+    "hash": "ccf407b6"
   },
   "card-editor.studio-canvas.showing-state": {
     "text": "Weergave: {state}",
@@ -5986,6 +6006,10 @@
   "card-editor.studio-canvas.shown-at-px-px": {
     "text": ", getoond op {px} px",
     "hash": "72dc4b9f"
+  },
+  "card-editor.studio-canvas.unit-px": {
+    "text": "px",
+    "hash": "6ee2cc10"
   },
   "card-editor.studio-canvas.up": {
     "text": "Omhoog",

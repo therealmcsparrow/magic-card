@@ -4,6 +4,7 @@ import { CardModule, HomeAssistant } from '../types';
 import '../editor/components/sync-indicator';
 import '../editor/components/attribute-picker';
 import '../editor/components/box-field';
+import { skipField } from './modified-only';
 
 /**
  * Render a field label with optional sync indicator.
@@ -129,6 +130,7 @@ export function renderTextField(
   syncContext?: SyncContext,
   options?: { placeholder?: string; mono?: boolean },
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -153,6 +155,7 @@ export function renderTextareaField(
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -176,6 +179,7 @@ export function renderNumberField(
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -207,6 +211,7 @@ export function renderSelectField(
   syncContext?: SyncContext,
   opts?: { disabled?: boolean },
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${label ? renderFieldHead(label, propertyName, syncContext) : nothing}
@@ -240,6 +245,7 @@ export function renderSegField(
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   const current = options.some((o) => o.value === value) ? value : options[0]?.value;
   const onKey = (e: KeyboardEvent) => {
     const idx = options.findIndex((o) => o.value === current);
@@ -286,6 +292,7 @@ export function renderToggleField(
   syncContext?: SyncContext,
   help?: string,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="switch-row">
       <div class="txt">
@@ -313,6 +320,7 @@ export function renderEntityField(
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -334,6 +342,7 @@ export function renderServiceField(
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -358,6 +367,7 @@ export function renderColorField(
   /** Offer "entity colour" with a colour from an attribute (slider colours, contract entity-colour 1.0.0): the entity's live state colour and attributes. */
   entity?: { color?: string; attributes?: Record<string, unknown> },
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -385,6 +395,7 @@ export function renderUnitField(
   placeholder?: string,
   units?: string[],
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -407,6 +418,7 @@ export function renderBoxField(
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   const design = { [baseName]: value || '' } as Record<string, unknown>;
   return html`
     <div class="mc-field">
@@ -431,6 +443,7 @@ export function renderIconField(
   syncContext?: SyncContext,
   animated?: { module: CardModule; onModule: (m: CardModule) => void },
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -452,6 +465,7 @@ export function renderCardField(
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -472,6 +486,7 @@ export function renderMediaField(
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
@@ -501,6 +516,7 @@ export function renderAttributeField(
   caption?: string,
   extras?: ReadonlyArray<{ value: string; label: string }>,
 ): TemplateResult {
+  if (skipField(label, value)) return html``;
   if (!entityId || !hass) return html``;
 
   const entity = hass.states[entityId];
