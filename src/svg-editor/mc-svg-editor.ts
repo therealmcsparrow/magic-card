@@ -16,6 +16,7 @@ import { loadPathBooleans } from '../path-booleans/loader';
 import type { PathTool } from '../contracts/path-tools';
 import { FRAME_WIDE_MIN_PX, UI_STUDIO_FRAME_TAG, type StudioFrameElement } from '../contracts/studio-frame';
 import { defineKitElements } from '../ui-kit/define-parts';
+import { loadStudioFonts } from '../ui-kit';
 import { StudioFrame } from '../ui-kit/frame/studio-frame';
 import type { BooleanOp } from '../contracts/path-booleans';
 import { loadPathCanvas } from '../path-canvas/loader';
@@ -287,6 +288,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   connectedCallback(): void {
     super.connectedCallback();
+    void loadStudioFonts();
     this.setAttribute('data-mc-svg-editor', '');
     const active = deepActive();
     if (active) this.opener = { el: active, key: active.getAttribute('data-focus-key') ?? undefined, root: active.getRootNode() };

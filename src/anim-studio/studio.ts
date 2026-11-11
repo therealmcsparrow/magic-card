@@ -47,6 +47,7 @@ import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../con
 import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
 import { t, tr, m, locale, type MessageId } from './i18n';
+import { loadStudioFonts } from '../ui-kit/fonts/load-lazy';
 import { setPseudoRtl } from './pseudo-toggle';
 
 // The animation studio `<magic-card-animation-studio>`: library and editor. The host does the storage; the studio emits
@@ -487,6 +488,7 @@ export class AnimationStudio extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    void loadStudioFonts();
     void labelsLoad.then(() => (this._labels = labelsState));
     this.addEventListener('keydown', this._onKeydown);
     this.addEventListener('pointerdown', this._onPointer);

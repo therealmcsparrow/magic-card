@@ -11,6 +11,7 @@ import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeEditorElement
 import { cloneDoc } from './model';
 import { base } from './styles';
 import { fire } from './util';
+import { loadStudioFonts } from '../ui-kit/fonts/load-lazy';
 import { reasonText } from './start-view';
 import type { CreateDetail } from './start-view';
 import type { Draft } from './editor-view';
@@ -82,6 +83,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
 
   connectedCallback(): void {
     super.connectedCallback();
+    void loadStudioFonts();
     window.addEventListener('beforeunload', this._beforeUnload);
     this._offTrial = subscribeTrial(() => this.requestUpdate());
   }

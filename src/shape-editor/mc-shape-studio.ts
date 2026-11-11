@@ -18,7 +18,7 @@ import type { ShapeOptions } from '../types';
 import { loadCustomShapes } from '../utils/shape-custom-loader';
 import { resolveCustomShape } from '../utils/shape-ref';
 import { clamp, shapePath } from '../utils/shape-path';
-import { RovingFocus, button, chip, defineUiKit, empty, glyph as kitGlyph, notice, row, sectionHead, slider, switchRow, toolbar, topBar } from '../ui-kit';
+import { RovingFocus, button, chip, defineUiKit, empty, glyph as kitGlyph, loadStudioFonts, notice, row, sectionHead, slider, switchRow, toolbar, topBar } from '../ui-kit';
 import { glyph } from './glyphs';
 import { deleteShape, freeId, listShapes, LibraryError, lookupFor, saveShape, slug, tooBig, watchLibrary, type Hass, type LibraryProblem } from './library';
 import {
@@ -214,6 +214,7 @@ export class McShapeStudio extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     defineUiKit();
+    void loadStudioFonts();
     if (this.hass) setI18nLocale(this.hass as unknown as LocaleHassLike);
     this.addEventListener('keydown', this.onKey);
     this.addEventListener('keydown', this.onEsc, true);

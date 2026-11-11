@@ -7,6 +7,7 @@ import type { HomeAssistant } from '../types';
 import { editorSystem } from '../css/editor-stack';
 import { kitButtonExtras } from '../ui-kit/css/extras';
 import { defineKitElements } from '../ui-kit/define-parts';
+import { loadStudioFonts } from '../ui-kit';
 import { StudioFrame } from '../ui-kit/frame/studio-frame';
 import { createClip, deleteClip, duplicateClip, moveClip, parseWhen, renameClip, setClipPlay, setClipTiming, type ClipsError, type ClipTiming } from './clips';
 import { renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
@@ -81,6 +82,7 @@ export class McImageAnimator extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     defineKitElements([[UI_STUDIO_FRAME_TAG, StudioFrame]]);
+    void loadStudioFonts();
     this._started ??= this._open();
   }
 

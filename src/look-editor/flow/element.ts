@@ -14,6 +14,7 @@ import { fieldReset } from '../../editor/components/field-reset';
 import { renderColorRangesField } from '../../editor/components/color-ranges-field';
 import '../../editor/components/color-picker';
 import '../../editor/components/icon-picker';
+import { loadStudioFonts } from '../../ui-kit';
 import { FrameShell, LOOK_STAGE_MEASURE } from '../frame-shell';
 import { t } from '../i18n';
 import { FLOW_PRESETS } from '../presets';
@@ -122,6 +123,11 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
   private _before?: FlowConfig;
   private readonly _id = `mc-fle-${++uid}`;
   private readonly _shell = new FrameShell(this);
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    void loadStudioFonts();
+  }
 
   // ── writes ──
 

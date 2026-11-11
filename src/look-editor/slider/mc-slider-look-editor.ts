@@ -13,6 +13,7 @@ import { seg } from '../../ui-kit/templates/choice';
 import { notice } from '../../ui-kit/templates/status';
 import { numericControl } from '../../utils/entity-control';
 import { entityStateColor } from '../../utils/entity-color';
+import { loadStudioFonts } from '../../ui-kit';
 import { FrameShell, LOOK_STAGE_MEASURE } from '../frame-shell';
 import { t } from '../i18n';
 import { SLIDER_PRESETS, TRACK_TILES } from './presets';
@@ -125,6 +126,11 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
   /** Sections opened here when the host passes no onToggle (a bare mount). */
   private _own = new Set<string>();
   private readonly _shell = new FrameShell(this);
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    void loadStudioFonts();
+  }
   /** The user closed Track and fill, which is open by itself while a look key is set. */
   @state() private _trackClosed = false;
   @state() private _undoLabel = '';

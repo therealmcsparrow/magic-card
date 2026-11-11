@@ -9,7 +9,7 @@ import { describeSelection, selectionFromPath, selectionKey } from './selection'
 import { kitTopbar } from '../../ui-kit/css/extras';
 import { kitLip } from '../../ui-kit/css/lip';
 import { kitBlueprint } from '../../ui-kit/css/blueprint';
-import { defineUiKit } from '../../ui-kit';
+import { defineUiKit, loadStudioFonts } from '../../ui-kit';
 import { readDirection } from '../../ui-kit/controllers/direction';
 import { PanelLips } from '../../ui-kit/controllers/panel-lips';
 import type { PanelLipSpec, PanelLipStrings } from '../../contracts/ui-kit';
@@ -160,6 +160,7 @@ export class Studio extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     defineUiKit();
+    void loadStudioFonts();
     this._wideLayers?.addEventListener?.('change', this._onViewport);
     if (this.stateManager && !this._unsubscribe) this._subscribe();
   }
