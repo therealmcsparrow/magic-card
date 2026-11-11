@@ -1416,6 +1416,26 @@ export class McteEditorView extends LitElement {
         white-space: nowrap;
       }
       @media (max-width: 479px) {
+        /* the name, the chips and the buttons wrap onto a second row instead of pushing a control off the screen */
+        .fr-bar {
+          flex-wrap: wrap;
+          padding-block: var(--bp-s-3);
+        }
+        .tname {
+          flex: 1 1 8rem;
+        }
+        .chips {
+          flex: 0 1 auto;
+          flex-wrap: wrap;
+          white-space: normal;
+        }
+        .fr-bar .spacer {
+          display: none;
+        }
+        .fr-bar .grp {
+          flex: 1 1 auto;
+          justify-content: flex-end;
+        }
         .back-label,
         .vr {
           position: absolute;

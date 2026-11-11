@@ -202,7 +202,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   }
   :host([centre-stage]) .field {
     display: grid;
-    padding-inline: 8px;
+    padding-inline: 20px; /* the card studio canvas bleeds 20px each side for its handles; this room keeps that bleed inside the field */
   }
   .content {
     position: relative;
