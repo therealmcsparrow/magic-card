@@ -5,7 +5,7 @@ import type { FlowBudget, FlowLineStyle, FlowShape } from '../../contracts/flow-
 import { FLOW_LOOK_DEFAULTS, defaultCapSize } from '../../contracts/flow-look.defaults';
 import { FLOW_SPIN_SHAPES } from '../../contracts/flow-look.needs';
 import { FLOW_LOOK_EDITOR_TAG, LOOK_UNDO_TOAST_MS, type FlowLookEditorElement, type FlowPreset } from '../../contracts/look-editor';
-import type { UiChoice, UiChoicePick, UiToastElement } from '../../contracts/ui-kit';
+import type { StudioFrameStrings, UiChoice, UiChoicePick, UiToastElement } from '../../contracts/ui-kit';
 import { editorSystem } from '../../css/editor-stack';
 import { kitNotice } from '../../ui-kit/css';
 import { lazyChunks } from '../../utils/lazy-chunks';
@@ -14,6 +14,7 @@ import { fieldReset } from '../../editor/components/field-reset';
 import { renderColorRangesField } from '../../editor/components/color-ranges-field';
 import '../../editor/components/color-picker';
 import '../../editor/components/icon-picker';
+import { FrameShell, LOOK_STAGE_MEASURE } from '../frame-shell';
 import { t } from '../i18n';
 import { FLOW_PRESETS } from '../presets';
 import { LINE_TILES, SHAPE_TILES } from '../tiles';
@@ -34,6 +35,11 @@ const SECTION_KEYS: Record<string, readonly Key[]> = {
   swarm: ['motion', 'spacing_mode', 'spacing', 'size_variation', 'shape_alternate'],
   arrival: ['arrival', 'arrival_size'],
 };
+const COLOUR_KEYS: readonly string[] = ['color', 'color_mode', 'color_to', 'thresholds'];
+const STYLE_KEYS: readonly string[] = [
+  'line_style', 'dash_length', 'dash_gap', 'rail_gap', 'amplitude', 'wavelength', 'electric', 'tube_tint', 'bubbles', 'bubble_count',
+  'tube_fill_value', 'flicker', 'neon_core', 'cable_color', 'twisted',
+];
 
 let uid = 0;
 const strip = (s: string): string => s.replace(/\s*\([^)]*\)$/, '');
@@ -44,31 +50,52 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
     kitNotice,
     css`
       :host {
-        display: grid;
-        gap: 16px;
-        min-width: 0;
+        display: block;
+        min-inline-size: 0;
+      }
+      mc-ui-studio-frame {
+        min-block-size: 26rem;
+        --mc-ground: var(--bp-bg);
+        --mc-surface: var(--bp-sheet);
+        --mc-text: var(--bp-ink);
+        --mc-text-2: var(--bp-mute);
+        --mc-divider: var(--bp-line);
+        --mc-canvas: var(--bp-bg);
       }
       .stack {
         display: grid;
         gap: 16px;
-        min-width: 0;
+        min-inline-size: 0;
+      }
+      .stage {
+        display: grid;
+        gap: 16px;
+        padding: 16px;
+        min-inline-size: 0;
+      }
+      .drawer {
+        display: grid;
+        gap: 16px;
+        min-inline-size: 0;
       }
       .bar {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 8px;
+        padding-inline: 12px;
+        min-inline-size: 0;
       }
       .bar .status {
-        flex: 1 1 12rem;
+        flex: 1 1 8rem;
         margin: 0;
-        min-width: 0;
+        min-inline-size: 0;
         overflow-wrap: anywhere;
       }
       .sr {
         position: absolute;
-        width: 1px;
-        height: 1px;
+        inline-size: 1px;
+        block-size: 1px;
         overflow: hidden;
         clip: rect(0 0 0 0);
         white-space: nowrap;
@@ -94,6 +121,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
   private _undoName?: string;
   private _before?: FlowConfig;
   private readonly _id = `mc-fle-${++uid}`;
+  private readonly _shell = new FrameShell(this);
 
   // ── writes ──
 
@@ -348,16 +376,6 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
 
   private _presets(): TemplateResult {
     const items: UiChoice[] = FLOW_PRESETS.map((p) => ({ value: p.id, label: t(p.label), description: t(p.description), preview: p.preview }));
-    const st = lookStatus(this.flow);
-    const text =
-      st.kind === 'default'
-        ? t('look-editor.element.default-look')
-        : st.kind === 'preset'
-          ? t('look-editor.element.name-look', { name: t(st.preset.label) })
-          : st.kind === 'started'
-            ? t('look-editor.element.your-own-look-started-from-name', { name: t(st.preset.label) })
-            : t('look-editor.element.your-own-look');
-    const undoText = this._undoName ? t('look-editor.element.undo-name-look', { name: this._undoName }) : this._before ? t('look-editor.element.undo-reset') : t('look-editor.element.undo');
     return html`
       <mc-ui-chip-group
         data-key="presets"
@@ -369,13 +387,36 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
           if (p) this._apply(p);
         }}
       ></mc-ui-chip-group>
-      <div class="bar">
-        <p class="help status" data-role="status">${text}</p>
-        ${this.undo ? html`<button type="button" class="btn btn-text btn-sm" data-role="undo" @click=${this._undo}>${undoText}</button>` : nothing}
-        <button type="button" class="btn btn-text btn-sm" data-role="reset" @click=${() => this._reset()}>${t('look-editor.element.reset-look')}</button>
-      </div>
       ${this._still ? html`<p class="help" role="status">${t('look-editor.element.your-system-has-reduced-motion-on-so')}</p>` : nothing}
     `;
+  }
+
+  /** The bar above the stage: look status, inline Undo, Reset look, and Settings to open the drawer. */
+  private _bar(): TemplateResult {
+    const st = lookStatus(this.flow);
+    const text =
+      st.kind === 'default'
+        ? t('look-editor.element.default-look')
+        : st.kind === 'preset'
+          ? t('look-editor.element.name-look', { name: t(st.preset.label) })
+          : st.kind === 'started'
+            ? t('look-editor.element.your-own-look-started-from-name', { name: t(st.preset.label) })
+            : t('look-editor.element.your-own-look');
+    const undoText = this._undoName ? t('look-editor.element.undo-name-look', { name: this._undoName }) : this._before ? t('look-editor.element.undo-reset') : t('look-editor.element.undo');
+    const narrow = this._shell.narrow;
+    return html`<div slot="top" class="bar">
+      <p class="help status" data-role="status">${text}</p>
+      ${this.undo ? html`<button type="button" class="btn btn-text btn-sm" data-role="undo" @click=${this._undo}>${undoText}</button>` : nothing}
+      <button type="button" class="btn btn-text btn-sm" data-role="reset" @click=${() => this._reset()}>${t('look-editor.element.reset-look')}</button>
+      <button
+        type="button"
+        class="btn btn-text btn-sm"
+        data-role="settings"
+        aria-haspopup=${narrow ? 'dialog' : nothing}
+        aria-expanded=${narrow ? nothing : this._shell.frame()?.drawerOpen ? 'true' : 'false'}
+        @click=${this._shell.onSettings}
+      >${t('look-editor.element.settings')}</button>
+    </div>`;
   }
 
   private _colourBlock(): TemplateResult {
@@ -550,10 +591,8 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
     );
   }
 
-  private _shapesFold(): TemplateResult {
-    const f = this.flow;
-    const shape = (f.shape ?? 'dot') as FlowShape;
-    const names: Record<FlowShape, string> = {
+  private _shapeNames(): Record<FlowShape, string> {
+    return {
       dot: t('look-editor.element.dot'),
       arrow: t('look-editor.element.arrow'),
       chevron: t('look-editor.element.chevron'),
@@ -566,7 +605,25 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
       drop: t('look-editor.element.drop'),
       icon: t('look-editor.element.icon'),
     };
+  }
+
+  /** The shape tiles sit on the stage beside the line tiles. */
+  private _shapeTiles(): TemplateResult {
+    const names = this._shapeNames();
     const items: UiChoice[] = (Object.keys(names) as FlowShape[]).map((v) => ({ value: v, label: names[v], preview: SHAPE_TILES[v] }));
+    return html`<mc-ui-tile-group
+      data-key="shape"
+      .label=${t('look-editor.element.shape')}
+      .items=${items}
+      .value=${(this.flow.shape ?? 'dot') as FlowShape}
+      @mc-pick=${(e: CustomEvent<UiChoicePick>) => this._edit({ shape: e.detail.value === 'dot' ? undefined : e.detail.value })}
+    ></mc-ui-tile-group>`;
+  }
+
+  private _shapesFold(): TemplateResult {
+    const f = this.flow;
+    const shape = (f.shape ?? 'dot') as FlowShape;
+    const names = this._shapeNames();
     const dots = f.dots ?? DEFAULT_DOTS;
     const dot = shape === 'dot';
     const pixels = f.motion !== 'pulse' && spacingMode(f) !== 'even';
@@ -574,14 +631,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
       'shapes',
       t('look-editor.element.shapes'),
       [names[shape], t('look-editor.element.n-px', { n: f.dot_size ?? DEFAULT_DOT_SIZE }), String(dots)].join(' · '),
-      html`<mc-ui-tile-group
-          data-key="shape"
-          .label=${t('look-editor.element.shape')}
-          .items=${items}
-          .value=${shape}
-          @mc-pick=${(e: CustomEvent<UiChoicePick>) => this._edit({ shape: e.detail.value === 'dot' ? undefined : e.detail.value })}
-        ></mc-ui-tile-group>
-        ${shape === 'icon'
+      html`${shape === 'icon'
           ? html`${this._label(
                 t('look-editor.element.icon'),
                 'shape_icon',
@@ -683,12 +733,56 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
     );
   }
 
+  private _strings(): StudioFrameStrings {
+    return {
+      pin: t('look-editor.element.keep-inspector-open'),
+      modifiedOnly: t('look-editor.element.modified-only'),
+      noneModified: t('look-editor.element.none-modified'),
+      close: t('look-editor.element.close-inspector'),
+      drawer: t('look-editor.element.inspector'),
+      zoom: t('look-editor.element.zoom'),
+    };
+  }
+
+  /** A group of keys is shown while Modified only is off, or when one of its keys is set. */
+  private _shows(keys: readonly string[]): boolean {
+    return !this._shell.modifiedOnly || keys.some((k) => this._f[k] !== undefined);
+  }
+
+  private _drawer(): TemplateResult {
+    const style = this._styleFields();
+    const groups: Array<[readonly string[], () => TemplateResult | typeof nothing]> = [
+      [COLOUR_KEYS, () => html`<div class="stack">${this._colourBlock()}</div>`],
+      [STYLE_KEYS, () => (style === nothing ? nothing : html`<div class="stack">${style}</div>`)],
+      [SECTION_KEYS.line, () => this._lineFold()],
+      [SECTION_KEYS.ends, () => this._endsFold()],
+      [SECTION_KEYS.shapes, () => this._shapesFold()],
+      [SECTION_KEYS.swarm, () => this._swarmFold()],
+      [SECTION_KEYS.arrival, () => this._arrivalFold()],
+    ];
+    const shown = groups.filter(([keys]) => this._shows(keys));
+    return html`<div slot="drawer" class="drawer">
+      ${this._notices()} ${this._presets()}
+      ${this._shell.modifiedOnly && !shown.length ? html`<p class="help" role="status">${t('look-editor.element.none-modified')}</p>` : nothing}
+      ${shown.map(([, render]) => render())}
+    </div>`;
+  }
+
   protected render(): TemplateResult {
     return html`
-      ${this._notices()} ${this._presets()}
-      <div class="stack">${this._colourBlock()}</div>
-      <div class="stack">${this._tiles()} ${this._styleFields()}</div>
-      ${this._lineFold()} ${this._endsFold()} ${this._shapesFold()} ${this._swarmFold()} ${this._arrivalFold()}
+      <mc-ui-studio-frame
+        studio="look-editor"
+        .scheme=${this.hass?.themes?.darkMode ? 'dark' : 'light'}
+        .strings=${this._strings()}
+        .selectionLabel=${t('look-editor.element.flow-look')}
+        .measure=${LOOK_STAGE_MEASURE}
+        @mc-frame-modified=${this._shell.onModified}
+        @mc-frame-drawer=${this._shell.onDrawer}
+      >
+        ${this._bar()}
+        ${this._drawer()}
+        <div slot="stage" class="stage" @pointerdown=${this._shell.onStage}>${this._tiles()} ${this._shapeTiles()}</div>
+      </mc-ui-studio-frame>
       <div class="sr" role="status" aria-live="polite">${this._announce}</div>
       <mc-ui-toast .offset=${88} .dismissLabel=${t('look-editor.element.dismiss')} @mc-toast-action=${this._undo}></mc-ui-toast>
     `;
