@@ -202,8 +202,8 @@ export function renderCardGeneral(
     ${share
       ? html`<div class="group" data-card-share>
           <div class="bar">
-            <button type="button" class="btn btn-sm" data-share="export" @click=${(e: Event) => void openShare(e, 'export', config, share, Object.keys(hass?.states ?? {}))}><ha-icon icon="mdi:export-variant"></ha-icon>${t('card-editor.card-settings.share-this-card')}</button>
-            <button type="button" class="btn btn-sm" data-share="import" @click=${(e: Event) => void openShare(e, 'import', config, share, Object.keys(hass?.states ?? {}))}><ha-icon icon="mdi:import"></ha-icon>${t('card-editor.card-settings.import-a-shared-card')}</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-share="export" @click=${(e: Event) => void openShare(e, 'export', config, share, Object.keys(hass?.states ?? {}))}><ha-icon icon="mdi:export-variant"></ha-icon>${t('card-editor.card-settings.share-this-card')}</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-share="import" @click=${(e: Event) => void openShare(e, 'import', config, share, Object.keys(hass?.states ?? {}))}><ha-icon icon="mdi:import"></ha-icon>${t('card-editor.card-settings.import-a-shared-card')}</button>
           </div>
           ${PLACEHOLDER_IN_CARD.test(JSON.stringify(config))
             ? html`<div class="bar" data-map-later>

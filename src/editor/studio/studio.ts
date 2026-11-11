@@ -56,7 +56,7 @@ function lipSpecs(): PanelLipSpec[] {
   return [
     { id: 'layers', side: 'start', controls: 'layers', name: t('card-editor.studio.layers-panel'), noun: t('card-editor.studio.layers'),
       hideLabel: t('card-editor.studio.hide-noun-keys', { noun: t('card-editor.studio.layers'), keys }), showLabel: t('card-editor.studio.show-noun-keys', { noun: t('card-editor.studio.layers'), keys }) },
-    { id: 'inspector', side: 'end', controls: 'drawer', name: t('card-editor.studio.inspector-panel'), noun: t('card-editor.studio.inspector'),
+    { id: 'inspector', side: 'end', controls: 'inspector', name: t('card-editor.studio.inspector-panel'), noun: t('card-editor.studio.inspector'),
       hideLabel: t('card-editor.studio.hide-noun-keys', { noun: t('card-editor.studio.inspector'), keys }), showLabel: t('card-editor.studio.show-noun-keys', { noun: t('card-editor.studio.inspector'), keys }) },
   ];
 }
@@ -125,6 +125,7 @@ export class Studio extends LitElement {
     editor: 'card-studio',
     panels: lipSpecs(),
     strings: lipStrings('en'),
+    keys: 'manual',
   });
   private _lipLocale = 'en';
   /** Layers open beside the stage by default from 1280 px; below that the toggle opens it over the stage. */
@@ -162,12 +163,14 @@ export class Studio extends LitElement {
     defineUiKit();
     void loadStudioFonts();
     this._wideLayers?.addEventListener?.('change', this._onViewport);
+    this.addEventListener('keydown', this._onShortcut, { capture: true });
     if (this.stateManager && !this._unsubscribe) this._subscribe();
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this._wideLayers?.removeEventListener?.('change', this._onViewport);
+    this.removeEventListener('keydown', this._onShortcut, { capture: true });
     this._unsubscribe?.();
     this._unsubscribe = undefined;
     this._subscribedTo = undefined;
@@ -282,6 +285,17 @@ export class Studio extends LitElement {
     else frame.openDrawer(e.currentTarget as HTMLElement, 'user');
   };
 
+  /** Ctrl/Cmd + \ shows or hides Layers and the inspector drawer together; below the Layers column it toggles the drawer alone. */
+  private _onShortcut = (e: KeyboardEvent): void => {
+    const columns = this._lips.active;
+    if (!this._lips.handleKey(e)) return;
+    const frame = this._frame;
+    if (!frame || this._live) return;
+    const show = columns ? !this._lips.isHidden('layers') : !frame.drawerOpen;
+    if (show) frame.openDrawer(null, 'user');
+    else frame.closeDrawer('user');
+  };
+
   private _onStagePointerDown = (): void => {
     this._frame?.stageWork();
   };
@@ -314,7 +328,12 @@ export class Studio extends LitElement {
     if (!(this._wideLayers?.matches ?? true)) this._showLayers = false;
     // Edit is an explicit "edit this": the drawer opens first
     this._frame?.openDrawer(this.shadowRoot?.querySelector<HTMLElement>('.drawer-toggle'), 'user');
-    void (this.inspector?.updateComplete ?? Promise.resolve()).then(() => this.inspector?.focusInspector());
+    // the frame shows the drawer (and queues its own focus) on its update; the inspector takes focus after both
+    void (async () => {
+      await (this._frame as (StudioFrameElement & { updateComplete?: Promise<unknown> }) | null)?.updateComplete;
+      await this.inspector?.updateComplete;
+      this.inspector?.focusInspector();
+    })();
   };
 
   /** Rename from the canvas menu: the Layers field (the overlay opens when narrow); focus returns to the canvas. */
@@ -526,7 +545,7 @@ export class Studio extends LitElement {
           <button type="button" class="icon-btn" aria-label=${t('card-editor.studio.redo-ctrl-y')} title=${t('card-editor.studio.redo-ctrl-y')}
             ?disabled=${live || !sm.canRedo()} @click=${() => sm.redo()}><ha-icon icon="mdi:redo"></ha-icon></button>
           <button type="button" class="icon-btn drawer-toggle" aria-label=${t('card-editor.studio.inspector-panel')} title=${t('card-editor.studio.inspector-panel')}
-            aria-controls="drawer" aria-expanded=${this._frame?.drawerOpen ? 'true' : 'false'} ?hidden=${live} @click=${this._toggleDrawer}>
+            aria-controls="inspector" aria-expanded=${this._frame?.drawerOpen ? 'true' : 'false'} ?hidden=${live} @click=${this._toggleDrawer}>
             <ha-icon icon="mdi:tune-variant"></ha-icon>
           </button>
           <button type="button" class="btn btn-primary btn-sm" @click=${this._close}>
@@ -741,18 +760,18 @@ export class Studio extends LitElement {
       }
       .bar-row {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        gap: 8px;
+        gap: 4px 8px;
         flex: 1;
         min-width: 0;
-        overflow-x: auto;
-        scrollbar-width: none;
-      }
-      .bar-row::-webkit-scrollbar {
-        display: none;
+        padding-block: 4px;
       }
       .bar-row > * {
         flex: none;
+      }
+      .bar-row > .spacer {
+        flex: 1 1 0;
       }
       .layers {
         box-sizing: border-box;

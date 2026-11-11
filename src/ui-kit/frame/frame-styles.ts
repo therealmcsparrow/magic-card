@@ -55,7 +55,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     display: flex;
     align-items: center;
     gap: var(--bp-s-3);
-    block-size: var(--bp-bar-h);
+    min-block-size: var(--bp-bar-h);
     padding: 0 var(--bp-s-5);
     border-block-end: 1px solid var(--bp-line);
     background: var(--bp-sheet);
@@ -322,6 +322,8 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
   }
   .ib[aria-pressed="true"] {
     background: var(--bp-acc-soft);
+    color: var(--bp-acc);
+    box-shadow: inset 0 0 0 2px var(--bp-acc);
   }
   svg {
     display: block;

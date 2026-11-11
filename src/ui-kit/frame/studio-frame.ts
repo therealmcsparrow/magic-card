@@ -72,6 +72,10 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
 
   openDrawer(opener?: HTMLElement | null, reason: FrameDrawerReason = 'user'): void {
     if (opener) this._opener = opener;
+    else if (!this._open) {
+      const at = this._deepActive();
+      this._opener = at && !this._inDrawer(at) ? at : null;
+    }
     if (this._open) return;
     this._open = true;
     this._fire<FrameDrawerChange>(FRAME_DRAWER_EVENT, { open: true, reason });
@@ -82,11 +86,14 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
 
   closeDrawer(reason: FrameDrawerReason = 'user'): void {
     if (!this._open) return;
+    const inside = this._inDrawer(this._deepActive());
     this._open = false;
     this._fire<FrameDrawerChange>(FRAME_DRAWER_EVENT, { open: false, reason });
     const opener = this._opener;
     this._opener = null;
-    if (reason !== 'stage' && opener?.isConnected) opener.focus();
+    if (reason === 'stage') return;
+    if (opener?.isConnected) opener.focus();
+    else if (inside) this._topStops()[0]?.focus();
   }
 
   stageWork(): void {
@@ -116,26 +123,55 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     } else if (e.key === 'Tab' && this._open && this.narrow) this._trap(e);
   };
 
-  /** Keeps Tab inside the sheet: wraps from the last focusable to the first and back. */
+  private _deepActive(): HTMLElement | null {
+    let a: Element | null = document.activeElement;
+    try {
+      while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
+    } catch {
+      /* some DOMs throw on a detached shadow root; keep the outer element */
+    }
+    return a instanceof HTMLElement && a !== document.body ? a : null;
+  }
+
+  /** True when the node sits in the drawer, the sheet or an element slotted into either. */
+  private _inDrawer(node: Node | null): boolean {
+    const own = this.renderRoot.querySelector('[data-bp="drawer"], [data-bp="sheet"]');
+    for (let n: Node | null = node; n; n = n.parentNode ?? (n as ShadowRoot).host ?? null) {
+      if (n === own) return true;
+      if (n instanceof HTMLElement && n.parentElement === this && (n.slot === 'drawer' || n.slot === 'drawer-actions')) return true;
+    }
+    return false;
+  }
+
+  /** Tab stops reached through shadow roots and slots, in document order. */
+  private _stops(el: Element, out: HTMLElement[]): void {
+    if (el.hasAttribute('hidden') || el.hasAttribute('inert')) return;
+    if (el.matches(FOCUSABLE) && !(el as HTMLButtonElement).disabled) out.push(el as HTMLElement);
+    if (el instanceof HTMLSlotElement) {
+      for (const a of el.assignedElements({ flatten: true })) this._stops(a, out);
+    } else if (el.shadowRoot) {
+      for (const c of Array.from(el.shadowRoot.children)) this._stops(c, out);
+    } else {
+      for (const c of Array.from(el.children)) this._stops(c, out);
+    }
+  }
+
+  private _topStops(): HTMLElement[] {
+    const out: HTMLElement[] = [];
+    for (const c of Array.from(this.children)) if (c.slot === 'top') this._stops(c, out);
+    return out;
+  }
+
+  /** Keeps Tab inside the sheet: wraps from the last tab stop to the first and back. */
   private _trap(e: KeyboardEvent): void {
     const sheet = this.renderRoot.querySelector('[data-bp="sheet"]');
     if (!sheet) return;
     const list: HTMLElement[] = [];
-    for (const n of sheet.querySelectorAll<HTMLElement>('button, slot')) {
-      if (n instanceof HTMLSlotElement) {
-        for (const el of n.assignedElements({ flatten: true }) as HTMLElement[]) {
-          if (el.matches(FOCUSABLE)) list.push(el);
-          list.push(...el.querySelectorAll<HTMLElement>(FOCUSABLE));
-        }
-      } else list.push(n);
-    }
-    const usable = list.filter((el) => !(el as HTMLButtonElement).disabled && !el.hidden);
-    const first = usable[0];
-    const last = usable[usable.length - 1];
+    for (const c of Array.from(sheet.children)) this._stops(c, list);
+    const first = list[0];
+    const last = list[list.length - 1];
     if (!first || !last) return;
-    const active = (this.getRootNode() as Document | ShadowRoot).activeElement;
-    const inner = (this.renderRoot as ShadowRoot).activeElement;
-    const at = inner ?? active;
+    const at = this._deepActive();
     if (e.shiftKey && at === first) {
       e.preventDefault();
       last.focus();

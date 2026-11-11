@@ -135,6 +135,8 @@ describe('SVG editor panel lips', () => {
   });
 
   it('inside the card studio the SVG editor wins the shortcut and the studio keeps its panels', async () => {
+    // Layers is a column (and has a lip) from 1280 px
+    (window as unknown as { happyDOM: { setViewport(v: { width: number; height: number }): void } }).happyDOM.setViewport({ width: 1400, height: 900 });
     await import('../src/modules/index');
     await import('../src/card/magic-card');
     await import('../src/editor/studio/studio');
@@ -162,7 +164,8 @@ describe('SVG editor panel lips', () => {
     expect(e.defaultPrevented).toBe(true);
     expect(q<HTMLElement>(el, '#side')!.dataset.lip).toBe('hidden');
     expect(studio.shadowRoot!.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
-    expect(studio.shadowRoot!.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('shown');
+    // the inspector lives in the frame's drawer, not in a lip
+    expect(studio.shadowRoot!.querySelector<HTMLElement>('#inspector')!.hasAttribute('hidden')).toBe(false);
     expect(localStorage.getItem('mc-panels:card-studio')).toBeNull();
   });
 
