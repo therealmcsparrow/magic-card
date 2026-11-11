@@ -1,11 +1,12 @@
-// Contract: ui kit. Version 1.3.0. The card editor (src/editor/ + src/css/editor-system) is the base look; the kit
+// Contract: ui kit. Version 1.4.0. The card editor (src/editor/ + src/css/editor-system) is the base look; the kit
 // is extracted FROM it (single source), not designed in parallel, so every screen has the same look and feel.
 // Tags are `mc-ui-*`; `mc-*` alone is the namespace of the card's own elements such as mc-path-menu.
 
 export * from './ui-kit-lips';
+export * from './studio-frame';
 
-export const UI_KIT_CONTRACT_VERSION = '1.3.0';
-export const UI_KIT_CONTRACT_REVISION = 6;
+export const UI_KIT_CONTRACT_VERSION = '1.4.0';
+export const UI_KIT_CONTRACT_REVISION = 7;
 
 /**
  * Plain Event on window that the Pseudo RTL switch dispatches right after it sets or removes `dir` on the studio and
@@ -59,6 +60,13 @@ export const NEW_TOKENS = [
 export const KIT_SCOPED_TOKENS = [
   '--mc-hit-sm', '--mc-hit-xs', '--mc-radius-tag', '--mc-radius-seg', '--mc-radius-xl', '--mc-ease',
   '--mc-shadow-dialog',
+] as const;
+/** Soft-blueprint tokens the `blueprint` css part declares on the studio :host (palette, type, spacing, sizes, motion). */
+export const KIT_BLUEPRINT_TOKENS = [
+  '--bp-font-ui', '--bp-font-mono', '--bp-bar-h', '--bp-ruler', '--bp-grid', '--bp-drawer-w', '--bp-layers-w', '--bp-hit',
+  '--bp-focus-w', '--bp-focus-off', '--bp-dur', '--bp-dur-sheet',
+  '--bp-bg', '--bp-sheet', '--bp-surf', '--bp-surf2', '--bp-hair', '--bp-hair2', '--bp-line', '--bp-edge', '--bp-ink', '--bp-mute',
+  '--bp-acc', '--bp-acc-ink', '--bp-acc-soft', '--bp-warn', '--bp-danger', '--bp-shadow', '--bp-shadow-card', '--bp-shadow-pill',
 ] as const;
 
 // ── Layer 2: template helpers ────────────────────────────────────────────────
