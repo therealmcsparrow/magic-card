@@ -1,10 +1,10 @@
-// Contract: studio frame. Version 1.0.0. Part of the ui kit (re-exported by ./ui-kit from ui-kit 1.4.0).
+// Contract: studio frame. Version 1.1.0. Part of the ui kit (re-exported by ./ui-kit from ui-kit 1.4.0).
 // The shared shell of every studio: a thin top bar, hairline rulers on the top and start edge, a measured grid stage
 // with a zoom pill, and an end-side drawer that pushes the stage at 1024 px and wider and becomes a full-height sheet
 // below it. The frame owns layout, rulers, grid, drawer, pin, "Modified only" and the sheet; the studio owns every
 // field, tool and string. It renders no text of its own: all words come in through `strings`.
 
-export const STUDIO_FRAME_CONTRACT_VERSION = '1.0.0';
+export const STUDIO_FRAME_CONTRACT_VERSION = '1.1.0';
 
 export const UI_STUDIO_FRAME_TAG = 'mc-ui-studio-frame';
 
@@ -106,10 +106,10 @@ export interface StudioFrameElement extends HTMLElement {
 /** Fonts the studios load from their own lazy chunk; never from a third-party host. */
 export const STUDIO_FONT_FAMILIES = { sans: 'MC Space Grotesk', mono: 'MC Space Mono' } as const;
 
-/** src/ui-kit/fonts/load.ts. Idempotent; resolves false (system fallbacks stay) when the chunk or a face fails. */
+/** src/ui-kit/fonts/load.ts (card editor) and load-lazy.ts (standalone bundles). Idempotent; resolves false (system fallbacks stay) when the chunk or a face fails. */
 export type LoadStudioFonts = () => Promise<boolean>;
 
-/** Logical name of the lazy font chunk (one file for the editor, the animation studio and the theme editor). */
+/** Lazy font chunk of the animation studio and theme editor bundles; the card editor carries the faces in its own chunk. */
 export const STUDIO_FONTS_CHUNK = 'magic-card-studio-fonts.js';
 
 declare global {

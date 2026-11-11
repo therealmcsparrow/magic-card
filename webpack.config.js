@@ -159,8 +159,6 @@ module.exports = (env, argv) => {
         cacheGroups: {
           default: false,
           defaultVendors: false,
-          // the one copy of the studio fonts (src/ui-kit/fonts/data.ts) for every studio chunk that loads them
-          'studio-fonts': { test: /[\\/]src[\\/]ui-kit[\\/]fonts[\\/]data\.ts$/, name: 'studio-fonts', chunks: 'async', enforce: true },
           'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
           // The modules only the forum shot and the icon-library chunk share. Two bundles load that chunk (the studio and the forum shot),
           // so webpack no longer treats the studio's modules as already loaded and would copy them into the chunk; they get their own chunk instead (not src/i18n/labels/index.ts, which import()s its tables where a shared chunk loads nothing, nor src/icon-anim/icon-doc.ts, which reads those labels).
