@@ -6043,9 +6043,17 @@
     "text": "Magic Card studio",
     "hash": "6dfced21"
   },
+  "card-editor.studio.modified-only": {
+    "text": "Modified only",
+    "hash": "d5f0ab19"
+  },
   "card-editor.studio.mods": {
     "text": "{mods, plural, one {# module} other {# modules}}",
     "hash": "aea4e5f9"
+  },
+  "card-editor.studio.nothing-modified": {
+    "text": "Nothing here differs from the default",
+    "hash": "75578f99"
   },
   "card-editor.studio.panels-hidden": {
     "text": "{panels} hidden",
@@ -6054,6 +6062,10 @@
   "card-editor.studio.panels-shown": {
     "text": "{panels} shown",
     "hash": "755f1a3b"
+  },
+  "card-editor.studio.pin-panel": {
+    "text": "Pin the panel",
+    "hash": "d5b1453b"
   },
   "card-editor.studio.preview": {
     "text": "Preview",
@@ -6102,6 +6114,10 @@
   "card-editor.studio.yaml": {
     "text": "YAML",
     "hash": "9b6e8abe"
+  },
+  "card-editor.studio.zoom": {
+    "text": "Zoom",
+    "hash": "509c517e"
   },
   "card-editor.sync-indicator.overridden": {
     "text": "Overridden",

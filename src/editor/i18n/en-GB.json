@@ -8228,6 +8228,11 @@
     "note": "Title of the full-screen studio editor, shown in its header and as its accessible name.",
     "max": 30
   },
+  "card-editor.studio.modified-only": {
+    "text": "Modified only",
+    "note": "Label of the switch that shows only the settings that differ from their default.",
+    "max": 20
+  },
   "card-editor.studio.mods": {
     "text": "{mods, plural, one {# module} other {# modules}}",
     "note": "Studio status text counting the modules in the card, for example 1 module or 5 modules. Plural forms follow the count.",
@@ -8235,6 +8240,11 @@
     "vars": {
       "mods": "The count the text is about."
     }
+  },
+  "card-editor.studio.nothing-modified": {
+    "text": "Nothing here differs from the default",
+    "note": "Shown in the settings panel when Modified only is on and no setting differs from its default.",
+    "max": 45
   },
   "card-editor.studio.panels-hidden": {
     "text": "{panels} hidden",
@@ -8251,6 +8261,11 @@
     "vars": {
       "panels": "The value that replaces panels in the text."
     }
+  },
+  "card-editor.studio.pin-panel": {
+    "text": "Pin the panel",
+    "note": "Accessible name of the button that keeps the settings panel open while you work on the card.",
+    "max": 20
   },
   "card-editor.studio.preview": {
     "text": "Preview",
@@ -8320,6 +8335,11 @@
   "card-editor.studio.yaml": {
     "text": "YAML",
     "note": "Option in the editor mode switch: edit the card as YAML code. Keep the acronym; counterpart of Form.",
+    "max": 10
+  },
+  "card-editor.studio.zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the zoom controls group beside the preview.",
     "max": 10
   },
   "card-editor.sync-indicator.overridden": {

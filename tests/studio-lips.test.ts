@@ -11,6 +11,7 @@ const cfg = { type: 'custom:magic-card', name: 'Living Room', rows: [{ id: 'r', 
 type El = HTMLElement & { stateManager: EditorStateManager; open: boolean; hass: unknown; updateComplete: Promise<unknown> };
 
 async function mount(): Promise<{ el: El; root: ShadowRoot }> {
+  (window as unknown as { happyDOM: { setViewport(v: { width: number; height: number }): void } }).happyDOM.setViewport({ width: 1400, height: 900 });
   const proto = HTMLDialogElement.prototype as unknown as { showModal?: () => void; close?: () => void };
   proto.showModal ??= function (this: HTMLDialogElement) { this.setAttribute('open', ''); };
   proto.close ??= function (this: HTMLDialogElement) { this.removeAttribute('open'); };
@@ -34,22 +35,18 @@ afterEach(() => {
 });
 
 describe('card studio panel lips', () => {
-  it('renders a lip for Layers and Inspector, a status region and ids on both panels', async () => {
+  it('renders a lip for Layers only, a status region and the Layers id, with the inspector in the frame drawer', async () => {
     const { root } = await mount();
     expect(lip(root, 'layers').getAttribute('aria-label')).toBe('Layers panel');
-    expect(lip(root, 'inspector').getAttribute('aria-label')).toBe('Inspector panel');
+    expect(lip(root, 'inspector')).toBeNull();
     expect(root.getElementById('layers')!.getAttribute('aria-label')).toBe('Layers panel');
-    expect(root.getElementById('inspector')!.getAttribute('aria-label')).toBe('Inspector panel');
+    expect(root.querySelector('mc-ui-studio-frame > #inspector')!.getAttribute('slot')).toBe('drawer');
     expect(lip(root, 'layers').title).toBe('Hide layers (Ctrl+\\)');
     expect(root.querySelector('.lip-status[role="status"]')).not.toBeNull();
     expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
-    expect(root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('shown');
-    // the lip follows the Layers panel and precedes the Inspector, so the tab order matches what is on screen
-    expect(root.querySelector('#layers')!.nextElementSibling).toBe(lip(root, 'layers'));
-    expect(lip(root, 'inspector').nextElementSibling).toBe(root.querySelector('#inspector'));
   });
 
-  it('hiding a panel gives its track to the canvas, keeps the panel mounted and remembers it', async () => {
+  it('hiding Layers keeps the panel mounted and remembers it', async () => {
     const { el, root } = await mount();
     const layers = root.querySelector<HTMLElement>('#layers')!;
     lip(root, 'layers').click();
@@ -57,7 +54,6 @@ describe('card studio panel lips', () => {
     expect(root.querySelector('#layers')).toBe(layers);
     expect(layers.dataset.lip).toBe('hidden');
     expect(layers.hasAttribute('inert')).toBe(true);
-    expect(root.querySelector('.workspace')!.classList.contains('no-layers')).toBe(true);
     expect(localStorage.getItem('mc-panels:card-studio')).toBe('layers');
     expect(lip(root, 'layers').getAttribute('aria-expanded')).toBe('false');
   });
@@ -69,13 +65,12 @@ describe('card studio panel lips', () => {
     await el.updateComplete;
     expect(e.defaultPrevented).toBe(true);
     expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
-    expect(root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('hidden');
   });
 
   it('opens with the remembered state and shows the first-open hint once', async () => {
-    localStorage.setItem('mc-panels:card-studio', 'inspector');
+    localStorage.setItem('mc-panels:card-studio', 'layers');
     const { root } = await mount();
-    expect(root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('hidden');
+    expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
     expect(root.querySelector('.lip-hint')).not.toBeNull();
   });
 
@@ -94,21 +89,19 @@ describe('card studio panel lips', () => {
     expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
   });
 
-  it('Edit on a layer brings a hidden Inspector back', async () => {
-    localStorage.setItem('mc-panels:card-studio', 'inspector');
+  it('Edit on a layer opens the frame drawer that holds the inspector', async () => {
     const { el, root } = await mount();
+    const frame = root.querySelector('mc-ui-studio-frame') as HTMLElement & { drawerOpen: boolean };
     root.querySelector('mc-structure-outline')!.dispatchEvent(new CustomEvent('mc-edit-module', { bubbles: true }));
     await el.updateComplete;
     await el.updateComplete;
-    expect(root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('shown');
+    expect(frame.drawerOpen).toBe(true);
     expect(localStorage.getItem('mc-panels:card-studio')).toBeNull();
   });
 
-  it('a hidden panel keeps its width: the track goes to 0, the panel keeps its own width', () => {
+  it('a hidden Layers panel keeps its width: the lip moves to the window edge and the panel stays mounted', () => {
     const css = (Studio.styles as Array<{ cssText: string }>).map((s) => s.cssText).join('\n');
-    expect(css).toMatch(/\.layers\[data-lip='hidden'\]\s*\{[^}]*width:\s*var\(--lpw\)/);
-    expect(css).toMatch(/\.inspector\[data-lip='hidden'\]\s*\{[^}]*width:\s*var\(--ipw\)/);
-    expect(css).toMatch(/\.no-inspector\s*\{[^}]*--iw:\s*0px/);
+    expect(css).toMatch(/\.lips\s*\{[^}]*position:\s*absolute/);
     expect(css).not.toMatch(/\[data-lip='hidden'\]\s*\{[^}]*(?:max-)?width:\s*0[;\s]/);
   });
 });
@@ -130,14 +123,14 @@ describe('card studio lip leftovers', () => {
     const chev = btn.querySelector<SVGElement>('svg.opener-chevron')!;
     expect(chev.getAttribute('width')).toBe('16');
     expect(chev.getAttribute('aria-hidden')).toBe('true');
-    expect(btn.getAttribute('aria-expanded')).toBe('false');
-    expect(btn.getAttribute('aria-label')).toBe('Layers');
-    expect(btn.dataset.open).toBe('false');
-    btn.click();
-    await el.updateComplete;
     expect(btn.getAttribute('aria-expanded')).toBe('true');
     expect(btn.getAttribute('aria-label')).toBe('Layers');
     expect(btn.dataset.open).toBe('true');
+    btn.click();
+    await el.updateComplete;
+    expect(btn.getAttribute('aria-expanded')).toBe('false');
+    expect(btn.getAttribute('aria-label')).toBe('Layers');
+    expect(btn.dataset.open).toBe('false');
     const css = (Studio.styles as Array<{ cssText: string }>).map((s) => s.cssText).join('\n');
     expect(css).toMatch(/\.layers-toggle\[data-open='true'\] \.opener-chevron[^{]*\{[^}]*scaleX\(-1\)/s);
     expect(css).toMatch(/\.layers-toggle\[data-dir='rtl'\] \.opener-chevron[^{]*\{[^}]*scaleX\(-1\)/s);
