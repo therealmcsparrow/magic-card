@@ -197,7 +197,7 @@ Keyboard in the outline: Up, Down, Home and End move focus between items, and En
 
 ### Studio
 
-Open it with Open studio. It is a full-screen dialog with:
+Open it with Open studio. It is a full-screen dialog. All seven studios share one look: a thin top bar, rulers and a grid, and a settings drawer on the right that pushes the stage aside, with a pin to keep it open and Modified only to show the fields you changed. Below 1024 px wide the drawer becomes a sheet. The studios follow Home Assistant's light or dark mode and use bundled fonts (licences in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)). See [The studio look](documentation/studio/studio-look.md). The Studio has:
 
 -   Layers on the left: the same outline as the pane editor, with an Add module row under every column. Its edge button hides it so the canvas can take the width. At 900 px wide or less, Layers is an overlay you open with the Layers button, and at 640 px or less the inspector moves below the canvas. See [Hiding the side panels](#hiding-the-side-panels).
 -   A live canvas in the middle that renders the real card with your Home Assistant data. Click a module, column, row or the card background to select it. A click on the dotted area around the card also selects the card. Hovering previews what a click selects. Actions do not fire on the canvas, except in Preview (see [Preview](documentation/studio/preview.md)). The selection has one colour per level: grey for the card, orange for rows, green for columns and the theme accent colour for modules.

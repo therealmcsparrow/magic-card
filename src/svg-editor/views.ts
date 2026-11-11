@@ -231,7 +231,7 @@ function topBar(ed: McSvgEditor, tail = true): TemplateResult {
   const sm = ed.layout === 'stacked';
   const z = sm ? 'sm' : 'md';
   // narrow windows (and 200 % zoom): the title is read by screen readers only, secondary buttons keep their glyph and lose the word, so the bar needs two rows at most
-  const tight = ed.layout === 'compact' || sm;
+  const tight = ed.layout === 'compact' || sm || ed.crowdW > 0;
   const image = ed.source.kind.startsWith('image');
   const o = ed.out;
   const zone = o.error === 'over' ? ' is-error' : o.bytes >= 24 * 1024 ? ' is-warn' : '';
@@ -518,7 +518,7 @@ function imageFrame(ed: McSvgEditor): TemplateResult {
   const tabs = (['inspector', 'layers'] as const).map((k) => html`<button type="button" role="tab" id=${`tab-${k}`} aria-selected=${aria(ed.tab === k)} aria-controls="drawer-body" tabindex=${ed.tab === k ? '0' : '-1'} @click=${() => (ed.tab = k)}>${k === 'layers' ? t('svg-editor.views.layers') : t('svg-editor.views.inspector')}</button>`);
   return html`<mc-ui-studio-frame studio="image-editor" start-mode="rail" .scheme=${(ed.hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode ? 'dark' : 'light'} .strings=${strings}
     .selectionLabel=${sel.length === 1 ? sel[0].name || t('svg-editor.views.layer') : sel.length ? t('svg-editor.views.c-shapes-selected', { c: sel.length }) : ed.doc.name || t('svg-editor.views.image-editor')}
-    .measure=${{ width: ed.doc.vb.w, height: ed.doc.vb.h, grid: ed.pixelGrid ? ed.grid : 0, selection: b ? { x: b.x, y: b.y, width: b.w, height: b.h } : null, zoom: ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1) }}
+    .measure=${{ width: ed.doc.vb.w, height: ed.doc.vb.h, grid: ed.pixelGrid ? ed.grid : 0, selection: b ? { x: b.x, y: b.y, width: b.w, height: b.h } : null, zoom: stageZoom(ed) }}
     @mc-frame-drawer=${(e: CustomEvent<FrameDrawerChange>) => (ed.drawer = e.detail.open)}
     @mc-frame-modified=${(e: CustomEvent<FrameModifiedChange>) => (ed.modOnly = e.detail.on)}>
     <div slot="top" class="ftop">${topBar(ed, false)}</div>
@@ -536,6 +536,14 @@ function imageFrame(ed: McSvgEditor): TemplateResult {
           ${inspect ? html`<div class="insp" id="inspector" role="tabpanel" aria-labelledby="tab-inspector">${inspectorBody(ed)}</div>` : html`<div role="tabpanel" aria-labelledby="tab-layers">${guard([ed.listKey, ed.sel, ed.cur, ed.drag, ed.tmsg, ed.renaming, ed.menu, ed.layout, ed.tool], () => layersPanel(ed))}</div>`}
         </div>`}
   </mc-ui-studio-frame>`;
+}
+
+/** The zoom the frame sizes its stage box with: the view's zoom against fit, never past the room the frame has for it. */
+function stageZoom(ed: McSvgEditor): number {
+  const z = ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1);
+  const [w, h] = ed.fieldBox;
+  const room = w > 0 && h > 0 ? Math.min(w / ed.doc.vb.w, h / ed.doc.vb.h) : Math.min(innerWidth / 2 / ed.doc.vb.w, innerHeight / 2 / ed.doc.vb.h);
+  return Math.min(z, room);
 }
 
 /** The canvas section: the floating bar, the stage with its canvas and the notices below it. */

@@ -6796,6 +6796,11 @@
     "note": "Label before the technical identifier cards must use to pick this animation.",
     "max": 25
   },
+  "anim-studio.studio.close-layers": {
+    "text": "Close layers",
+    "note": "Tooltip and label of the button that closes the Layers sheet on a narrow screen.",
+    "max": 20
+  },
   "anim-studio.studio.count": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}}",
     "note": "Number of keyframes in an animation, with singular and plural forms.",
@@ -7163,11 +7168,6 @@
     "text": "Layers",
     "note": "Capitalised name of the layers panel, used as a heading or in panel toggles.",
     "max": 10
-  },
-  "anim-studio.studio.close-layers": {
-    "text": "Close layers",
-    "note": "Tooltip and label of the button that closes the Layers sheet on a narrow screen.",
-    "max": 20
   },
   "anim-studio.studio.layers-panel": {
     "text": "Layers panel",

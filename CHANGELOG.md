@@ -28,6 +28,17 @@ See [Animate a library image](documentation/images/animating-images.md).
 
 ## Unreleased
 
+### Improved
+-   **One look for all seven studios.** The Studio, animation studio, image animator, image editor, look editor, shape editor and theme editor now share a thin top bar, rulers, a measured grid and a zoom pill. Settings sit in a drawer on the right that pushes the stage aside instead of covering it. Nothing was removed: every field, button, menu item and shortcut is still there.
+-   **Pin.** Pin the drawer to keep it open while you work on the stage. Unpinned, it closes when you click the stage.
+-   **Modified only.** Show only the fields that differ from their default.
+-   **Narrow screens.** Below 1024 px wide the drawer becomes a full-height sheet with a close button.
+-   **Keyboard.** Escape closes an unpinned drawer or sheet and returns focus to where you were. Ctrl+\ (Cmd+\ on a Mac) still shows or hides the side panels in the Studio.
+-   **Light and dark.** The studios follow Home Assistant's light or dark mode.
+-   **Bundled fonts.** Space Grotesk and Space Mono load from your Home Assistant when a studio opens. No outside site is asked. Licences are in THIRD-PARTY-NOTICES.md.
+
+See [The studio look](documentation/studio/studio-look.md).
+
 ### Documentation
 -   **Fifteen more complete dashboards.** Gallery dashboards 26 to 40: ten futuristic and five steampunk machine walls, each a sections view made only of Magic Cards. One large machine fills the screen, with the controls built into it, and an alarm changes the whole wall. Each page has desktop, alarm and phone pictures, install steps and a list of the entities it uses. The picture files are in `_assets`, with their sources. See [Complete dashboards](documentation/gallery/dashboards/README.md).
 -   **SVG files for gallery dashboards.** Every gallery dashboard that draws backgrounds, pictures or icons in SVG now has an `svg` folder with a copy of each drawing, to open in a vector editor or use elsewhere. The dashboards don't need these files, because `dashboard.yaml` already contains the same SVG.

@@ -287,18 +287,24 @@ export class Studio extends LitElement {
 
   /** Ctrl/Cmd + \ shows or hides Layers and the inspector drawer together; below the Layers column it toggles the drawer alone. */
   private _onShortcut = (e: KeyboardEvent): void => {
+    if (this._live) return;
     const columns = this._lips.active;
     if (!this._lips.handleKey(e)) return;
     const frame = this._frame;
-    if (!frame || this._live) return;
+    if (!frame) return;
     const show = columns ? !this._lips.isHidden('layers') : !frame.drawerOpen;
     if (show) frame.openDrawer(null, 'user');
     else frame.closeDrawer('user');
   };
 
-  private _onStagePointerDown = (): void => {
+  /** Work on the stage closes an unpinned drawer. Captured on the frame, because modules stop the event before the canvas sees it and the canvas only covers the card. */
+  private _onStagePointerDown = (e: Event): void => {
+    const path = e.composedPath();
+    const onStage = path.some((n) => n instanceof HTMLElement && (n.dataset?.bp === 'stage' || n.slot === 'stage'));
+    if (!onStage || path.some((n) => n instanceof HTMLElement && n.dataset?.bp === 'zoom')) return;
     this._frame?.stageWork();
   };
+  private readonly _stageCapture = { handleEvent: (e: Event): void => this._onStagePointerDown(e), capture: true };
 
   private _toggleLayers = (): void => {
     if (this._wideLayers?.matches ?? true) this._lips.toggle('layers');
@@ -589,6 +595,7 @@ export class Studio extends LitElement {
                 @mc-frame-drawer=${() => this.requestUpdate()}
                 @mc-frame-modified=${(e: CustomEvent<{ on: boolean }>) => { this._modifiedOnly = e.detail.on; }}
                 @mc-canvas-measure=${this._onCanvasMeasure}
+                @pointerdown=${this._stageCapture}
               >
                 ${this._renderTopbar(s, mode)}
                 <nav slot="start" class="layers" id="layers" aria-label=${t('card-editor.studio.layers-panel')} ?hidden=${!this._layersOpen} ?inert=${!this._layersOpen}
@@ -602,13 +609,12 @@ export class Studio extends LitElement {
                 </nav>
                 ${mode === 'form' || live
                   ? html`<mc-studio-canvas slot="stage" .stateManager=${sm} .hass=${this.hass} .width=${this._width} .live=${live} @mc-match-view=${this._onMatchView}
-                      @pointerdown=${this._onStagePointerDown}
                       @mc-edit-module=${this._onEditModule} @mc-rename-request=${this._onRenameRequest}
                       @mc-studio-more-info=${this._onMoreInfo}></mc-studio-canvas>`
                   : nothing}
                 ${mode === 'yaml'
                   ? html`
-                      <div slot="stage" class="center-alt" ?hidden=${live} @pointerdown=${this._onStagePointerDown}>
+                      <div slot="stage" class="center-alt" ?hidden=${live}>
                         <div class="yaml-view"><mc-yaml-editor .stateManager=${sm} .hass=${this.hass}></mc-yaml-editor></div>
                       </div>
                     `

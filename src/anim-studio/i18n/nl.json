@@ -4823,6 +4823,10 @@
     "text": "Kaarten gebruiken hem als",
     "hash": "8239a9a2"
   },
+  "anim-studio.studio.close-layers": {
+    "text": "Lagen sluiten",
+    "hash": "0cbb5e46"
+  },
   "anim-studio.studio.count": {
     "text": "{count, plural, one {# keyframe} other {# keyframes}}",
     "hash": "bb6b3c12"
@@ -5066,10 +5070,6 @@
   "anim-studio.studio.layers-2": {
     "text": "Lagen",
     "hash": "0bcd66e6"
-  },
-  "anim-studio.studio.close-layers": {
-    "text": "Lagen sluiten",
-    "hash": "0cbb5e46"
   },
   "anim-studio.studio.layers-panel": {
     "text": "Lagenpaneel",

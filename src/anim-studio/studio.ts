@@ -439,6 +439,9 @@ export class AnimationStudio extends LitElement {
     const shown = this._layersShown;
     const lipMoved = shown !== this._layersWas || changed.has('_drawerOpen');
     this._layersWas = shown;
+    // the Layers sheet covers the stage: what lies under it is not reachable by Tab while it is open
+    const under = this._narrow && shown;
+    for (const el of this.shadowRoot?.querySelectorAll<HTMLElement>('.center > :not(.layers-sheet)') ?? []) el.toggleAttribute('inert', under);
     if (changed.has('_height') || changed.has('_width') || lipMoved || changed.has('_view') || (changed.has('_doc') && prev?.id !== this._doc?.id)) this._autoSplit();
     else if (changed.has('_doc')) this._autoSplit(true);
     // a shape was drawn: its row is in view in the layers column (a short window scrolls the column)

@@ -675,6 +675,7 @@ export const editorStyles: CSSResult[] = [
       pointer-events: auto;
     }
     .center.fstage {
+      grid-area: auto;
       inline-size: 100%;
       min-inline-size: 0;
       max-inline-size: 100%;

@@ -146,14 +146,17 @@ export const studioStyles: CSSResult[] = [
     .fr-bar .spacer {
       flex: 1;
     }
-    .fr-bar .grp {
-      flex: none;
+    .fr-bar {
+      flex-wrap: wrap;
+      gap: 4px var(--bp-s-3);
+      block-size: auto;
+      padding-block: 4px;
     }
-    .fr-bar .title {
-      flex-wrap: nowrap;
+    .fr-bar .grp {
+      flex: 0 1 auto;
+      flex-wrap: wrap;
     }
     .fr-bar .doc-name {
-      white-space: nowrap;
       font-size: var(--bp-t-bar);
     }
     .fr-start {

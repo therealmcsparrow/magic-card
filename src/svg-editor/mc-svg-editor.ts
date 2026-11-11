@@ -128,7 +128,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'startBusy', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving', 'tab', 'modOnly', 'narrow', 'drawer'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'startBusy', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving', 'tab', 'modOnly', 'narrow', 'drawer', 'fieldBox', 'crowdW'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -204,6 +204,12 @@ export class McSvgEditor extends LitElement implements StageHost {
   live = '';
   dirty = false;
   layout: 'wide' | 'mid' | 'compact' | 'stacked' = 'wide';
+  /** Room the studio frame leaves for the stage (width, height in px): the frame sizes its stage box from the image, so the zoom it is told never exceeds this. */
+  fieldBox: readonly [number, number] = [0, 0];
+  /** Window width (px) at which the top bar ran past the window with every button worded; 0 while it fits. Those buttons keep only their glyph until the window is clearly wider. */
+  crowdW = 0;
+  private fieldEl?: HTMLElement;
+  private fieldRo?: ResizeObserver;
   overlay = false;
   renaming?: string;
   /** The tree row that holds the tab stop (`g:<id>` for a group). */
@@ -315,6 +321,8 @@ export class McSvgEditor extends LitElement implements StageHost {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this.ro?.disconnect();
+    this.fieldRo?.disconnect();
+    this.fieldEl = undefined;
     for (const [d, f] of this.dialogs) d.removeEventListener('cancel', f);
     this.dialogs = [];
     cancelAnimationFrame(this.raf);
@@ -2109,7 +2117,36 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** Where focus was when a window (Save to library, Export, ...) opened: it goes back there when the window goes away. */
   private dlgReturn?: HTMLElement;
 
+  /** Follows the frame's field, so the stage box shrinks and grows with the room beside the layers and the drawer. */
+  private watchField(): void {
+    const el = this.frame?.shadowRoot?.querySelector<HTMLElement>('.field') ?? undefined;
+    if (el === this.fieldEl) return;
+    this.fieldRo?.disconnect();
+    this.fieldEl = el;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const read = (): void => {
+      const cs = getComputedStyle(el);
+      const w = Math.max(0, Math.floor(el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)));
+      const h = Math.max(0, Math.floor(el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)));
+      if (w !== this.fieldBox[0] || h !== this.fieldBox[1]) this.fieldBox = [w, h];
+    };
+    this.fieldRo = new ResizeObserver(read);
+    this.fieldRo.observe(el);
+    read();
+  }
+
+  /** The top bar is one row: when its words do not fit the window, the secondary buttons keep their glyph only. */
+  private checkBar(): void {
+    const w = this.getBoundingClientRect().width;
+    const bar = this.renderRoot.querySelector<HTMLElement>('.ftop .topbar');
+    if (!w || !bar) return;
+    if (this.crowdW && w > this.crowdW + 320) this.crowdW = 0;
+    else if (!this.crowdW && bar.getBoundingClientRect().right > this.getBoundingClientRect().right + 1) this.crowdW = w;
+  }
+
   protected updated(changed: PropertyValues): void {
+    this.watchField();
+    if (this.img) this.checkBar();
     // the Saved chip takes no focus: a change of it is said once
     const chip = this.savedLabel;
     if (chip !== this.chipSaid) {

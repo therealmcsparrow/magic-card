@@ -74,7 +74,7 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     if (opener) this._opener = opener;
     else if (!this._open) {
       const at = this._deepActive();
-      this._opener = at && !this._inDrawer(at) ? at : null;
+      this._opener = at && !this._inDrawer(at) && !this._holdsFrame(at) ? at : null;
     }
     if (this._open) return;
     this._open = true;
@@ -92,8 +92,19 @@ export class StudioFrame extends LitElement implements StudioFrameElement {
     const opener = this._opener;
     this._opener = null;
     if (reason === 'stage') return;
-    if (opener?.isConnected) opener.focus();
-    else if (inside) this._topStops()[0]?.focus();
+    // below the push breakpoint the bar, the start slot and the stage are inert until the sheet is gone, so focus waits for that render
+    const land = (): void => {
+      if (opener?.isConnected) opener.focus();
+      else if (inside) this._topStops()[0]?.focus();
+    };
+    if (this.narrow) void this.updateComplete.then(land);
+    else land();
+  }
+
+  /** True when the node holds this frame, for example a dialog host that took focus itself. */
+  private _holdsFrame(node: Node): boolean {
+    for (let n: Node | null = this; n; n = n.parentNode ?? (n as ShadowRoot).host ?? null) if (n === node) return true;
+    return false;
   }
 
   stageWork(): void {

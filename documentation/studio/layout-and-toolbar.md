@@ -25,13 +25,13 @@ From left to right:
 
 ## Workspace
 
-| Area | Width | Content |
+| Area | Size | Content |
 | --- | --- | --- |
-| Layers (left) | 240 px | "Layers" with the module count, and the structure outline. See [Structure outline](../editor/structure-outline.md). |
+| Layers (left) | narrow column | "Layers" with the module count, and the structure outline. See [Structure outline](../editor/structure-outline.md). |
 | Canvas (middle) | the rest | The live card on a dotted background. See [Canvas and selection](canvas-and-selection.md). |
-| Inspector (right) | 340 px | The settings of the selection. See [Inspector](../inspector/README.md). |
+| Inspector (right) | drawer that pushes the canvas aside | The settings of the selection. See [Inspector](../inspector/README.md). |
 
-On screens 1180 px wide or less, the side panels narrow to 220 px and 320 px.
+Below 1024 px the inspector opens as a full-height sheet instead. See [Studio look](studio-look.md).
 
 The inspector's header and tab bar stay at the top of its panel; only the settings below them scroll. A tab switch or a new selection starts the settings at the top. See [Inspector header](../inspector/README.md#header).
 

@@ -113,9 +113,16 @@ function stateFields(p: ClipsPanelProps, clip: ImageClip): TemplateResult {
   </div>`;
 }
 
+const clipChanged = (c: ImageClip): boolean =>
+  c.tracks.length > 0 || c.play.on !== 'always' || c.duration !== 2 || c.iterations !== 'infinite' || (c.direction ?? 'normal') !== 'normal';
+
+/** True when any clip differs from a fresh one, or a trigger is being drafted. */
+export const clipsModified = (clips: readonly ImageClip[], drafting?: string): boolean => clips.length > 1 || !!drafting || clips.some(clipChanged);
+
 function details(p: ClipsPanelProps, clip: ImageClip, index: number): TemplateResult {
   const forever = clip.iterations === 'infinite';
   const only = p.modifiedOnly === true;
+  const showName = !only;
   const showTrigger = !only || clip.play.on !== 'always' || p.drafting === clip.id;
   const showDuration = !only || clip.duration !== 2;
   const showForever = !only || !forever;
@@ -128,11 +135,13 @@ function details(p: ClipsPanelProps, clip: ImageClip, index: number): TemplateRe
     ['alternate', t('image-animator.clips-panel.back-and-forth')],
     ['alternate-reverse', t('image-animator.clips-panel.back-and-forth-starting-backwards')],
   ];
-  return html`<div class="clip-details" role="group" aria-labelledby="clip-name-label">
-    <div class="ia-row">
+  return html`<div class="clip-details" role="group" aria-labelledby=${showName ? 'clip-name-label' : 'clips-title'}>
+    ${showName
+      ? html`<div class="ia-row">
       <label id="clip-name-label" for="clip-name">${t('image-animator.clips-panel.clip-name')}</label>
       <input id="clip-name" type="text" maxlength="64" .value=${clip.name} @change=${(e: Event) => p.rename(clip.id, (e.target as HTMLInputElement).value)} />
-    </div>
+    </div>`
+      : nothing}
     ${showTrigger
       ? html`<div class="ia-row">
       <label for="clip-trigger">${t('image-animator.clips-panel.starts-when')}</label>
@@ -168,18 +177,32 @@ function details(p: ClipsPanelProps, clip: ImageClip, index: number): TemplateRe
       </select>
     </div>`
       : nothing}
-    <div class="ia-row">
+    ${only
+      ? nothing
+      : html`<div class="ia-row">
       <button type="button" class="btn btn-secondary" ?disabled=${index === 0} @click=${() => p.move(clip.id, -1)}>${t('image-animator.clips-panel.move-up')}</button>
       <button type="button" class="btn btn-secondary" ?disabled=${index === p.clips.length - 1} @click=${() => p.move(clip.id, 1)}>${t('image-animator.clips-panel.move-down')}</button>
       <button type="button" class="btn btn-secondary" @click=${() => p.duplicate(clip.id)}>${t('image-animator.clips-panel.duplicate')}</button>
       <button type="button" class="btn btn-secondary" @click=${() => p.remove(clip.id)}>${t('image-animator.clips-panel.delete')}</button>
-    </div>
+    </div>`}
   </div>`;
 }
 
-export function renderClips(p: ClipsPanelProps): TemplateResult {
+export function renderClips(p: ClipsPanelProps): TemplateResult | typeof nothing {
   const index = p.clips.findIndex((c) => c.id === p.selected);
   const clip = index < 0 ? undefined : p.clips[index];
+  if (p.modifiedOnly === true) {
+    if (!clipsModified(p.clips, p.drafting)) return nothing;
+    return html`<section aria-labelledby="clips-title">
+      <h3 id="clips-title">${t('image-animator.clips-panel.clips')}</h3>
+      ${p.clips.length > 1
+        ? html`<ul class="clip-list">
+            ${p.clips.map((c) => html`<li><button type="button" class="btn btn-secondary" aria-pressed=${c.id === p.selected ? 'true' : 'false'} @click=${() => p.select(c.id)}>${c.name}</button></li>`)}
+          </ul>`
+        : nothing}
+      ${clip ? details(p, clip, index) : nothing}
+    </section>`;
+  }
   return html`<section aria-labelledby="clips-title">
     <h3 id="clips-title">${t('image-animator.clips-panel.clips')}</h3>
     <p class="hint">${t('image-animator.clips-panel.name-each-animation-and-choose-what-starts-it')}</p>

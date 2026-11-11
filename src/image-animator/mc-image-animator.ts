@@ -10,7 +10,7 @@ import { defineKitElements } from '../ui-kit/define-parts';
 import { loadStudioFonts } from '../ui-kit';
 import { StudioFrame } from '../ui-kit/frame/studio-frame';
 import { createClip, deleteClip, duplicateClip, moveClip, parseWhen, renameClip, setClipPlay, setClipTiming, type ClipsError, type ClipTiming } from './clips';
-import { renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
+import { clipsModified, renderClips, type ClipsPanelProps, type StateFields, type TriggerKind } from './clips-panel';
 import { presetChoices, renderEffects, renderTargetList, effectLabel, targetName, type PanelProps } from './effects-panel';
 import { t } from './i18n';
 import { loadImageTools } from './image-loader';
@@ -379,9 +379,12 @@ export class McImageAnimator extends LitElement {
 
   private _onStageClick(e: Event): void {
     if (!this._svg) return;
-    const before = this._target;
+    const before = this._target?.ref;
     this._pick(pickTarget(this._svg, e.target instanceof Element ? e.target : null));
-    if (this._target !== before && !this._narrow) this._frame?.openDrawer(null, 'selection');
+    if (this._target?.ref !== before && !this._narrow) this._frame?.openDrawer(null, 'selection');
+    // The stage click moves focus to the drawing's host outside the dialog; Escape and Tab need it back inside.
+    const win = this.renderRoot.querySelector<HTMLElement>('.window');
+    if (win && !win.contains(this.shadowRoot?.activeElement ?? null)) (this.renderRoot.querySelector<HTMLElement>('#title') ?? win).focus({ preventScroll: true });
   }
 
   /** Work on the drawing gives the stage the room back when the drawer is not pinned. */
@@ -598,9 +601,17 @@ export class McImageAnimator extends LitElement {
     const panel = this._panel();
     const clips = o.animation?.clips.length ?? 0;
     const busy = this._saving || !!this._ask || !!this._leaving;
+    if (this._modifiedOnly) {
+      const cp = panel ? this._clipsPanel() : undefined;
+      const changed = !!cp && clipsModified(cp.clips, cp.drafting);
+      return html`<div slot="drawer" id="ia-drawer" class="drawer-body" ?inert=${busy}>
+        ${this._warnings(o)}
+        ${cp && changed ? renderClips({ ...cp, modifiedOnly: true }) : html`<p class="hint" role="status">${t('image-animator.mc-image-animator.nothing-modified')}</p>`}
+      </div>`;
+    }
     return html`<div slot="drawer" id="ia-drawer" class="drawer-body" ?inert=${busy}>
       ${this._warnings(o)}
-      ${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips({ ...this._clipsPanel(), modifiedOnly: this._modifiedOnly })}` : nothing}
+      ${panel ? html`${renderTargetList(panel)}${renderEffects(panel)}${renderMorph(this._morphPanel())}${renderClips(this._clipsPanel())}` : nothing}
       <p>${clips ? t('image-animator.mc-image-animator.count-animations', { count: clips }) : t('image-animator.mc-image-animator.this-image-has-no-animations-yet')}</p>
     </div>`;
   }
