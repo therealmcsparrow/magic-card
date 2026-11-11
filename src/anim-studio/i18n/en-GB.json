@@ -6988,6 +6988,36 @@
     "note": "Description of the motion path start option: the icon travels along a line the user draws.",
     "max": 35
   },
+  "anim-studio.studio.frame-close": {
+    "text": "Close inspector",
+    "note": "Accessible name of the button that closes the inspector drawer or the settings sheet.",
+    "max": 20
+  },
+  "anim-studio.studio.frame-modified-only": {
+    "text": "Modified only",
+    "note": "Label of the switch that shows only the animation fields that differ from their starting values.",
+    "max": 18
+  },
+  "anim-studio.studio.frame-none-modified": {
+    "text": "No changed fields yet.",
+    "note": "Shown in the inspector when Modified only is on and no field differs from its starting value.",
+    "max": 30
+  },
+  "anim-studio.studio.frame-pin": {
+    "text": "Keep inspector open",
+    "note": "Accessible name of the pin button that keeps the inspector drawer open while you work on the stage.",
+    "max": 28
+  },
+  "anim-studio.studio.frame-settings": {
+    "text": "Settings",
+    "note": "Bar button on a narrow screen that opens the settings sheet with the inspector.",
+    "max": 14
+  },
+  "anim-studio.studio.frame-zoom": {
+    "text": "Zoom",
+    "note": "Accessible name of the group of zoom controls over the stage.",
+    "max": 10
+  },
   "anim-studio.studio.got-it": {
     "text": "Got it",
     "note": "Button that dismisses a one-time hint in the studio.",
@@ -7155,6 +7185,15 @@
     "max": 45,
     "vars": {
       "kind": "The value that replaces kind in the text."
+    }
+  },
+  "anim-studio.studio.modified-count": {
+    "text": "{modified} of {total} settings changed",
+    "note": "Count above the animation settings when Modified only is on: how many settings differ from their starting values, out of all of them.",
+    "max": 34,
+    "vars": {
+      "modified": "How many settings differ from their starting value.",
+      "total": "How many settings there are in all."
     }
   },
   "anim-studio.studio.more-presets-could-not-load-the-built-in": {
@@ -7382,6 +7421,14 @@
     "text": "Repeat count",
     "note": "Number field for how many times the animation plays before it stops.",
     "max": 20
+  },
+  "anim-studio.studio.reset-field": {
+    "text": "Reset {field}",
+    "note": "Accessible name of the small button that puts one animation setting back to its starting value. The field is the setting name.",
+    "max": 28,
+    "vars": {
+      "field": "Name of the setting that is reset, for example Duration."
+    }
   },
   "anim-studio.studio.restore-unsaved-changes": {
     "text": "Restore unsaved changes?",

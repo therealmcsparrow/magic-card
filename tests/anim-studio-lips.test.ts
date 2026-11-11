@@ -34,10 +34,12 @@ async function open(width: number) {
   };
   return { el, root, settle };
 }
-const lip = (root: ShadowRoot, id: string): HTMLButtonElement => root.querySelector<HTMLButtonElement>(`.lip[aria-controls="${id}"]`)!;
+const layersToggle = (root: ShadowRoot): HTMLButtonElement => root.querySelector<HTMLButtonElement>('.layers-toggle[aria-controls="layers"]')!;
+const drawerToggle = (root: ShadowRoot): HTMLButtonElement => root.querySelector<HTMLButtonElement>('.insp-toggle[aria-controls="inspector"]')!;
+const frameOf = (root: ShadowRoot) => root.querySelector('mc-ui-studio-frame') as unknown as { drawerOpen: boolean; strings: { drawer: string } };
 const ctrlBackslash = (): KeyboardEvent => new KeyboardEvent('keydown', { key: '\\', code: 'Backslash', ctrlKey: true, bubbles: true, composed: true, cancelable: true });
 
-describe('animation studio panel lips', () => {
+describe('animation studio panels in the frame', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
     localStorage.clear();
@@ -50,119 +52,95 @@ describe('animation studio panel lips', () => {
     (t.el as unknown as { _selection: unknown })._selection = { kind: 'target', target: 'part:clapper', targets: ['part:clapper'] };
     await t.settle();
     expect((t.el as unknown as { _selection: { kind: string } })._selection.kind).toBe('target');
-    expect(t.root.getElementById('inspector')!.getAttribute('aria-label')).toBe('Inspector panel');
-    expect(lip(t.root, 'inspector').getAttribute('aria-label')).toBe('Inspector panel');
+    expect(frameOf(t.root).strings.drawer).toBe('Inspector');
+    expect(drawerToggle(t.root).getAttribute('aria-label')).toBe('Inspector');
   });
 
-  it('has a lip for Layers and one for the Inspector, in tab order, and a status region from the first render', async () => {
+  it('has a bar toggle for Layers and one for the Inspector, in tab order, and a status region from the first render', async () => {
     const t = await open(1440);
-    expect(lip(t.root, 'layers').getAttribute('aria-label')).toBe('Layers panel');
-    expect(lip(t.root, 'inspector').getAttribute('aria-label')).toBe('Inspector panel');
+    expect(layersToggle(t.root).getAttribute('aria-label')).toBe('Layers');
+    expect(layersToggle(t.root).getAttribute('aria-expanded')).toBe('true');
     expect(t.root.getElementById('layers')!.getAttribute('aria-label')).toBe('Layers panel');
-    expect(t.root.getElementById('inspector')!.getAttribute('aria-label')).toBe('Inspector panel');
-    expect(lip(t.root, 'layers').getAttribute('aria-expanded')).toBe('true');
     expect(t.root.querySelector('.lip-status[role="status"]')).not.toBeNull();
-    const layers = t.root.querySelector<HTMLElement>('#layers')!;
-    expect(layers.dataset.lip).toBe('shown');
-    expect(layers.nextElementSibling).toBe(lip(t.root, 'layers'));
-    expect(lip(t.root, 'inspector').nextElementSibling).toBe(t.root.querySelector('#inspector'));
+    const buttons = [...t.root.querySelectorAll<HTMLElement>('.fr-bar button')];
+    expect(buttons.indexOf(layersToggle(t.root))).toBeLessThan(buttons.indexOf(drawerToggle(t.root)));
   });
 
   it('the icons-only rail and its Collapse layers button are gone', async () => {
-    const t = await open(944);
+    const t = await open(1100);
     expect(t.root.querySelector('.rail-toggle')).toBeNull();
-    expect(t.root.querySelector('.layers.rail, .workspace.rail')).toBeNull();
+    expect(t.root.querySelector('.layers.rail, .workspace')).toBeNull();
     expect(t.root.textContent).not.toContain('Collapse layers');
     expect(t.root.querySelector('.layers-head h2')!.textContent).toBe('Layers');
   });
 
-  it('hiding Layers gives the canvas its track, keeps the panel mounted, remembers it per device', async () => {
+  it('hiding Layers removes the panel from the frame and remembers it per device', async () => {
     const t = await open(1440);
-    const layers = t.root.querySelector<HTMLElement>('#layers')!;
-    lip(t.root, 'layers').click();
+    layersToggle(t.root).click();
     await t.settle();
-    expect(t.root.querySelector('#layers')).toBe(layers);
-    expect(layers.dataset.lip).toBe('hidden');
-    expect(layers.hasAttribute('inert')).toBe(true);
-    expect(t.root.querySelector('.workspace')!.classList.contains('no-layers')).toBe(true);
+    expect(t.root.querySelector('#layers')).toBeNull();
     expect(localStorage.getItem('mc-panels:anim-studio')).toBe('layers');
-    expect(lip(t.root, 'layers').getAttribute('aria-expanded')).toBe('false');
-    // the panel is out of the focus order
-    expect(getComputedStyle(layers).visibility).toBe('hidden');
+    expect(layersToggle(t.root).getAttribute('aria-expanded')).toBe('false');
     t.el.remove();
 
     const again = await open(1440);
-    expect(again.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
-    expect(again.root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('shown');
+    expect(again.root.querySelector('#layers')).toBeNull();
+    expect(layersToggle(again.root).getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('hiding the Inspector gives the canvas its track and keeps the panel', async () => {
+  it('the Inspector toggle closes and opens the drawer', async () => {
     const t = await open(1440);
-    const insp = t.root.querySelector<HTMLElement>('#inspector')!;
-    lip(t.root, 'inspector').click();
+    const f = frameOf(t.root);
+    const was = f.drawerOpen;
+    drawerToggle(t.root).click();
     await t.settle();
-    expect(t.root.querySelector('#inspector')).toBe(insp);
-    expect(insp.dataset.lip).toBe('hidden');
-    expect(t.root.querySelector('.workspace')!.classList.contains('no-inspector')).toBe(true);
+    expect(f.drawerOpen).toBe(!was);
+    expect(drawerToggle(t.root).getAttribute('aria-expanded')).toBe(String(!was));
   });
 
-  it('Ctrl+\\ hides both column panels and shows them again, and announces it', async () => {
+  it('Ctrl+\\ toggles the drawer', async () => {
     const t = await open(1440);
+    const f = frameOf(t.root);
+    const was = f.drawerOpen;
     const ev = ctrlBackslash();
-    t.el.shadowRoot!.querySelector('.stage-wrap, mcas-stage, .center')!.dispatchEvent(ev);
+    t.root.querySelector('mcas-stage')!.dispatchEvent(ev);
     await t.settle();
     expect(ev.defaultPrevented).toBe(true);
-    expect(t.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
-    expect(t.root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('hidden');
-    await new Promise((r) => requestAnimationFrame(() => r(null)));
+    expect(f.drawerOpen).toBe(!was);
+    t.root.querySelector('mcas-stage')!.dispatchEvent(ctrlBackslash());
     await t.settle();
-    expect(t.root.querySelector('.lip-status')!.textContent).toBe('Layers and inspector hidden');
-    t.root.querySelector('.center')!.dispatchEvent(ctrlBackslash());
-    await t.settle();
-    expect(t.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
-    expect(t.root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('shown');
+    expect(f.drawerOpen).toBe(was);
   });
 
-  it('the Inspector slide-over is not a column: no lip, no hidden state; Layers keeps its lip', async () => {
-    localStorage.setItem('mc-panels:anim-studio', 'inspector');
+  it('below 1024 px Layers is a sheet behind its bar toggle and the Inspector opens from Settings', async () => {
     const t = await open(800);
-    expect(lip(t.root, 'inspector')).toBeNull();
-    expect(t.root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('off');
-    expect(t.root.querySelector('.workspace')!.classList.contains('no-inspector')).toBe(false);
-    expect(lip(t.root, 'layers')).not.toBeNull();
-    // the slide-over still opens from its own button
-    t.root.querySelector<HTMLButtonElement>('.insp-toggle')!.click();
+    expect(layersToggle(t.root).getAttribute('aria-expanded')).toBe('false');
+    expect(t.root.querySelector('#layers')).toBeNull();
+    expect(drawerToggle(t.root).getAttribute('aria-haspopup')).toBe('dialog');
+    drawerToggle(t.root).click();
     await t.settle();
-    expect(t.root.querySelector('.workspace')!.classList.contains('insp-open')).toBe(true);
-    // Ctrl+\ touches only the column panel
-    t.root.querySelector('.center')!.dispatchEvent(ctrlBackslash());
-    await t.settle();
-    expect(t.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
-    expect(t.root.querySelector('.workspace')!.classList.contains('insp-open')).toBe(true);
+    expect(frameOf(t.root).drawerOpen).toBe(true);
   });
 
   describe('the earlier Collapse layers choice (mcas-layers)', () => {
-    it('rail: Layers opens hidden once, the hint explains it in its own words, the choice is written under the new key', async () => {
+    it('rail: Layers opens hidden once and the choice is written under the new key', async () => {
       localStorage.setItem(LAYERS_KEY, 'rail');
       const t = await open(1440);
-      expect(t.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
+      expect(t.root.querySelector('#layers')).toBeNull();
+      expect(layersToggle(t.root).getAttribute('aria-expanded')).toBe('false');
       expect(localStorage.getItem('mc-panels:anim-studio')).toBe('layers');
-      const hint = t.root.querySelector('.lip-hint')!;
-      expect(hint.querySelector('p')!.textContent).toBe('The layers panel is hidden, as you collapsed it before. Use the arrow on the edge to show it.');
-      expect(lip(t.root, 'layers').getAttribute('aria-describedby')).toBe(hint.id);
     });
 
     it('showing Layers keeps it shown on the next open', async () => {
       localStorage.setItem(LAYERS_KEY, 'rail');
       const t = await open(1440);
-      lip(t.root, 'layers').click();
+      layersToggle(t.root).click();
       await t.settle();
       expect(localStorage.getItem('mc-panels:anim-studio')).toBeNull();
       expect(localStorage.getItem(LAYERS_KEY)).toBeNull();
       t.el.remove();
       const again = await open(1440);
-      expect(again.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
-      expect(again.root.querySelector('.lip-hint')).toBeNull();
+      expect(again.root.querySelector('#layers')).not.toBeNull();
     });
 
     it('open, unknown values and nothing stored leave Layers shown', async () => {
@@ -171,7 +149,7 @@ describe('animation studio panel lips', () => {
         localStorage.clear();
         localStorage.setItem(LAYERS_KEY, v);
         const t = await open(1440);
-        expect(t.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
+        expect(t.root.querySelector('#layers')).not.toBeNull();
       }
     });
 
@@ -179,33 +157,29 @@ describe('animation studio panel lips', () => {
       localStorage.setItem(LAYERS_KEY, 'rail');
       localStorage.setItem('mc-panels:anim-studio', 'inspector');
       const t = await open(1440);
-      expect(t.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
-      expect(t.root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('hidden');
+      expect(t.root.querySelector('#layers')).not.toBeNull();
     });
 
-    it('blocked storage: both panels open shown and nothing throws', async () => {
+    it('blocked storage: Layers opens shown and nothing throws', async () => {
       const real = Object.getOwnPropertyDescriptor(window, 'localStorage')!;
       let touched = 0;
       Object.defineProperty(window, 'localStorage', { configurable: true, get: () => { touched++; throw new Error('blocked'); } });
       try {
         const t = await open(1440);
         expect(touched).toBeGreaterThan(0);
-        expect(t.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
-        lip(t.root, 'layers').click();
+        expect(t.root.querySelector('#layers')).not.toBeNull();
+        layersToggle(t.root).click();
         await t.settle();
-        expect(t.root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('hidden');
+        expect(t.root.querySelector('#layers')).toBeNull();
       } finally {
         Object.defineProperty(window, 'localStorage', real);
       }
     });
   });
 
-  it('the stylesheet: no rail rules; a hidden panel keeps its width; the tracks follow the hidden state', () => {
+  it('the stylesheet: no rail rules and no column tracks of the old layout', () => {
     const css = studioStyles.map((s) => s.cssText).join('\n');
     expect(css).not.toMatch(/\.rail\b/);
-    expect(css).toMatch(/\.layers\[data-lip='hidden'\]\s*\{[^}]*width:\s*var\(--layers-w\)/);
-    expect(css).toMatch(/\.inspector\[data-lip='hidden'\]\s*\{[^}]*width:\s*var\(--insp-w\)/);
-    expect(css).toMatch(/\.no-layers\s*\{[^}]*--lw:\s*0px/);
-    expect(css).toMatch(/\.no-inspector\s*\{[^}]*--iw:\s*0px/);
+    expect(css).not.toMatch(/\.workspace|\.no-layers|\.no-inspector|\.insp-scrim/);
   });
 });
