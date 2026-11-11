@@ -1950,8 +1950,11 @@ export class McSvgEditor extends LitElement implements StageHost {
   };
 
   get fitZoom(): number {
-    const r = this.canvas()?.getBoundingClientRect();
-    return r && r.width ? Math.max(0.01, Math.min((r.width - 48) / this.doc.vb.w, (r.height - 48) / this.doc.vb.h)) : 0;
+    const c = this.canvas();
+    const r = c?.getBoundingClientRect();
+    if (!r || !r.width) return 0;
+    const top = Math.max(0, Math.min((c as { fitTop?: number }).fitTop ?? 0, r.height - 49));
+    return Math.max(0.01, Math.min((r.width - 48) / this.doc.vb.w, (r.height - top - 48) / this.doc.vb.h));
   }
 
   blankStart(): Doc {

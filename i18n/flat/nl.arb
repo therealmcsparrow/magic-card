@@ -8654,6 +8654,13 @@
     "x-max-length": 25,
     "x-source-hash": "8239a9a2"
   },
+  "anim-studio.studio.close-layers": "Lagen sluiten",
+  "@anim-studio.studio.close-layers": {
+    "description": "Tooltip and label of the button that closes the Layers sheet on a narrow screen. Max 20 characters.",
+    "source_text": "Close layers",
+    "x-max-length": 20,
+    "x-source-hash": "0cbb5e46"
+  },
   "anim-studio.studio.count": "{count, plural, one {# keyframe} other {# keyframes}}",
   "@anim-studio.studio.count": {
     "description": "Number of keyframes in an animation, with singular and plural forms. {count}: The count the text is about. Max 20 characters.",
@@ -40242,6 +40249,13 @@
     "x-max-length": 40,
     "x-source-hash": "6a434cf4"
   },
+  "mcu-panel.panel.new-animation": "Animatiestudio openen",
+  "@mcu-panel.panel.new-animation": {
+    "description": "Button above the animation list: opens the animation studio at its list, where animations are made, imported and edited. Max 24 characters.",
+    "source_text": "Open animation studio",
+    "x-max-length": 24,
+    "x-source-hash": "cb5ba04a"
+  },
   "mcu-panel.panel.new-template": "Nieuw sjabloon",
   "@mcu-panel.panel.new-template": {
     "description": "Primary button above the template list, and the dialog title until the new template has a name. Max 24 characters.",
@@ -40255,6 +40269,13 @@
     "source_text": "New template name",
     "x-max-length": 30,
     "x-source-hash": "0a05447d"
+  },
+  "mcu-panel.panel.new-theme": "Thema-editor openen",
+  "@mcu-panel.panel.new-theme": {
+    "description": "Button above the theme list: opens the theme editor at its list, where themes are made, imported and edited. Max 24 characters.",
+    "source_text": "Open theme editor",
+    "x-max-length": 24,
+    "x-source-hash": "38c4b2f1"
   },
   "mcu-panel.panel.no-animations-match-search": "Geen animaties komen overeen met je zoekopdracht.",
   "@mcu-panel.panel.no-animations-match-search": {
@@ -47353,6 +47374,13 @@
     "x-max-length": 15,
     "x-source-hash": "a57b08a4"
   },
+  "svg-editor.views.px": "px",
+  "@svg-editor.views.px": {
+    "description": "Lower-case suffix after a number field in the image editor, meaning pixels. Max 10 characters.",
+    "source_text": "px",
+    "x-max-length": 10,
+    "x-source-hash": "6ee2cc10"
+  },
   "svg-editor.views.reading": "Lezen…",
   "@svg-editor.views.reading": {
     "description": "Short progress text while a chosen file is being read. Keep the ellipsis. Max 15 characters.",
@@ -47917,12 +47945,12 @@
     "x-max-length": 30,
     "x-source-hash": "68edf118"
   },
-  "svg-editor.views.w-x-h-units": "{w} x {h} eenheden",
-  "@svg-editor.views.w-x-h-units": {
-    "description": "Size of the image canvas in drawing units, shown under the canvas and in the Inspector. {w} is the width and {h} the height, as numbers. {h}: The canvas height in drawing units. {w}: The canvas width in drawing units. Max 30 characters.",
-    "source_text": "{w} x {h} units",
+  "svg-editor.views.w-x-h-px": "{w} x {h} px",
+  "@svg-editor.views.w-x-h-px": {
+    "description": "Size of the image canvas in pixels, shown under the image in the image editor. {w} is the width and {h} the height, as numbers. {h}: The image height in pixels. {w}: The image width in pixels. Max 30 characters.",
+    "source_text": "{w} x {h} px",
     "x-max-length": 30,
-    "x-source-hash": "86219fc5"
+    "x-source-hash": "26de7c54"
   },
   "svg-editor.views.what-do-you-want-to-start-from": "Waarmee wil je beginnen?",
   "@svg-editor.views.what-do-you-want-to-start-from": {
@@ -50600,13 +50628,6 @@
     "x-max-length": 20,
     "x-source-hash": "f827a651"
   },
-  "theme-editor.lips.got-it": "Begrepen",
-  "@theme-editor.lips.got-it": {
-    "description": "Button that dismisses the one-time hint about the side panel tabs. Means understood. Max 10 characters.",
-    "source_text": "Got it",
-    "x-max-length": 10,
-    "x-source-hash": "5ad3dbd1"
-  },
   "theme-editor.lips.hide-noun-keys": "Verberg {noun} ({keys})",
   "@theme-editor.lips.hide-noun-keys": {
     "description": "Tooltip on a side panel edge tab. {noun} is the panel name, such as 'variables' or 'preview'; {keys} is the keyboard shortcut, such as Ctrl+B; do not translate it. {keys}: The value that replaces keys in the text. {noun}: The value that replaces noun in the text. Max 35 characters.",
@@ -50641,13 +50662,6 @@
     "source_text": "Show {noun} ({keys})",
     "x-max-length": 35,
     "x-source-hash": "7a362b14"
-  },
-  "theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": "Het paneel {noun} is verborgen, zoals je het had achtergelaten. Gebruik de knop in de balk om het te tonen.",
-  "@theme-editor.lips.the-noun-panel-is-hidden-as-you-left-it": {
-    "description": "Hint at the screen edge. {noun} is the panel name, such as 'variables' or 'preview'. {noun}: The value that replaces noun in the text. Max 130 characters.",
-    "source_text": "The {noun} panel is hidden, as you left it. Use the button in the bar to show it.",
-    "x-max-length": 130,
-    "x-source-hash": "fc9c41e5"
   },
   "theme-editor.lips.variables": "variabelen",
   "@theme-editor.lips.variables": {
