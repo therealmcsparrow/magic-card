@@ -27,9 +27,9 @@ function clamp(v: number, min: number, max: number): number {
 }
 
 /**
- * Position of the module float bar. Never covers a neighbouring module:
- * below the frame first, then above it (clear of the frame's name tag), then right and left of the frame,
- * and as a last resort inside the frame's top-right corner. Always clamped to the visible canvas.
+ * Position of the module float bar, an overlay that always gets a spot. Never covers a neighbouring module:
+ * above the frame first (clear of the frame's name tag), then below it, then right and left of the frame,
+ * and as a last resort inside the frame's top-right corner. Always clamped to the visible stage.
  */
 export function placeFloatBar(frame: Box, bar: Size, obstacles: Box[], viewport: Box): { top: number; left: number } {
   return findFloatBarSpot(frame, bar, obstacles, viewport) ?? insideCorner(frame, bar, viewport);
@@ -54,8 +54,8 @@ export function findFloatBarSpot(frame: Box, bar: Size, obstacles: Box[], viewpo
   };
 
   const candidates: Array<[number, number]> = [
-    [frame.top + frame.height + GAP, alignedLeft],
     [frame.top - TAG - GAP - bar.height, alignedLeft],
+    [frame.top + frame.height + GAP, alignedLeft],
     [sideTop, frame.left + frame.width + GAP],
     [sideTop, frame.left - GAP - bar.width],
   ];

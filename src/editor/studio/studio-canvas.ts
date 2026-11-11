@@ -5,7 +5,7 @@ import type { EditorStateManager } from '../state/editor-state';
 import type { MagicCard } from '../../card/magic-card';
 import { CARD_TAG } from '../../utils/constants';
 import { editorSystem } from '../../css/editor-stack';
-import { findFloatBarSpot, lipBoxes } from './float-bar';
+import { placeFloatBar, lipBoxes } from './float-bar';
 import { ItemMenu, LongPress, itemMenuStyles } from './item-menu';
 import {
   ModuleSelection,
@@ -333,10 +333,8 @@ export class StudioCanvas extends LitElement {
   @state() private _sheet?: { list: HereEntry[]; x: number; y: number; hold?: boolean };
   /** Layers under the selected module (itself included): the float bar's "Layers here (n)". */
   @state() private _hereCount = 0;
-  /** No spot beside the selection fits: the float bar sits in a strip above the canvas instead of on the module. */
-  @state() private _docked = false;
-  /** Button index and old bar element while keyboard focus rides along when the bar moves to or from the dock. */
-  private _barFocus?: { index: number; from: HTMLElement };
+  /** The scroll area the canvas sits in, watched so the float bar stays inside what is visible of it. */
+  private _stage?: HTMLElement;
 
   /** Show a short status ("Row 2 YAML copied") in the capsule at the canvas foot, announced politely. */
   showStatus(message: string): void {
@@ -397,7 +395,6 @@ export class StudioCanvas extends LitElement {
       this._clearPress();
       this._hoverEl = null;
       this._hoverSel = null;
-      this._docked = false;
       card.selectedPath = undefined;
       card.selectedFlow = null;
       card.previewPaused = false;
@@ -433,6 +430,8 @@ export class StudioCanvas extends LitElement {
     this._subscribedTo = undefined;
     this._ro?.disconnect();
     this._ro = undefined;
+    this._stage?.removeEventListener('scroll', this._queuePlace);
+    this._stage = undefined;
     window.removeEventListener('resize', this._queuePlace);
     this._lipRoot?.removeEventListener('transitionend', this._onLipSlid);
     this._lipRoot = undefined;
@@ -996,6 +995,31 @@ export class StudioCanvas extends LitElement {
     return r.width || r.height ? r : null;
   }
 
+  /** Screen rect of what is visible of the nearest scrolling ancestor (the studio's stage); follows its scrolling. */
+  private _watchStage(from: HTMLElement): { top: number; left: number; width: number; height: number } | null {
+    let stage = this._stage;
+    if (!stage || !stage.isConnected) {
+      stage?.removeEventListener('scroll', this._queuePlace);
+      stage = undefined;
+      let node: Node | null = from;
+      while (node) {
+        node = (node as Element).assignedSlot ?? node.parentNode ?? (node as ShadowRoot).host ?? null;
+        if (node instanceof HTMLElement) {
+          const o = getComputedStyle(node);
+          if (/(auto|scroll)/.test(o.overflowY + o.overflowX)) {
+            stage = node;
+            break;
+          }
+        }
+      }
+      this._stage = stage;
+      stage?.addEventListener('scroll', this._queuePlace, { passive: true });
+    }
+    if (!stage) return null;
+    const r = stage.getBoundingClientRect();
+    return { top: r.top + stage.clientTop, left: r.left + stage.clientLeft, width: stage.clientWidth, height: stage.clientHeight };
+  }
+
   private _place(): void {
     if (!this.isConnected) return;
     const root = this.shadowRoot;
@@ -1009,7 +1033,6 @@ export class StudioCanvas extends LitElement {
     const toLocal = layoutSpace(inner);
     this._placeColumnHandles(toLocal);
     if (!tr) {
-      this._docked = false;
       frame.hidden = true;
       bar.hidden = true;
       canvasEl?.classList.remove('framed');
@@ -1029,7 +1052,6 @@ export class StudioCanvas extends LitElement {
     frame.hidden = false;
     Object.assign(frame.style, { top: `${top}px`, left: `${left}px`, width: `${w}px`, height: `${h}px` });
     if (sel.kind !== 'module') {
-      this._docked = false;
       bar.hidden = true;
     } else {
       bar.hidden = false;
@@ -1044,37 +1066,22 @@ export class StudioCanvas extends LitElement {
         .map(toLocal);
       // the panel lips overlay the canvas edges: the bar keeps off them
       obstacles.push(...lipBoxes(this.getRootNode() as ParentNode, toLocal));
-      const viewport = {
-        top: -CANVAS_ROOM_Y,
-        left: -CANVAS_ROOM_X,
-        width: inner.clientWidth + CANVAS_ROOM_X * 2,
-        // the dock strip takes its height from the canvas while docked; judge the spots against the canvas without it
-        height: canvas.clientHeight + (root?.querySelector<HTMLElement>('.bar-dock')?.offsetHeight ?? 0) + CANVAS_ROOM_Y * 2,
-      };
-      const pos = findFloatBarSpot(
+      const stage = this._watchStage(canvas);
+      const viewport = stage
+        ? toLocal({ top: stage.top, left: stage.left, width: stage.width, height: stage.height } as DOMRect)
+        : {
+            top: -CANVAS_ROOM_Y,
+            left: -CANVAS_ROOM_X,
+            width: inner.clientWidth + CANVAS_ROOM_X * 2,
+            height: canvas.clientHeight + CANVAS_ROOM_Y * 2,
+          };
+      const pos = placeFloatBar(
         { top, left, width: w, height: h },
         { width: Math.max(bar.offsetWidth, bar.scrollWidth), height: bar.offsetHeight },
         obstacles,
         viewport,
       );
-      const docked = !pos;
-      if (docked !== this._docked) {
-        const buttons = [...bar.querySelectorAll('button')];
-        let active: Element | null = null;
-        try {
-          active = root?.activeElement ?? null;
-        } catch {
-          // focus left in a torn-down tree: nothing to carry over
-        }
-        const index = buttons.findIndex((b) => b === active);
-        if (index >= 0) this._barFocus = { index, from: bar };
-      }
-      this._docked = docked;
-      if (this._barFocus && this._barFocus.from !== bar) {
-        bar.querySelectorAll('button')[this._barFocus.index]?.focus({ preventScroll: true });
-        this._barFocus = undefined;
-      }
-      if (pos) Object.assign(bar.style, { top: `${pos.top}px`, left: `${pos.left}px` });
+      Object.assign(bar.style, { top: `${pos.top}px`, left: `${pos.left}px` });
     }
     canvasEl?.classList.toggle('framed', !frame.hidden);
     this._placeHover();
@@ -1391,7 +1398,6 @@ export class StudioCanvas extends LitElement {
     `;
 
     return html`
-      ${this._docked && !live ? html`<div class="bar-dock">${floatBar}</div>` : nothing}
       <div
         class="canvas ${this._connectFrom ? 'connecting' : ''} ${live ? 'live' : ''}"
         tabindex=${live ? nothing : '0'}
@@ -1430,7 +1436,7 @@ export class StudioCanvas extends LitElement {
               : nothing}
           </div>
           ${this._renderColumnHandles()}
-          ${this._docked ? nothing : floatBar}`}
+          ${floatBar}`}
         </div>
       </div>
       ${this._connectFrom
@@ -1485,24 +1491,6 @@ export class StudioCanvas extends LitElement {
         grid-template-rows: auto minmax(0, 1fr);
         min-height: 0;
         min-width: 0;
-      }
-      /* strip above the canvas for the float bar when no spot beside the selection fits; takes room only while docked */
-      .bar-dock {
-        grid-row: 1;
-        display: flex;
-        justify-content: safe center;
-        padding: 6px 8px;
-        overflow-x: auto;
-        background: var(--mc-surface);
-        border-bottom: 1px solid var(--mc-divider);
-      }
-      .bar-dock:has(.float-bar[hidden]) {
-        display: none;
-      }
-      .bar-dock .float-bar {
-        position: static;
-        flex: none;
-        max-width: none;
       }
       .canvas {
         direction: ltr; /* frames, handles and drag maths use screen coordinates */
