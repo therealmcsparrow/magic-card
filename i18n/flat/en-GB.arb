@@ -13162,6 +13162,42 @@
     "x-max-length": 10,
     "x-source-hash": "19766ed6"
   },
+  "card-editor.font-picker.categories": "Font categories",
+  "@card-editor.font-picker.categories": {
+    "description": "Accessible name of the group of category filter buttons in the Google fonts list. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "ea8fcba2"
+  },
+  "card-editor.font-picker.category-display": "Display",
+  "@card-editor.font-picker.category-display": {
+    "description": "Label of the filter button that lists only display (decorative headline) Google fonts. Max 14 characters.",
+    "x-max-length": 14,
+    "x-source-hash": "34e108c0"
+  },
+  "card-editor.font-picker.category-handwriting": "Handwriting",
+  "@card-editor.font-picker.category-handwriting": {
+    "description": "Label of the filter button that lists only handwriting Google fonts. Max 14 characters.",
+    "x-max-length": 14,
+    "x-source-hash": "95a98bc8"
+  },
+  "card-editor.font-picker.category-monospace": "Monospace",
+  "@card-editor.font-picker.category-monospace": {
+    "description": "Label of the filter button that lists only monospace Google fonts. Max 14 characters.",
+    "x-max-length": 14,
+    "x-source-hash": "64c223c2"
+  },
+  "card-editor.font-picker.category-sans-serif": "Sans serif",
+  "@card-editor.font-picker.category-sans-serif": {
+    "description": "Label of the filter button that lists only sans serif Google fonts. Max 14 characters.",
+    "x-max-length": 14,
+    "x-source-hash": "afb6b974"
+  },
+  "card-editor.font-picker.category-serif": "Serif",
+  "@card-editor.font-picker.category-serif": {
+    "description": "Label of the filter button that lists only serif Google fonts. Max 14 characters.",
+    "x-max-length": 14,
+    "x-source-hash": "1b5e747e"
+  },
   "card-editor.font-picker.font-family": "Font family",
   "@card-editor.font-picker.font-family": {
     "description": "Label of the field for the font's family name, such as Roboto or Arial. Max 20 characters.",
@@ -13210,6 +13246,28 @@
     "x-max-length": 25,
     "x-source-hash": "6cfe7c1e"
   },
+  "card-editor.font-picker.nudge-utils-missing": "This font needs Google Fonts and Magic Card Utils. Install Utils, then turn on Google Fonts. Viewers then contact Google.",
+  "@card-editor.font-picker.nudge-utils-missing": {
+    "description": "One line under a font field when the chosen font is a Google font and Magic Card Utils is not installed. Max 130 characters.",
+    "x-max-length": 130,
+    "x-source-hash": "3b84dd87"
+  },
+  "card-editor.font-picker.nudge-utils-off": "This Google font is switched off. Turn on Google Fonts in Magic Card Utils → Configure. Viewers then contact Google.",
+  "@card-editor.font-picker.nudge-utils-off": {
+    "description": "One line under a font field when the chosen font is a Google font but the Google Fonts switch in Magic Card Utils is off. Max 130 characters.",
+    "x-max-length": 130,
+    "x-source-hash": "fe026169"
+  },
+  "card-editor.font-picker.results": "{total, plural, one {# font} other {# fonts}}",
+  "@card-editor.font-picker.results": {
+    "description": "Number of Google fonts that match the search and category filter. {total} is that number, a whole number. {total}: The value that replaces total in the text. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "20f34339",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
   "card-editor.font-picker.save": "Save",
   "@card-editor.font-picker.save": {
     "description": "Button that confirms the selected font and closes the font browser. Max 10 characters.",
@@ -13227,6 +13285,12 @@
     "description": "Placeholder of the font field before any font has been chosen. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "2c9bc7a2"
+  },
+  "card-editor.font-picker.showing-first": "Showing the first {n} of {total}. Refine your search to see more.",
+  "@card-editor.font-picker.showing-first": {
+    "description": "Line under a long Google fonts list: only the first {n} of {total} matches are shown, so the user should narrow the search. {n}: The value that replaces n in the text. {total}: The value that replaces total in the text. Max 70 characters.",
+    "x-max-length": 70,
+    "x-source-hash": "61cfb4bd"
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": "The quick brown fox jumps over the lazy dog",
   "@card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
@@ -25787,6 +25851,24 @@
     "description": "Label of the font family choice, such as Sans-serif or Serif. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "64d0b3ad"
+  },
+  "image-editor.text-ui.google-font": "Google font…",
+  "@image-editor.text-ui.google-font": {
+    "description": "Option in the font choice of a text layer that opens the list of Google fonts. The three dots mean a list opens. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "8677baaa"
+  },
+  "image-editor.text-ui.google-font-hint": "{name} is a Google font. It loads from Google Fonts while the switch in Magic Card Utils is on.",
+  "@image-editor.text-ui.google-font-hint": {
+    "description": "Hint under the font choice when the text uses a Google font. {name} is the font family name. {name}: The font family name. Max 130 characters.",
+    "x-max-length": 130,
+    "x-source-hash": "d899e889"
+  },
+  "image-editor.text-ui.google-font-loads": "{name} is a Google font. It loads from Google Fonts because the switch in Magic Card Utils is on. Viewers then contact Google.",
+  "@image-editor.text-ui.google-font-loads": {
+    "description": "Hint under the font choice when the text uses a Google font and the Google Fonts switch is on. {name} is the font family name. {name}: The font family name. Max 160 characters.",
+    "x-max-length": 160,
+    "x-source-hash": "2621b6cf"
   },
   "image-editor.text-ui.italic": "Italic",
   "@image-editor.text-ui.italic": {
