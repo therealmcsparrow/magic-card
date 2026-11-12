@@ -1309,6 +1309,12 @@
       "field": "/files/magic-card-animation-studio.js/ceiling",
       "from": 1006336,
       "to": 1010688
+    },
+    {
+      "id": "animation-studio-ceiling-1002496-to-1010688",
+      "field": "/files/magic-card-animation-studio.js/ceiling",
+      "from": 1002496,
+      "to": 1010688
     }
   ]
 }
