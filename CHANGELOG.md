@@ -10,6 +10,7 @@ A pre-release. Install Magic Card Utils 2026.11.3-beta.1 (or newer) first, then 
 
 ### Breaking
 -   **Google fonts need Magic Card Utils and a switch.** A card that names a Google font now shows a fallback font until **Load Google Fonts** is on in Settings → Devices & services → Magic Card Utils → Configure, and the page is reloaded. The card editor shows a short note under such a font field. An `@import` of a Google Fonts address in a card's custom css is not affected.
+-   **Source Sans Pro shows a fallback.** Google renamed it Source Sans 3, so a card that names Source Sans Pro from the old font list shows the fallback font. Pick Source Sans 3 in the Google tab.
 
 ### New
 -   **Every Google font in every font picker.** With the switch on, each font picker has a Google tab with the full Google Fonts catalogue, search and category filters. It covers the card editor and Studio, the theme editor font fields and image editor text. Typing a catalogue name such as `lato` is stored as `"Lato", sans-serif`.

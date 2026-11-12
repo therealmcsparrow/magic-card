@@ -33,6 +33,8 @@ This changed in 2026.11.04. A card that names a Google font now needs Magic Card
 
 To keep the look, install Magic Card Utils and turn on the switch. Or pick a font that is installed on the device.
 
+Google renamed Source Sans Pro, which the old font list offered, to Source Sans 3. A card that names Source Sans Pro shows the fallback font even with the switch on. Pick Source Sans 3 in the Google tab to get the look back.
+
 ## Theme fonts
 
 When the switch is on, Magic Card Utils also loads the fonts that your active Home Assistant theme names, if they are Google fonts. They load on every Home Assistant page, not only on dashboards with a Magic Card.

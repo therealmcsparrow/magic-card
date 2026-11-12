@@ -101,7 +101,7 @@ The import summary shows the warning before you confirm. The confirm button read
 
 Magic Card and Magic Card Utils have no telemetry and send nothing to the author. Your icons, shapes and presets are stored in your own Home Assistant (Magic Card Utils) or in the card configuration.
 
-Magic Card Utils makes no requests to other websites. Magic Card makes them only when your own configuration asks for it:
+Neither makes requests to other websites unless you turn on a feature or your own configuration asks for it:
 
 -   Google Fonts load from Google (`fonts.googleapis.com` and `fonts.gstatic.com`) only when the **Load Google Fonts** switch in Magic Card Utils is on. Google can then see the visitor's IP address. A font that an imported file names does not change this: with the switch off, it shows as a generic font.
 -   An address you typed, such as an image, is requested by the browser, and that website can see the visitor's IP address.
