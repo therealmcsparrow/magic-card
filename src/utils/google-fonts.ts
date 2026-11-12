@@ -50,6 +50,9 @@ export function collectConfigFonts(config: object): string[] {
   return out;
 }
 
+/** The lazy `google-fonts` chunk: the catalogue and everything that turns font-family text into stylesheet links. */
+export const googleFontsChunk = () => import(/* webpackChunkName: "google-fonts" */ '../google-fonts/loader');
+
 /** Font strings already handed on: each is looked at once per page, however often the card renders. */
 const asked = new Set<string>();
 
@@ -59,6 +62,6 @@ export function loadConfigFonts(config: object): void {
   if (!fresh.length) return;
   fresh.forEach((s) => asked.add(s));
   whenGoogleFontsAllowed(() => {
-    import(/* webpackChunkName: "google-fonts" */ '../google-fonts/loader').then((m) => m.loadFontsFor(fresh.flatMap(m.fontCandidates)), () => 0);
+    googleFontsChunk().then((m) => m.loadFontsFor(fresh.flatMap(m.fontCandidates)), () => 0);
   });
 }

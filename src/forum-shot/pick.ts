@@ -4,7 +4,7 @@ import type { IconStyle } from '../contracts/icon-library';
 import { loadIconLibrary } from '../anim-studio/icon-library-loader';
 import { styleDoc } from '../icon-anim/style';
 import type { LookSource } from './looks';
-import { classifyCard } from './font-address';
+import { classifyCard, configGoogleFamilies } from './font-address';
 import { findRemoteAssets } from './remote';
 import { forumShotError } from './settle';
 
@@ -64,17 +64,18 @@ export async function listMagicCards(hass: WsHass): Promise<MagicCardRef[]> {
     if (!isObj(config) || !Array.isArray(config.views)) continue;
     readable++;
     let nodes = 0;
-    const walk = (node: unknown, path: number[], view: string): void => {
+    const walk = async (node: unknown, path: number[], view: string): Promise<void> => {
       if (!isObj(node) || ++nodes > MAX_NODES || refs.length >= MAX_CARDS) return;
       if (node.type === CARD_TYPE) {
         const cardName = text(node.name) || `#${refs.filter((r) => r.dashboard === dash.path && r.view === view).length + 1}`;
-        const { lock, fontHosts } = classifyCard(node, location.origin);
+        const { lock, fontHosts } = await classifyCard(node, location.origin);
+        const families = await configGoogleFamilies(node);
         refs.push({
           dashboard: dash.path,
           view,
           path,
           label: [dash.title, view, cardName].filter(Boolean).join(' / '),
-          remote: findRemoteAssets(node, location.origin),
+          remote: findRemoteAssets(node, location.origin, families),
           lock,
           fontHosts,
           dashboardTitle: dash.title,
@@ -82,9 +83,14 @@ export async function listMagicCards(hass: WsHass): Promise<MagicCardRef[]> {
         });
         return;
       }
-      childrenOf(node).forEach((c, i) => walk(c, [...path, i], view));
+      let i = 0;
+      for (const c of childrenOf(node)) await walk(c, [...path, i++], view);
     };
-    (config.views as unknown[]).forEach((v, i) => walk(v, [i], isObj(v) ? text(v.title) || text(v.path) || `View ${i + 1}` : `View ${i + 1}`));
+    let v = 0;
+    for (const view of config.views as unknown[]) {
+      await walk(view, [v], isObj(view) ? text(view.title) || text(view.path) || `View ${v + 1}` : `View ${v + 1}`);
+      v++;
+    }
   }
   if (!readable) throw forumShotError('config_read_failed');
   if (!refs.length) throw forumShotError('no_cards');

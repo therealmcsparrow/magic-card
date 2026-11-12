@@ -61,7 +61,7 @@ const inOrder = <T>(order: T[], wanted: T[]): T[] => order.filter((v) => wanted.
  * into one PNG. Throws `remote_asset` before any card mounts, and `too_large` before the frames are drawn together.
  */
 export async function renderSheet(hass: object, request: ForumShotRequest, seams: SheetSeams = {}): Promise<ForumShotSheet> {
-  const kit = prepareCard(request.config, location.origin);
+  const kit = await prepareCard(request.config, location.origin);
   if (kit.lock) throw forumShotError('remote_asset');
   const shown = request.fontHosts ?? [];
   if (kit.plan.fontHosts.some((h) => !shown.includes(h))) throw forumShotError('hosts_changed');

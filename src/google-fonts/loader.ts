@@ -3,7 +3,7 @@ import { collectConfigFonts, googleFontsAllowed, whenGoogleFontsAllowed } from '
 import { LOCAL_FONT_NAMES } from './local-fonts';
 import { findFamily, type GoogleFamily } from './catalogue';
 
-export { LOCAL_FONT_NAMES };
+export { LOCAL_FONT_NAMES, findFamily };
 
 const SKIPPED = new Set(['serif', 'monospace', 'cursive', 'inherit', 'initial', 'roboto', ...LOCAL_FONT_NAMES.map((n) => n.toLowerCase())]);
 /** Hyphenated generics (`sans-serif`, `system-ui`) never match, so only the plain ones are listed. */

@@ -7,6 +7,9 @@ import { MagicCardForumShot } from '../src/forum-shot/element';
 import { forumShotError } from '../src/forum-shot/settle';
 import '../src/forum-shot';
 
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
+
 const mc = (extra: Record<string, unknown> = {}) => ({ type: 'custom:magic-card', ...extra });
 const font = mc({ name: 'Alpha', css: '@import url(https://fonts.googleapis.com/css2?family=Lora);' });
 const plain = mc({ name: 'Beta' });

@@ -7,6 +7,9 @@ import { cardConfigOf, listMagicCards } from '../src/forum-shot/pick';
 import { MagicCardForumShot } from '../src/forum-shot/element';
 import '../src/forum-shot';
 
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
+
 const mc = (extra: Record<string, unknown> = {}) => ({ type: 'custom:magic-card', ...extra });
 const plain = { type: 'entities', entities: [] };
 const overview = {

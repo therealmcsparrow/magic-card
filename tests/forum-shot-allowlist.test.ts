@@ -3,6 +3,9 @@ import '../src/index';
 import { findRemoteAssets, keepsText, scrubHass, scrubText, scrubValue } from '../src/forum-shot/remote';
 import { modeWrapper, themeVars } from '../src/forum-shot/modes';
 
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
+
 const ORIGIN = 'http://localhost:3000';
 
 // Every form the security review (48) reached a server with, plus the ones it listed as closed. String.raw keeps the backslashes.

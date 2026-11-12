@@ -1,6 +1,6 @@
 // Which font addresses a card config names, and whether the card can be picked. Reads nothing from the network.
 import type { ForumShotLockReason } from '../contracts/forum-shot';
-import { legacyConfigFonts, legacyFontFamilies, legacyFontUrl } from './legacy-fonts';
+import { googleFontsAllowed, googleFontsChunk } from '../utils/google-fonts';
 import type { FontPlan, PreparedFace } from './font-fetch';
 import { CUSTOM_CARD, FONT_KEYS, LIMIT, MAX_DEPTH, MAX_NODES, MAX_STRING, decodeEntities, findRemoteAssets } from './remote';
 
@@ -9,8 +9,6 @@ export const FONT_HOST_PAIRS: Readonly<Record<string, readonly string[]>> = { 'f
 /** Most font hosts a card may name before it is locked: a longer list is no disclosure. */
 export const MAX_FONT_HOSTS = 8;
 const MAX_ADDRESS = 2048;
-// Roboto is the Home Assistant font and loads nothing.
-const SYSTEM_FAMILY = 'Roboto';
 const GOOGLE_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 const PRIVATE_SUFFIXES = ['localhost', 'local', 'internal', 'intranet', 'private', 'corp', 'home', 'lan', 'localdomain', 'arpa'];
 // ASCII letters, digits and `- . _ ~ : / ? # @ ! $ & + , ; = %`; anything else (space, quote, bracket, backslash, `*`, braces) cannot be judged.
@@ -26,6 +24,32 @@ export interface CardClass {
 type Verdict = { kind: 'host'; host: string } | { kind: 'outside' } | { kind: 'cannot' };
 const CANNOT: Verdict = { kind: 'cannot' };
 const OUTSIDE: Verdict = { kind: 'outside' };
+
+type FontLib = typeof import('../google-fonts/loader');
+let lib: FontLib | undefined;
+
+/** Loads the shared `google-fonts` chunk (the catalogue and the loader) once; resolves with nothing while Magic Card Utils does not allow Google Fonts, and the name helpers below read nothing until then. */
+export async function loadGoogleFontsLib(): Promise<FontLib | undefined> {
+  if (!googleFontsAllowed()) return undefined;
+  return (lib ??= await googleFontsChunk());
+}
+
+/** The Google families a card config uses, as the catalogue names them; none while Magic Card Utils does not allow Google Fonts. */
+export async function configGoogleFamilies(config: object): Promise<string[]> {
+  const fonts = await loadGoogleFontsLib();
+  return fonts ? (await fonts.resolveGoogleFonts(fonts.configFontCandidates(config))).map((f) => f.name) : [];
+}
+
+/** The catalogue name of the family a font-family part (or a one-family value) names; undefined for a local font, a generic, or while Google Fonts are not allowed. */
+function googleNameOf(part: string): string | undefined {
+  const candidate = lib?.fontCandidates(part)[0];
+  return candidate && googleFontsAllowed() ? lib?.findFamily(candidate)?.name : undefined;
+}
+
+/** Every Google family in a font-family value, in order. */
+function googleNamesIn(value: string): string[] {
+  return [...new Set(value.split(',').map(googleNameOf).filter((n): n is string => !!n))];
+}
 
 export function isPublicHost(host: string): boolean {
   if (host.length > 253) return false;
@@ -348,7 +372,7 @@ function readCss(css: string, origin: string): CssRead {
 }
 
 /** Whether a card can be picked and which hosts a Download would contact for its fonts. Makes no request. */
-export function classifyCard(config: unknown, origin: string): CardClass {
+export async function classifyCard(config: unknown, origin: string): Promise<CardClass> {
   const hosts = new Set<string>();
   let outside = false;
   let cannot = false;
@@ -379,9 +403,9 @@ export function classifyCard(config: unknown, origin: string): CardClass {
     return v;
   };
   const stripped = rewrite(config, 0);
-  const families = config && typeof config === 'object' ? legacyConfigFonts(config) : [];
-  const remote = findRemoteAssets(stripped, origin).filter((r) => !families.includes(r));
-  if (families.some((f) => f !== SYSTEM_FAMILY)) GOOGLE_HOSTS.forEach((h) => hosts.add(h));
+  const families = config && typeof config === 'object' ? await configGoogleFamilies(config) : [];
+  const remote = findRemoteAssets(stripped, origin);
+  if (families.length) GOOGLE_HOSTS.forEach((h) => hosts.add(h));
   for (const h of [...hosts]) FONT_HOST_PAIRS[h]?.forEach((x) => hosts.add(x));
 
   let lock: ForumShotLockReason | null = null;
@@ -423,8 +447,8 @@ export function aliasFamilies(value: string, has: (lower: string) => boolean): s
   return value
     .split(',')
     .map((part) => {
-      const f = legacyFontFamilies(part)[0];
-      return f && f !== SYSTEM_FAMILY && has(f.toLowerCase()) ? ` "${aliasOf(f)}"` : part;
+      const f = googleNameOf(part);
+      return f && has(f.toLowerCase()) ? ` "${aliasOf(f)}"` : part;
     })
     .join(',')
     .replace(/^ /, '');
@@ -433,14 +457,14 @@ export function aliasFamilies(value: string, has: (lower: string) => boolean): s
 /** A text from a template result with every Google family under its alias, so the card's own loader requests none; `onMissing` is called for a family no face was prepared for. */
 export function aliasInText(text: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
   return mapFontFamilies(text, (v) => {
-    for (const f of legacyFontFamilies(v)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
+    for (const f of googleNamesIn(v)) if (!prepared.has(f.toLowerCase())) onMissing();
     return aliasFamilies(v, () => true);
   });
 }
 
 /** The value of a font key from a template result with every Google family under its alias, so the card's own loader requests none; `onMissing` is called for a family no face was prepared for. */
 export function aliasFontValue(value: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
-  for (const f of legacyFontFamilies(value)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
+  for (const f of googleNamesIn(value)) if (!prepared.has(f.toLowerCase())) onMissing();
   return aliasFamilies(value, () => true);
 }
 
@@ -455,12 +479,14 @@ export interface CardKit {
 }
 
 /** Judges a freshly read config and builds what a Download needs for its fonts. Makes no request. */
-export function prepareCard(config: Record<string, unknown>, origin: string): CardKit {
-  const { lock, fontHosts } = classifyCard(config, origin);
+export async function prepareCard(config: Record<string, unknown>, origin: string): Promise<CardKit> {
+  const { lock, fontHosts } = await classifyCard(config, origin);
   const imports: string[] = [];
   const faces: string[] = [];
   const aliases = new Map<string, string>();
-  for (const f of legacyConfigFonts(config)) if (f !== SYSTEM_FAMILY) aliases.set(f.toLowerCase(), aliasOf(f));
+  const fonts = await loadGoogleFontsLib();
+  const resolved = fonts ? await fonts.resolveGoogleFonts(fonts.configFontCandidates(config)) : [];
+  for (const f of resolved) aliases.set(f.name.toLowerCase(), aliasOf(f.name));
   const hasAlias = (lower: string) => aliases.has(lower);
   const mountCss = (css: string): string => {
     const r = css.length > MAX_STRING ? null : readCss(css, origin);
@@ -490,7 +516,7 @@ export function prepareCard(config: Record<string, unknown>, origin: string): Ca
   const sheets = [
     ...imports.map((url) => ({ url })),
     ...faces.map((css) => ({ css })),
-    ...[...aliases.keys()].map((k) => ({ url: legacyFontUrl(legacyConfigFonts(config).find((f) => f.toLowerCase() === k) as string) })),
+    ...resolved.map((f) => ({ url: (fonts as FontLib).googleFontUrl(f) })),
   ];
   return { lock, plan: { fontHosts, sheets: lock ? [] : sheets }, mount, aliases };
 }
