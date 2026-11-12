@@ -28,10 +28,14 @@ const OUTSIDE: Verdict = { kind: 'outside' };
 type FontLib = typeof import('../google-fonts/loader');
 let lib: FontLib | undefined;
 
-/** Loads the shared `google-fonts` chunk (the catalogue and the loader) once; resolves with nothing while Magic Card Utils does not allow Google Fonts, and the name helpers below read nothing until then. */
+/** Loads the shared `google-fonts` chunk (the catalogue and the loader) once; resolves with nothing while Magic Card Utils does not allow Google Fonts or the chunk fails to load (then a card has no Google families), and the name helpers below read nothing until then. */
 export async function loadGoogleFontsLib(): Promise<FontLib | undefined> {
   if (!googleFontsAllowed()) return undefined;
-  return (lib ??= await googleFontsChunk());
+  try {
+    return (lib ??= await googleFontsChunk());
+  } catch {
+    return undefined;
+  }
 }
 
 /** The Google families a card config uses, as the catalogue names them; none while Magic Card Utils does not allow Google Fonts. */

@@ -38,7 +38,7 @@ module.exports = (env, argv) => {
     // and Terser's `ecma` below follows it. tools/check-es-syntax.mjs parses every dist .js at 2021.
     target: ['web', 'es2021'],
     // Four bundles: the card, the animation studio, and the theme editor and forum shot the magic-card-utils panel
-    // loads (each defines only its own elements; the forum shot is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js,
+    // loads (each defines only its own elements; the forum shot imports the icon library and Google fonts chunks, public path: src/forum-shot/public-path.ts). The card editor is a lazy chunk (magic-card-editor.js,
     // loaded by src/utils/editor-loader.ts). The card's v2 animation runtime is a lazy chunk
     // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
     // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk

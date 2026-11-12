@@ -121,20 +121,8 @@ export function codeOf(e: unknown): ForumShotErrorCode {
   return typeof code === 'string' ? (code as ForumShotErrorCode) : 'capture_failed';
 }
 
-/** The directory of this bundle when it shares the page's origin, else ''. */
-function chunkBase(url: string): string {
-  try {
-    const u = new URL(url);
-    return u.origin === location.origin ? new URL('.', u).href : '';
-  } catch {
-    return '';
-  }
-}
-
-/** The Quiet, Living and Glow documents: the entries come from the existing lazy icon-library chunk (loaded once, next to this bundle), the derivation from this bundle's own copy of styleDoc. */
+/** The Quiet, Living and Glow documents: the entries come from the existing lazy icon-library chunk (loaded once, next to this bundle; public-path.ts sets the base), the derivation from this bundle's own copy of styleDoc. */
 export async function iconLibraryLookSource(): Promise<LookSource> {
-  const base = chunkBase(import.meta.url);
-  if (base && typeof __webpack_public_path__ !== 'undefined') __webpack_public_path__ = base;
   let lib;
   try {
     lib = await loadIconLibrary();
