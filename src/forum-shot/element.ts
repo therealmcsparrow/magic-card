@@ -14,7 +14,7 @@ import type {
 import type { LocaleHassLike } from '../contracts/i18n';
 import { setI18nLocale } from '../i18n/runtime';
 import { t } from './i18n';
-import { cardConfigOf, codeOf, iconLibraryLookSource, listMagicCards } from './pick';
+import { cardConfigOf, codeOf, iconLibraryLookSource, imageFontValues, listMagicCards } from './pick';
 import type { WsHass } from './pick';
 import { dashboardName, filteredRows, rowKey, SORT_KEYS, sortedRows } from './card-table';
 import type { Sort, SortKey } from './card-table';
@@ -55,7 +55,7 @@ export class MagicCardForumShot extends LitElement {
     const looks: ForumShotLook[] = choice.looks ? ALL_LOOKS : ['as-configured'];
     const sheet = await renderSheet(
       h,
-      { config, modes, looks, fontHosts: ref.fontHosts },
+      { config, modes, looks, fontHosts: ref.fontHosts, imageFonts: await imageFontValues(h, config) },
       { lookSource: iconLibraryLookSource },
     );
     const url = URL.createObjectURL(sheet.blob);

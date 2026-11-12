@@ -1,5 +1,5 @@
 // Everything that turns font-family text into Google Font stylesheet links. Reached only through the lazy `google-fonts` chunk (or from other lazy chunks).
-import { collectConfigFonts, googleFontsAllowed, whenGoogleFontsAllowed } from '../utils/google-fonts';
+import { askedFontStrings, collectConfigFonts, googleFontsAllowed, whenGoogleFontsAllowed } from '../utils/google-fonts';
 import { LOCAL_FONT_NAMES } from './local-fonts';
 import { allFamilies, findFamily, genericFor, type GoogleFamily } from './catalogue';
 
@@ -46,14 +46,22 @@ export function loadGoogleFonts(families: GoogleFamily[]): void {
     link.rel = 'stylesheet';
     link.href = googleFontUrl(family);
     link.dataset.mcFont = family.name;
-    // a sheet that fails to load goes again, so the next render asks for it once more
+    // a sheet that fails to load is asked for again on the next render, up to MAX_TRIES times a page
     link.onerror = () => {
       link.remove();
+      const tries = (failed.get(family.name) ?? 0) + 1;
+      failed.set(family.name, tries);
+      if (tries >= MAX_TRIES) return;
       for (const n of asked) if (findFamily(n) === family) asked.delete(n);
+      for (const s of askedFontStrings) if (fontCandidates(s).some((n) => findFamily(n) === family)) askedFontStrings.delete(s);
     };
     document.head.appendChild(link);
   }
 }
+
+/** How often a family's stylesheet may fail before the page stops asking for it. */
+export const MAX_TRIES = 3;
+const failed = new Map<string, number>();
 
 /** Names already handed to loadFontsFor: each is checked once per page, however often the card renders. */
 const asked = new Set<string>();

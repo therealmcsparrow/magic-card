@@ -104,9 +104,14 @@ export class FontPicker extends LitElement {
     super.disconnectedCallback();
   }
 
+  private _typing(on: boolean): void {
+    this.dispatchEvent(new CustomEvent('mc-typing', { detail: on, bubbles: true, composed: true }));
+  }
+
   private _onInputChange(e: InputEvent): void {
     const value = (e.target as HTMLInputElement).value;
     this.value = value;
+    this._typing(true);
     this.dispatchEvent(new CustomEvent('value-changed', {
       detail: { value, typing: true },
       bubbles: true,
@@ -114,16 +119,29 @@ export class FontPicker extends LitElement {
     }));
   }
 
+  /** A commit still tidying its value: the blur that follows leaves ending the edit to it. */
+  private _committing = false;
+
+  private _onInputBlur(): void {
+    if (!this._committing) this._typing(false);
+  }
+
   private async _onInputCommit(e: Event): Promise<void> {
     const raw = (e.target as HTMLInputElement).value;
-    const value = await normaliseFontValue(raw);
-    if (value === raw) return;
-    this.value = value;
-    this.dispatchEvent(new CustomEvent('value-changed', {
-      detail: { value },
-      bubbles: true,
-      composed: true,
-    }));
+    this._committing = true;
+    try {
+      const value = await normaliseFontValue(raw);
+      if (value === raw) return;
+      this.value = value;
+      this.dispatchEvent(new CustomEvent('value-changed', {
+        detail: { value },
+        bubbles: true,
+        composed: true,
+      }));
+    } finally {
+      this._committing = false;
+      this._typing(false);
+    }
   }
 
   private _openModal(): void {
@@ -229,6 +247,7 @@ export class FontPicker extends LitElement {
           aria-label=${this.label || t('card-editor.font-picker.font-family')}
           @input=${this._onInputChange}
           @change=${this._onInputCommit}
+          @blur=${this._onInputBlur}
         />
         <button type="button" class="btn btn-secondary" @click=${this._openModal}>${t('card-editor.font-picker.browse')}</button>
       </div>

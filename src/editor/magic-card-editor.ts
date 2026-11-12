@@ -141,6 +141,11 @@ export class MagicCardEditor extends LitElement {
       },
       true,
     );
+    // a font typed by name is one undo step from the first key to the tidied value on commit (font-picker.ts)
+    this.addEventListener('mc-typing', (e) => {
+      e.stopPropagation();
+      this._stateManager.typing((e as CustomEvent<boolean>).detail);
+    });
   }
 
   private _containEvent = (e: Event): void => {

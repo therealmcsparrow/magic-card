@@ -1,7 +1,7 @@
 // Contract: forum shot (one PNG of a dashboard's Magic Cards for a forum post). Version 1.2.0.
 // Types and constants only; the module is the lazy entry magic-card-forum-shot.js.
 
-export const FORUM_SHOT_CONTRACT_VERSION = '1.2.0';
+export const FORUM_SHOT_CONTRACT_VERSION = '1.3.0';
 export const FORUM_SHOT_FILE = 'magic-card-forum-shot.js';
 export const FORUM_SHOT_TAG = 'magic-card-forum-shot';
 /** Width of one frame in CSS px. */
@@ -22,6 +22,8 @@ export interface ForumShotRequest {
   looks: ForumShotLook[];
   /** The font hosts the person was shown (`MagicCardRef.fontHosts`); absent means none. A card whose fresh config needs a host outside them fails with `hosts_changed` before any request. */
   fontHosts?: string[];
+  /** The font-family values of the library images the card shows (see imageFontValues); a Google family there counts toward the hosts. */
+  imageFonts?: string[];
 }
 
 export interface ForumShotSheet {

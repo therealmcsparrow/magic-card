@@ -56,7 +56,8 @@ const configOf = (hass: WsHass, path: string | null): Promise<unknown> =>
 /** Every Magic Card of the dashboard configs the user can read, default dashboard first. */
 export async function listMagicCards(hass: WsHass): Promise<MagicCardRef[]> {
   const refs: MagicCardRef[] = [];
-  const images = new Map<string, string[]>();
+  const images = imageFontCache;
+  images.clear();
   let readable = 0;
   for (const dash of await dashboards(hass)) {
     let config: unknown;
@@ -101,13 +102,17 @@ export async function listMagicCards(hass: WsHass): Promise<MagicCardRef[]> {
   return refs;
 }
 
+/** Each library image's font-family values, read once per listing and kept for the Downloads that follow it. */
+const imageFontCache = new Map<string, string[]>();
+
 const SVG_FONT = /font-family\s*(?:=\s*(?:"([^"]*)"|'([^']*)')|:\s*([^;"'}]+))/gi;
 
 /**
  * The font-family values of the library images a card shows (`mcu-image:` refs anywhere in its config), read with images_get through
- * Home Assistant. None while Google Fonts are not allowed, or when the images cannot be read. `seen` keeps each image's answer for one listing.
+ * Home Assistant. None while Google Fonts are not allowed, or when the images cannot be read. `seen` keeps each image's answer; by default
+ * the answers of the last listing, so a Download reads only images the listing did not.
  */
-export async function imageFontValues(hass: WsHass, config: unknown, seen = new Map<string, string[]>()): Promise<string[]> {
+export async function imageFontValues(hass: WsHass, config: unknown, seen = imageFontCache): Promise<string[]> {
   if (!googleFontsAllowed()) return [];
   const ids = new Set<string>();
   let nodes = 0;
