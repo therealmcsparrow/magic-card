@@ -335,7 +335,7 @@ function startPanel(ed: McSvgEditor): TemplateResult {
   const img = ed.img;
   const tile = (id: string, g: GlyphName, name: string, sub: string, on: (e: Event) => void, panel?: StartPanel): TemplateResult => {
     const open = ed.startMode === panel;
-    return html`<button type="button" id=${id || nothing} class="tile glyph-only" aria-expanded=${panel ? aria(open) : nothing} aria-controls=${panel ? 'start-panel' : nothing} aria-busy=${id && ed.startBusy ? 'true' : nothing} @click=${on}>${glyph(g, 24)}<span>${name}${panel ? glyph(open ? 'chevronDown' : 'chevronRight', 14) : nothing}</span><span class="meta">${sub}</span></button>`;
+    return html`<button type="button" id=${id || nothing} class="tile glyph-only" aria-expanded=${panel ? aria(open) : nothing} aria-controls=${panel ? 'start-panel' : nothing} aria-busy=${id && ed.startBusy ? 'true' : nothing} @click=${on}>${glyph(g, 24)}<span>${name}</span><span class="meta">${sub}</span></button>`;
   };
   const mode = ed.startMode;
   const pasted = mode === 'paste' ? ed.renderRoot.querySelector<HTMLTextAreaElement>('#start-paste')?.value ?? '' : '';
