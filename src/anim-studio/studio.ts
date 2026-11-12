@@ -879,6 +879,8 @@ export class AnimationStudio extends LitElement {
   @state() private _stageRect?: { width: number; height: number };
   /** The preview's scale in the stage canvas, for the frame's rulers. */
   @state() private _stageScale = 1;
+  /** Where the drawn preview card's top-left sits in the frame's stage content, in CSS px. */
+  @state() private _stageOrigin?: { x: number; y: number };
   /** The moving element's box at rest within the preview card (the path overlay's subject). */
   @state() private _subjectRect?: { x: number; y: number; width: number; height: number };
   /** The stage geometry for panels (`.stage`). */
@@ -1838,6 +1840,10 @@ export class AnimationStudio extends LitElement {
     if (JSON.stringify(subject) !== JSON.stringify(this._subjectRect)) this._subjectRect = subject;
     const { scale, viewBox, screen } = (e as CustomEvent).detail ?? {};
     if (Number.isFinite(scale) && scale > 0 && scale !== this._stageScale) this._stageScale = scale;
+    const client = (e as CustomEvent).detail?.client;
+    const center = this.renderRoot.querySelector<HTMLElement>('.center')?.getBoundingClientRect();
+    const origin = center && client && Number.isFinite(client.left) && Number.isFinite(client.top) ? { x: Math.round(client.left - center.left), y: Math.round(client.top - center.top) } : undefined;
+    if (origin?.x !== this._stageOrigin?.x || origin?.y !== this._stageOrigin?.y) this._stageOrigin = origin;
     const info: StageInfo = {
       rect: { width, height },
       scale: Number.isFinite(scale) && scale > 0 ? scale : 1,
@@ -2179,8 +2185,9 @@ export class AnimationStudio extends LitElement {
     const r = this._stageRect;
     const zoom = this._stageScale > 0 ? this._stageScale : 1;
     const s = this._selection.kind !== 'none' ? this._subjectRect : undefined;
-    const selection = s && [s.x, s.y, s.width, s.height].every(Number.isFinite) ? { x: s.x / zoom, y: s.y / zoom, width: s.width / zoom, height: s.height / zoom } : null;
-    return { width: r?.width || 400, height: r?.height || 240, grid: 20, selection, zoom };
+    const selection = s && [s.x, s.y, s.width, s.height].every(Number.isFinite) ? { x: s.x, y: s.y, width: s.width, height: s.height } : null;
+    const o = this._stageOrigin;
+    return { width: r?.width || 400, height: r?.height || 240, grid: 20, selection, zoom, ...(o ? { origin: { x: o.x, y: o.y } } : {}) };
   }
 
   /** The drawer toggle of the bar: on a narrow screen the Settings button that opens the sheet. */

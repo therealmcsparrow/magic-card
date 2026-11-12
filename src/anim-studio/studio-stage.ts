@@ -293,9 +293,10 @@ export class AnimationStage extends LitElement {
   }
 
   /**
-   * `stage-rect` { width, height, scale, subject? }: the preview card's unscaled size (the overlay
-   * slot covers it and is scaled with it), its scale in the canvas, and the moving element's box at
-   * rest within it, in unscaled px, measured without its animation's transform.
+   * `stage-rect` { width, height, scale, subject?, client }: the preview card's unscaled size (the
+   * overlay slot covers it and is scaled with it), its scale in the canvas, the moving element's box
+   * at rest within it, in unscaled px, measured without its animation's transform, and where the
+   * drawn card's top-left is in the viewport.
    */
   private _emitRect(): void {
     const frame = this.shadowRoot?.querySelector<HTMLElement>('.frame');
@@ -310,8 +311,10 @@ export class AnimationStage extends LitElement {
     subject?: StageInfo['subject'];
     viewBox?: StageInfo['viewBox'];
     screen?: StageInfo['screen'];
+    client: { left: number; top: number };
   } {
     const subject = this._subjectRect(frame);
+    const f = frame.getBoundingClientRect();
     const screen = this._screenRect(frame);
     const viewBox = this._iconViewBox();
     return {
@@ -321,6 +324,7 @@ export class AnimationStage extends LitElement {
       ...(subject ? { subject } : {}),
       ...(viewBox ? { viewBox } : {}),
       ...(screen ? { screen } : {}),
+      client: { left: f.left, top: f.top },
     };
   }
 
