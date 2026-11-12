@@ -3770,6 +3770,36 @@
     "note": "Button that closes the font browser without changing the chosen font.",
     "max": 10
   },
+  "card-editor.font-picker.categories": {
+    "text": "Font categories",
+    "note": "Accessible name of the group of category filter buttons in the Google fonts list.",
+    "max": 30
+  },
+  "card-editor.font-picker.category-display": {
+    "text": "Display",
+    "note": "Label of the filter button that lists only display (decorative headline) Google fonts.",
+    "max": 14
+  },
+  "card-editor.font-picker.category-handwriting": {
+    "text": "Handwriting",
+    "note": "Label of the filter button that lists only handwriting Google fonts.",
+    "max": 14
+  },
+  "card-editor.font-picker.category-monospace": {
+    "text": "Monospace",
+    "note": "Label of the filter button that lists only monospace Google fonts.",
+    "max": 14
+  },
+  "card-editor.font-picker.category-sans-serif": {
+    "text": "Sans serif",
+    "note": "Label of the filter button that lists only sans serif Google fonts.",
+    "max": 14
+  },
+  "card-editor.font-picker.category-serif": {
+    "text": "Serif",
+    "note": "Label of the filter button that lists only serif Google fonts.",
+    "max": 14
+  },
   "card-editor.font-picker.font-family": {
     "text": "Font family",
     "note": "Label of the field for the font's family name, such as Roboto or Arial.",
@@ -3810,6 +3840,14 @@
     "note": "Empty state of the font picker list when the search matches no font.",
     "max": 25
   },
+  "card-editor.font-picker.results": {
+    "text": "{total} fonts",
+    "note": "Number of Google fonts that match the search and category filter. {total} is that number.",
+    "vars": {
+      "total": "The value that replaces total in the text."
+    },
+    "max": 20
+  },
   "card-editor.font-picker.save": {
     "text": "Save",
     "note": "Button that confirms the selected font and closes the font browser.",
@@ -3824,6 +3862,15 @@
     "text": "Select font",
     "note": "Placeholder of the font field before any font has been chosen.",
     "max": 20
+  },
+  "card-editor.font-picker.showing-first": {
+    "text": "Showing the first {n} of {total}. Refine your search to see more.",
+    "note": "Line under a long Google fonts list: only the first {n} of {total} matches are shown, so the user should narrow the search.",
+    "vars": {
+      "n": "The value that replaces n in the text.",
+      "total": "The value that replaces total in the text."
+    },
+    "max": 70
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
     "text": "The quick brown fox jumps over the lazy dog",

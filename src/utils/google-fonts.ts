@@ -6,14 +6,17 @@ export function googleFontsAllowed(): boolean {
   return (window as unknown as { magicCardUtils?: { settings?: { googleFonts?: boolean } } }).magicCardUtils?.settings?.googleFonts === true;
 }
 
-/** Calls `cb` now when allowed, otherwise once on the first `mcu-settings` event that allows it. */
+const waiting: Array<() => void> = [];
+function onSettings(): void {
+  if (!googleFontsAllowed()) return;
+  window.removeEventListener('mcu-settings', onSettings);
+  waiting.splice(0).forEach((cb) => cb());
+}
+
+/** Calls `cb` now when allowed, otherwise once on the first `mcu-settings` event that allows it (one shared listener, however many wait). */
 export function whenGoogleFontsAllowed(cb: () => void): void {
   if (googleFontsAllowed()) return cb();
-  window.addEventListener('mcu-settings', function on() {
-    if (!googleFontsAllowed()) return;
-    window.removeEventListener('mcu-settings', on);
-    cb();
-  });
+  if (waiting.push(cb) === 1) window.addEventListener('mcu-settings', onSettings);
 }
 
 const CSS_FONT_FAMILY = /font-family\s*:\s*([^;]+)/gi;
@@ -52,6 +55,9 @@ export function collectConfigFonts(config: object): string[] {
 
 /** The lazy `google-fonts` chunk: the catalogue and everything that turns font-family text into stylesheet links. */
 export const googleFontsChunk = () => import(/* webpackChunkName: "google-fonts" */ '../google-fonts/loader');
+
+/** The whole catalogue, from the lazy chunk (a local import, not a Google request). */
+export const loadCatalogue = () => googleFontsChunk().then((m) => m.allFamilies());
 
 /** Font strings already handed on: each is looked at once per page, however often the card renders. */
 const asked = new Set<string>();

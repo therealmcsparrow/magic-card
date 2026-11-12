@@ -2791,6 +2791,30 @@
     "text": "Annuleren",
     "hash": "19766ed6"
   },
+  "card-editor.font-picker.categories": {
+    "text": "Lettertypecategorieën",
+    "hash": "ea8fcba2"
+  },
+  "card-editor.font-picker.category-display": {
+    "text": "Display",
+    "hash": "34e108c0"
+  },
+  "card-editor.font-picker.category-handwriting": {
+    "text": "Handschrift",
+    "hash": "95a98bc8"
+  },
+  "card-editor.font-picker.category-monospace": {
+    "text": "Monospace",
+    "hash": "64c223c2"
+  },
+  "card-editor.font-picker.category-sans-serif": {
+    "text": "Schreefloos",
+    "hash": "afb6b974"
+  },
+  "card-editor.font-picker.category-serif": {
+    "text": "Serif",
+    "hash": "1b5e747e"
+  },
   "card-editor.font-picker.font-family": {
     "text": "Lettertypefamilie",
     "hash": "119ef3fa"
@@ -2823,6 +2847,10 @@
     "text": "Geen lettertypen gevonden",
     "hash": "6cfe7c1e"
   },
+  "card-editor.font-picker.results": {
+    "text": "{total} lettertypen",
+    "hash": "8c32ef24"
+  },
   "card-editor.font-picker.save": {
     "text": "Opslaan",
     "hash": "1509f561"
@@ -2834,6 +2862,10 @@
   "card-editor.font-picker.select-font": {
     "text": "Lettertype kiezen",
     "hash": "2c9bc7a2"
+  },
+  "card-editor.font-picker.showing-first": {
+    "text": "De eerste {n} van {total} worden getoond. Verfijn je zoekopdracht voor meer.",
+    "hash": "61cfb4bd"
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
     "text": "Pa's wijze lynx bezag vroom het fikse aquaduct",

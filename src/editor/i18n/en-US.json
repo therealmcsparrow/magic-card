@@ -2791,6 +2791,30 @@
     "text": "Cancel",
     "hash": "19766ed6"
   },
+  "card-editor.font-picker.categories": {
+    "text": "Font categories",
+    "hash": "ea8fcba2"
+  },
+  "card-editor.font-picker.category-display": {
+    "text": "Display",
+    "hash": "34e108c0"
+  },
+  "card-editor.font-picker.category-handwriting": {
+    "text": "Handwriting",
+    "hash": "95a98bc8"
+  },
+  "card-editor.font-picker.category-monospace": {
+    "text": "Monospace",
+    "hash": "64c223c2"
+  },
+  "card-editor.font-picker.category-sans-serif": {
+    "text": "Sans serif",
+    "hash": "afb6b974"
+  },
+  "card-editor.font-picker.category-serif": {
+    "text": "Serif",
+    "hash": "1b5e747e"
+  },
   "card-editor.font-picker.font-family": {
     "text": "Font family",
     "hash": "119ef3fa"
@@ -2823,6 +2847,10 @@
     "text": "No fonts found",
     "hash": "6cfe7c1e"
   },
+  "card-editor.font-picker.results": {
+    "text": "{total} fonts",
+    "hash": "8c32ef24"
+  },
   "card-editor.font-picker.save": {
     "text": "Save",
     "hash": "1509f561"
@@ -2834,6 +2862,10 @@
   "card-editor.font-picker.select-font": {
     "text": "Select font",
     "hash": "2c9bc7a2"
+  },
+  "card-editor.font-picker.showing-first": {
+    "text": "Showing the first {n} of {total}. Refine your search to see more.",
+    "hash": "61cfb4bd"
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
     "text": "The quick brown fox jumps over the lazy dog",

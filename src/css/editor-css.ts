@@ -1391,6 +1391,34 @@ export const fontPickerStyles = css`
     color: var(--mc-text);
     overflow-wrap: anywhere;
   }
+
+  .mc-font-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 16px 0;
+  }
+
+  .mc-font-cat {
+    cursor: pointer;
+  }
+
+  .mc-font-cat[aria-pressed='true'] {
+    border-color: var(--mc-accent);
+    color: var(--mc-accent);
+  }
+
+  .mc-font-count,
+  .mc-font-more {
+    margin: 8px 16px 0;
+    font-size: 0.8125rem;
+    color: var(--mc-text-secondary);
+  }
+
+  .mc-font-more {
+    padding: 8px 0 12px;
+    text-align: center;
+  }
 `;
 
 /* ================================================================== */

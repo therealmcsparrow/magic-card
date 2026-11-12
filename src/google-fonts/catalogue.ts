@@ -43,11 +43,17 @@ export function parseCatalogue(packed: string): GoogleFamily[] {
   return out;
 }
 
+let all: GoogleFamily[] | undefined;
 let byName: Map<string, GoogleFamily> | undefined;
+
+/** Every family of the catalogue, in catalogue order. */
+export function allFamilies(): GoogleFamily[] {
+  return (all ??= parseCatalogue(PACKED));
+}
 
 /** The catalogue entry for a family name, ignoring case and applying renames. */
 export function findFamily(name: string): GoogleFamily | undefined {
-  if (!byName) byName = new Map(parseCatalogue(PACKED).map((f) => [f.name.toLowerCase(), f]));
+  if (!byName) byName = new Map(allFamilies().map((f) => [f.name.toLowerCase(), f]));
   const key = name.trim().toLowerCase();
   const current = GOOGLE_ALIASES[key] ?? key;
   return byName.get(current.toLowerCase());

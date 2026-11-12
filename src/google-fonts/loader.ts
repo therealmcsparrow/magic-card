@@ -1,9 +1,9 @@
 // Everything that turns font-family text into Google Font stylesheet links. Reached only through the lazy `google-fonts` chunk (or from other lazy chunks).
 import { collectConfigFonts, googleFontsAllowed, whenGoogleFontsAllowed } from '../utils/google-fonts';
 import { LOCAL_FONT_NAMES } from './local-fonts';
-import { findFamily, type GoogleFamily } from './catalogue';
+import { allFamilies, findFamily, genericFor, type GoogleFamily } from './catalogue';
 
-export { LOCAL_FONT_NAMES, findFamily };
+export { LOCAL_FONT_NAMES, findFamily, allFamilies, genericFor };
 
 const SKIPPED = new Set(['serif', 'monospace', 'cursive', 'inherit', 'initial', 'roboto', ...LOCAL_FONT_NAMES.map((n) => n.toLowerCase())]);
 /** Hyphenated generics (`sans-serif`, `system-ui`) never match, so only the plain ones are listed. */
