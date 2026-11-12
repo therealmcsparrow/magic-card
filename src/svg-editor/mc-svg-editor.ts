@@ -869,6 +869,15 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   // ── history ──
 
+  /** A change the user did not make (text measured again once its font loaded): no history step, no unsaved mark. */
+  settle(f: (d: Doc) => Doc): void {
+    const clean = !this.dirty;
+    this.base = f(this.base);
+    if (!this.hot) this.setDoc(f(this.doc));
+    if (clean) this.baseline = this.stamp(this.base);
+    this.refresh();
+  }
+
   /** Make the live document the new committed one: one history step. */
   commit(label: string, merge?: string): void {
     this.endMoving();

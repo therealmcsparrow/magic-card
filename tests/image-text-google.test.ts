@@ -6,6 +6,8 @@ import { IMAGE_POLICY } from '../src/svg-safety';
 import * as safety from '../src/svg-safety';
 import { cleanText, textAttrs, validFont, changed } from '../src/image-editor/text';
 import { textRows } from '../src/image-editor/text-ui';
+import { bindKit } from '../src/image-editor/kit';
+import { imageKit } from '../src/svg-editor/image-kit';
 import { install } from '../src/svg-image/chunk';
 import { __resetImageClientForTests } from '../src/svg-image/client';
 import type { McSvgImage } from '../src/svg-image/mc-svg-image';
@@ -110,5 +112,32 @@ describe('help under the font field', () => {
     render(textRows(x, shape('"Roboto", sans-serif') as never) ?? html``, host);
     expect(help()).toContain('while the switch in Magic Card Utils is on');
     expect(help()).toContain('Nothing is downloaded');
+  });
+});
+
+describe('measure again once a Google font loads', () => {
+  it('updates the drawing through settle, never as an edit', async () => {
+    bindKit(imageKit);
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    const host = document.createElement('div');
+    document.body.append(host);
+    const f = '"Lato", sans-serif';
+    const lato = { id: 'a', paths: [], look: { text: { s: 'Hello', z: 20, w: 400, a: 'start', f } } };
+    const other = { id: 'b', paths: [], look: { text: { s: 'Hi', z: 20, w: 400, a: 'start', f: 'serif' } } };
+    const edits: string[] = [];
+    const settled: ((d: { shapes: unknown[] }) => { shapes: { id: string; paths: unknown[] }[] })[] = [];
+    const x = {
+      shell: { requestUpdate: () => undefined, settle: (fn: never) => settled.push(fn) },
+      edit: (_f: unknown, label: string) => edits.push(label),
+      needColours: () => undefined,
+      googleFont: false,
+    } as never;
+    render(textRows(x, lato as never) ?? html``, host);
+    for (let i = 0; i < 50 && !settled.length; i++) await wait(20);
+    expect(settled.length).toBe(1);
+    expect(edits).toEqual([]);
+    const out = settled[0]({ shapes: [lato, other] });
+    expect(out.shapes[0].paths.length).toBeGreaterThan(0);
+    expect(out.shapes[1]).toBe(other);
   });
 });

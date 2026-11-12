@@ -104,8 +104,8 @@ const fontItems = (): Array<[string, string]> => [
 const GOOGLE = 'google';
 const loadedFonts = new Set<string>();
 
-/** Asks the font loader for a Google family once, then measures the text again with the face in place. */
-function loadGoogleFont(f: string, again: () => void): void {
+/** Asks the font loader for a Google family once, then measures the text in that font again with the face in place. */
+export function loadGoogleFont(x: ImageExt, f: string): void {
   if (!googleFamilyOf(f) || loadedFonts.has(f)) return;
   loadedFonts.add(f);
   whenGoogleFontsAllowed(() => {
@@ -114,7 +114,7 @@ function loadGoogleFont(f: string, again: () => void): void {
         m.loadFontsFor(m.fontCandidates(f));
         return document.fonts?.load(`16px ${f}`);
       })
-      .then(again, () => 0);
+      .then(() => x.shell.settle((d) => ({ ...d, shapes: d.shapes.map((q) => (q.look?.text?.f === f ? retext(q, {}) : q)) })), () => 0);
   });
 }
 
@@ -170,7 +170,7 @@ export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
   const left = IMAGE_MAX_TEXT_CHARS - td.s.length;
   const countId = 'tx-count';
   const google = googleFontsAllowed();
-  loadGoogleFont(td.f, () => set({}, 'Text font', 'text-font-measure'));
+  loadGoogleFont(x, td.f);
   const done = (): void => {
     const cur = sh.doc.shapes.find((q) => q.id === s.id);
     if (!cur?.look?.text || !blank(cur.look.text)) return;
@@ -231,7 +231,7 @@ export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
     ${num('tx-spacing', t('image-editor.text-ui.letter-spacing-units'), td.l ?? 0, (n) => set({ l: n }, 'Letter spacing', 'text-spacing'), { min: -100, max: 1000, step: 1 })}
     ${fontField(x, td, (patch) => {
       set(patch, 'Text font');
-      if (patch.f) loadGoogleFont(patch.f, () => set({}, 'Text font', 'text-font-measure'));
+      if (patch.f) loadGoogleFont(x, patch.f);
     })}
     <p class="help">${fontHint(td.f, google)}</p>
     ${google && googleFamilyOf(td.f) ? nothing : html`<p class="help">${t('image-editor.text-ui.text-uses-fonts-already-on-the-device')}</p>`}

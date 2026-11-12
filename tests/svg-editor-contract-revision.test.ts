@@ -20,3 +20,26 @@ describe('svg editor contract revision', () => {
     expect(rev()).toBeGreaterThanOrEqual(SVG_EDITOR_MCU_MIN_REVISION);
   });
 });
+
+describe('settle', () => {
+  const settle = (customElements.get('mc-svg-editor') as unknown as { prototype: { settle(this: unknown, f: (d: unknown) => unknown): void } }).prototype.settle;
+  const fake = (dirty: boolean, hot = false) => {
+    const me = { dirty, hot, base: 'b', doc: 'd', baseline: 'old', set: [] as unknown[], refreshed: 0, setDoc: (d: unknown) => me.set.push(d), stamp: (d: unknown) => 'stamp:' + String(d), refresh: () => void me.refreshed++ };
+    return me;
+  };
+  it('changes the document and its committed copy, and keeps a clean editor clean', () => {
+    const me = fake(false);
+    settle.call(me, (d) => d + '+');
+    expect(me.base).toBe('b+');
+    expect(me.set).toEqual(['d+']);
+    expect(me.baseline).toBe('stamp:b+');
+    expect(me.refreshed).toBe(1);
+  });
+  it('leaves the unsaved mark and a running gesture alone', () => {
+    const me = fake(true, true);
+    settle.call(me, (d) => d + '+');
+    expect(me.base).toBe('b+');
+    expect(me.set).toEqual([]);
+    expect(me.baseline).toBe('old');
+  });
+});
