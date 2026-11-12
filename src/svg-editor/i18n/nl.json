@@ -1023,6 +1023,10 @@
     "text": "De pijltjestoetsen verplaatsen met 0,5. Zet Uitlijnen op raster aan om de rastergrootte te gebruiken.",
     "hash": "27ec574a"
   },
+  "svg-editor.views.back": {
+    "text": "Terug",
+    "hash": "76900f1b"
+  },
   "svg-editor.views.bevel": {
     "text": "Afgeschuind",
     "hash": "72c3bce2"

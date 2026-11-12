@@ -1,5 +1,5 @@
 import { IMAGE_MORPH_MAX_FRAMES, IMAGE_MORPH_MIN_FRAMES } from '../contracts/image-animation';
-import { IMAGE_FONT_FAMILIES, IMAGE_ID_RE, THEME_VAR_NAME_RE } from '../contracts/svg-image';
+import { IMAGE_FONT_FAMILIES, IMAGE_FONT_RE, IMAGE_ID_RE, THEME_VAR_NAME_RE } from '../contracts/svg-image';
 import {
   MORPH_ATTRIBUTES,
   MORPH_CALC_MODES,
@@ -88,7 +88,7 @@ export function cleanImageValue(kind: SvgValueKind, raw: string, policy: SvgPoli
       return v === 'none' || URL_REF_RE.test(v) ? v : undefined;
     case 'font': {
       const low = v.toLowerCase();
-      return IMAGE_FONT_FAMILIES.includes(low) ? low : 'sans-serif';
+      return IMAGE_FONT_FAMILIES.includes(low) ? low : IMAGE_FONT_RE.test(v) ? v : 'sans-serif';
     }
     case 'id':
       return IMAGE_ID_RE.test(v) ? v : undefined;

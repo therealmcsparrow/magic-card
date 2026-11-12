@@ -1,3 +1,4 @@
+import './public-path';
 import { FORUM_SHOT_TAG } from '../contracts/forum-shot';
 import { MagicCardForumShot } from './element';
 

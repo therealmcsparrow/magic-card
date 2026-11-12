@@ -4,6 +4,9 @@ import { captureFrame } from '../src/forum-shot/capture';
 import { modeWrapper, themeVars } from '../src/forum-shot/modes';
 import { findRemoteAssets, hasRemote, scrubHass, scrubText, scrubValue, sweepRemote } from '../src/forum-shot/remote';
 
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
+
 const ORIGIN = 'http://localhost:3000';
 const HTTPS_ORIGIN = 'https://ha.example';
 

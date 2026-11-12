@@ -169,9 +169,10 @@ Each module's keys are in [Modules](../modules/README.md).
 
 ## A font does not load
 
--   Only the Google Fonts offered in the editor's font picker are loaded. See [Fonts](value-syntax.md#fonts). Other families must be installed on the device.
--   The name must match the picker's spelling, apart from case: `Open Sans`, not `OpenSans`.
--   The device needs internet access to reach `fonts.googleapis.com`.
+-   Google fonts load only when the Google Fonts switch in Magic Card Utils is on. Go to Settings → Devices & services → Magic Card Utils → Configure, turn on **Load Google Fonts** and reload the page. See [Privacy](../../README.md#privacy).
+-   Only fonts in the Google Fonts catalogue are loaded. See [Fonts](value-syntax.md#fonts). Other families must be installed on the device.
+-   The name must match the catalogue's spelling, apart from case: `Open Sans`, not `OpenSans`.
+-   The device needs internet access to reach `fonts.googleapis.com`, and the switch must be on.
 
 ## A shape, value background or seasonal scene does not show
 

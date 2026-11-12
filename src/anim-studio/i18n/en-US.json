@@ -1355,6 +1355,10 @@
     "text": "Add keyframe",
     "hash": "1edf9373"
   },
+  "anim-studio.keyframes-editor.add-keyframe-here": {
+    "text": "Add keyframe here",
+    "hash": "e98e4ba1"
+  },
   "anim-studio.keyframes-editor.add-lane-keyframe": {
     "text": "Add {lane} keyframe",
     "hash": "c12254e5"
@@ -1443,6 +1447,10 @@
     "text": "Empty keyframe",
     "hash": "56004797"
   },
+  "anim-studio.keyframes-editor.every-property-is-added": {
+    "text": "Every property is added",
+    "hash": "fbe8ac50"
+  },
   "anim-studio.keyframes-editor.expand": {
     "text": "Expand",
     "hash": "07548c2c"
@@ -1462,6 +1470,10 @@
   "anim-studio.keyframes-editor.keyframe": {
     "text": "keyframe",
     "hash": "d4b9bf32"
+  },
+  "anim-studio.keyframes-editor.keyframe-actions": {
+    "text": "Keyframe actions",
+    "hash": "cc140916"
   },
   "anim-studio.keyframes-editor.keyframe-timeline": {
     "text": "Keyframe timeline",
@@ -1575,9 +1587,17 @@
     "text": "Seconds",
     "hash": "381a8e96"
   },
+  "anim-studio.keyframes-editor.select-all-keyframes": {
+    "text": "Select all keyframes",
+    "hash": "1d99c296"
+  },
   "anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": {
     "text": "Select every {name} keyframe (Shift adds)",
     "hash": "071c1a0f"
+  },
+  "anim-studio.keyframes-editor.select-keyframes-first": {
+    "text": "Select keyframes first",
+    "hash": "12c57791"
   },
   "anim-studio.keyframes-editor.selected": {
     "text": "selected",
@@ -4795,6 +4815,10 @@
     "text": "Animation studio",
     "hash": "c98a7b94"
   },
+  "anim-studio.studio.back": {
+    "text": "Back",
+    "hash": "76900f1b"
+  },
   "anim-studio.studio.blank-keyframes": {
     "text": "Blank keyframes",
     "hash": "09007f4b"
@@ -5195,9 +5219,17 @@
     "text": "Not used",
     "hash": "dccafe55"
   },
+  "anim-studio.studio.nothing-to-redo": {
+    "text": "Nothing to redo",
+    "hash": "4aaf2710"
+  },
   "anim-studio.studio.nothing-to-set-here-yet": {
     "text": "Nothing to set here yet.",
     "hash": "a35b7b34"
+  },
+  "anim-studio.studio.nothing-to-undo": {
+    "text": "Nothing to undo",
+    "hash": "83290078"
   },
   "anim-studio.studio.origin": {
     "text": "Origin",
@@ -5215,6 +5247,14 @@
     "text": "Particles play on the whole element.",
     "hash": "2b24c6c6"
   },
+  "anim-studio.studio.pause": {
+    "text": "Pause",
+    "hash": "858e4ba7"
+  },
+  "anim-studio.studio.play": {
+    "text": "Play",
+    "hash": "436e6101"
+  },
   "anim-studio.studio.play-animations-one-after-another": {
     "text": "Play animations one after another",
     "hash": "36d48524"
@@ -5222,6 +5262,10 @@
   "anim-studio.studio.pseudo-rtl": {
     "text": "Pseudo RTL",
     "hash": "3a83f974"
+  },
+  "anim-studio.studio.redo": {
+    "text": "Redo",
+    "hash": "74273989"
   },
   "anim-studio.studio.redo-ctrl-y": {
     "text": "Redo (Ctrl+Y)",
@@ -5319,6 +5363,10 @@
     "text": "Some panels are hidden, as you left them. Use the arrows on the edges to show them.",
     "hash": "dab30b27"
   },
+  "anim-studio.studio.stage-actions": {
+    "text": "Stage actions",
+    "hash": "d2870e80"
+  },
   "anim-studio.studio.stage-height": {
     "text": "Stage height",
     "hash": "b8b87d11"
@@ -5386,6 +5434,10 @@
   "anim-studio.studio.tool-tool": {
     "text": "Tool: {tool}",
     "hash": "9c49b4ea"
+  },
+  "anim-studio.studio.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
   },
   "anim-studio.studio.undo-ctrl-z": {
     "text": "Undo (Ctrl+Z)",

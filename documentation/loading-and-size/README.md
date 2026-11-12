@@ -13,11 +13,11 @@ Two small files hold code that several features read, so the card file does not 
 
 Keep both files in the folder next to `magic-card.js`, with their `.br` and `.gz` copies, like every other file of the release.
 
-## The Google Fonts list
+## Google Fonts
 
-Magic Card knows 20 Google Fonts by name: Roboto, Open Sans, Lato, Montserrat, Oswald, Source Sans Pro, Raleway, PT Sans, Merriweather, Playfair Display, Lora, PT Serif, Noto Sans, Ubuntu, Poppins, Nunito, Inconsolata, Fira Code, Source Code Pro and Dancing Script. The list lives in the card file, `magic-card.js`, so it is not a part of its own.
+Google fonts load only when the Google Fonts switch in Magic Card Utils is on. The whole Google Fonts catalogue is then available in every font picker. See [Fonts and Google Fonts](../design/fonts.md).
 
-The card reads it each time it draws. When a font family in the card's settings names one of these fonts, the card adds one stylesheet link for it to the page, once per font per page visit. The font comes from `fonts.googleapis.com`, with the weights 300, 400, 500 and 700, or fewer for a font that does not have all four. A card that names none of them, or only Roboto or a system font, loads nothing from Google. Roboto is Home Assistant's own font and is never fetched. The card editor's font picker uses the same loader. See the privacy note in the main README.
+When a font family in the card's settings names a catalogue font, the card adds one stylesheet link for it to the page, once per font per page visit. The font comes from `fonts.googleapis.com`, with the weights 300, 400, 500 and 700, or fewer for a font that does not have all four. A card that names none of them, or only Roboto or a system font, loads nothing from Google. With the switch off, nothing is requested from Google. Roboto is Home Assistant's own font and is never fetched. See [Privacy](../../README.md#privacy).
 
 ## When a part cannot load
 

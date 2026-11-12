@@ -5,11 +5,11 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
 import type { SvgCssOption, SvgMorphOption } from './svg-safety';
 import type { SanitisedImageMarkup } from './svg-reader';
 
-/** Contract: library images on cards. Version 1.2.0. A library image is a full drawing saved in Magic Card Utils
+/** Contract: library images on cards. Version 1.3.0. A library image is a full drawing saved in Magic Card Utils
  * (mcu-library 1.2.0, kind `images`). */
 
-export const SVG_IMAGE_CONTRACT = '1.2.0';
-export const SVG_IMAGE_CONTRACT_REVISION = 9;
+export const SVG_IMAGE_CONTRACT = '1.3.0';
+export const SVG_IMAGE_CONTRACT_REVISION = 10;
 
 export const IMAGE_REF_PREFIX = 'mcu-image:';
 export const IMAGE_REF_RE = /^mcu-image:([a-z0-9][a-z0-9_-]{0,63})$/;
@@ -76,6 +76,11 @@ export const IMAGE_ATTRIBUTES: readonly string[] = [
   'letter-spacing', 'preserveAspectRatio', 'data-name',
 ];
 export const IMAGE_FONT_FAMILIES: readonly string[] = ['sans-serif', 'serif', 'monospace', 'system-ui'];
+/** A Google family in an image: `"Name", <generic>` with one of IMAGE_FONT_FAMILIES as the generic. */
+export const IMAGE_FONT_RE = /^"([A-Za-z0-9 ]{1,64})", (sans-serif|serif|monospace|system-ui)$/;
+/** The stored form of a Google family; the picker's `cursive` generic becomes `sans-serif`, because images allow only the four. */
+export const imageFontValue = (name: string, generic: string): string =>
+  `"${name}", ${IMAGE_FONT_FAMILIES.includes(generic) ? generic : 'sans-serif'}`;
 export const IMAGE_ID_RE = /^[A-Za-z][\w.-]{0,63}$/;
 export const THEME_VAR_NAME_RE = /^--[a-z0-9][a-z0-9-]{0,63}$/;
 export const IMAGE_MAIN_VAR = '--mc-image-main';

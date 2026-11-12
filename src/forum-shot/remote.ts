@@ -1,5 +1,4 @@
 // Remote assets for the forum shot: finds addresses outside the Home Assistant origin in a card config, hass data and theme values, and removes them before anything mounts.
-import { configGoogleFonts } from '../utils/google-fonts';
 
 /** Config keys whose string value names font families. */
 export const FONT_KEYS: ReadonlySet<string> = new Set(['font_family', 'tab_font_family', 'label_font_family']);
@@ -180,11 +179,11 @@ export function hasRemote(text: string, origin: string): boolean {
 }
 
 /**
- * The cross-origin hosts every string of the config names (nested modules included), then each Google font family the
- * config uses. A string, depth or node limit adds `limit`; a number, boolean or null past the depth limit holds no address and adds nothing.
+ * The cross-origin hosts every string of the config names (nested modules included), then each Google font family in `families`
+ * (the ones the config uses and Google Fonts allow, see configGoogleFamilies). A string, depth or node limit adds `limit`; a number, boolean or null past the depth limit holds no address and adds nothing.
  * Empty when the card makes no outside request.
  */
-export function findRemoteAssets(config: unknown, origin: string): string[] {
+export function findRemoteAssets(config: unknown, origin: string, families: readonly string[] = []): string[] {
   const out: string[] = [];
   const add = (v: string) => out.includes(v) || out.push(v);
   let nodes = 0;
@@ -203,7 +202,7 @@ export function findRemoteAssets(config: unknown, origin: string): string[] {
     }
   };
   walk(config, 0);
-  if (config && typeof config === 'object') for (const f of configGoogleFonts(config)) add(f);
+  for (const f of families) add(f);
   return out;
 }
 

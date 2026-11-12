@@ -5,6 +5,9 @@ import type { SheetSeams } from '../src/forum-shot/sheet';
 import type { FontResponse, FontSeams } from '../src/forum-shot/font-fetch';
 import { classifyCard, faceRules, prepareCard } from '../src/forum-shot/font-address';
 
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
+
 const PNG = new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' });
 const ORIGIN = location.origin;
 const hass = { states: {}, language: 'en', themes: { themes: {} } };
@@ -48,12 +51,12 @@ function fonts(route: (url: string) => FontResponse | null = (url) => (url.inclu
   return { s, urls };
 }
 
-function run(config: Record<string, unknown>, f: FontSeams, fontHosts: string[] = prepareCard(config, ORIGIN).plan.fontHosts, h: object = hass) {
+function run(config: Record<string, unknown>, f: FontSeams, fontHosts?: string[], h: object = hass) {
   const svgs: string[] = [];
   const compose = vi.fn(async () => PNG);
   const seams: SheetSeams = { capture: { rasterise: async (url) => (url.includes('foreignObject') || decodeURIComponent(url).includes('foreignObject') ? svgs.push(decodeURIComponent(url)) : 0, PNG) }, compose, settleMs: 0, fonts: f };
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: 400, height: 100, top: 0, left: 0, right: 400, bottom: 100, x: 0, y: 0, toJSON: () => ({}) });
-  return { svgs, compose, go: () => renderSheet(h, { config, modes: ['light'], looks: ['as-configured'], fontHosts }, seams) };
+  return { svgs, compose, go: async () => renderSheet(h, { config, modes: ['light'], looks: ['as-configured'], fontHosts: fontHosts ?? (await prepareCard(config, ORIGIN)).plan.fontHosts }, seams) };
 }
 
 afterEach(() => {
@@ -150,7 +153,7 @@ describe('the picture carries the real font', () => {
 
   it('reads a font-only css: its @import and @font-face are fetched and neither reaches the mounted copy', async () => {
     const css = '@import url("https://fonts.googleapis.com/css2?family=Lora");@font-face{font-family:Mine;src:url(https://fonts.gstatic.com/m.woff2);}';
-    const kit = prepareCard(cardWith({ css }), ORIGIN);
+    const kit = await prepareCard(cardWith({ css }), ORIGIN);
     expect(kit.lock).toBeNull();
     expect(JSON.stringify(kit.mount)).not.toMatch(/@import|@font-face|gstatic|googleapis/);
     expect(kit.plan.sheets).toEqual([
@@ -164,9 +167,9 @@ describe('the picture carries the real font', () => {
     expect(document.head.querySelector('link')).toBeNull();
   });
 
-  it('renames a listed family to its alias on the mounted copy and leaves the real config alone', () => {
+  it('renames a listed family to its alias on the mounted copy and leaves the real config alone', async () => {
     const config = cardWith({ css: '.a{font-family:"Open Sans", sans-serif;} .b{font-family:Roboto}' });
-    const kit = prepareCard(config, ORIGIN);
+    const kit = await prepareCard(config, ORIGIN);
     const text = JSON.stringify(kit.mount);
     expect(text).toContain('mc-shot-open-sans');
     expect(text).not.toContain('Open Sans');
@@ -175,8 +178,8 @@ describe('the picture carries the real font', () => {
     expect(kit.aliases.get('open sans')).toBe('mc-shot-open-sans');
   });
 
-  it('renames only the families it detects: an undetected css family and a label font outside a button keep their names', () => {
-    const kit = prepareCard({ type: 'custom:magic-card', css: '.a{font-family:Open Sans}', rows: [{ label_font_family: 'Lora' }] }, ORIGIN);
+  it('renames only the families it detects: an undetected css family and a label font outside a button keep their names', async () => {
+    const kit = await prepareCard({ type: 'custom:magic-card', css: '.a{font-family:Open Sans}', rows: [{ label_font_family: 'Lora' }] }, ORIGIN);
     const text = JSON.stringify(kit.mount);
     expect(text).toContain('Open Sans');
     expect(text).toContain('Lora');
@@ -184,15 +187,15 @@ describe('the picture carries the real font', () => {
     expect(kit.aliases.size).toBe(0);
   });
 
-  it('renames a label font inside a button because it is detected', () => {
-    const kit = prepareCard({ type: 'custom:magic-card', rows: [{ type: 'button', label_font_family: 'Lora' }] }, ORIGIN);
+  it('renames a label font inside a button because it is detected', async () => {
+    const kit = await prepareCard({ type: 'custom:magic-card', rows: [{ type: 'button', label_font_family: 'Lora' }] }, ORIGIN);
     expect(JSON.stringify(kit.mount)).toContain('mc-shot-lora');
   });
 
-  it('locks a card with an own __proto__ key as cannot_judge', () => {
+  it('locks a card with an own __proto__ key as cannot_judge', async () => {
     const config = JSON.parse('{"type":"custom:magic-card","rows":[{"__proto__":{"image":"https://evil.example/x.png"}}]}');
-    expect(prepareCard(config, ORIGIN).lock).toBe('cannot_judge');
-    expect(classifyCard(config, ORIGIN).lock).toBe('cannot_judge');
+    expect((await prepareCard(config, ORIGIN)).lock).toBe('cannot_judge');
+    expect((await classifyCard(config, ORIGIN)).lock).toBe('cannot_judge');
   });
 
   it('writes only checked values into the prepared style, and refuses a face it cannot write safely', () => {

@@ -4,6 +4,9 @@ import { listMagicCards } from '../src/forum-shot/pick';
 import { MagicCardForumShot } from '../src/forum-shot/element';
 import '../src/forum-shot';
 
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
+
 // Regression for the two reported forum shot bugs: a card that names a Google font (Roboto included) is locked by
 // the list, and the list is radios in a fieldset instead of a table with Dashboard, View, Card and Status columns.
 

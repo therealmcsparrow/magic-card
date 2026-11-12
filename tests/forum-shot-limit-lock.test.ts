@@ -2,6 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { classifyCard } from '../src/forum-shot/font-address';
 import { findRemoteAssets, scrubValue } from '../src/forum-shot/remote';
 
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
+
 const ORIGIN = 'https://ha.example.org';
 const SECRET = 'SECRETVALUE';
 
@@ -46,10 +49,10 @@ afterEach(() => {
 });
 
 describe('a value past the depth limit that cannot hold an address', () => {
-  it.each([[1], [0], [true], [false], [null]])('does not lock on %j', (leaf) => {
+  it.each([[1], [0], [true], [false], [null]])('does not lock on %j', async (leaf) => {
     const config = pastDepth(leaf);
     expect(findRemoteAssets(config, ORIGIN)).toEqual([]);
-    expect(classifyCard(config, ORIGIN)).toEqual({ lock: null, fontHosts: [] });
+    expect(await classifyCard(config, ORIGIN)).toEqual({ lock: null, fontHosts: [] });
   });
 
   it.each([[1], [true], [null]])('reaches the picture unchanged and unreported: %j', (leaf) => {
@@ -59,8 +62,8 @@ describe('a value past the depth limit that cannot hold an address', () => {
     expect(onRemove).not.toHaveBeenCalled();
   });
 
-  it('does not lock an array of numbers that ends past the limit', () => {
-    expect(classifyCard(atLimit([1, 2, 3]), ORIGIN).lock).toBeNull();
+  it('does not lock an array of numbers that ends past the limit', async () => {
+    expect((await classifyCard(atLimit([1, 2, 3]), ORIGIN)).lock).toBeNull();
   });
 });
 
@@ -73,20 +76,20 @@ describe('a true limit stays locked', () => {
     ['an empty object, which the picture would replace', {}],
     ['an array', [1]],
     ['a custom-card module', { type: 'custom-card' }],
-  ])('past the depth limit: %s', (_name, leaf) => {
-    expect(classifyCard(pastDepth(leaf), ORIGIN).lock).toBe('limit');
+  ])('past the depth limit: %s', async (_name, leaf) => {
+    expect((await classifyCard(pastDepth(leaf), ORIGIN)).lock).toBe('limit');
   });
 
-  it('over the node limit, numbers included', () => {
-    expect(classifyCard({ type: 'custom:magic-card', big: Array.from({ length: 60_000 }, () => 1) }, ORIGIN).lock).toBe('limit');
+  it('over the node limit, numbers included', async () => {
+    expect((await classifyCard({ type: 'custom:magic-card', big: Array.from({ length: 60_000 }, () => 1) }, ORIGIN)).lock).toBe('limit');
   });
 
-  it('a string over the size limit', () => {
-    expect(classifyCard({ type: 'custom:magic-card', text: 'a'.repeat(1_000_001) }, ORIGIN).lock).toBe('limit');
+  it('a string over the size limit', async () => {
+    expect((await classifyCard({ type: 'custom:magic-card', text: 'a'.repeat(1_000_001) }, ORIGIN)).lock).toBe('limit');
   });
 
-  it('a css text over the size limit', () => {
-    expect(classifyCard({ type: 'custom:magic-card', css: `a{color:red}${' '.repeat(1_000_001)}` }, ORIGIN).lock).toBe('limit');
+  it('a css text over the size limit', async () => {
+    expect((await classifyCard({ type: 'custom:magic-card', css: `a{color:red}${' '.repeat(1_000_001)}` }, ORIGIN)).lock).toBe('limit');
   });
 });
 
@@ -101,7 +104,7 @@ describe('the console snippet', () => {
       ['font_hosts', { type: 'custom:magic-card', css: nineHosts }],
     ];
     for (const [name, config] of cases) {
-      expect(classifyCard(config, ORIGIN).lock).toBe('limit');
+      expect((await classifyCard(config, ORIGIN)).lock).toBe('limit');
       const { report } = await runSnippet([config]);
       expect(report.firing).toHaveLength(1);
       expect(report.firing[0].limits).toEqual([name]);
@@ -116,7 +119,7 @@ describe('the console snippet', () => {
 
   it('agrees with the classifier on a card no limit touches', async () => {
     const config = { type: 'custom:magic-card', name: SECRET, css: '@import url("https://fonts.googleapis.com/css2?family=Lato");' };
-    expect(classifyCard(config, ORIGIN).lock).toBeNull();
+    expect((await classifyCard(config, ORIGIN)).lock).toBeNull();
     const { report } = await runSnippet([config]);
     expect(report).toEqual({ cards: 1, firing: [] });
   });

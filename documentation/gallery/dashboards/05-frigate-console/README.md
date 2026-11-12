@@ -33,7 +33,7 @@ A few cards in more detail:
    ```
 
 2. Restart Home Assistant, or run the action `frontend.reload_themes`.
-3. Fonts: the cards use Exo 2 and Titillium Web. Add the URL in `fonts.txt` as a dashboard resource: Settings → Dashboards → ⋮ → Resources → Add resource, type Stylesheet. Without it the cards fall back to Montserrat and Source Sans Pro, which Magic Card loads itself.
+3. Fonts: the cards use Exo 2 and Titillium Web. Add the URL in `fonts.txt` as a dashboard resource: Settings → Dashboards → ⋮ → Resources → Add resource, type Stylesheet. Without it the cards fall back to Montserrat, which Magic Card loads when the Load Google Fonts switch in Magic Card Utils is on, and otherwise to the device's sans-serif font.
 4. Install Magic Card if you haven't already.
 5. Settings → Dashboards → Add dashboard → New dashboard from scratch. Open it, then ⋮ → Edit dashboard → ⋮ → Raw configuration editor. Paste the whole of `dashboard.yaml` and save.
 6. Swap the entity ids below for your own.

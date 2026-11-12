@@ -16,9 +16,11 @@ In scope:
 -   **Preset-file import.** A preset, theme, animation, icon or shape file that hangs the editor, reads local data, writes outside the place it is meant for, or sends a request without the confirmation described in [Export and import](documentation/presets/export-and-import.md#safe-import).
 -   **The Magic Card Utils library.** The library commands that Magic Card calls over the Home Assistant WebSocket, and the script that Magic Card Utils adds to every Home Assistant page so cards can read the library. Report problems in that integration in its own repository: [magic-card-utils](https://github.com/therealmcsparrow/magic-card-utils/security).
 -   **Magic Card's own files** in `dist/`.
+-   **Google Fonts switch.** A request to `fonts.googleapis.com` or `fonts.gstatic.com` from Magic Card or Magic Card Utils while the Google Fonts switch is off, other than an address that the card author typed.
 
 Out of scope:
 
+-   A request to Google Fonts that you turned on with the **Load Google Fonts** switch in Magic Card Utils, or that you wrote yourself as an `@import` in a card's custom css. Google receives the viewer's IP address in both cases; see [Privacy](README.md#privacy).
 -   A request that you confirmed with **Import anyway**. A theme kept with an outside address or with `card-mod-` lines does what the warning says.
 -   Faults in Home Assistant, card-mod, other custom cards, or a website a configuration points to.
 -   A card configuration or template that you wrote or imported yourself, and that holds what it was told to hold.

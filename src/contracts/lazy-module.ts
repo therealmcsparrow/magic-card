@@ -2,11 +2,11 @@ import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
-/** Contract: lazy modules and lazy card chunks. Version 1.12.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
+/** Contract: lazy modules and lazy card chunks. Version 1.13.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
  * and the rarely used modules leave magic-card.js. A quiet chunk (lazyChunk option `silent`) shows no failure notice. */
 
-export const LAZY_MODULE_CONTRACT = '1.12.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 27;
+export const LAZY_MODULE_CONTRACT = '1.13.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 28;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -112,6 +112,12 @@ export const SVG_CSS_CHUNK = 'svg-css';
 export const SVG_CSS_CHUNK_FILE = 'magic-card-svg-css.js';
 /** Same meaning as LAZY_CHUNK_CEILINGS. The resolver (src/svg-safety/css.ts) is about 10 KiB minified. */
 export const SVG_CSS_CHUNK_CEILING = 16_384;
+
+/** The google-fonts chunk: the Google Fonts catalogue, loaded only when a font name needs checking and Magic Card Utils allows Google Fonts. */
+export const GOOGLE_FONTS_CHUNK = 'google-fonts';
+export const GOOGLE_FONTS_CHUNK_FILE = 'magic-card-google-fonts.js';
+/** Same meaning as LAZY_CHUNK_CEILINGS. The catalogue is about 43 KiB minified. */
+export const GOOGLE_FONTS_CHUNK_CEILING = 46_080;
 
 /** What every chunk entry exports. */
 export interface LazyChunkModule {

@@ -2425,6 +2425,13 @@
     "x-max-length": 20,
     "x-source-hash": "1edf9373"
   },
+  "anim-studio.keyframes-editor.add-keyframe-here": "Keyframe hier toevoegen",
+  "@anim-studio.keyframes-editor.add-keyframe-here": {
+    "description": "Item of the timeline right-click menu on a track that adds a keyframe at the time under the pointer. Max 30 characters.",
+    "source_text": "Add keyframe here",
+    "x-max-length": 30,
+    "x-source-hash": "e98e4ba1"
+  },
   "anim-studio.keyframes-editor.add-lane-keyframe": "{lane}-keyframe toevoegen",
   "@anim-studio.keyframes-editor.add-lane-keyframe": {
     "description": "Name of an undo step, not shown on a control. {lane} is the lowercase name of the property the keyframe animates, such as rotation. {lane}: The value that replaces lane in the text. Max 35 characters.",
@@ -2595,6 +2602,13 @@
     "x-max-length": 25,
     "x-source-hash": "56004797"
   },
+  "anim-studio.keyframes-editor.every-property-is-added": "Elke eigenschap is toegevoegd",
+  "@anim-studio.keyframes-editor.every-property-is-added": {
+    "description": "Why the Add property submenu of the stage right-click menu is unavailable: the selected part already animates every property. Max 35 characters.",
+    "source_text": "Every property is added",
+    "x-max-length": 35,
+    "x-source-hash": "fbe8ac50"
+  },
   "anim-studio.keyframes-editor.expand": "Uitvouwen",
   "@anim-studio.keyframes-editor.expand": {
     "description": "Tooltip of the fold button on a timeline track row that shows its property lanes. Verb; the named version has its own key. Max 10 characters.",
@@ -2629,6 +2643,13 @@
     "source_text": "keyframe",
     "x-max-length": 15,
     "x-source-hash": "d4b9bf32"
+  },
+  "anim-studio.keyframes-editor.keyframe-actions": "Keyframe-acties",
+  "@anim-studio.keyframes-editor.keyframe-actions": {
+    "description": "Accessible name of the menu that opens on a right-click or long press in the timeline. Max 30 characters.",
+    "source_text": "Keyframe actions",
+    "x-max-length": 30,
+    "x-source-hash": "cc140916"
   },
   "anim-studio.keyframes-editor.keyframe-timeline": "Keyframe-tijdlijn",
   "@anim-studio.keyframes-editor.keyframe-timeline": {
@@ -2830,12 +2851,26 @@
     "x-max-length": 15,
     "x-source-hash": "381a8e96"
   },
+  "anim-studio.keyframes-editor.select-all-keyframes": "Alle keyframes selecteren",
+  "@anim-studio.keyframes-editor.select-all-keyframes": {
+    "description": "Item of the timeline right-click menu that selects every keyframe in the timeline. Max 30 characters.",
+    "source_text": "Select all keyframes",
+    "x-max-length": 30,
+    "x-source-hash": "1d99c296"
+  },
   "anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": "Alle {name}-keyframes selecteren (Shift voegt toe)",
   "@anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": {
     "description": "Tooltip of a lane header that selects all its keyframes. {name} is the lowercase property name; Shift adds to the current selection. {name}: The value that replaces name in the text. Max 70 characters.",
     "source_text": "Select every {name} keyframe (Shift adds)",
     "x-max-length": 70,
     "x-source-hash": "071c1a0f"
+  },
+  "anim-studio.keyframes-editor.select-keyframes-first": "Selecteer eerst keyframes",
+  "@anim-studio.keyframes-editor.select-keyframes-first": {
+    "description": "Why Copy and Delete are unavailable in the timeline right-click menu: no keyframes are selected. Tells the user the next step. Max 35 characters.",
+    "source_text": "Select keyframes first",
+    "x-max-length": 35,
+    "x-source-hash": "12c57791"
   },
   "anim-studio.keyframes-editor.selected": "geselecteerd",
   "@anim-studio.keyframes-editor.selected": {
@@ -8605,6 +8640,13 @@
     "x-max-length": 25,
     "x-source-hash": "c98a7b94"
   },
+  "anim-studio.studio.back": "Terug",
+  "@anim-studio.studio.back": {
+    "description": "First row of a submenu in the stage right-click menu that goes back to the main menu. Max 15 characters.",
+    "source_text": "Back",
+    "x-max-length": 15,
+    "x-source-hash": "76900f1b"
+  },
   "anim-studio.studio.blank-keyframes": "Lege keyframes",
   "@anim-studio.studio.blank-keyframes": {
     "description": "Start option in the new-animation menu: an empty keyframe animation. Max 25 characters.",
@@ -9329,12 +9371,26 @@
     "x-max-length": 15,
     "x-source-hash": "dccafe55"
   },
+  "anim-studio.studio.nothing-to-redo": "Niets om opnieuw te doen",
+  "@anim-studio.studio.nothing-to-redo": {
+    "description": "Why Redo is unavailable in the stage right-click menu: no undone change to bring back. Max 30 characters.",
+    "source_text": "Nothing to redo",
+    "x-max-length": 30,
+    "x-source-hash": "4aaf2710"
+  },
   "anim-studio.studio.nothing-to-set-here-yet": "Hier valt nog niets in te stellen.",
   "@anim-studio.studio.nothing-to-set-here-yet": {
     "description": "Empty state of the inspector when the selection has no editable fields. Max 40 characters.",
     "source_text": "Nothing to set here yet.",
     "x-max-length": 40,
     "x-source-hash": "a35b7b34"
+  },
+  "anim-studio.studio.nothing-to-undo": "Niets om ongedaan te maken",
+  "@anim-studio.studio.nothing-to-undo": {
+    "description": "Why Undo is unavailable in the stage right-click menu: no change made yet. Max 30 characters.",
+    "source_text": "Nothing to undo",
+    "x-max-length": 30,
+    "x-source-hash": "83290078"
   },
   "anim-studio.studio.origin": "Oorsprong",
   "@anim-studio.studio.origin": {
@@ -9364,6 +9420,20 @@
     "x-max-length": 60,
     "x-source-hash": "2b24c6c6"
   },
+  "anim-studio.studio.pause": "Pauzeren",
+  "@anim-studio.studio.pause": {
+    "description": "Item of the stage right-click menu that pauses the preview. Max 20 characters.",
+    "source_text": "Pause",
+    "x-max-length": 20,
+    "x-source-hash": "858e4ba7"
+  },
+  "anim-studio.studio.play": "Afspelen",
+  "@anim-studio.studio.play": {
+    "description": "Item of the stage right-click menu that plays the paused preview. Max 20 characters.",
+    "source_text": "Play",
+    "x-max-length": 20,
+    "x-source-hash": "436e6101"
+  },
   "anim-studio.studio.play-animations-one-after-another": "Animaties na elkaar afspelen",
   "@anim-studio.studio.play-animations-one-after-another": {
     "description": "Description of the sequence type in the new animation chooser. Max 55 characters.",
@@ -9377,6 +9447,13 @@
     "source_text": "Pseudo RTL",
     "x-max-length": 16,
     "x-source-hash": "3a83f974"
+  },
+  "anim-studio.studio.redo": "Opnieuw",
+  "@anim-studio.studio.redo": {
+    "description": "Item of the stage right-click menu that redoes the last undone change. Max 20 characters.",
+    "source_text": "Redo",
+    "x-max-length": 20,
+    "x-source-hash": "74273989"
   },
   "anim-studio.studio.redo-ctrl-y": "Opnieuw (Ctrl+Y)",
   "@anim-studio.studio.redo-ctrl-y": {
@@ -9546,6 +9623,13 @@
     "x-max-length": 135,
     "x-source-hash": "dab30b27"
   },
+  "anim-studio.studio.stage-actions": "Podiumacties",
+  "@anim-studio.studio.stage-actions": {
+    "description": "Accessible name of the menu that opens on a right-click or long press on the preview stage. Max 30 characters.",
+    "source_text": "Stage actions",
+    "x-max-length": 30,
+    "x-source-hash": "d2870e80"
+  },
   "anim-studio.studio.stage-height": "Hoogte van het canvas",
   "@anim-studio.studio.stage-height": {
     "description": "Accessible label of the drag handle that resizes the preview stage vertically. Max 25 characters.",
@@ -9664,6 +9748,13 @@
     "source_text": "Tool: {tool}",
     "x-max-length": 20,
     "x-source-hash": "9c49b4ea"
+  },
+  "anim-studio.studio.undo": "Ongedaan maken",
+  "@anim-studio.studio.undo": {
+    "description": "Item of the stage right-click menu that undoes the last change. Max 20 characters.",
+    "source_text": "Undo",
+    "x-max-length": 20,
+    "x-source-hash": "a8283ade"
   },
   "anim-studio.studio.undo-ctrl-z": "Ongedaan maken (Ctrl+Z)",
   "@anim-studio.studio.undo-ctrl-z": {
@@ -15307,6 +15398,48 @@
     "x-max-length": 10,
     "x-source-hash": "19766ed6"
   },
+  "card-editor.font-picker.categories": "Lettertypecategorieën",
+  "@card-editor.font-picker.categories": {
+    "description": "Accessible name of the group of category filter buttons in the Google fonts list. Max 30 characters.",
+    "source_text": "Font categories",
+    "x-max-length": 30,
+    "x-source-hash": "ea8fcba2"
+  },
+  "card-editor.font-picker.category-display": "Display",
+  "@card-editor.font-picker.category-display": {
+    "description": "Label of the filter button that lists only display (decorative headline) Google fonts. Max 14 characters.",
+    "source_text": "Display",
+    "x-max-length": 14,
+    "x-source-hash": "34e108c0"
+  },
+  "card-editor.font-picker.category-handwriting": "Handschrift",
+  "@card-editor.font-picker.category-handwriting": {
+    "description": "Label of the filter button that lists only handwriting Google fonts. Max 14 characters.",
+    "source_text": "Handwriting",
+    "x-max-length": 14,
+    "x-source-hash": "95a98bc8"
+  },
+  "card-editor.font-picker.category-monospace": "Monospace",
+  "@card-editor.font-picker.category-monospace": {
+    "description": "Label of the filter button that lists only monospace Google fonts. Max 14 characters.",
+    "source_text": "Monospace",
+    "x-max-length": 14,
+    "x-source-hash": "64c223c2"
+  },
+  "card-editor.font-picker.category-sans-serif": "Schreefloos",
+  "@card-editor.font-picker.category-sans-serif": {
+    "description": "Label of the filter button that lists only sans serif Google fonts. Max 14 characters.",
+    "source_text": "Sans serif",
+    "x-max-length": 14,
+    "x-source-hash": "afb6b974"
+  },
+  "card-editor.font-picker.category-serif": "Serif",
+  "@card-editor.font-picker.category-serif": {
+    "description": "Label of the filter button that lists only serif Google fonts. Max 14 characters.",
+    "source_text": "Serif",
+    "x-max-length": 14,
+    "x-source-hash": "1b5e747e"
+  },
   "card-editor.font-picker.font-family": "Lettertypefamilie",
   "@card-editor.font-picker.font-family": {
     "description": "Label of the field for the font's family name, such as Roboto or Arial. Max 20 characters.",
@@ -15363,6 +15496,31 @@
     "x-max-length": 25,
     "x-source-hash": "6cfe7c1e"
   },
+  "card-editor.font-picker.nudge-utils-missing": "Dit lettertype vraagt Google Fonts en Magic Card Utils. Installeer Utils en zet Google Fonts aan. Kijkers benaderen dan Google.",
+  "@card-editor.font-picker.nudge-utils-missing": {
+    "description": "One line under a font field when the chosen font is a Google font and Magic Card Utils is not installed. Max 130 characters.",
+    "source_text": "This font needs Google Fonts and Magic Card Utils. Install Utils, then turn on Google Fonts. Viewers then contact Google.",
+    "x-max-length": 130,
+    "x-source-hash": "3b84dd87"
+  },
+  "card-editor.font-picker.nudge-utils-off": "Dit Google-lettertype staat uit. Zet Google Fonts aan bij Magic Card Utils → Configureren. Kijkers benaderen dan Google.",
+  "@card-editor.font-picker.nudge-utils-off": {
+    "description": "One line under a font field when the chosen font is a Google font but the Google Fonts switch in Magic Card Utils is off. Max 130 characters.",
+    "source_text": "This Google font is switched off. Turn on Google Fonts in Magic Card Utils → Configure. Viewers then contact Google.",
+    "x-max-length": 130,
+    "x-source-hash": "fe026169"
+  },
+  "card-editor.font-picker.results": "{total, plural, one {# lettertype} other {# lettertypen}}",
+  "@card-editor.font-picker.results": {
+    "description": "Number of Google fonts that match the search and category filter. {total} is that number, a whole number. {total}: The value that replaces total in the text. Max 20 characters.",
+    "source_text": "{total, plural, one {# font} other {# fonts}}",
+    "x-max-length": 20,
+    "x-source-hash": "20f34339",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
   "card-editor.font-picker.save": "Opslaan",
   "@card-editor.font-picker.save": {
     "description": "Button that confirms the selected font and closes the font browser. Max 10 characters.",
@@ -15383,6 +15541,13 @@
     "source_text": "Select font",
     "x-max-length": 20,
     "x-source-hash": "2c9bc7a2"
+  },
+  "card-editor.font-picker.showing-first": "Eerste {n} van {total} getoond. Verfijn je zoekopdracht.",
+  "@card-editor.font-picker.showing-first": {
+    "description": "Line under a long Google fonts list: only the first {n} of {total} matches are shown, so the user should narrow the search. {n}: The value that replaces n in the text. {total}: The value that replaces total in the text. Max 70 characters.",
+    "source_text": "Showing the first {n} of {total}. Refine your search to see more.",
+    "x-max-length": 70,
+    "x-source-hash": "61cfb4bd"
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": "Pa's wijze lynx bezag vroom het fikse aquaduct",
   "@card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
@@ -30017,6 +30182,27 @@
     "source_text": "Font",
     "x-max-length": 10,
     "x-source-hash": "64d0b3ad"
+  },
+  "image-editor.text-ui.google-font": "Google-lettertype…",
+  "@image-editor.text-ui.google-font": {
+    "description": "Option in the font choice of a text layer that opens the list of Google fonts. The three dots mean a list opens. Max 20 characters.",
+    "source_text": "Google font…",
+    "x-max-length": 20,
+    "x-source-hash": "8677baaa"
+  },
+  "image-editor.text-ui.google-font-hint": "{name} is een Google-lettertype. Het wordt van Google Fonts geladen zolang de schakelaar in Magic Card Utils aan staat.",
+  "@image-editor.text-ui.google-font-hint": {
+    "description": "Hint under the font choice when the text uses a Google font. {name} is the font family name. {name}: The font family name. Max 130 characters.",
+    "source_text": "{name} is a Google font. It loads from Google Fonts while the switch in Magic Card Utils is on.",
+    "x-max-length": 130,
+    "x-source-hash": "d899e889"
+  },
+  "image-editor.text-ui.google-font-loads": "{name} is een Google-lettertype. Het wordt van Google Fonts geladen omdat de schakelaar in Magic Card Utils aan staat. Kijkers benaderen dan Google.",
+  "@image-editor.text-ui.google-font-loads": {
+    "description": "Hint under the font choice when the text uses a Google font and the Google Fonts switch is on. {name} is the font family name. {name}: The font family name. Max 160 characters.",
+    "source_text": "{name} is a Google font. It loads from Google Fonts because the switch in Magic Card Utils is on. Viewers then contact Google.",
+    "x-max-length": 160,
+    "x-source-hash": "2621b6cf"
   },
   "image-editor.text-ui.italic": "Cursief",
   "@image-editor.text-ui.italic": {
@@ -46337,6 +46523,13 @@
     "x-max-length": 105,
     "x-source-hash": "27ec574a"
   },
+  "svg-editor.views.back": "Terug",
+  "@svg-editor.views.back": {
+    "description": "Top row of a submenu in the shape actions menu; returns to the main menu. Max 20 characters.",
+    "source_text": "Back",
+    "x-max-length": 20,
+    "x-source-hash": "76900f1b"
+  },
   "svg-editor.views.bevel": "Afgeschuind",
   "@svg-editor.views.bevel": {
     "description": "Option name for the stroke line-join style with a cut-off corner. Pairs with Round and Miter. Max 15 characters.",
@@ -49311,13 +49504,6 @@
     "source_text": "Variables",
     "x-max-length": 15,
     "x-source-hash": "02db55ba"
-  },
-  "theme-editor.editor-view.variables-panel": "Variabelenpaneel",
-  "@theme-editor.editor-view.variables-panel": {
-    "description": "Accessible name of the editor panel that holds the variable list. Same English as the side tab tooltip. Max 25 characters.",
-    "source_text": "Variables panel",
-    "x-max-length": 25,
-    "x-source-hash": "aeb81548"
   },
   "theme-editor.editor-view.variables-you-set-now-stay-shared-you": "Variabelen die je nu instelt, blijven gedeeld. Je kunt ze daarna voor licht of donker overschrijven.",
   "@theme-editor.editor-view.variables-you-set-now-stay-shared-you": {

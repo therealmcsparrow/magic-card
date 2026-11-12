@@ -1,63 +1,32 @@
-// Google Fonts the card can load: a design font family naming one gets a stylesheet link in
-// document.head, once per family. System fonts and Roboto load nothing.
+// The gate for Google Fonts, plus the cheap part of loading them: spotting that a card config names a font at all. Everything else lives in the lazy
+// `google-fonts` chunk (src/google-fonts/loader.ts), which is only fetched once Magic Card Utils allows Google Fonts.
 
-/** The weights requested (upright only), so light, medium and bold are real faces, not synthesised. */
-export const COMMON_WEIGHTS = [300, 400, 500, 700];
-
-const LIGHT_REGULAR_BOLD = [300, 400, 700];
-const REGULAR_BOLD = [400, 700];
-const REGULAR_MEDIUM_BOLD = [400, 500, 700];
-
-/** Each offered family with the upright weights it has when not all of the common ones (css2 rejects a missing weight). */
-export const GOOGLE_FONT_WEIGHTS: Record<string, number[] | undefined> = {
-  Roboto: undefined,
-  'Open Sans': undefined,
-  Lato: LIGHT_REGULAR_BOLD,
-  Montserrat: undefined,
-  Oswald: undefined,
-  'Source Sans Pro': LIGHT_REGULAR_BOLD,
-  Raleway: undefined,
-  'PT Sans': REGULAR_BOLD,
-  Merriweather: undefined,
-  'Playfair Display': REGULAR_MEDIUM_BOLD,
-  Lora: REGULAR_MEDIUM_BOLD,
-  'PT Serif': REGULAR_BOLD,
-  'Noto Sans': undefined,
-  Ubuntu: undefined,
-  Poppins: undefined,
-  Nunito: undefined,
-  Inconsolata: undefined,
-  'Fira Code': undefined,
-  'Source Code Pro': undefined,
-  'Dancing Script': REGULAR_MEDIUM_BOLD,
-};
-
-const BY_NAME = new Map(Object.keys(GOOGLE_FONT_WEIGHTS).map((name) => [name.toLowerCase(), name]));
-/** The css2 stylesheet URL of a family with its common upright weights (`Open+Sans:wght@300;400;500;700`). */
-export function googleFontUrl(family: string): string {
-  const weights = ((Object.prototype.hasOwnProperty.call(GOOGLE_FONT_WEIGHTS, family) ? GOOGLE_FONT_WEIGHTS[family] : undefined) ?? COMMON_WEIGHTS).join(';');
-  return `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@${weights}&display=swap`;
+/** True when Magic Card Utils is installed and its Google Fonts switch is on. */
+export function googleFontsAllowed(): boolean {
+  return (window as unknown as { magicCardUtils?: { settings?: { googleFonts?: boolean } } }).magicCardUtils?.settings?.googleFonts === true;
 }
 
-/** The Google Fonts named in a CSS font-family value (`"Open Sans", sans-serif` → `['Open Sans']`). */
-export function googleFontFamilies(value: unknown): string[] {
-  if (typeof value !== 'string') return [];
-  const out: string[] = [];
-  for (const part of value.split(',')) {
-    const name = BY_NAME.get(part.trim().replace(/^["']|["']$/g, '').trim().toLowerCase());
-    if (name && !out.includes(name)) out.push(name);
-  }
-  return out;
+const waiting: Array<() => void> = [];
+function onSettings(): void {
+  if (!googleFontsAllowed()) return;
+  window.removeEventListener('mcu-settings', onSettings);
+  waiting.splice(0).forEach((cb) => cb());
+}
+
+/** Calls `cb` now when allowed, otherwise once on the first `mcu-settings` event that allows it (one shared listener, however many wait). */
+export function whenGoogleFontsAllowed(cb: () => void): void {
+  if (googleFontsAllowed()) return cb();
+  if (waiting.push(cb) === 1) window.addEventListener('mcu-settings', onSettings);
 }
 
 const CSS_FONT_FAMILY = /font-family\s*:\s*([^;]+)/gi;
 const configCache = new WeakMap<object, string[]>();
 
 /**
- * Every Google Font a card config uses: `font_family` and `tab_font_family` anywhere, and `label_font_family` inside a button module (row / column / module designs,
+ * The raw font-family strings a card config holds: `font_family` and `tab_font_family` anywhere, `label_font_family` inside a button module (row / column / module designs,
  * nested children, hover, conditional rules) and `font-family` declarations in any `css` text.
  */
-export function configGoogleFonts(config: object): string[] {
+export function collectConfigFonts(config: object): string[] {
   const cached = configCache.get(config);
   if (cached) return cached;
   const found = new Set<string>();
@@ -71,9 +40,10 @@ export function configGoogleFonts(config: object): string[] {
     }
     const inButton = button || (node as { type?: unknown }).type === 'button';
     for (const [key, value] of Object.entries(node)) {
-      if (key === 'font_family' || key === 'tab_font_family' || (key === 'label_font_family' && inButton)) googleFontFamilies(value).forEach((f) => found.add(f));
-      else if (key === 'css' && typeof value === 'string') {
-        for (const m of value.matchAll(CSS_FONT_FAMILY)) googleFontFamilies(m[1]).forEach((f) => found.add(f));
+      if (key === 'font_family' || key === 'tab_font_family' || (key === 'label_font_family' && inButton)) {
+        if (typeof value === 'string') found.add(value);
+      } else if (key === 'css' && typeof value === 'string') {
+        for (const m of value.matchAll(CSS_FONT_FAMILY)) found.add(m[1]);
       } else if (value && typeof value === 'object') walk(value, inButton);
     }
   };
@@ -83,26 +53,21 @@ export function configGoogleFonts(config: object): string[] {
   return out;
 }
 
-/** Families Home Assistant already loads (its UI font): offered in the picker, never fetched. */
-const BUNDLED = new Set(['Roboto']);
-/** Families with a stylesheet link in document.head (filled from the head once, then kept here). */
-let requested: Set<string> | undefined;
+/** The lazy `google-fonts` chunk: the catalogue and everything that turns font-family text into stylesheet links. */
+export const googleFontsChunk = () => import(/* webpackChunkName: "google-fonts" */ '../google-fonts/loader');
 
-/**
- * A stylesheet link per family in document.head (Google's css2 API, common weights), added once.
- * Families already requested return right away (no DOM query on every render).
- */
-export function loadGoogleFonts(families: string[]): void {
-  if (typeof document === 'undefined' || !document.head) return;
-  if (requested && families.every((f) => requested!.has(f) || BUNDLED.has(f))) return;
-  requested ??= new Set([...document.head.querySelectorAll<HTMLLinkElement>('link[data-mc-font]')].map((l) => l.dataset.mcFont ?? ''));
-  for (const family of families) {
-    if (requested.has(family) || BUNDLED.has(family)) continue;
-    requested.add(family);
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = googleFontUrl(family);
-    link.dataset.mcFont = family;
-    document.head.appendChild(link);
-  }
+/** The whole catalogue, from the lazy chunk (a local import, not a Google request). */
+export const loadCatalogue = () => googleFontsChunk().then((m) => m.allFamilies());
+
+/** Font strings already handed on: each is looked at once per page, however often the card renders. */
+const asked = new Set<string>();
+
+/** Loads the Google Fonts a config names. Does nothing without a font string, and fetches the loader chunk only once the gate is open. */
+export function loadConfigFonts(config: object): void {
+  const fresh = collectConfigFonts(config).filter((s) => !asked.has(s));
+  if (!fresh.length) return;
+  fresh.forEach((s) => asked.add(s));
+  whenGoogleFontsAllowed(() => {
+    googleFontsChunk().then((m) => m.loadFontsFor(fresh.flatMap(m.fontCandidates)), () => 0);
+  });
 }

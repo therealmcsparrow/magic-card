@@ -37,6 +37,7 @@ import './unit-field';
 import './box-field';
 import './media-picker';
 import './font-picker';
+import { renderFontNudge } from './font-nudge';
 import './sync-indicator';
 import './condition-row';
 import './animation-list';
@@ -1148,6 +1149,7 @@ export class DesignPanel extends LitElement {
               .value=${value}
               @value-changed=${(e: CustomEvent) => this._handlePropertyChange(p.key, e.detail.value)}
             ></mc-font-picker>
+            ${renderFontNudge(String(value ?? ''))}
           `,
           syncIndicator,
           undefined,

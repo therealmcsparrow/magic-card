@@ -35,6 +35,7 @@ const REGISTERED_IMPORT_SITES = [
   'src/transfer/share-kit-loader.ts',
   'src/theme-editor/presets/loader.ts',
   'src/ui-kit/fonts/load-lazy.ts',
+  'src/utils/google-fonts.ts',
 ];
 
 // The one manifest site (lazy-module 1.4.0): the only file that may carry /* webpackIgnore: true */.

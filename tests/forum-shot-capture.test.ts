@@ -8,6 +8,9 @@ import { deepElements, findRemoteAssets, hasRemote, scrubHass, scrubText, sweepR
 import { settleCard } from '../src/forum-shot/settle';
 import type { SettledCard } from '../src/forum-shot/settle';
 
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
+
 const ORIGIN = 'http://localhost:3000';
 const REMOTE = 'https://t.example/entity-picture.png';
 const PNG = new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' });
@@ -40,7 +43,7 @@ describe('findRemoteAssets', () => {
   });
 
   it('adds Google font families from the shared helper', () => {
-    expect(findRemoteAssets({ font_family: '"Open Sans", sans-serif' }, ORIGIN)).toEqual(['Open Sans']);
+    expect(findRemoteAssets({ font_family: '"Open Sans", sans-serif' }, ORIGIN, ['Open Sans'])).toEqual(['Open Sans']);
   });
 
   it('is empty for a config with no remote asset', () => {
@@ -77,8 +80,8 @@ describe('a protocol-relative address behind a delimiter', () => {
     expect(findRemoteAssets({ css: `.a{background:url("${form}")}` }, ORIGIN)).not.toEqual([]);
   });
 
-  it.each(forms)('locks %s in classifyCard', (_l, form) => {
-    expect(classifyCard(nested(form), ORIGIN)).toEqual({ lock: 'outside_address', fontHosts: [] });
+  it.each(forms)('locks %s in classifyCard', async (_l, form) => {
+    expect(await classifyCard(nested(form), ORIGIN)).toEqual({ lock: 'outside_address', fontHosts: [] });
   });
 
   it.each(forms)('sweeps %s from an img and a style', (_l, form) => {
@@ -98,7 +101,7 @@ describe('a protocol-relative address behind a delimiter', () => {
 
   it.each(harmless.map((f) => [JSON.stringify(f), f] as const))('locks the harmless text %s everywhere', async (_l, text) => {
     expect(findRemoteAssets({ a: text }, ORIGIN)).toEqual(['unknown']);
-    expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock).toBe('outside_address');
+    expect((await classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN)).lock).toBe('outside_address');
     const root = document.createElement('div');
     root.innerHTML = '<p></p>';
     root.querySelector('p')!.setAttribute('title', text);
@@ -112,7 +115,7 @@ describe('a protocol-relative address behind a delimiter', () => {
   it('keeps plain addresses and texts clean everywhere', async () => {
     for (const text of clean) {
       expect(findRemoteAssets({ a: text }, ORIGIN), text).toEqual([]);
-      expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock, text).toBeNull();
+      expect((await classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN)).lock, text).toBeNull();
       const root = document.createElement('div');
       root.innerHTML = '<p></p>';
       root.querySelector('p')!.setAttribute('title', text);
@@ -134,8 +137,8 @@ describe('an origin address cut at a separator', () => {
     expect(findRemoteAssets({ css: `.a{background:url("${form}")}` }, ORIGIN)).not.toEqual([]);
   });
 
-  it.each(forms)('locks a cut at %s in classifyCard', (_l, form) => {
-    expect(classifyCard(nested(form), ORIGIN)).toEqual({ lock: 'outside_address', fontHosts: [] });
+  it.each(forms)('locks a cut at %s in classifyCard', async (_l, form) => {
+    expect(await classifyCard(nested(form), ORIGIN)).toEqual({ lock: 'outside_address', fontHosts: [] });
   });
 
   it.each(forms)('sweeps a cut at %s from an img and a style', (_l, form) => {
@@ -168,10 +171,10 @@ describe('a raster data image as a whole token', () => {
   const rasters = ['data:image/png;base64,AA//BB==', 'data:image/jpeg;base64,/9j//gA7', 'data:image/webp;base64,//8AAAA='];
   const around = (r: string) => [r, `"${r}"`, `url(${r})`, `url("${r}")`, `.a{background:url('${r}')} .b{color:red}`, `a ${r} b`];
 
-  it.each(rasters.flatMap((r) => around(r).map((t) => [JSON.stringify(t), t] as const)))('keeps %s clean', (_l, text) => {
+  it.each(rasters.flatMap((r) => around(r).map((t) => [JSON.stringify(t), t] as const)))('keeps %s clean', async (_l, text) => {
     expect(hasRemote(text, ORIGIN)).toBe(false);
     expect(findRemoteAssets({ a: text }, ORIGIN)).toEqual([]);
-    expect(classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN).lock).toBeNull();
+    expect((await classifyCard({ type: 'custom:magic-card', rows: [{ text }] }, ORIGIN)).lock).toBeNull();
     const root = document.createElement('div');
     root.innerHTML = '<img><i></i>';
     root.querySelector('img')!.setAttribute('src', text);
@@ -200,7 +203,7 @@ describe('a card whose accepted font rule sits between comments', () => {
   it('passes the remote gate on the mount the picker offered', async () => {
     const css = '/* fonts */\n@import url("https://fonts.googleapis.com/css2?family=Lora");\n/* rest */\n.a{color:red}';
     const rows = [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'a', type: 'text', text: 'Hello there' }] }] }];
-    const kit = prepareCard({ type: 'custom:magic-card', rows, css }, ORIGIN);
+    const kit = await prepareCard({ type: 'custom:magic-card', rows, css }, ORIGIN);
     expect(kit.lock).toBeNull();
     settled = await settleCard({ states: {}, language: 'en', themes: { themes: {} } }, kit.mount, { settleMs: 0 });
     expect(settled).toBeDefined();

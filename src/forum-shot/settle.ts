@@ -1,7 +1,7 @@
 // Settled card for the forum shot: mounts a Magic Card paused and offscreen on a scrubbed hass copy, waits until it is still.
 import { FORUM_SHOT_WIDTH } from '../contracts/forum-shot';
 import type { ForumShotErrorCode, ForumShotNotice } from '../contracts/forum-shot';
-import { aliasFontValue, aliasInText } from './font-address';
+import { aliasFontValue, aliasInText, loadGoogleFontsLib } from './font-address';
 import { deepElements, findRemoteAssets, scrubHass, sweepRemote } from './remote';
 
 const CARD_TAG = 'magic-card';
@@ -84,7 +84,8 @@ function finishOneShots(root: ParentNode): void {
  */
 export async function settleCard(hass: object, config: Record<string, unknown>, options: SettleOptions = {}): Promise<SettledCard> {
   const origin = location.origin;
-  if (findRemoteAssets(config, origin).some((r) => r !== 'Roboto')) throw forumShotError('remote_asset');
+  await loadGoogleFontsLib();
+  if (findRemoteAssets(config, origin).length) throw forumShotError('remote_asset');
   const Ctor = customElements.get(CARD_TAG);
   if (!Ctor) throw forumShotError('card_not_defined');
 

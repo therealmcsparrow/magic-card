@@ -747,10 +747,6 @@
     "text": "Variables",
     "hash": "02db55ba"
   },
-  "theme-editor.editor-view.variables-panel": {
-    "text": "Variables panel",
-    "hash": "aeb81548"
-  },
   "theme-editor.editor-view.variables-you-set-now-stay-shared-you": {
     "text": "Variables you set now stay shared. You can then override any of them for light or dark.",
     "hash": "c9bda1f8"

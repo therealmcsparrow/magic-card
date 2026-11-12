@@ -11,11 +11,14 @@ import '../theme-safety/wall-tablet';
 import type { WallTabletLabels } from '../theme-safety/wall-tablet';
 import type { SwitchOption } from './mode-switch';
 import { t, tx } from './i18n';
+import { googleFontsChunk, whenGoogleFontsAllowed } from '../utils/google-fonts';
 import { browserMode, scopeLabel } from './util';
 
 // The preview stage: every resolved draft variable is set inline on the stage element.
 
 export const PREVIEW_TAG = 'mcte-theme-preview';
+const FONT_VARS = ['ha-font-family-body', 'ha-font-family-heading', 'ha-card-header-font-family'];
+
 /** Updates after the first are batched for this long (acceptance criterion 5: under 200 ms in all). */
 export const PREVIEW_DEBOUNCE_MS = 50;
 
@@ -205,7 +208,10 @@ export class McteThemePreview extends LitElement {
     const stage = this.renderRoot.querySelector<HTMLElement>('.stage');
     if (!stage) return;
     this._scope ??= new ScopedVars(stage);
-    const { skipped } = this._scope.apply(previewVars(this.doc, this._mode));
+    const vars = previewVars(this.doc, this._mode);
+    const { skipped } = this._scope.apply(vars);
+    const fonts = FONT_VARS.map((k) => vars[k]).filter(Boolean);
+    if (fonts.length) whenGoogleFontsAllowed(() => void googleFontsChunk().then((m) => m.loadFontsFor(fonts.flatMap(m.fontCandidates)), () => 0));
     this._applied = true;
     if (skipped !== this._skipped) this._skipped = skipped;
   }

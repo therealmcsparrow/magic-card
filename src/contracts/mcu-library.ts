@@ -23,8 +23,9 @@ export const THEME_VALUE_MAX_CHARS = 1024;
 export const AUTHOR_MAX_CHARS = 80;
 /** */
 export const DESCRIPTION_MAX_CHARS = 280;
-/** Provider script size cap, unminified (it loads on every HA page). */
-export const PROVIDER_MAX_BYTES = 6 * 1024;
+/** Provider script size cap, unminified (it loads on every HA page). Its only DOM write is a Google Fonts
+ * `<link rel="stylesheet" data-mc-font>` in document.head, and only while the Google Fonts switch is on. */
+export const PROVIDER_MAX_BYTES = 10 * 1024;
 export const CONNECTION_POLL_MS = 50;
 export const CONNECTION_WAIT_MS = 30_000;
 /** "Keep a copy in this card" is on by default up to this sanitised markup size. */

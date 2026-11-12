@@ -923,7 +923,7 @@ export class McteEditorView extends LitElement {
   private _presetDlg(mode: 'save' | 'export'): void {
     this._menu = false;
     const el = this.renderRoot.querySelector<MctePresetDialog>('mcte-preset-dialog');
-    this.renderRoot.querySelector<HTMLElement>(mode === 'save' && this._w >= 640 ? '.savepreset' : '.more')?.focus();
+    this.renderRoot.querySelector<HTMLElement>(mode === 'save' && this._w >= 900 ? '.savepreset' : '.more')?.focus();
     el?.open(mode, { name: this._name, doc: this._doc, id: slugName(this._name) || 'theme' });
   }
 
@@ -992,7 +992,7 @@ export class McteEditorView extends LitElement {
       ${this._menu
         ? html`<div class="menu" role="menu" style="inset-block-start: ${this._menuPos.top}px; inset-inline-end: ${this._menuPos.end}px" aria-label=${t('theme-editor.editor-view.more-actions')} @keydown=${this._menuKey}>
             ${compact ? html`${this._tryButton(true)}<p class="help tryhelp-menu" id="try-help">${this._tryHelp()}</p>` : nothing}
-            ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
+            ${this._w < 900 && this.backend?.presets ? html`<button type="button" role="menuitem" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
             <button type="button" role="menuitem" @click=${() => this._presetDlg('export')}>${t('theme-editor.editor-view.export-theme')}</button>
             <button type="button" role="menuitem" @click=${() => this._openDlg('yaml')}>${t('theme-editor.editor-view.show-yaml')}</button>
             <button type="button" role="menuitem" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say(t('theme-editor.editor-view.copied-yaml')), (this._menu = false)))}>${t('theme-editor.editor-view.copy-yaml')}</button>
@@ -1037,13 +1037,13 @@ export class McteEditorView extends LitElement {
     return html`<header class="fr-bar" slot="top" aria-label=${t('theme-editor.editor-view.editor-panels')}>
       <button type="button" class="btn btn-text btn-sm back" @click=${() => this._back()}>${glyph('arrowLeft')} <span class="back-label">${t('theme-editor.editor-view.themes')}</span></button>
       <span class="vr" aria-hidden="true"></span>
-      <strong class="studio-title">${t('theme-editor.editor-view.theme-editor')}</strong>
+      ${this._w < 1100 ? nothing : html`<strong class="studio-title">${t('theme-editor.editor-view.theme-editor')}</strong>`}
       <h2 class="tname" tabindex="-1">${this._name}</h2>
       <div class="chips">${this._chips()}</div>
       <span class="spacer"></span>
-      ${this._viewControls(compact)}
+      ${this._viewControls(this._w < 1100)}
       <div class="grp">
-        ${this.backend?.presets && !compact ? html`<button type="button" class="btn btn-secondary btn-sm savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
+        ${this.backend?.presets && this._w >= 900 ? html`<button type="button" class="btn btn-secondary btn-sm savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
         ${compact ? nothing : this._tryButton()}
         <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         <button
@@ -1556,8 +1556,7 @@ export class McteEditorView extends LitElement {
         min-block-size: 32px;
       }
       .fr-bar .view {
-        flex: 0 1 auto;
-        min-inline-size: 0;
+        flex: none;
       }
       .previewing {
         white-space: nowrap;

@@ -4,6 +4,29 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.11.04-beta.1 (2026-11-12)
+
+A pre-release. Install Magic Card Utils 2026.11.3-beta.1 (or newer) first, then update Magic Card. To install it, choose **Include pre-releases** in the Marketplace, or turn on **Show beta versions** in HACS.
+
+### Breaking
+-   **Google fonts need Magic Card Utils and a switch.** A card that names a Google font now shows a fallback font until **Load Google Fonts** is on in Settings → Devices & services → Magic Card Utils → Configure, and the page is reloaded. The card editor shows a short note under such a font field. An `@import` of a Google Fonts address in a card's custom css is not affected.
+-   **Source Sans Pro shows a fallback.** Google renamed it Source Sans 3, so a card that names Source Sans Pro from the old font list shows the fallback font. Pick Source Sans 3 in the Google tab.
+
+### New
+-   **Every Google font in every font picker.** With the switch on, each font picker has a Google tab with the full Google Fonts catalogue, search and category filters. It covers the card editor and Studio, the theme editor font fields and image editor text. Typing a catalogue name such as `lato` is stored as `"Lato", sans-serif`.
+-   **Theme fonts.** Fonts named by your Home Assistant theme load on every Home Assistant page when the switch is on.
+-   **Google fonts in images.** Image text can use a Google font, stored as `"Name", sans-serif`, `serif`, `monospace` or `system-ui`. A handwriting font falls back to sans-serif in images.
+-   **Right-click menu in the animation studio.** Right-click a layer row, or press and hold it on a touch screen, to open its actions menu where you clicked. In the timeline, right-click a keyframe for Copy, Paste, Delete and Select all keyframes, or an empty spot on a lane for Add keyframe here. Right-click the canvas, press and hold it, or press Shift+F10 there for Add property, keyframe actions, Play or Pause, What moves, and Undo and Redo; a particle animation adds Add emitter and Duplicate emitter.
+
+### Changed
+-   **Privacy.** With the switch off, or without Magic Card Utils, nothing is requested from Google. The privacy text in the README, the SVG allowlist and SECURITY.md describes the switch. See [Fonts and Google Fonts](documentation/design/fonts.md).
+
+### Fixed
+-   **Theme editor fits its space.** The theme list no longer draws a second canvas inside the Magic Card Utils panel, and nothing runs off its right edge. On narrower screens the theme editor's top bar drops the title and the "Previewing" note, and **Save as my preset** moves into the ⋯ menu, so the buttons no longer overlap.
+-   **Back in right-click submenus.** A submenu in the right-click menu of the icon, image and shape editors and the animation studio now starts with a Back row, so you can return to the main menu by touch or mouse. While a submenu is open, a click on the main menu runs the item you clicked.
+-   **Size box on the preview in the animation studio.** In the keyframes, particles, path and icon animation editors, ruler 0, the width callout and the selection box now line up with the preview card instead of the edge of the stage. The selection size is given in card pixels at any zoom.
+-   **One edge beside the inspector.** The icon and image editors no longer draw a second vertical line inside the inspector, next to the edge of the side panel.
+
 ## 2026.11.03 (2026-11-12)
 
 This stable release holds everything from the 2026.11.03 pre-releases, which are listed below, plus the changes in this section. Install Magic Card Utils 2026.11.02 first, then update Magic Card. With an older Utils, the Animate buttons are greyed out and images stay at 256 KiB. If you stayed on 2026.11.02, these are the main changes:

@@ -5,6 +5,7 @@ import type { ImageAnimHandle } from '../contracts/image-animation';
 import type { BackgroundLayerConfig, BgLayerStatus } from '../contracts/bg-stack';
 import { IMAGE_MAX_DESCRIPTION_CHARS, IMAGE_REF_PREFIX, IMAGE_REF_RE, IMAGE_SKELETON_MS, MAX_LAYER_PREFETCH, type ImagePoint } from '../contracts/svg-image';
 import { entityStateColor, isEntityColor } from '../utils/entity-color';
+import { googleFontsChunk, whenGoogleFontsAllowed } from '../utils/google-fonts';
 import { safeColor } from '../utils/safe-css';
 import { loadImageAnim, loadPauseChunk, loadTrackCompiler, wantsTracks } from './anim-loader';
 import { loadImage, watchImage, type ImageEntry } from './client';
@@ -272,6 +273,7 @@ export class McSvgImage extends LitElement {
       if (svg) {
         stage.insertBefore(svg, stage.firstChild);
         this._svg = svg;
+        this._loadFonts(svg);
         this._startAnim(svg, this._entry);
         if (this.layer) whenIdle(() => this._prefetch());
       }
@@ -291,6 +293,12 @@ export class McSvgImage extends LitElement {
       }
     }
     this._report();
+  }
+
+  /** Text in a Google family asks the font loader for it; nothing is requested while the switch is off. */
+  private _loadFonts(svg: SVGElement): void {
+    const raw = [...svg.querySelectorAll('[font-family]')].map((e) => e.getAttribute('font-family') ?? '');
+    if (raw.length) whenGoogleFontsAllowed(() => void googleFontsChunk().then((m) => m.loadFontsFor(raw.flatMap(m.fontCandidates)), () => 0));
   }
 
   /** A record with an animation loads the image-anim chunk and plays it on the mounted drawing; one without never does. */

@@ -7,6 +7,7 @@ import { seg } from '../../ui-kit/templates/choice';
 import type { LayerView } from '../../contracts/studio-layers';
 import { emitterIds, isLocked } from '../layer-view';
 import { lockBanner, lockBannerStyles } from './lock-banner';
+import type { StageMenuEntry } from '../editor-slots';
 import { animationStyles } from '../../css/animations';
 import { resolveAnimations, type FxLayer, type ResolvedAnimations } from '../resolve';
 import { intensityLabel } from '../../utils/animation-presets';
@@ -2377,6 +2378,21 @@ export class AnimParticlesEditor extends LitElement {
       </div>`;
   }
 
+  /** The stage's right-click menu: Add emitter and Duplicate emitter, as the buttons offer them. */
+  stageMenu(): StageMenuEntry[] {
+    const doc = this.doc;
+    if (!doc || this.disabled) return [];
+    const why = canAddEmitter(doc) ? undefined : this._capText(doc);
+    return [
+      { id: 'pt-add-emitter', icon: 'mdi:plus', label: t('anim-studio.particles-editor.add-emitter'), reason: why, run: this._addEmitter },
+      { id: 'pt-dup-emitter', icon: 'mdi:content-duplicate', label: t('anim-studio.particles-editor.duplicate-emitter'), reason: why, run: this._dupEmitter },
+    ];
+  }
+
+  private _capText(doc: AnimationDoc): string {
+    return emitterCount(doc) >= PARTICLES_V2_CAPS.emitters ? t('anim-studio.particles-editor.at-most-emitters-emitters', { emitters: PARTICLES_V2_CAPS.emitters }) : t('anim-studio.particles-editor.no-free-particles-left-lower-a-count-to');
+  }
+
   /** The emitter switcher (2+ emitters) and Add emitter. */
   private _renderBar(): TemplateResult {
     const doc = this.doc!;
@@ -2396,7 +2412,7 @@ export class AnimParticlesEditor extends LitElement {
       <button type="button" class="btn btn-secondary btn-sm em-add" ?disabled=${!can || this.disabled} aria-describedby=${can ? nothing : 'h-em-cap'} @click=${this._addEmitter}>
         <ha-icon icon="mdi:plus"></ha-icon>${t('anim-studio.particles-editor.add-emitter')}
       </button>
-      ${can ? nothing : html`<p class="help em-cap" id="h-em-cap">${n >= PARTICLES_V2_CAPS.emitters ? t('anim-studio.particles-editor.at-most-emitters-emitters', { emitters: PARTICLES_V2_CAPS.emitters }) : t('anim-studio.particles-editor.no-free-particles-left-lower-a-count-to')}</p>`}
+      ${can ? nothing : html`<p class="help em-cap" id="h-em-cap">${this._capText(doc)}</p>`}
     </div>`;
   }
 

@@ -1,10 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ForumShotLockReason, MagicCardRef } from '../src/contracts/forum-shot';
-import { aliasInText, classifyCard, prepareCard } from '../src/forum-shot/font-address';
-import { configGoogleFonts } from '../src/utils/google-fonts';
+import { aliasInText, classifyCard, configGoogleFamilies as configGoogleFonts, prepareCard } from '../src/forum-shot/font-address';
 import { listMagicCards } from '../src/forum-shot/pick';
 import { findRemoteAssets } from '../src/forum-shot/remote';
+
+(window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
+await (await import('../src/forum-shot/font-address')).loadGoogleFontsLib();
 
 interface AddressCase {
   id: string;
@@ -34,10 +36,10 @@ describe('classifyCard', () => {
     expect(fixture.addressCases.length).toBeGreaterThan(100);
   });
 
-  it.each(fixture.addressCases.map((c) => [c.id, c] as const))('classifies each card: %s', (_id, c) => {
+  it.each(fixture.addressCases.map((c) => [c.id, c] as const))('classifies each card: %s', async (_id, c) => {
     const config = configOf(c);
     const started = performance.now();
-    const got = classifyCard(config, fixture.origin);
+    const got = await classifyCard(config, fixture.origin);
     if (c.generate) expect(performance.now() - started).toBeLessThan(fixture.generatedMaxMs);
     expect(got.lock).toBe(c.expect.lock);
     expect([...got.fontHosts].sort()).toEqual([...c.expect.fontHosts].sort());
@@ -77,15 +79,15 @@ describe('a font-family value is read the way the card loader reads it', () => {
   const probe = '.a{font-family: x}, Nunito;}';
   const config = { type: 'custom:magic-card', rows: [{ id: 'r', columns: [{ id: 'c', modules: [{ id: 'm', type: 'text', text: 'a', css: probe }] }] }] };
 
-  it('finds the family the loader finds, and renames it in a template text and in the mounted css', () => {
-    expect(configGoogleFonts(config)).toEqual(['Nunito']);
+  it('finds the family the loader finds, and renames it in a template text and in the mounted css', async () => {
+    expect(await configGoogleFonts(config)).toEqual(['Nunito']);
     const missing = vi.fn();
     expect(aliasInText(probe, new Set(), missing)).toBe('.a{font-family: x}, "mc-shot-nunito";}');
     expect(missing).toHaveBeenCalledTimes(1);
-    const kit = prepareCard(config, 'http://localhost:3000');
+    const kit = await prepareCard(config, 'http://localhost:3000');
     const css = JSON.stringify(kit.mount);
     expect(css).toContain('mc-shot-nunito');
-    expect(configGoogleFonts(kit.mount)).toEqual([]);
+    expect(await configGoogleFonts(kit.mount)).toEqual([]);
   });
 
   it.each([
@@ -93,22 +95,22 @@ describe('a font-family value is read the way the card loader reads it', () => {
     ['.a{font-family: Oswald}.b{font-family: Lora}', '.a{font-family: "mc-shot-oswald"}.b{font-family: "mc-shot-lora"}', 0],
     ['.a{font-family:Arial}.b{font-family:Lora}', '.a{font-family:Arial}.b{font-family:"mc-shot-lora"}', 1],
     ['.a{font-family: x}, Nunito;}', '.a{font-family: x}, "mc-shot-nunito";}', 1],
-  ])('renames every rule of minified css %s', (text, expected, missingCount) => {
+  ])('renames every rule of minified css %s', async (text, expected, missingCount) => {
     const missing = vi.fn();
     expect(aliasInText(text, new Set(missingCount ? [] : ['lora', 'oswald', 'nunito']), missing)).toBe(expected);
     expect(missing).toHaveBeenCalledTimes(missingCount);
-    expect(configGoogleFonts({ css: aliasInText(text, new Set(['lora', 'oswald']), () => undefined) })).toEqual([]);
+    expect(await configGoogleFonts({ css: aliasInText(text, new Set(['lora', 'oswald']), () => undefined) })).toEqual([]);
   });
 
-  it('gives the mounted copy an alias for the family of a later rule', () => {
+  it('gives the mounted copy an alias for the family of a later rule', async () => {
     const cfg = { type: 'custom:magic-card', font_family: 'Lora', css: '.a{font-family:Arial}.b{font-family:Lora}', rows: [] };
-    const kit = prepareCard(cfg, 'http://localhost:3000');
+    const kit = await prepareCard(cfg, 'http://localhost:3000');
     expect(kit.aliases.get('lora')).toBe('mc-shot-lora');
     expect(JSON.stringify(kit.mount)).toContain('.b{font-family:\\"mc-shot-lora\\"}');
   });
 
-  it.each(['.a{font-family: Lora}', '.a{font-family: Lora } .b{x:1}', 'p{font-family: Lora, serif;}'])('renames the family in %s', (text) => {
-    expect(configGoogleFonts({ css: aliasInText(text, new Set(['lora']), () => undefined) })).toEqual([]);
+  it.each(['.a{font-family: Lora}', '.a{font-family: Lora } .b{x:1}', 'p{font-family: Lora, serif;}'])('renames the family in %s', async (text) => {
+    expect(await configGoogleFonts({ css: aliasInText(text, new Set(['lora']), () => undefined) })).toEqual([]);
     expect(aliasInText(text, new Set(['lora']), () => undefined)).toContain('mc-shot-lora');
   });
 });
@@ -125,17 +127,17 @@ describe('removing an accepted font rule leaves no slash pair on the mount', () 
     `.a{color:red}/**/${IMPORT}/**/.b{color:blue}`,
   ];
 
-  it.each(cases.map((c) => [JSON.stringify(c), c] as const))('classify and mount agree on %s', (_l, css) => {
+  it.each(cases.map((c) => [JSON.stringify(c), c] as const))('classify and mount agree on %s', async (_l, css) => {
     const config = { type: 'custom:magic-card', css };
-    const kit = prepareCard(config, ORIGIN);
+    const kit = await prepareCard(config, ORIGIN);
     expect(kit.lock).toBeNull();
     expect(findRemoteAssets(kit.mount, ORIGIN)).toEqual([]);
-    expect(classifyCard(config, ORIGIN).lock).toBeNull();
+    expect((await classifyCard(config, ORIGIN)).lock).toBeNull();
     expect(kit.plan.sheets.length).toBeGreaterThan(0);
   });
 
-  it('keeps the rules around the removed one', () => {
-    const kit = prepareCard({ type: 'custom:magic-card', css: `/* a */${IMPORT}/* b */.a{color:red}` }, ORIGIN);
+  it('keeps the rules around the removed one', async () => {
+    const kit = await prepareCard({ type: 'custom:magic-card', css: `/* a */${IMPORT}/* b */.a{color:red}` }, ORIGIN);
     expect(kit.mount.css).toContain('.a{color:red}');
     expect(kit.mount.css).not.toContain('@import');
   });
@@ -157,9 +159,44 @@ describe('a long run of font-family rules (R-26)', () => {
     expect(missing).toBe(3000);
   });
 
-  it('renames every family in prepareCard css', () => {
+  it('renames every family in prepareCard css', async () => {
     const config = { type: 'custom:magic-card', font_family: 'Lora', css: '.a{font-family:Lora}'.repeat(20_000) };
-    const kit = prepareCard(config, fixture.origin);
+    const kit = await prepareCard(config, fixture.origin);
     expect((kit.mount.css as string).split('mc-shot-lora').length - 1).toBe(20_000);
+  });
+});
+
+describe('Google Fonts are used only when Magic Card Utils allows them', () => {
+  const lato = { type: 'custom:magic-card', font_family: 'Lato, sans-serif' };
+  const gate = (window as unknown as { magicCardUtils?: unknown });
+  const saved = gate.magicCardUtils;
+
+  afterEach(() => {
+    gate.magicCardUtils = saved;
+  });
+
+  it('plans no Google URL, host or alias and makes no request while the switch is off', async () => {
+    gate.magicCardUtils = { settings: { googleFonts: false } };
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const kit = await prepareCard(lato, 'http://localhost:3000');
+    expect(kit.plan).toEqual({ fontHosts: [], sheets: [] });
+    expect(kit.aliases.size).toBe(0);
+    expect(JSON.stringify(kit.mount)).not.toContain('mc-shot-');
+    expect(await classifyCard(lato, 'http://localhost:3000')).toEqual({ lock: null, fontHosts: [] });
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('plans no Google URL without Magic Card Utils at all', async () => {
+    delete gate.magicCardUtils;
+    expect((await prepareCard(lato, 'http://localhost:3000')).plan.sheets).toEqual([]);
+    expect(aliasInText('font-family: Lato', new Set(), () => undefined)).toBe('font-family: Lato');
+  });
+
+  it('plans the css2 URL of the family when the switch is on', async () => {
+    gate.magicCardUtils = { settings: { googleFonts: true } };
+    const kit = await prepareCard(lato, 'http://localhost:3000');
+    expect(kit.plan.sheets).toEqual([{ url: 'https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap' }]);
+    expect(kit.plan.fontHosts).toEqual(['fonts.googleapis.com', 'fonts.gstatic.com']);
+    expect(kit.aliases.get('lato')).toBe('mc-shot-lato');
   });
 });

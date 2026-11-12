@@ -18,6 +18,6 @@ design:
 
 The field has its own reset button. In a [conditional rule](conditional-design.md), the field edits the rule's `css`, which replaces the default `css` while the rule matches. In the [Hover](hover.md) view it edits `hover.css`, which is added on top of the default `css` while the pointer is over the element.
 
-A Google font named in a `font-family` declaration here is loaded like one picked in the font field. See [Font family](README.md#font-family).
+A Google font named in a `font-family` declaration here is loaded like one picked in the font field. See [Font family](README.md#font-family). Google fonts load only when the Google Fonts switch in Magic Card Utils is on. See [Privacy](../../README.md#privacy). An `@import url(https://fonts.googleapis.com/...)` that you write here is not controlled by the switch.
 
 The card's own Custom CSS is the last field of the card's Design tab (`css` at the top level). It applies to the card's content.

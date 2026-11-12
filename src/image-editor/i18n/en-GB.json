@@ -983,6 +983,27 @@
     "note": "Label of the font family choice, such as Sans-serif or Serif.",
     "max": 10
   },
+  "image-editor.text-ui.google-font": {
+    "text": "Google font…",
+    "note": "Option in the font choice of a text layer that opens the list of Google fonts. The three dots mean a list opens.",
+    "max": 20
+  },
+  "image-editor.text-ui.google-font-hint": {
+    "text": "{name} is a Google font. It loads from Google Fonts while the switch in Magic Card Utils is on.",
+    "note": "Hint under the font choice when the text uses a Google font. {name} is the font family name.",
+    "max": 130,
+    "vars": {
+      "name": "The font family name."
+    }
+  },
+  "image-editor.text-ui.google-font-loads": {
+    "text": "{name} is a Google font. It loads from Google Fonts because the switch in Magic Card Utils is on. Viewers then contact Google.",
+    "note": "Hint under the font choice when the text uses a Google font and the Google Fonts switch is on. {name} is the font family name.",
+    "max": 160,
+    "vars": {
+      "name": "The font family name."
+    }
+  },
   "image-editor.text-ui.italic": {
     "text": "Italic",
     "note": "Option for slanted letters in the text style choice.",
