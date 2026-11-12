@@ -1355,6 +1355,10 @@
     "text": "Keyframe toevoegen",
     "hash": "1edf9373"
   },
+  "anim-studio.keyframes-editor.add-keyframe-here": {
+    "text": "Keyframe hier toevoegen",
+    "hash": "e98e4ba1"
+  },
   "anim-studio.keyframes-editor.add-lane-keyframe": {
     "text": "{lane}-keyframe toevoegen",
     "hash": "c12254e5"
@@ -1462,6 +1466,10 @@
   "anim-studio.keyframes-editor.keyframe": {
     "text": "keyframe",
     "hash": "d4b9bf32"
+  },
+  "anim-studio.keyframes-editor.keyframe-actions": {
+    "text": "Keyframe-acties",
+    "hash": "cc140916"
   },
   "anim-studio.keyframes-editor.keyframe-timeline": {
     "text": "Keyframe-tijdlijn",
@@ -1575,9 +1583,17 @@
     "text": "Seconden",
     "hash": "381a8e96"
   },
+  "anim-studio.keyframes-editor.select-all-keyframes": {
+    "text": "Alle keyframes selecteren",
+    "hash": "1d99c296"
+  },
   "anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": {
     "text": "Alle {name}-keyframes selecteren (Shift voegt toe)",
     "hash": "071c1a0f"
+  },
+  "anim-studio.keyframes-editor.select-keyframes-first": {
+    "text": "Selecteer eerst keyframes",
+    "hash": "12c57791"
   },
   "anim-studio.keyframes-editor.selected": {
     "text": "geselecteerd",

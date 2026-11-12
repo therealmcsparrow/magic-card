@@ -113,7 +113,10 @@ export function syncTabStops(host: Element): void {
 }
 
 export class LayerRows implements ReactiveController {
-  private _menu?: { key: LayerKey; first?: boolean };
+  private _menu?: { key: LayerKey; first?: boolean; at?: [number, number]; touch?: boolean; opener?: HTMLElement };
+  /** Touch on a row: waiting for the long press that opens the menu. */
+  private _press?: { x: number; y: number; t: ReturnType<typeof setTimeout> };
+  private _menuAt = 0;
   /** The menu button's own press closes the menu (an outside press); the click that follows must not open it again. */
   private _outsideAt?: { key: LayerKey; at: number };
   private _focus?: { key: LayerKey; ctl?: string };
@@ -135,7 +138,7 @@ export class LayerRows implements ReactiveController {
     const menu = this.host.renderRoot?.querySelector<UiMenuElement>('mc-ui-menu');
     if (menu && this._menu?.first) {
       this._menu.first = false;
-      menu.anchor = this.host.renderRoot?.querySelector<HTMLElement>(`li[data-ref="${this._menu.key}"] [data-ctl="menu"]`) ?? undefined;
+      if (!this._menu.at) menu.anchor = this.host.renderRoot?.querySelector<HTMLElement>(`li[data-ref="${this._menu.key}"] [data-ctl="menu"]`) ?? undefined;
       menu.show();
     }
     if (f) void this._refocus(f);
@@ -268,6 +271,41 @@ export class LayerRows implements ReactiveController {
     this.host.requestUpdate();
   }
 
+  /** Right-click or long-press on a row: pick the row, then open its menu at the point. */
+  private _openAt(r: RowInit, e: MouseEvent, opener: HTMLElement, touch: boolean): void {
+    if (!r.selected) this.actions.select(r.key, e);
+    this._menuAt = Date.now();
+    this._menu = { key: r.key, first: true, at: [e.clientX, e.clientY], touch, opener: opener.querySelector<HTMLElement>('[data-lk]') ?? opener };
+    this.host.requestUpdate();
+  }
+
+  /** Events from the rename input or from the open menu itself keep their own behaviour. */
+  private _foreign(e: Event): boolean {
+    return e.composedPath().some((n) => (n as Element).localName === 'mc-ui-menu' || (n as Element).localName === 'input');
+  }
+
+  private _context(e: MouseEvent, r: RowInit): void {
+    if (this._foreign(e)) return;
+    e.preventDefault();
+    if (Date.now() - this._menuAt > 500) this._openAt(r, e, e.currentTarget as HTMLElement, false);
+  }
+
+  private _pressDown(e: PointerEvent, r: RowInit): void {
+    this._pressEnd();
+    if (e.pointerType !== 'touch' || this._foreign(e)) return;
+    const row = e.currentTarget as HTMLElement;
+    this._press = { x: e.clientX, y: e.clientY, t: setTimeout(() => ((this._press = undefined), this._openAt(r, e, row, true)), 500) };
+  }
+
+  private _pressMove = (e: PointerEvent): void => {
+    if (this._press && Math.hypot(e.clientX - this._press.x, e.clientY - this._press.y) > 8) this._pressEnd();
+  };
+
+  private _pressEnd = (): void => {
+    if (this._press) clearTimeout(this._press.t);
+    this._press = undefined;
+  };
+
   private _toggleMenu(key: LayerKey): void {
     if (this._menu?.key === key) return this._closeMenu();
     const o = this._outsideAt;
@@ -278,9 +316,10 @@ export class LayerRows implements ReactiveController {
 
   private _closeMenu(back = true): void {
     const key = this._menu?.key;
+    const ctl = this._menu?.at ? undefined : 'menu';
     this._menu = undefined;
     this.host.requestUpdate();
-    if (key && back) this.focusKey(key, 'menu');
+    if (key && back) this.focusKey(key, ctl);
   }
 
   private _menuItems(r: RowInit): Array<UiMenuEntry & { run: () => void }> {
@@ -309,6 +348,9 @@ export class LayerRows implements ReactiveController {
     return html`<mc-ui-menu
       .items=${entries}
       .align=${'end' as const}
+      .at=${this._menu?.at}
+      .touch=${!!this._menu?.touch}
+      .opener=${this._menu?.opener}
       label=${t('anim-studio.layer-row.layer-actions-name', { name: r.name })}
       @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
         e.stopPropagation();
@@ -371,7 +413,10 @@ export class LayerRows implements ReactiveController {
     const full = !compact
       ? html`<span class="lfull">${toggles.length ? TOGGLES.filter((k) => toggles.includes(k)).map(btn) : nothing}${mv('up')}${mv('down')}</span>`
       : nothing;
-    return html`<li class="lr lvl-${r.level ?? 1} ${compact ? 'compact' : ''} ${r.selected ? 'sel' : ''} ${why ? 'is-hidden' : ''} ${locked ? 'is-locked' : ''}" data-ref=${r.key} data-id=${r.key.slice(r.key.indexOf(':') + 1)} @dblclick=${() => this.actions.dblclick?.(r.key)} @keydown=${(e: KeyboardEvent) => this._key(e, r)}>
+    const ctx = hasMenu
+      ? { contextmenu: (e: MouseEvent) => this._context(e, r), down: (e: PointerEvent) => this._pressDown(e, r) }
+      : undefined;
+    return html`<li class="lr lvl-${r.level ?? 1} ${compact ? 'compact' : ''} ${r.selected ? 'sel' : ''} ${why ? 'is-hidden' : ''} ${locked ? 'is-locked' : ''}" data-ref=${r.key} data-id=${r.key.slice(r.key.indexOf(':') + 1)} @dblclick=${() => this.actions.dblclick?.(r.key)} @keydown=${(e: KeyboardEvent) => this._key(e, r)} @contextmenu=${ctx?.contextmenu} @pointerdown=${ctx?.down} @pointermove=${this._pressMove} @pointerup=${this._pressEnd} @pointercancel=${this._pressEnd}>
       <div class="lr-in">
         ${r.expanded === undefined
           ? html`<span class="lcaret-space"></span>`

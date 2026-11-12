@@ -2086,6 +2086,12 @@
     "x-max-length": 20,
     "x-source-hash": "1edf9373"
   },
+  "anim-studio.keyframes-editor.add-keyframe-here": "Add keyframe here",
+  "@anim-studio.keyframes-editor.add-keyframe-here": {
+    "description": "Item of the timeline right-click menu on a track that adds a keyframe at the time under the pointer. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "e98e4ba1"
+  },
   "anim-studio.keyframes-editor.add-lane-keyframe": "Add {lane} keyframe",
   "@anim-studio.keyframes-editor.add-lane-keyframe": {
     "description": "Name of an undo step, not shown on a control. {lane} is the lowercase name of the property the keyframe animates, such as rotation. {lane}: The value that replaces lane in the text. Max 35 characters.",
@@ -2264,6 +2270,12 @@
     "x-max-length": 15,
     "x-source-hash": "d4b9bf32"
   },
+  "anim-studio.keyframes-editor.keyframe-actions": "Keyframe actions",
+  "@anim-studio.keyframes-editor.keyframe-actions": {
+    "description": "Accessible name of the menu that opens on a right-click or long press in the timeline. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "cc140916"
+  },
   "anim-studio.keyframes-editor.keyframe-timeline": "Keyframe timeline",
   "@anim-studio.keyframes-editor.keyframe-timeline": {
     "description": "Accessible name of the timeline region that holds the lanes and keyframe markers. Read by screen readers only. Max 30 characters.",
@@ -2436,11 +2448,23 @@
     "x-max-length": 15,
     "x-source-hash": "381a8e96"
   },
+  "anim-studio.keyframes-editor.select-all-keyframes": "Select all keyframes",
+  "@anim-studio.keyframes-editor.select-all-keyframes": {
+    "description": "Item of the timeline right-click menu that selects every keyframe in the timeline. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "1d99c296"
+  },
   "anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": "Select every {name} keyframe (Shift adds)",
   "@anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": {
     "description": "Tooltip of a lane header that selects all its keyframes. {name} is the lowercase property name; Shift adds to the current selection. {name}: The value that replaces name in the text. Max 70 characters.",
     "x-max-length": 70,
     "x-source-hash": "071c1a0f"
+  },
+  "anim-studio.keyframes-editor.select-keyframes-first": "Select keyframes first",
+  "@anim-studio.keyframes-editor.select-keyframes-first": {
+    "description": "Why Copy and Delete are unavailable in the timeline right-click menu: no keyframes are selected. Tells the user the next step. Max 35 characters.",
+    "x-max-length": 35,
+    "x-source-hash": "12c57791"
   },
   "anim-studio.keyframes-editor.selected": "selected",
   "@anim-studio.keyframes-editor.selected": {

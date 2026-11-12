@@ -54,9 +54,9 @@
   },
   "files": {
     "magic-card-animation-studio.js": {
-      "raw": 1002496,
-      "ceiling": 1002496,
-      "note": "Animation studio the magic-card-utils panel loads. 979 KiB; measured 1,002,030, so the margin is tight."
+      "raw": 1006336,
+      "ceiling": 1006336,
+      "note": "Animation studio the magic-card-utils panel loads. 983 KiB; measured 1,006,130, so the margin is tight."
     },
     "magic-card-editor.js": {
       "raw": 1095680,
@@ -1285,6 +1285,18 @@
       "field": "/files/magic-card-animation-studio.js/ceiling",
       "from": 1000448,
       "to": 1002496
+    },
+    {
+      "id": "animation-studio-raw-1002496-to-1006336",
+      "field": "/files/magic-card-animation-studio.js/raw",
+      "from": 1002496,
+      "to": 1006336
+    },
+    {
+      "id": "animation-studio-ceiling-1002496-to-1006336",
+      "field": "/files/magic-card-animation-studio.js/ceiling",
+      "from": 1002496,
+      "to": 1006336
     }
   ]
 }

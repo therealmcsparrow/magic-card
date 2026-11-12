@@ -66,6 +66,7 @@ const SNAP_PX = 6;
 const LONG_PRESS_MS = 400;
 /** Touch: moving this far before the long press means scrolling. */
 const TOUCH_SLOP = 8;
+const MENU_PRESS_MS = 500;
 const round1 = (n: number): number => Math.round(n * 10) / 10;
 const pctText = (at: number): string => `${round1(at)}%`;
 
@@ -153,6 +154,11 @@ export class AnimKeyframesEditor extends LitElement {
   private _unsubClip?: () => void;
   /** Touch on a track: waiting for the long press that starts a box select. */
   private _hold?: { pointerId: number; x: number; y: number; timer: ReturnType<typeof setTimeout>; target: TargetRef; additive: boolean };
+  /** The right-click / long-press menu: where it opens, and the track time under the pointer. */
+  @state() private _ctx?: { at: [number, number]; touch: boolean; opener: HTMLElement; add?: TKey };
+  private _ctxAt = 0;
+  /** Touch on a key: waiting for the long press that opens the menu. */
+  private _keyPress?: { pointerId: number; x: number; y: number; timer: ReturnType<typeof setTimeout> };
   /** A selection-change during a drag, once per frame. */
   private _selFrame = 0;
   /** The Add property button's own press closes the menu (an outside press); the click that follows must not open it again. */
@@ -206,6 +212,7 @@ export class AnimKeyframesEditor extends LitElement {
     this._bodyRo?.disconnect();
     this._bodyRo = undefined;
     this._unsubClip?.();
+    this._endKeyPress();
     this.removeEventListener('touchmove', this._onTouchMove);
     this._cancelHold();
     cancelAnimationFrame(this._selFrame);
@@ -282,6 +289,8 @@ export class AnimKeyframesEditor extends LitElement {
       menu.anchor = this.renderRoot.querySelector<HTMLElement>('.add-btn') ?? undefined;
       menu.show();
     }
+    const ctx = this._ctx ? this.renderRoot.querySelector<UiMenuElement>('mc-ui-menu.ctx-menu') : null;
+    if (ctx && !ctx.open) ctx.show();
     if (this._pendingFocus) {
       const el = this.renderRoot.querySelector<HTMLElement>(`.key[data-key="${CSS.escape(this._pendingFocus)}"]`);
       this._pendingFocus = undefined;
@@ -448,6 +457,7 @@ export class AnimKeyframesEditor extends LitElement {
       this._anchor = k;
     }
     this._laneFocus.set(`${k.target}|${k.lane}`, k.at);
+    if (e.pointerType === 'touch') this._pressKey(e);
     // a locked key can be selected (its values show), not dragged
     if (this._refuseLocked(this._keys)) return;
     this._drag = {
@@ -475,6 +485,87 @@ export class AnimKeyframesEditor extends LitElement {
   private _cancelHold(): void {
     if (this._hold) clearTimeout(this._hold.timer);
     this._hold = undefined;
+  }
+
+  // ── context menu ──
+
+  private _pressKey(e: PointerEvent): void {
+    this._endKeyPress();
+    const { pointerId, clientX: x, clientY: y } = e;
+    const opener = e.currentTarget as HTMLElement;
+    const timer = setTimeout(() => {
+      this._keyPress = undefined;
+      if (this._drag?.moved) return;
+      this._drag = undefined;
+      this._openCtx([x, y], true, opener);
+    }, MENU_PRESS_MS);
+    this._keyPress = { pointerId, x, y, timer };
+  }
+
+  private _endKeyPress(): void {
+    if (this._keyPress) clearTimeout(this._keyPress.timer);
+    this._keyPress = undefined;
+  }
+
+  private _openCtx(at: [number, number], touch: boolean, opener: HTMLElement, add?: TKey): void {
+    this._ctxAt = Date.now();
+    this._ctx = { at, touch, opener, add };
+  }
+
+  /** Right-click on a key: select it unless it is selected, then the menu. */
+  private _onKeyContext(e: MouseEvent, k: TKey): void {
+    if (this.disabled) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (Date.now() - this._ctxAt < MENU_PRESS_MS) return;
+    if (!this._isSel(k)) {
+      this._select([k]);
+      this._anchor = k;
+    }
+    this._openCtx([e.clientX, e.clientY], false, e.currentTarget as HTMLElement);
+  }
+
+  /** Right-click on a lane track: the selection stays, Add keyframe here uses the time under the pointer. */
+  private _onTrackContext(e: MouseEvent, target: TargetRef, lane: KeyLane): void {
+    if (this.disabled) return;
+    e.preventDefault();
+    // a touch long press on a track is a box select
+    if (this._drag || this._hold || Date.now() - this._ctxAt < MENU_PRESS_MS) return;
+    this._openCtx([e.clientX, e.clientY], false, e.currentTarget as HTMLElement, { target, lane, at: this._snapAt(this._atFromX(e.clientX), e.shiftKey) });
+  }
+
+  private _ctxItems(): Array<UiMenuEntry & { run: () => void }> {
+    const none = this._keys.length ? undefined : t('anim-studio.keyframes-editor.select-keyframes-first');
+    const add = this._ctx?.add;
+    return [
+      ...(add ? [{ id: 'add', icon: 'mdi:plus', label: t('anim-studio.keyframes-editor.add-keyframe-here'), run: () => this._add(add.target, add.lane, add.at) }] : []),
+      { id: 'copy', icon: 'mdi:content-copy', label: t('anim-studio.keyframes-editor.copy-keyframes'), keys: 'Control+C', reason: none, run: () => this._copy() },
+      { id: 'paste', icon: 'mdi:content-paste', label: t('anim-studio.keyframes-editor.paste-keyframes-at-the-playhead'), keys: 'Control+V', reason: keyClipboard() ? undefined : t('anim-studio.keyframes-editor.copy-keyframes-first'), run: () => this._paste() },
+      { id: 'delete', icon: 'mdi:delete-outline', label: t('anim-studio.keyframes-editor.delete-keyframes'), keys: 'Delete', danger: true, reason: none, run: () => this._delete() },
+      { id: 'all', icon: 'mdi:select-all', label: t('anim-studio.keyframes-editor.select-all-keyframes'), keys: 'Control+A', separatorBefore: true, run: () => this._selectAll() },
+    ];
+  }
+
+  private _renderCtx(): TemplateResult {
+    const c = this._ctx!;
+    const items = this._ctxItems();
+    return html`<mc-ui-menu
+      class="ctx-menu"
+      .items=${items}
+      label=${t('anim-studio.keyframes-editor.keyframe-actions')}
+      .at=${c.at}
+      .touch=${c.touch}
+      .opener=${c.opener}
+      @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
+        e.stopPropagation();
+        this._ctx = undefined;
+        items.find((i) => i.id === e.detail.id)?.run();
+      }}
+      @mc-menu-close=${(e: Event) => {
+        e.stopPropagation();
+        this._ctx = undefined;
+      }}
+    ></mc-ui-menu>`;
   }
 
   private _onTrackDown(e: PointerEvent, target: TargetRef): void {
@@ -538,6 +629,8 @@ export class AnimKeyframesEditor extends LitElement {
   }
 
   private _onPointerMove = (e: PointerEvent): void => {
+    const kp = this._keyPress;
+    if (kp && e.pointerId === kp.pointerId && Math.hypot(e.clientX - kp.x, e.clientY - kp.y) > TOUCH_SLOP) this._endKeyPress();
     const h = this._hold;
     if (h && e.pointerId === h.pointerId && Math.hypot(e.clientX - h.x, e.clientY - h.y) > TOUCH_SLOP) this._cancelHold();
     const d = this._drag;
@@ -586,6 +679,7 @@ export class AnimKeyframesEditor extends LitElement {
   };
 
   private _onPointerUp = (e: PointerEvent): void => {
+    if (this._keyPress?.pointerId === e.pointerId) this._endKeyPress();
     const h = this._hold;
     if (h && e.pointerId === h.pointerId) {
       // a tap on a track (no long press, no scroll): like a click on empty track
@@ -760,9 +854,7 @@ export class AnimKeyframesEditor extends LitElement {
       this._paste();
     } else if (mod && key === 'a') {
       e.preventDefault();
-      const all: TKey[] = [];
-      for (const r of this._rows()) for (const at of laneTimes(this._kfsOf(r.target), r.lane)) if (!this._narrow || r.lane === '*') all.push({ ...r, at });
-      this._select(all);
+      this._selectAll();
     } else if (mod && (key === '=' || key === '+' || key === '-')) {
       e.preventDefault();
       this._setZoom(zoomStep(this._zoom, key === '-' ? -1 : 1));
@@ -771,6 +863,12 @@ export class AnimKeyframesEditor extends LitElement {
       e.stopPropagation();
       this._select([]);
     }
+  }
+
+  private _selectAll(): void {
+    const all: TKey[] = [];
+    for (const r of this._rows()) for (const at of laneTimes(this._kfsOf(r.target), r.lane)) if (!this._narrow || r.lane === '*') all.push({ ...r, at });
+    this._select(all);
   }
 
   private _focusKey(k: TKey, extend = false): void {
@@ -1534,6 +1632,7 @@ export class AnimKeyframesEditor extends LitElement {
         ${this._renderBar(narrow)} ${narrow ? this._renderNarrow() : this._renderTimeline()}
         <div class="sr-only" role="status" aria-live="polite">${this._status}</div>
       </div>
+      ${this._ctx ? this._renderCtx() : nothing}
     `;
   }
 
@@ -1754,6 +1853,7 @@ export class AnimKeyframesEditor extends LitElement {
         aria-describedby="kf-help"
         title=${val ? t('anim-studio.keyframes-editor.label-at-at-value', { label, at: pctText(at), value: val }) : t('anim-studio.keyframes-editor.label-at-at', { label, at: pctText(at) })}
         @pointerdown=${(e: PointerEvent) => this._onKeyDown(e, k)}
+        @contextmenu=${(e: MouseEvent) => this._onKeyContext(e, k)}
         @keydown=${(e: KeyboardEvent) => this._onKeyKeydown(e, k)}
         @focus=${() => this._laneFocus.set(`${target}|${lane}`, at)}
         @dblclick=${(e: Event) => e.stopPropagation()}
@@ -1816,6 +1916,7 @@ export class AnimKeyframesEditor extends LitElement {
         <div
           class="track"
           @pointerdown=${(e: PointerEvent) => this._onTrackDown(e, g.target)}
+          @contextmenu=${(e: MouseEvent) => this._onTrackContext(e, g.target, '*')}
           @dblclick=${(e: MouseEvent) => this._onTrackDblClick(e, g.target, '*')}
         >
           ${this._renderKeys(g, '*', times)}
@@ -1857,6 +1958,7 @@ export class AnimKeyframesEditor extends LitElement {
         <div
           class="track"
           @pointerdown=${(e: PointerEvent) => this._onTrackDown(e, g.target)}
+          @contextmenu=${(e: MouseEvent) => this._onTrackContext(e, g.target, lane)}
           @dblclick=${(e: MouseEvent) => this._onTrackDblClick(e, g.target, lane)}
         >
           ${this._renderKeys(g, lane, times)}

@@ -15,6 +15,7 @@ A pre-release. Install Magic Card Utils 2026.11.3-beta.1 (or newer) first, then 
 -   **Every Google font in every font picker.** With the switch on, each font picker has a Google tab with the full Google Fonts catalogue, search and category filters. It covers the card editor and Studio, the theme editor font fields and image editor text. Typing a catalogue name such as `lato` is stored as `"Lato", sans-serif`.
 -   **Theme fonts.** Fonts named by your Home Assistant theme load on every Home Assistant page when the switch is on.
 -   **Google fonts in images.** Image text can use a Google font, stored as `"Name", sans-serif`, `serif`, `monospace` or `system-ui`. A handwriting font falls back to sans-serif in images.
+-   **Right-click menu in the animation studio.** Right-click a layer row, or press and hold it on a touch screen, to open its actions menu where you clicked. In the timeline, right-click a keyframe for Copy, Paste, Delete and Select all keyframes, or an empty spot on a lane for Add keyframe here.
 
 ### Changed
 -   **Privacy.** With the switch off, or without Magic Card Utils, nothing is requested from Google. The privacy text in the README, the SVG allowlist and SECURITY.md describes the switch. See [Fonts and Google Fonts](documentation/design/fonts.md).

@@ -1882,6 +1882,11 @@
     "note": "Timeline toolbar button that adds a keyframe to the selected part at the playhead position.",
     "max": 20
   },
+  "anim-studio.keyframes-editor.add-keyframe-here": {
+    "text": "Add keyframe here",
+    "note": "Item of the timeline right-click menu on a track that adds a keyframe at the time under the pointer.",
+    "max": 30
+  },
   "anim-studio.keyframes-editor.add-lane-keyframe": {
     "text": "Add {lane} keyframe",
     "note": "Name of an undo step, not shown on a control. {lane} is the lowercase name of the property the keyframe animates, such as rotation.",
@@ -2052,6 +2057,11 @@
     "text": "keyframe",
     "note": "Lowercase noun used inside a longer label, such as a marker name. Not a heading; the capitalised word has other keys.",
     "max": 15
+  },
+  "anim-studio.keyframes-editor.keyframe-actions": {
+    "text": "Keyframe actions",
+    "note": "Accessible name of the menu that opens on a right-click or long press in the timeline.",
+    "max": 30
   },
   "anim-studio.keyframes-editor.keyframe-timeline": {
     "text": "Keyframe timeline",
@@ -2224,6 +2234,11 @@
     "note": "Name of the seconds choice for the timeline ruler unit, as opposed to percent of the cycle.",
     "max": 15
   },
+  "anim-studio.keyframes-editor.select-all-keyframes": {
+    "text": "Select all keyframes",
+    "note": "Item of the timeline right-click menu that selects every keyframe in the timeline.",
+    "max": 30
+  },
   "anim-studio.keyframes-editor.select-every-name-keyframe-shift-adds": {
     "text": "Select every {name} keyframe (Shift adds)",
     "note": "Tooltip of a lane header that selects all its keyframes. {name} is the lowercase property name; Shift adds to the current selection.",
@@ -2231,6 +2246,11 @@
     "vars": {
       "name": "The value that replaces name in the text."
     }
+  },
+  "anim-studio.keyframes-editor.select-keyframes-first": {
+    "text": "Select keyframes first",
+    "note": "Why Copy and Delete are unavailable in the timeline right-click menu: no keyframes are selected. Tells the user the next step.",
+    "max": 35
   },
   "anim-studio.keyframes-editor.selected": {
     "text": "selected",
