@@ -1221,7 +1221,7 @@ The release bundles third-party software under its own licences. See [THIRD-PART
 
 [hacs-badge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg
 [hacs-url]: https://hacs.xyz/
-[version-badge]: https://img.shields.io/github/package-json/v/therealmcsparrow/magic-card
+[version-badge]: https://img.shields.io/github/v/release/therealmcsparrow/magic-card
 [version-url]: https://github.com/therealmcsparrow/magic-card/releases
 [license-badge]: https://img.shields.io/github/license/therealmcsparrow/magic-card
 [license-url]: https://github.com/therealmcsparrow/magic-card/blob/main/LICENSE
