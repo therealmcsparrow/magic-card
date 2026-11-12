@@ -16,11 +16,11 @@ const w = window as unknown as { magicCardUtils?: { settings?: { googleFonts?: b
 const links = () => [...document.head.querySelectorAll<HTMLLinkElement>('link[data-mc-font]')];
 const flush = (ms = 120) => new Promise((r) => setTimeout(r, ms));
 
-async function mountGroup(): Promise<McteFieldGroup> {
+async function mountGroup(errors = new Map<string, string>(), custom = false): Promise<McteFieldGroup> {
   const el = document.createElement('mcte-field-group') as McteFieldGroup;
   el.group = { id: 'fonts', label: 'Fonts', entries: [] } as never;
-  el.rows = [{ entry: { name: 'ha-font-family-body', group: 'fonts', source: 'ha', kind: 'font', default: 'Roboto', label: 'Body font' } as never, follows: false }];
-  el.ctx = { doc: {}, scope: 'shared', hasModes: false, errors: new Map(), hints: new Map(), touched: new Set(), readOnly: false };
+  el.rows = [{ entry: { name: 'ha-font-family-body', group: 'fonts', source: 'ha', kind: 'font', default: 'Roboto', label: 'Body font' } as never, follows: false, custom }];
+  el.ctx = { doc: {}, scope: 'shared', hasModes: false, errors, hints: new Map(), touched: new Set(), readOnly: false };
   el.open = true;
   document.body.appendChild(el);
   await el.updateComplete;
@@ -46,6 +46,24 @@ describe('theme editor font fields', () => {
     el.addEventListener('mcte-set', (e) => seen.push((e as CustomEvent).detail));
     picker!.dispatchEvent(new CustomEvent('value-changed', { detail: { value: '"Lato", sans-serif' } }));
     expect(seen).toEqual([{ name: 'ha-font-family-body', value: '"Lato", sans-serif' }]);
+  });
+
+  it('names the font textbox after its field, marks an error on it and focuses it on a jump', async () => {
+    // a custom row is labelled with its variable name, which needs no translation table
+    const el = await mountGroup(new Map([['ha-font-family-body', 'Not a font value']]), true);
+    const field = el.shadowRoot!.querySelector('#f-ha-font-family-body')!;
+    expect(field.querySelector('label')).toBeNull();
+    const picker = field.querySelector('mc-font-picker') as HTMLElement & { label: string; updateComplete: Promise<unknown> };
+    expect(picker.label).toBe('ha-font-family-body');
+    expect(field.querySelector('.lbl')!.textContent!.trim()).toBe('ha-font-family-body');
+    await picker.updateComplete;
+    await el.updateComplete;
+    const input = picker.shadowRoot!.querySelector('input')!;
+    expect(input.getAttribute('aria-label')).toBe(picker.label);
+    expect(input.getAttribute('aria-invalid')).toBe('true');
+    expect(input.getAttribute('aria-description')).toBeTruthy();
+    el.focusField('ha-font-family-body');
+    expect(picker.shadowRoot!.activeElement).toBe(input);
   });
 
   it('keeps a variable reference as typed, and it validates', async () => {

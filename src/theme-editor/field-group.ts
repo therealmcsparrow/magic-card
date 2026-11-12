@@ -44,6 +44,8 @@ export interface FieldCtx {
 }
 
 const modeLabel = (m: ThemeMode): string => scopeLabel(m);
+/** The picker elements that own their textbox in another shadow root. */
+const PICKERS = 'mc-color-picker, mc-font-picker';
 const isColour = (entry: Pick<CatalogueEntry, 'kind'>): boolean => entry.kind === 'color' || entry.kind === 'background';
 
 /** The text under a field for an error from model.validateValue (colour fields lead with the picker). */
@@ -101,12 +103,12 @@ export class McteFieldGroup extends LitElement {
   }
 
   /**
-   * The colour picker owns its textbox (another shadow root), so an error cannot be linked by id. Set
+   * The colour and font pickers own their textbox (another shadow root), so an error cannot be linked by id. Set
    * aria-invalid and an aria-description on that textbox instead, once the picker has drawn it.
    */
   private _markPickers(): void {
     for (const f of this.renderRoot.querySelectorAll<HTMLElement>('.field')) {
-      const picker = f.querySelector<HTMLElement & { updateComplete?: Promise<unknown> }>('mc-color-picker');
+      const picker = f.querySelector<HTMLElement & { updateComplete?: Promise<unknown> }>(PICKERS);
       if (!picker) continue;
       const apply = (): void => {
         const input = picker.shadowRoot?.querySelector<HTMLInputElement>('input[type="text"]');
@@ -128,9 +130,9 @@ export class McteFieldGroup extends LitElement {
   /** The id of a field's focus target, for "jump to the first problem". */
   focusField(name: string): void {
     const root = this.renderRoot;
-    const el = root.querySelector<HTMLElement>(`#in-${CSS.escape(name)}`) ?? root.querySelector<HTMLElement>(`#f-${CSS.escape(name)} mc-color-picker`);
+    const picker = root.querySelector(`#f-${CSS.escape(name)}`)?.querySelector<HTMLElement>(PICKERS);
+    const el = root.querySelector<HTMLElement>(`#in-${CSS.escape(name)}`) ?? picker;
     if (el && 'focus' in el) el.focus();
-    const picker = root.querySelector<HTMLElement>(`#f-${CSS.escape(name)} mc-color-picker`);
     (picker?.shadowRoot?.querySelector('input') as HTMLElement | null | undefined)?.focus();
   }
 
@@ -191,6 +193,7 @@ export class McteFieldGroup extends LitElement {
     if (entry.kind === 'font' && !this.ctx.readOnly) {
       return html`<mc-font-picker
         id="in-${name}"
+        .label=${label}
         .value=${shown}
         .hass=${this.hass}
         @value-changed=${(e: CustomEvent) => {
@@ -297,7 +300,7 @@ export class McteFieldGroup extends LitElement {
     const only = this._onlyIn(row, name);
     return html`<div class="field ${err ? 'bad' : ''}" id="f-${name}" data-state=${state}>
       <div class="field-head">
-        ${isColour(entry) && !this.ctx.readOnly
+        ${(isColour(entry) || entry.kind === 'font') && !this.ctx.readOnly
           ? html`<span class="lbl" id="lbl-${name}">${label}</span>`
           : html`<label class="lbl ${custom ? 'mono' : ''}" for="in-${name}">${label}</label>`}
         <span class="status help">${statusText}</span>

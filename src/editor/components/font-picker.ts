@@ -68,9 +68,13 @@ const LOCAL_FONTS: FontOption[] = LOCAL_FONT_NAMES.map((name) => ({ name, ...LOC
 @customElement('mc-font-picker')
 export class FontPicker extends LitElement {
   static styles = [editorSystem, pickerStyles, fontPickerStyles];
+  /** focus() on the element reaches the text field ("jump to the first problem" in the theme editor). */
+  static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
+  /** The field's name for assistive technology; "Font family" when empty. */
+  @property({ type: String }) label = '';
 
   private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
 
@@ -215,7 +219,7 @@ export class FontPicker extends LitElement {
           class="input"
           .value=${this.value}
           placeholder=${t('card-editor.font-picker.font-family')}
-          aria-label=${t('card-editor.font-picker.font-family')}
+          aria-label=${this.label || t('card-editor.font-picker.font-family')}
           @input=${this._onInputChange}
           @change=${this._onInputCommit}
         />

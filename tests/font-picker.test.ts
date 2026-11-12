@@ -176,3 +176,14 @@ describe('whenGoogleFontsAllowed', () => {
     }
   });
 });
+
+describe('font picker name', () => {
+  it('names its textbox after the label, "Font family" without one', async () => {
+    const el = await mount();
+    const input = () => root(el).querySelector<HTMLInputElement>('.mc-picker-row input')!;
+    expect(input().getAttribute('aria-label')).toBe('Font family');
+    el.label = 'Heading font';
+    await el.updateComplete;
+    expect(input().getAttribute('aria-label')).toBe('Heading font');
+  });
+});
