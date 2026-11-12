@@ -1,7 +1,7 @@
 // @vitest-environment-options {"settings":{"handleDisabledFileLoadingAsSuccess":true}}
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { googleFontsAllowed } from '../src/utils/google-fonts';
-import { fontCandidates, googleFontUrl, loadFontsFor } from '../src/google-fonts/loader';
+import { fontCandidates, googleFontUrl, loadFontsFor, MAX_TRIES } from '../src/google-fonts/loader';
 
 const links = () => [...document.head.querySelectorAll<HTMLLinkElement>('link[data-mc-font]')];
 const w = window as unknown as { magicCardUtils?: { settings?: { googleFonts?: boolean } } };
@@ -125,5 +125,21 @@ describe('retry after a failure', () => {
       vi.doUnmock('../src/google-fonts/loader');
       vi.resetModules();
     }
+  });
+  it('asks again for a card font whose stylesheet failed, up to MAX_TRIES times', async () => {
+    const { loadConfigFonts } = await import('../src/utils/google-fonts');
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    const config = { font_family: '"Bitter", serif' };
+    const bitter = () => links().filter((l) => l.dataset.mcFont === 'Bitter');
+    for (let i = 0; i < MAX_TRIES; i++) {
+      loadConfigFonts(config);
+      for (let j = 0; j < 40 && !bitter().length; j++) await flush();
+      expect(bitter()).toHaveLength(1);
+      bitter()[0].dispatchEvent(new Event('error'));
+      expect(bitter()).toHaveLength(0);
+    }
+    loadConfigFonts(config);
+    for (let j = 0; j < 4; j++) await flush();
+    expect(bitter()).toHaveLength(0);
   });
 });
