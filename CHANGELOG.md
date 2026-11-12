@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## 2026.11.04-beta.1
+## 2026.11.04-beta.1 (2026-11-12)
 
 A pre-release. Install Magic Card Utils 2026.11.3-beta.1 (or newer) first, then update Magic Card. To install it, choose **Include pre-releases** in the Marketplace, or turn on **Show beta versions** in HACS.
 
