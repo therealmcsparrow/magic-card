@@ -203,7 +203,6 @@ export const editorStyles: CSSResult[] = [
     }
     .insp {
       padding: 12px 16px;
-      border-inline-start: 1px solid var(--mc-divider);
     }
     .center {
       grid-area: center;
