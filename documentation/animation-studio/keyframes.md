@@ -83,6 +83,7 @@ Moving or deleting a diamond in a summary lane moves or deletes the whole keyfra
 -   Ctrl+A selects every keyframe. Escape clears the selection.
 -   Click a lane's name to select every keyframe in it.
 -   Right-click a diamond, or press and hold it on a touch screen, to select it and open a menu with Copy, Paste, Delete and Select all keyframes. Right-click an empty spot on a lane for Add keyframe here. A right-click on a row in the Layers column opens the same menu as its ⋮ button.
+-   Right-click the canvas, press and hold it on a touch screen, or press Shift+F10 or the menu key while it has focus, to add a property, add a keyframe at the playhead on the selected lane, copy, paste or delete keyframes, play or pause, switch What moves, and undo or redo.
 
 Dragging any selected diamond moves the whole selection by the same amount, so the keyframes keep their spacing, also across targets. When one of them reaches 0% or 100% the whole selection stops there. Alt drags a copy of the selection.
 

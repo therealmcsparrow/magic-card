@@ -1447,6 +1447,10 @@
     "text": "Leeg keyframe",
     "hash": "56004797"
   },
+  "anim-studio.keyframes-editor.every-property-is-added": {
+    "text": "Elke eigenschap is toegevoegd",
+    "hash": "fbe8ac50"
+  },
   "anim-studio.keyframes-editor.expand": {
     "text": "Uitvouwen",
     "hash": "07548c2c"
@@ -4811,6 +4815,10 @@
     "text": "Animatiestudio",
     "hash": "c98a7b94"
   },
+  "anim-studio.studio.back": {
+    "text": "Terug",
+    "hash": "76900f1b"
+  },
   "anim-studio.studio.blank-keyframes": {
     "text": "Lege keyframes",
     "hash": "09007f4b"
@@ -5211,9 +5219,17 @@
     "text": "Niet gebruikt",
     "hash": "dccafe55"
   },
+  "anim-studio.studio.nothing-to-redo": {
+    "text": "Niets om opnieuw te doen",
+    "hash": "4aaf2710"
+  },
   "anim-studio.studio.nothing-to-set-here-yet": {
     "text": "Hier valt nog niets in te stellen.",
     "hash": "a35b7b34"
+  },
+  "anim-studio.studio.nothing-to-undo": {
+    "text": "Niets om ongedaan te maken",
+    "hash": "83290078"
   },
   "anim-studio.studio.origin": {
     "text": "Oorsprong",
@@ -5231,6 +5247,14 @@
     "text": "Deeltjes spelen op het hele element.",
     "hash": "2b24c6c6"
   },
+  "anim-studio.studio.pause": {
+    "text": "Pauzeren",
+    "hash": "858e4ba7"
+  },
+  "anim-studio.studio.play": {
+    "text": "Afspelen",
+    "hash": "436e6101"
+  },
   "anim-studio.studio.play-animations-one-after-another": {
     "text": "Animaties na elkaar afspelen",
     "hash": "36d48524"
@@ -5238,6 +5262,10 @@
   "anim-studio.studio.pseudo-rtl": {
     "text": "Pseudo-RTL",
     "hash": "3a83f974"
+  },
+  "anim-studio.studio.redo": {
+    "text": "Opnieuw",
+    "hash": "74273989"
   },
   "anim-studio.studio.redo-ctrl-y": {
     "text": "Opnieuw (Ctrl+Y)",
@@ -5335,6 +5363,10 @@
     "text": "Een paar panelen zijn verborgen, zoals je ze had achtergelaten. Gebruik de pijlen aan de randen om ze te tonen.",
     "hash": "dab30b27"
   },
+  "anim-studio.studio.stage-actions": {
+    "text": "Podiumacties",
+    "hash": "d2870e80"
+  },
   "anim-studio.studio.stage-height": {
     "text": "Hoogte van het canvas",
     "hash": "b8b87d11"
@@ -5402,6 +5434,10 @@
   "anim-studio.studio.tool-tool": {
     "text": "Gereedschap: {tool}",
     "hash": "9c49b4ea"
+  },
+  "anim-studio.studio.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
   },
   "anim-studio.studio.undo-ctrl-z": {
     "text": "Ongedaan maken (Ctrl+Z)",

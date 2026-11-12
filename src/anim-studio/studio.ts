@@ -24,7 +24,7 @@ import {
 import type { TransferChunk, TransferItem, TransferKind } from '../contracts/preset-transfer';
 import type { AnimationStage } from './studio-stage';
 import { studioStyles } from './studio-styles';
-import { KIND_EDITORS, PATH_HOST_TAG, editorDefined } from './editor-slots';
+import { KIND_EDITORS, PATH_HOST_TAG, editorDefined, type KindEditorElement, type StageMenuEntry } from './editor-slots';
 import { NO_SELECTION, PANELS, panelsFor, type PanelSpec, type PreviewChangeDetail, type StageInfo, type StudioSelection } from './slots';
 import { TILES, type PreviewTile } from './tiles';
 import type { TargetRef } from './model';
@@ -262,6 +262,9 @@ export function autoSplit(doc: AnimationDoc, h: number, narrow = false): number 
 
 /** The document's own keyframes move a target (element or icon). */
 const moves = (d: AnimationDoc): boolean => d.kind === 'keyframes' || d.kind === 'sequence';
+/** Touch: the press that opens the stage menu, and the movement that cancels it. */
+const MENU_PRESS_MS = 500;
+const TOUCH_SLOP = 8;
 
 /** What the inspector is about: the kind, plus the first key's target and lane, or the target. */
 function selectionSubject(s: StudioSelection | undefined): string {
@@ -301,6 +304,10 @@ export class AnimationStudio extends LitElement {
   @state() private _kind: AnimationKind | 'all' = 'all';
   @state() private _menu = false;
   private _menuClosedAt = 0;
+  /** The stage's right-click / long-press menu. */
+  @state() private _stageMenu?: { at: [number, number]; touch: boolean; opener: HTMLElement; items: StageMenuEntry[] };
+  private _stageMenuAt = 0;
+  private _stagePress?: { pointerId: number; x: number; y: number; timer: ReturnType<typeof setTimeout> };
   @state() private _renaming?: string;
   @state() private _dialog?: Dialog;
   /** What had focus when the dialog opened. */
@@ -467,6 +474,8 @@ export class AnimationStudio extends LitElement {
       }
       this._focusSel = undefined;
     }
+    const sm = this._stageMenu ? this.shadowRoot?.querySelector<UiMenuElement>('mc-ui-menu.stage-menu') : undefined;
+    if (sm && !sm.open) sm.show();
     const menu = this._menu ? this.shadowRoot?.querySelector<UiMenuElement>('mc-ui-menu.new-menu') : undefined;
     if (menu && !menu.open) {
       menu.anchor = this.shadowRoot?.querySelector<HTMLElement>('.new-btn') ?? undefined;
@@ -527,6 +536,7 @@ export class AnimationStudio extends LitElement {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this._onKeydown);
     window.removeEventListener('beforeunload', this._onBeforeUnload);
+    this._endStagePress();
     this._ro?.disconnect();
     this._ro = undefined;
     this._keepDraft();
@@ -1053,6 +1063,146 @@ export class AnimationStudio extends LitElement {
 
   private _stage(): AnimationStage | null {
     return this.shadowRoot?.querySelector('mcas-stage') ?? null;
+  }
+
+  // ── stage menu ──
+
+  /** Events from a text field, an open menu or the path canvas (it has its own menu) keep their own behaviour. */
+  private _stageForeign(e: Event): boolean {
+    return e.composedPath().some((n) => {
+      const el = n as HTMLElement;
+      return el.localName === 'mc-ui-menu' || el.localName === 'mc-path-canvas' || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName ?? '') || !!el.isContentEditable;
+    });
+  }
+
+  private _stageMenuItems(d: AnimationDoc): StageMenuEntry[] {
+    const ed = this.shadowRoot?.querySelector<KindEditorElement>(`${KIND_EDITORS[d.kind].tag}.kind-editor`);
+    const own = ed?.stageMenu?.() ?? [];
+    const playing = this._stage()?.playing ?? true;
+    const target = d.target === 'icon' ? 'icon' : 'element';
+    return [
+      ...own,
+      {
+        id: 'studio-play',
+        icon: playing ? 'mdi:pause' : 'mdi:play',
+        label: playing ? t('anim-studio.studio.pause') : t('anim-studio.studio.play'),
+        keys: 'Space',
+        separatorBefore: own.length > 0,
+        run: () => this._stage()?.togglePlay(),
+      },
+      ...(moves(d)
+        ? [
+            {
+              id: 'studio-moves',
+              icon: 'mdi:cursor-move',
+              label: t('anim-studio.studio.what-moves'),
+              items: (['element', 'icon'] as const).map((tg) => ({
+                id: `studio-target:${tg}`,
+                label: tg === 'element' ? t('anim-studio.studio.element') : t('anim-studio.studio.icon'),
+                checked: tg === target,
+                run: () => {
+                  if (tg !== target) this._set({ target: tg }, 'target');
+                },
+              })),
+            },
+          ]
+        : []),
+      {
+        id: 'studio-undo',
+        icon: 'mdi:undo',
+        label: t('anim-studio.studio.undo'),
+        keys: 'Control+Z',
+        separatorBefore: true,
+        reason: this._history.canUndo() ? undefined : t('anim-studio.studio.nothing-to-undo'),
+        run: () => this.undo(),
+      },
+      {
+        id: 'studio-redo',
+        icon: 'mdi:redo',
+        label: t('anim-studio.studio.redo'),
+        keys: 'Control+Y',
+        reason: this._history.canRedo() ? undefined : t('anim-studio.studio.nothing-to-redo'),
+        run: () => this.redo(),
+      },
+    ];
+  }
+
+  private _openStageMenu(at: [number, number], touch: boolean, opener: HTMLElement): void {
+    const d = this._doc;
+    if (!d || this._busy) return;
+    this._stageMenuAt = Date.now();
+    this._stageMenu = { at, touch, opener, items: this._stageMenuItems(d) };
+  }
+
+  private _onStageContext = (e: MouseEvent): void => {
+    if (e.defaultPrevented || this._stageForeign(e)) return;
+    e.preventDefault();
+    if (Date.now() - this._stageMenuAt < MENU_PRESS_MS) return;
+    this._openStageMenu([e.clientX, e.clientY], false, e.currentTarget as HTMLElement);
+  };
+
+  /** Shift+F10 or the ContextMenu key with focus on the stage: the menu at the stage centre. */
+  private _onStageKey = (e: KeyboardEvent): void => {
+    if (e.defaultPrevented || !(e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey)) || this._stageForeign(e)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const stage = e.currentTarget as HTMLElement;
+    const r = stage.getBoundingClientRect();
+    const from = e.composedPath()[0];
+    this._openStageMenu([r.left + r.width / 2, r.top + r.height / 2], false, from instanceof HTMLElement ? from : stage);
+  };
+
+  private _onStageDown = (e: PointerEvent): void => {
+    this._frame()?.stageWork();
+    this._endStagePress();
+    // a draw tool owns the touch: a press there is a stroke
+    if (e.pointerType !== 'touch' || this._selection.kind === 'tool' || this._stageForeign(e)) return;
+    const { pointerId, clientX: x, clientY: y } = e;
+    const opener = e.currentTarget as HTMLElement;
+    const timer = setTimeout(() => {
+      this._stagePress = undefined;
+      this._openStageMenu([x, y], true, opener);
+    }, MENU_PRESS_MS);
+    this._stagePress = { pointerId, x, y, timer };
+  };
+
+  private _onStageMove = (e: PointerEvent): void => {
+    const p = this._stagePress;
+    if (p && e.pointerId === p.pointerId && Math.hypot(e.clientX - p.x, e.clientY - p.y) > TOUCH_SLOP) this._endStagePress();
+  };
+
+  private _endStagePress = (): void => {
+    if (this._stagePress) clearTimeout(this._stagePress.timer);
+    this._stagePress = undefined;
+  };
+
+  private _renderStageMenu(): TemplateResult {
+    const c = this._stageMenu!;
+    const find = (list: StageMenuEntry[], id: string): StageMenuEntry | undefined => {
+      for (const e of list) {
+        const hit = e.id === id ? e : e.items ? find(e.items, id) : undefined;
+        if (hit) return hit;
+      }
+      return undefined;
+    };
+    return html`<mc-ui-menu
+      class="stage-menu"
+      .items=${c.items}
+      label=${t('anim-studio.studio.stage-actions')}
+      backLabel=${t('anim-studio.studio.back')}
+      .at=${c.at}
+      .touch=${c.touch}
+      .opener=${c.opener}
+      @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
+        e.stopPropagation();
+        this._stageMenu = undefined;
+        find(c.items, e.detail.id)?.run?.();
+      }}
+      @mc-menu-close=${(e: Event) => {
+        e.stopPropagation();
+        this._stageMenu = undefined;
+      }}
+    ></mc-ui-menu>`;
   }
 
   private _onKeydown = (e: KeyboardEvent): void => {
@@ -2315,7 +2465,12 @@ export class AnimationStudio extends LitElement {
           .preview=${this._preview}
           .subjectTarget=${d.kind === 'keyframes' && this._selection.kind !== 'none' ? this._selection.target : undefined}
           .zoomIcon=${this._zoomIcon(d)}
-          @pointerdown=${() => this._frame()?.stageWork()}
+          @pointerdown=${this._onStageDown}
+          @pointermove=${this._onStageMove}
+          @pointerup=${this._endStagePress}
+          @pointercancel=${this._endStagePress}
+          @contextmenu=${this._onStageContext}
+          @keydown=${this._onStageKey}
           @stage-tile=${(e: CustomEvent) => (this._tile = e.detail.tile)}
           @stage-time=${(e: CustomEvent) => (this._time = e.detail.time)}
           @stage-rect=${this._onStageRect}
@@ -2323,6 +2478,7 @@ export class AnimationStudio extends LitElement {
           ${d.kind === 'path' && editorDefined(PATH_HOST_TAG) ? this._editorEl(PATH_HOST_TAG, d, { slot: 'canvas', stageRect: this._stageRect, subjectRect: this._subjectRect }) : nothing}
           ${this._panels('stage-tool', d, { slot: 'overlay', stageRect: this._stageRect, subjectRect: this._subjectRect })}
         </mcas-stage>
+        ${this._stageMenu ? this._renderStageMenu() : nothing}
         ${
           panel
             ? html`<div

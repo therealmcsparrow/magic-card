@@ -1,5 +1,6 @@
 import type { AnimationKind } from './model';
 import { m, type MessageId } from './i18n';
+import type { UiMenuEntry } from '../contracts/ui-kit';
 
 // Where each kind editor goes in the studio. The shell renders an editor by its tag once defined, so editors live in
 // editors/<kind>-editor.ts. Props: .doc .hass .library .time .disabled. Events: doc-change { doc, label, transient? } (a
@@ -10,6 +11,15 @@ export interface KindEditorSlot {
   /** panel: the wide panel under the stage; inspector: the settings column. */
   place: 'panel' | 'inspector';
   title: MessageId;
+}
+
+/** A stage menu entry: picking it runs `run`; an entry with `items` is a submenu. */
+export type StageMenuEntry = UiMenuEntry & { run?: () => void; items?: StageMenuEntry[] };
+
+/** What the shell may call on a kind editor element besides its props. */
+export interface KindEditorElement extends HTMLElement {
+  /** Entries the editor adds to the right-click menu of the stage. */
+  stageMenu?(): StageMenuEntry[];
 }
 
 export const KIND_EDITORS: Record<AnimationKind, KindEditorSlot> = {

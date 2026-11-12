@@ -2240,6 +2240,12 @@
     "x-max-length": 25,
     "x-source-hash": "56004797"
   },
+  "anim-studio.keyframes-editor.every-property-is-added": "Every property is added",
+  "@anim-studio.keyframes-editor.every-property-is-added": {
+    "description": "Why the Add property submenu of the stage right-click menu is unavailable: the selected part already animates every property. Max 35 characters.",
+    "x-max-length": 35,
+    "x-source-hash": "fbe8ac50"
+  },
   "anim-studio.keyframes-editor.expand": "Expand",
   "@anim-studio.keyframes-editor.expand": {
     "description": "Tooltip of the fold button on a timeline track row that shows its property lanes. Verb; the named version has its own key. Max 10 characters.",
@@ -7430,6 +7436,12 @@
     "x-max-length": 25,
     "x-source-hash": "c98a7b94"
   },
+  "anim-studio.studio.back": "Back",
+  "@anim-studio.studio.back": {
+    "description": "First row of a submenu in the stage right-click menu that goes back to the main menu. Max 15 characters.",
+    "x-max-length": 15,
+    "x-source-hash": "76900f1b"
+  },
   "anim-studio.studio.blank-keyframes": "Blank keyframes",
   "@anim-studio.studio.blank-keyframes": {
     "description": "Start option in the new-animation menu: an empty keyframe animation. Max 25 characters.",
@@ -8054,11 +8066,23 @@
     "x-max-length": 15,
     "x-source-hash": "dccafe55"
   },
+  "anim-studio.studio.nothing-to-redo": "Nothing to redo",
+  "@anim-studio.studio.nothing-to-redo": {
+    "description": "Why Redo is unavailable in the stage right-click menu: no undone change to bring back. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "4aaf2710"
+  },
   "anim-studio.studio.nothing-to-set-here-yet": "Nothing to set here yet.",
   "@anim-studio.studio.nothing-to-set-here-yet": {
     "description": "Empty state of the inspector when the selection has no editable fields. Max 40 characters.",
     "x-max-length": 40,
     "x-source-hash": "a35b7b34"
+  },
+  "anim-studio.studio.nothing-to-undo": "Nothing to undo",
+  "@anim-studio.studio.nothing-to-undo": {
+    "description": "Why Undo is unavailable in the stage right-click menu: no change made yet. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "83290078"
   },
   "anim-studio.studio.origin": "Origin",
   "@anim-studio.studio.origin": {
@@ -8084,6 +8108,18 @@
     "x-max-length": 60,
     "x-source-hash": "2b24c6c6"
   },
+  "anim-studio.studio.pause": "Pause",
+  "@anim-studio.studio.pause": {
+    "description": "Item of the stage right-click menu that pauses the preview. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "858e4ba7"
+  },
+  "anim-studio.studio.play": "Play",
+  "@anim-studio.studio.play": {
+    "description": "Item of the stage right-click menu that plays the paused preview. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "436e6101"
+  },
   "anim-studio.studio.play-animations-one-after-another": "Play animations one after another",
   "@anim-studio.studio.play-animations-one-after-another": {
     "description": "Description of the sequence type in the new animation chooser. Max 55 characters.",
@@ -8095,6 +8131,12 @@
     "description": "Label of the switch in the studio top bar that shows the studio and preview with pseudo text, Arabic-Indic digits and right-to-left layout, to check mirroring. Max 16 characters.",
     "x-max-length": 16,
     "x-source-hash": "3a83f974"
+  },
+  "anim-studio.studio.redo": "Redo",
+  "@anim-studio.studio.redo": {
+    "description": "Item of the stage right-click menu that redoes the last undone change. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "74273989"
   },
   "anim-studio.studio.redo-ctrl-y": "Redo (Ctrl+Y)",
   "@anim-studio.studio.redo-ctrl-y": {
@@ -8240,6 +8282,12 @@
     "x-max-length": 135,
     "x-source-hash": "dab30b27"
   },
+  "anim-studio.studio.stage-actions": "Stage actions",
+  "@anim-studio.studio.stage-actions": {
+    "description": "Accessible name of the menu that opens on a right-click or long press on the preview stage. Max 30 characters.",
+    "x-max-length": 30,
+    "x-source-hash": "d2870e80"
+  },
   "anim-studio.studio.stage-height": "Stage height",
   "@anim-studio.studio.stage-height": {
     "description": "Accessible label of the drag handle that resizes the preview stage vertically. Max 25 characters.",
@@ -8341,6 +8389,12 @@
     "description": "Status line naming the active drawing tool. Tool is the already-translated tool name. {tool}: The value that replaces tool in the text. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "9c49b4ea"
+  },
+  "anim-studio.studio.undo": "Undo",
+  "@anim-studio.studio.undo": {
+    "description": "Item of the stage right-click menu that undoes the last change. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "a8283ade"
   },
   "anim-studio.studio.undo-ctrl-z": "Undo (Ctrl+Z)",
   "@anim-studio.studio.undo-ctrl-z": {

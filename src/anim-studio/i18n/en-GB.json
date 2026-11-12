@@ -2030,6 +2030,11 @@
     "note": "Name of a keyframe marker on the timeline that does not set any property yet.",
     "max": 25
   },
+  "anim-studio.keyframes-editor.every-property-is-added": {
+    "text": "Every property is added",
+    "note": "Why the Add property submenu of the stage right-click menu is unavailable: the selected part already animates every property.",
+    "max": 35
+  },
   "anim-studio.keyframes-editor.expand": {
     "text": "Expand",
     "note": "Tooltip of the fold button on a timeline track row that shows its property lanes. Verb; the named version has its own key.",
@@ -6781,6 +6786,11 @@
     "note": "Title of the animation studio in its top bar.",
     "max": 25
   },
+  "anim-studio.studio.back": {
+    "text": "Back",
+    "note": "First row of a submenu in the stage right-click menu that goes back to the main menu.",
+    "max": 15
+  },
   "anim-studio.studio.blank-keyframes": {
     "text": "Blank keyframes",
     "note": "Start option in the new-animation menu: an empty keyframe animation.",
@@ -7372,10 +7382,20 @@
     "note": "Status label on a library entry that no card or sequence uses yet.",
     "max": 15
   },
+  "anim-studio.studio.nothing-to-redo": {
+    "text": "Nothing to redo",
+    "note": "Why Redo is unavailable in the stage right-click menu: no undone change to bring back.",
+    "max": 30
+  },
   "anim-studio.studio.nothing-to-set-here-yet": {
     "text": "Nothing to set here yet.",
     "note": "Empty state of the inspector when the selection has no editable fields.",
     "max": 40
+  },
+  "anim-studio.studio.nothing-to-undo": {
+    "text": "Nothing to undo",
+    "note": "Why Undo is unavailable in the stage right-click menu: no change made yet.",
+    "max": 30
   },
   "anim-studio.studio.origin": {
     "text": "Origin",
@@ -7403,6 +7423,16 @@
     "note": "Hint shown in the target field when the animation type is particles, which ignore the target.",
     "max": 60
   },
+  "anim-studio.studio.pause": {
+    "text": "Pause",
+    "note": "Item of the stage right-click menu that pauses the preview.",
+    "max": 20
+  },
+  "anim-studio.studio.play": {
+    "text": "Play",
+    "note": "Item of the stage right-click menu that plays the paused preview.",
+    "max": 20
+  },
   "anim-studio.studio.play-animations-one-after-another": {
     "text": "Play animations one after another",
     "note": "Description of the sequence type in the new animation chooser.",
@@ -7412,6 +7442,11 @@
     "text": "Pseudo RTL",
     "note": "Label of the switch in the studio top bar that shows the studio and preview with pseudo text, Arabic-Indic digits and right-to-left layout, to check mirroring.",
     "max": 16
+  },
+  "anim-studio.studio.redo": {
+    "text": "Redo",
+    "note": "Item of the stage right-click menu that redoes the last undone change.",
+    "max": 20
   },
   "anim-studio.studio.redo-ctrl-y": {
     "text": "Redo (Ctrl+Y)",
@@ -7561,6 +7596,11 @@
     "note": "Notice in the studio when several side panels are collapsed; tells the user to use the edge arrows to show them.",
     "max": 135
   },
+  "anim-studio.studio.stage-actions": {
+    "text": "Stage actions",
+    "note": "Accessible name of the menu that opens on a right-click or long press on the preview stage.",
+    "max": 30
+  },
   "anim-studio.studio.stage-height": {
     "text": "Stage height",
     "note": "Accessible label of the drag handle that resizes the preview stage vertically.",
@@ -7657,6 +7697,11 @@
     "vars": {
       "tool": "The value that replaces tool in the text."
     }
+  },
+  "anim-studio.studio.undo": {
+    "text": "Undo",
+    "note": "Item of the stage right-click menu that undoes the last change.",
+    "max": 20
   },
   "anim-studio.studio.undo-ctrl-z": {
     "text": "Undo (Ctrl+Z)",

@@ -5,6 +5,7 @@ import type { UiMenuElement, UiMenuEntry, UiMenuPick } from '../../contracts/ui-
 import '../kit';
 import type { AnimationDoc, AnimationKeyframe, TargetRef } from '../model';
 import type { StudioSelection } from '../slots';
+import type { StageMenuEntry } from '../editor-slots';
 import type { LayerView } from '../../contracts/studio-layers';
 import { isLocked, lanesOf } from '../layer-view';
 import './bezier-editor';
@@ -534,9 +535,8 @@ export class AnimKeyframesEditor extends LitElement {
     this._openCtx([e.clientX, e.clientY], false, e.currentTarget as HTMLElement, { target, lane, at: this._snapAt(this._atFromX(e.clientX), e.shiftKey) });
   }
 
-  private _ctxItems(): Array<UiMenuEntry & { run: () => void }> {
+  private _ctxItems(add = this._ctx?.add): Array<UiMenuEntry & { run: () => void }> {
     const none = this._keys.length ? undefined : t('anim-studio.keyframes-editor.select-keyframes-first');
-    const add = this._ctx?.add;
     return [
       ...(add ? [{ id: 'add', icon: 'mdi:plus', label: t('anim-studio.keyframes-editor.add-keyframe-here'), run: () => this._add(add.target, add.lane, add.at) }] : []),
       { id: 'copy', icon: 'mdi:content-copy', label: t('anim-studio.keyframes-editor.copy-keyframes'), keys: 'Control+C', reason: none, run: () => this._copy() },
@@ -544,6 +544,35 @@ export class AnimKeyframesEditor extends LitElement {
       { id: 'delete', icon: 'mdi:delete-outline', label: t('anim-studio.keyframes-editor.delete-keyframes'), keys: 'Delete', danger: true, reason: none, run: () => this._delete() },
       { id: 'all', icon: 'mdi:select-all', label: t('anim-studio.keyframes-editor.select-all-keyframes'), keys: 'Control+A', separatorBefore: true, run: () => this._selectAll() },
     ];
+  }
+
+  /** The stage's right-click menu: Add property, a keyframe at the playhead on the selected lane, and the key actions. */
+  stageMenu(): StageMenuEntry[] {
+    if (!this._view || this.disabled) return [];
+    const active = this._active;
+    const free = this._freeLanes(active);
+    const last = this._keys[this._keys.length - 1];
+    return [
+      {
+        id: 'kf-add-property',
+        icon: 'mdi:plus',
+        label: t('anim-studio.keyframes-editor.add-property'),
+        reason: free.length ? undefined : t('anim-studio.keyframes-editor.every-property-is-added'),
+        items: this._addItems(free).map((e) => ({ ...e, id: `kf-lane:${e.id}`, run: () => this._addLane(e.id as LaneId) })),
+      },
+      ...(last ? [{ id: 'kf-add-key', icon: 'mdi:key-plus', label: t('anim-studio.keyframes-editor.add-a-keyframe-at-the-playhead'), run: () => this._add(last.target, last.lane, this.time * 100) }] : []),
+      ...this._ctxItems(undefined).map((e, i) => ({ ...e, id: `kf-${e.id}`, separatorBefore: e.separatorBefore || i === 0 })),
+    ];
+  }
+
+  private _freeLanes(active: TargetRef): ReturnType<typeof lanesFor> {
+    const used = new Set(usedLanes(this._kfsOf(active)));
+    return lanesFor(active).filter((l) => !used.has(l.id));
+  }
+
+  /** One entry per free lane, a rule between lane groups. */
+  private _addItems(free: ReturnType<typeof lanesFor>): UiMenuEntry[] {
+    return free.map((l, i) => ({ id: l.id, label: t(l.label), icon: l.icon, separatorBefore: i > 0 && free[i - 1].group !== l.group }));
   }
 
   private _renderCtx(): TemplateResult {
@@ -1638,7 +1667,7 @@ export class AnimKeyframesEditor extends LitElement {
 
   /** The property list of the Add property button: the kit menu, one entry per free lane, a rule between lane groups. */
   private _renderAddMenu(free: ReturnType<typeof lanesFor>, active: TargetRef, at: number): TemplateResult {
-    const items: UiMenuEntry[] = free.map((l, i) => ({ id: l.id, label: t(l.label), icon: l.icon, separatorBefore: i > 0 && free[i - 1].group !== l.group }));
+    const items = this._addItems(free);
     return html`<mc-ui-menu
       class="add-menu"
       .items=${items}
@@ -1660,8 +1689,7 @@ export class AnimKeyframesEditor extends LitElement {
     const secs = (this._view!.duration * this.time).toFixed(2);
     const o = this.onion;
     const active = this._active;
-    const used = new Set(usedLanes(this._kfsOf(active)));
-    const free = lanesFor(active).filter((l) => !used.has(l.id));
+    const free = this._freeLanes(active);
     const clip = keyClipboard();
     return html`
       <div class="bar">
