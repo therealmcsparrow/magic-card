@@ -200,7 +200,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     ${ed.startOpen ? startWindow(ed) : nothing}
     ${ed.dlg === 'save' ? saveWin(ed) : nothing} ${ed.dlg === 'single' ? singleWin(ed) : nothing} ${ed.leaving ? leaveWin(ed) : nothing} ${ed.newAsk ? newWin(ed) : nothing} ${ed.xfer ? xferWin(ed) : nothing}
     ${ed.dlg === 'poly' ? polyWin(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.pvOpen ? previewPop(ed) : nothing}
-    ${ed.menu ? html`<mc-ui-menu .items=${ed.menu.items} .label=${ed.menu.key === 'xfer' ? t('svg-editor.views.export-import') : ed.menu.key ? ed.menu.opener.textContent!.trim() : t('svg-editor.views.shape-actions')} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-ui-menu>` : nothing}
+    ${ed.menu ? html`<mc-ui-menu .items=${ed.menu.items} backLabel=${t('svg-editor.views.back')} .label=${ed.menu.key === 'xfer' ? t('svg-editor.views.export-import') : ed.menu.key ? ed.menu.opener.textContent!.trim() : t('svg-editor.views.shape-actions')} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-ui-menu>` : nothing}
     <mc-ui-toast @mc-toast-action=${() => ed.toastAct()}></mc-ui-toast>
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(false)}></span>

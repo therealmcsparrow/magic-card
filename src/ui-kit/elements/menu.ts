@@ -23,6 +23,8 @@ export class UiMenu extends LitElement {
   @property() align: 'start' | 'end' = 'start';
   @property({ type: Boolean }) touch = false;
   @property({ attribute: false }) opener?: HTMLElement;
+  /** Text of the row that leads out of a submenu; the parent row's label when empty. */
+  @property() backLabel = '';
 
   @state() private _open = false;
   /** Index of the open submenu parent in `items`, or -1. */
@@ -109,12 +111,19 @@ export class UiMenu extends LitElement {
         const x = this._dir.direction === 'rtl' ? (room ? r.left - w : r.right) : room ? Math.max(M, r.left - w) : r.right;
         placeAtPoint(sub, [x, r.top]);
       }
-      this.focusIn(this.list(), this.firstFree(e.items ?? []));
+      this.focusIn(this.list(), this.firstFree(e.items ?? []) + 1);
     });
   }
 
-  private pick(i: number, row: HTMLElement): void {
-    const e = this.entries()[i];
+  private back(): void {
+    const p = this._sub;
+    this._sub = -1;
+    void this.updateComplete.then(() => this.focusIn(this.list(), p));
+  }
+
+  private pick(i: number, row: HTMLElement, inSub = this._sub >= 0): void {
+    if (inSub && i === -1) return this.back();
+    const e = (inSub ? this.entries() : this.items)[i];
     if (!e || e.reason) return;
     if (e.items) return this.openSub(i, row);
     this.dispatchEvent(new CustomEvent<UiMenuPick>('mc-menu-pick', { detail: { id: e.id }, bubbles: true, composed: true }));
@@ -136,21 +145,19 @@ export class UiMenu extends LitElement {
     else if (k === 'ArrowUp') go(cur < 0 ? n - 1 : cur - 1);
     else if (k === 'Home') go(0);
     else if (k === 'End') go(n - 1);
-    else if (k === 'Enter' || k === ' ') this.pick(cur, rows[cur]);
+    else if (k === 'Enter' || k === ' ') this.pick(this._sub >= 0 ? cur - 1 : cur, rows[cur]);
     else if (k === (rtl ? 'ArrowLeft' : 'ArrowRight')) {
       if (this._sub < 0 && entries[cur]?.items) this.openSub(cur, rows[cur]);
     } else if (k === (rtl ? 'ArrowRight' : 'ArrowLeft') || k === 'Escape') {
-      if (this._sub >= 0) {
-        const p = this._sub;
-        this._sub = -1;
-        void this.updateComplete.then(() => this.focusIn(this.list(), p));
-      } else if (k === 'Escape') this.close('escape');
+      if (this._sub >= 0) this.back();
+      else if (k === 'Escape') this.close('escape');
     } else if (k === 'Tab') {
       handled = false;
       this.close('tab');
     } else if (k.length === 1 && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
-      const hit = entries.map((_, j) => (cur + 1 + j) % n).find((j) => entries[j].label.toLowerCase().startsWith(k.toLowerCase()));
-      if (hit !== undefined) go(hit);
+      const o = this._sub >= 0 ? 1 : 0;
+      const hit = entries.map((_, j) => (cur - o + 1 + j) % entries.length).find((j) => entries[j].label.toLowerCase().startsWith(k.toLowerCase()));
+      if (hit !== undefined) go(hit + o);
     } else handled = false;
     if (handled) {
       ev.preventDefault();
@@ -164,7 +171,7 @@ export class UiMenu extends LitElement {
     return nothing;
   }
 
-  private row(e: UiMenuEntry, i: number): TemplateResult {
+  private row(e: UiMenuEntry, i: number, inSub = false): TemplateResult {
     const sub = !!e.items;
     const role = e.checked === undefined ? 'menuitem' : 'menuitemcheckbox';
     return html`${e.separatorBefore ? html`<div class="sep" role="separator"></div>` : nothing}<div
@@ -177,7 +184,7 @@ export class UiMenu extends LitElement {
         aria-keyshortcuts=${e.keys ?? nothing}
         aria-haspopup=${sub ? 'menu' : nothing}
         aria-expanded=${sub ? String(this._sub === i) : nothing}
-        @click=${(ev: Event) => this.pick(i, ev.currentTarget as HTMLElement)}
+        @click=${(ev: Event) => this.pick(i, ev.currentTarget as HTMLElement, inSub)}
       >
         ${this.mark(e)}<span class="label">${e.label}</span>${e.keys ? html`<span class="keys">${e.keys}</span>` : nothing}${sub ? (this._dir.direction === 'rtl' ? '‹' : '›') : nothing}${e.reason ? html`<span class="why">${e.reason}</span>` : nothing}${e.sub ? html`<span class="sub-line">${e.sub}</span>` : nothing}
       </div>`;
@@ -189,7 +196,11 @@ export class UiMenu extends LitElement {
     return html`<div class="menu" role="menu" aria-label=${this.label} popover="manual" style=${`max-height:${window.innerHeight - M * 2}px`} @keydown=${this._key}>
         ${this.items.map((e, i) => this.row(e, i))}
       </div>${sub?.items
-        ? html`<div class="sub menu" role="menu" aria-label=${sub.label} popover="manual" @keydown=${this._key}>${sub.items.map((e, i) => this.row(e, i))}</div>`
+        ? html`<div class="sub menu" role="menu" aria-label=${sub.label} popover="manual" @keydown=${this._key}>
+            <div class="item back" role="menuitem" tabindex="-1" @click=${() => this.back()}>${this._dir.direction === 'rtl' ? '›' : '‹'} <span class="label">${this.backLabel || sub.label}</span></div>
+            <div class="sep" role="separator"></div>
+            ${sub.items.map((e, i) => this.row(e, i, true))}
+          </div>`
         : nothing}`;
   }
 }

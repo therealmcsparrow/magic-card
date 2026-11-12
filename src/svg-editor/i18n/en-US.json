@@ -1023,6 +1023,10 @@
     "text": "Arrow keys move by 0.5. Turn on Snap to use the grid size.",
     "hash": "27ec574a"
   },
+  "svg-editor.views.back": {
+    "text": "Back",
+    "hash": "76900f1b"
+  },
   "svg-editor.views.bevel": {
     "text": "Bevel",
     "hash": "72c3bce2"

@@ -21,6 +21,7 @@ A pre-release. Install Magic Card Utils 2026.11.3-beta.1 (or newer) first, then 
 
 ### Fixed
 -   **Theme editor fits its space.** The theme list no longer draws a second canvas inside the Magic Card Utils panel, and nothing runs off its right edge. On narrower screens the theme editor's top bar drops the title and the "Previewing" note, and **Save as my preset** moves into the ⋯ menu, so the buttons no longer overlap.
+-   **Back in right-click submenus.** A submenu in the right-click menu of the icon, image and shape editors and the animation studio now starts with a Back row, so you can return to the main menu by touch or mouse. While a submenu is open, a click on the main menu runs the item you clicked.
 
 ## 2026.11.03 (2026-11-12)
 

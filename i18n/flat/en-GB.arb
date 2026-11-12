@@ -39896,6 +39896,12 @@
     "x-max-length": 105,
     "x-source-hash": "27ec574a"
   },
+  "svg-editor.views.back": "Back",
+  "@svg-editor.views.back": {
+    "description": "Top row of a submenu in the shape actions menu; returns to the main menu. Max 20 characters.",
+    "x-max-length": 20,
+    "x-source-hash": "76900f1b"
+  },
   "svg-editor.views.bevel": "Bevel",
   "@svg-editor.views.bevel": {
     "description": "Option name for the stroke line-join style with a cut-off corner. Pairs with Round and Miter. Max 15 characters.",

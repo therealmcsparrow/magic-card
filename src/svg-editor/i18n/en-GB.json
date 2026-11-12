@@ -1456,6 +1456,11 @@
     "note": "Hint under the grid settings about nudging with arrow keys. 0.5 is a distance in units; Snap is the toggle label.",
     "max": 105
   },
+  "svg-editor.views.back": {
+    "text": "Back",
+    "note": "Top row of a submenu in the shape actions menu; returns to the main menu.",
+    "max": 20
+  },
   "svg-editor.views.bevel": {
     "text": "Bevel",
     "note": "Option name for the stroke line-join style with a cut-off corner. Pairs with Round and Miter.",
