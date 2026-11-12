@@ -7400,6 +7400,12 @@
     "x-max-length": 40,
     "x-source-hash": "38f19123"
   },
+  "anim-studio.studio.animation-studio": "Animation studio",
+  "@anim-studio.studio.animation-studio": {
+    "description": "Title of the animation studio in its top bar. Max 25 characters.",
+    "x-max-length": 25,
+    "x-source-hash": "c98a7b94"
+  },
   "anim-studio.studio.blank-keyframes": "Blank keyframes",
   "@anim-studio.studio.blank-keyframes": {
     "description": "Start option in the new-animation menu: an empty keyframe animation. Max 25 characters.",
@@ -7447,6 +7453,12 @@
     "description": "Label before the technical identifier cards must use to pick this animation. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "8239a9a2"
+  },
+  "anim-studio.studio.close": "Close",
+  "@anim-studio.studio.close": {
+    "description": "Button in the animation studio's top bar that leaves the studio. Max 12 characters.",
+    "x-max-length": 12,
+    "x-source-hash": "7d9eb7ac"
   },
   "anim-studio.studio.close-layers": "Close layers",
   "@anim-studio.studio.close-layers": {
@@ -18042,17 +18054,17 @@
     "x-max-length": 10,
     "x-source-hash": "55490a4b"
   },
-  "card-editor.studio.back-to-dialog": "Back to dialog",
-  "@card-editor.studio.back-to-dialog": {
-    "description": "Button in the studio header that leaves the studio and returns to the normal editor dialog. Max 25 characters.",
-    "x-max-length": 25,
-    "x-source-hash": "3158bd66"
-  },
   "card-editor.studio.canvas-width": "Canvas width",
   "@card-editor.studio.canvas-width": {
     "description": "Label for the control that sets how wide the studio preview area is. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "d17d81dc"
+  },
+  "card-editor.studio.close": "Close",
+  "@card-editor.studio.close": {
+    "description": "Button in the studio header that leaves the studio and returns to the normal editor dialog. Max 12 characters.",
+    "x-max-length": 12,
+    "x-source-hash": "7d9eb7ac"
   },
   "card-editor.studio.done": "Done",
   "@card-editor.studio.done": {
@@ -26790,11 +26802,11 @@
     "x-max-length": 35,
     "x-source-hash": "a0799a8a"
   },
-  "image-transfer.chunk.export-all-images": "Export all images",
+  "image-transfer.chunk.export-all-images": "Export all",
   "@image-transfer.chunk.export-all-images": {
     "description": "Label of the action that exports every saved image to one file. It tells the user the whole image library is included. Max 30 characters.",
     "x-max-length": 30,
-    "x-source-hash": "5e584b06"
+    "x-source-hash": "51427688"
   },
   "image-transfer.chunk.n": "{n, plural, one {# connection} other {# connections}}",
   "@image-transfer.chunk.n": {
@@ -36054,18 +36066,6 @@
     "x-max-length": 35,
     "x-source-hash": "56d77cd3"
   },
-  "shape-editor.mc-shape-studio.back": "Back",
-  "@shape-editor.mc-shape-studio.back": {
-    "description": "Button that leaves the current step or picker and returns to the previous view of the studio. Max 10 characters.",
-    "x-max-length": 10,
-    "x-source-hash": "76900f1b"
-  },
-  "shape-editor.mc-shape-studio.back-to-card-editor": "Back to card editor",
-  "@shape-editor.mc-shape-studio.back-to-card-editor": {
-    "description": "Button in the shape studio header. Closes the studio and returns the user to the card editor. Max 35 characters.",
-    "x-max-length": 35,
-    "x-source-hash": "89f5c8f1"
-  },
   "shape-editor.mc-shape-studio.bottom": "Bottom",
   "@shape-editor.mc-shape-studio.bottom": {
     "description": "Label for the bottom side of the card, used for the text space and anchor fields. Same English as the names key. Max 10 characters.",
@@ -36356,11 +36356,11 @@
     "x-max-length": 65,
     "x-source-hash": "54ca21d3"
   },
-  "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": "Esc doesn't close the editor. Use Done or Back to card editor.",
+  "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": "Esc doesn't close the editor. Use Done or Close.",
   "@shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": {
-    "description": "Hint shown when Esc is pressed in the full-page studio. Esc is the key name; Done and Back to card editor are button labels. Max 100 characters.",
+    "description": "Hint shown when Esc is pressed in the full-page studio. Esc is the key name; Done and Close are button labels. Max 100 characters.",
     "x-max-length": 100,
-    "x-source-hash": "17988495"
+    "x-source-hash": "24fc6da2"
   },
   "shape-editor.mc-shape-studio.export-file": "Export file",
   "@shape-editor.mc-shape-studio.export-file": {
@@ -39814,12 +39814,6 @@
     "x-max-length": 105,
     "x-source-hash": "27ec574a"
   },
-  "svg-editor.views.back-to-card-editor": "Back to card editor",
-  "@svg-editor.views.back-to-card-editor": {
-    "description": "Button that leaves the SVG editor and returns to the card editor. Max 35 characters.",
-    "x-max-length": 35,
-    "x-source-hash": "89f5c8f1"
-  },
   "svg-editor.views.bevel": "Bevel",
   "@svg-editor.views.bevel": {
     "description": "Option name for the stroke line-join style with a cut-off corner. Pairs with Round and Miter. Max 15 characters.",
@@ -40298,12 +40292,6 @@
     "x-max-length": 15,
     "x-source-hash": "da188e3b"
   },
-  "svg-editor.views.inspector-panel": "Inspector panel",
-  "@svg-editor.views.inspector-panel": {
-    "description": "Accessible name of the side panel with properties of the selected shape. Max 25 characters.",
-    "x-max-length": 25,
-    "x-source-hash": "20f92072"
-  },
   "svg-editor.views.it-is-saved-in-the-library": "It is saved in the library.",
   "@svg-editor.views.it-is-saved-in-the-library": {
     "description": "Status line in the icon editor use dialog. Tells the user the icon is stored in the shared library. Max 45 characters.",
@@ -40357,12 +40345,6 @@
     "description": "Heading of the list of drawing layers. Plural of Layer. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "0bcd66e6"
-  },
-  "svg-editor.views.layers-and-library-panel": "Layers and library panel",
-  "@svg-editor.views.layers-and-library-panel": {
-    "description": "Accessible name of the side panel that holds the layers list and the saved icon library. Max 40 characters.",
-    "x-max-length": 40,
-    "x-source-hash": "8c1a60b1"
   },
   "svg-editor.views.leave": "Leave",
   "@svg-editor.views.leave": {
@@ -40619,12 +40601,6 @@
     "description": "Label for the reach of the handle on the outgoing side of a curve point. Pairs with In handle length. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "20f2d707"
-  },
-  "svg-editor.views.panel": "Panel",
-  "@svg-editor.views.panel": {
-    "description": "Short label for a side panel of the editor, used on the show or hide button. Max 10 characters.",
-    "x-max-length": 10,
-    "x-source-hash": "d0d91173"
   },
   "svg-editor.views.paste-some-svg-first": "Paste some SVG first.",
   "@svg-editor.views.paste-some-svg-first": {
@@ -42301,6 +42277,12 @@
     "description": "Caption above the YAML view; says it shows the exact file that Save would write and cannot be edited there. Max 80 characters.",
     "x-max-length": 80,
     "x-source-hash": "de3e8bbb"
+  },
+  "theme-editor.editor-view.theme-editor": "Theme editor",
+  "@theme-editor.editor-view.theme-editor": {
+    "description": "Title of the theme editor in its top bar. Max 25 characters.",
+    "x-max-length": 25,
+    "x-source-hash": "2c9d9e02"
   },
   "theme-editor.editor-view.themes": "Themes",
   "@theme-editor.editor-view.themes": {

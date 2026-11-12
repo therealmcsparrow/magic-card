@@ -2,7 +2,7 @@
 
 The image animator makes a library image move. You pick a part of the drawing, add an effect, and say what starts it: always, hover, a tap, or a change in an entity. The result is saved with the image, so every card that shows the image moves.
 
-Animating needs Magic Card Utils 2026.11.2-beta.1 or newer. With an older version the Animate buttons are greyed out and say "Animating needs a newer Magic Card Utils. Update it and try again."
+Animating needs Magic Card Utils 2026.11.02 or newer. With an older version the Animate buttons are greyed out and say "Animating needs a newer Magic Card Utils. Update it and try again."
 
 ## Words used on this page
 
@@ -107,7 +107,7 @@ If the save fails, the window says why, for example "This image is larger than t
 
 ## Limits and older versions
 
-- An animated image can be up to 1 MiB with Magic Card Utils 2026.11.2-beta.1 or newer. The animation counts toward that size.
+- An animated image can be up to 1 MiB with Magic Card Utils 2026.11.02 or newer. The animation counts toward that size.
 - The library no longer has a limit on the number of images.
 - A card on an older Magic Card version shows an animated image as a still picture, and a very large image as missing. Update the card.
 - Share codes do not carry animations yet. An imported SVG loses any animation inside it.

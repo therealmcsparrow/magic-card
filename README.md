@@ -1109,7 +1109,7 @@ rows:
 
 ## Images
 
-Library images are drawings you make in the Magic Card image editor and save to the Magic Card Utils library. A dashboard can show one in an image module, or as a background behind the content. An image can move: the image animator adds effects, shape morphs and clips that start on hover, tap or an entity state. Animating needs Magic Card Utils 2026.11.2-beta.1 or newer.
+Library images are drawings you make in the Magic Card image editor and save to the Magic Card Utils library. A dashboard can show one in an image module, or as a background behind the content. An image can move: the image animator adds effects, shape morphs and clips that start on hover, tap or an entity state. Animating needs Magic Card Utils 2026.11.02 or newer.
 
 Library images need the Magic Card Utils integration, installed the same way as Magic Card. Everyone who can log in to Home Assistant can see them. Only administrators can create or change them.
 
