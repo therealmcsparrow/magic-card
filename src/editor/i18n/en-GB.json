@@ -3840,6 +3840,16 @@
     "note": "Empty state of the font picker list when the search matches no font.",
     "max": 25
   },
+  "card-editor.font-picker.nudge-utils-missing": {
+    "text": "This font comes from Google Fonts, which needs Magic Card Utils. Install Magic Card Utils to use Google Fonts.",
+    "note": "One line under a font field when the chosen font is a Google font and Magic Card Utils is not installed.",
+    "max": 130
+  },
+  "card-editor.font-picker.nudge-utils-off": {
+    "text": "This font comes from Google Fonts, which is switched off. Turn on Google Fonts under Magic Card Utils → Configure.",
+    "note": "One line under a font field when the chosen font is a Google font but the Google Fonts switch in Magic Card Utils is off.",
+    "max": 130
+  },
   "card-editor.font-picker.results": {
     "text": "{total} fonts",
     "note": "Number of Google fonts that match the search and category filter. {total} is that number.",

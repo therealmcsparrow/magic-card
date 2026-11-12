@@ -2847,6 +2847,14 @@
     "text": "No fonts found",
     "hash": "6cfe7c1e"
   },
+  "card-editor.font-picker.nudge-utils-missing": {
+    "text": "This font comes from Google Fonts, which needs Magic Card Utils. Install Magic Card Utils to use Google Fonts.",
+    "hash": "837a213d"
+  },
+  "card-editor.font-picker.nudge-utils-off": {
+    "text": "This font comes from Google Fonts, which is switched off. Turn on Google Fonts under Magic Card Utils → Configure.",
+    "hash": "fb1a7014"
+  },
   "card-editor.font-picker.results": {
     "text": "{total} fonts",
     "hash": "8c32ef24"
