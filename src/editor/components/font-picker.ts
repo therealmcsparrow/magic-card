@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles, fontPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
-import { loadGoogleFonts } from '../../utils/google-fonts';
+import { LOCAL_FONT_NAMES, loadFontsFor } from '../../utils/google-fonts';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { t } from '../i18n';
 
@@ -49,18 +49,19 @@ interface FontOption {
 }
 
 // Common local fonts available in most systems
-const LOCAL_FONTS: FontOption[] = [
-  { name: 'Arial', family: 'Arial, sans-serif', category: 'Sans-serif', isLocal: true },
-  { name: 'Helvetica', family: 'Helvetica, sans-serif', category: 'Sans-serif', isLocal: true },
-  { name: 'Times New Roman', family: '"Times New Roman", serif', category: 'Serif', isLocal: true },
-  { name: 'Georgia', family: 'Georgia, serif', category: 'Serif', isLocal: true },
-  { name: 'Courier New', family: '"Courier New", monospace', category: 'Monospace', isLocal: true },
-  { name: 'Verdana', family: 'Verdana, sans-serif', category: 'Sans-serif', isLocal: true },
-  { name: 'Tahoma', family: 'Tahoma, sans-serif', category: 'Sans-serif', isLocal: true },
-  { name: 'Trebuchet MS', family: '"Trebuchet MS", sans-serif', category: 'Sans-serif', isLocal: true },
-  { name: 'Comic Sans MS', family: '"Comic Sans MS", cursive', category: 'Cursive', isLocal: true },
-  { name: 'Impact', family: 'Impact, sans-serif', category: 'Sans-serif', isLocal: true },
-];
+const LOCAL_FAMILY: Record<string, { family: string; category: string }> = {
+  Arial: { family: 'Arial, sans-serif', category: 'Sans-serif' },
+  Helvetica: { family: 'Helvetica, sans-serif', category: 'Sans-serif' },
+  'Times New Roman': { family: '"Times New Roman", serif', category: 'Serif' },
+  Georgia: { family: 'Georgia, serif', category: 'Serif' },
+  'Courier New': { family: '"Courier New", monospace', category: 'Monospace' },
+  Verdana: { family: 'Verdana, sans-serif', category: 'Sans-serif' },
+  Tahoma: { family: 'Tahoma, sans-serif', category: 'Sans-serif' },
+  'Trebuchet MS': { family: '"Trebuchet MS", sans-serif', category: 'Sans-serif' },
+  'Comic Sans MS': { family: '"Comic Sans MS", cursive', category: 'Cursive' },
+  Impact: { family: 'Impact, sans-serif', category: 'Sans-serif' },
+};
+const LOCAL_FONTS: FontOption[] = LOCAL_FONT_NAMES.map((name) => ({ name, ...LOCAL_FAMILY[name], isLocal: true }));
 
 @customElement('mc-font-picker')
 export class FontPicker extends LitElement {
@@ -120,7 +121,7 @@ export class FontPicker extends LitElement {
 
   private _getFilteredFonts(): FontOption[] {
     // the Google tab previews each font in its own face
-    if (this._activeTab === 'google') loadGoogleFonts(GOOGLE_FONTS.map((f) => f.name));
+    if (this._activeTab === 'google') loadFontsFor(GOOGLE_FONTS.map((f) => f.name));
     const fonts = this._activeTab === 'local' ? LOCAL_FONTS : GOOGLE_FONTS;
 
     if (!this._searchQuery) return fonts;

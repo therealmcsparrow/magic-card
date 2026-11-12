@@ -1,5 +1,5 @@
 // Remote assets for the forum shot: finds addresses outside the Home Assistant origin in a card config, hass data and theme values, and removes them before anything mounts.
-import { configGoogleFonts } from '../utils/google-fonts';
+import { legacyConfigFonts } from './legacy-fonts';
 
 /** Config keys whose string value names font families. */
 export const FONT_KEYS: ReadonlySet<string> = new Set(['font_family', 'tab_font_family', 'label_font_family']);
@@ -203,7 +203,7 @@ export function findRemoteAssets(config: unknown, origin: string): string[] {
     }
   };
   walk(config, 0);
-  if (config && typeof config === 'object') for (const f of configGoogleFonts(config)) add(f);
+  if (config && typeof config === 'object') for (const f of legacyConfigFonts(config)) add(f);
   return out;
 }
 

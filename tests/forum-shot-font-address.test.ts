@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ForumShotLockReason, MagicCardRef } from '../src/contracts/forum-shot';
 import { aliasInText, classifyCard, prepareCard } from '../src/forum-shot/font-address';
-import { configGoogleFonts } from '../src/utils/google-fonts';
+import { legacyConfigFonts as configGoogleFonts } from '../src/forum-shot/legacy-fonts';
 import { listMagicCards } from '../src/forum-shot/pick';
 import { findRemoteAssets } from '../src/forum-shot/remote';
 

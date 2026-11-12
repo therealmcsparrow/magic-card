@@ -314,6 +314,11 @@
       "ceiling": 131072,
       "note": "Image animator (editor-only chunk, contract image-animator 1.0.0). 83 KiB, measured 79,930 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The contract ceiling is 131,072 B (IMAGE_ANIMATOR_CHUNK_CEILING)."
     },
+    "magic-card-google-fonts.js": {
+      "raw": 46080,
+      "ceiling": 46080,
+      "note": "Google Fonts catalogue, loaded only when a font name needs checking and Magic Card Utils allows Google Fonts (lazy-module 1.13.0). 45 KiB, measured 43,760 (Windows build) + 5 %, rounded up to 1 KiB."
+    },
     "magic-card-studio-fonts.js": {
       "raw": 74752,
       "ceiling": 98304,

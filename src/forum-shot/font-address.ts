@@ -1,6 +1,6 @@
 // Which font addresses a card config names, and whether the card can be picked. Reads nothing from the network.
 import type { ForumShotLockReason } from '../contracts/forum-shot';
-import { configGoogleFonts, googleFontFamilies, googleFontUrl } from '../utils/google-fonts';
+import { legacyConfigFonts, legacyFontFamilies, legacyFontUrl } from './legacy-fonts';
 import type { FontPlan, PreparedFace } from './font-fetch';
 import { CUSTOM_CARD, FONT_KEYS, LIMIT, MAX_DEPTH, MAX_NODES, MAX_STRING, decodeEntities, findRemoteAssets } from './remote';
 
@@ -379,7 +379,7 @@ export function classifyCard(config: unknown, origin: string): CardClass {
     return v;
   };
   const stripped = rewrite(config, 0);
-  const families = config && typeof config === 'object' ? configGoogleFonts(config) : [];
+  const families = config && typeof config === 'object' ? legacyConfigFonts(config) : [];
   const remote = findRemoteAssets(stripped, origin).filter((r) => !families.includes(r));
   if (families.some((f) => f !== SYSTEM_FAMILY)) GOOGLE_HOSTS.forEach((h) => hosts.add(h));
   for (const h of [...hosts]) FONT_HOST_PAIRS[h]?.forEach((x) => hosts.add(x));
@@ -423,7 +423,7 @@ export function aliasFamilies(value: string, has: (lower: string) => boolean): s
   return value
     .split(',')
     .map((part) => {
-      const f = googleFontFamilies(part)[0];
+      const f = legacyFontFamilies(part)[0];
       return f && f !== SYSTEM_FAMILY && has(f.toLowerCase()) ? ` "${aliasOf(f)}"` : part;
     })
     .join(',')
@@ -433,14 +433,14 @@ export function aliasFamilies(value: string, has: (lower: string) => boolean): s
 /** A text from a template result with every Google family under its alias, so the card's own loader requests none; `onMissing` is called for a family no face was prepared for. */
 export function aliasInText(text: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
   return mapFontFamilies(text, (v) => {
-    for (const f of googleFontFamilies(v)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
+    for (const f of legacyFontFamilies(v)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
     return aliasFamilies(v, () => true);
   });
 }
 
 /** The value of a font key from a template result with every Google family under its alias, so the card's own loader requests none; `onMissing` is called for a family no face was prepared for. */
 export function aliasFontValue(value: string, prepared: ReadonlySet<string>, onMissing: () => void): string {
-  for (const f of googleFontFamilies(value)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
+  for (const f of legacyFontFamilies(value)) if (f !== SYSTEM_FAMILY && !prepared.has(f.toLowerCase())) onMissing();
   return aliasFamilies(value, () => true);
 }
 
@@ -460,7 +460,7 @@ export function prepareCard(config: Record<string, unknown>, origin: string): Ca
   const imports: string[] = [];
   const faces: string[] = [];
   const aliases = new Map<string, string>();
-  for (const f of configGoogleFonts(config)) if (f !== SYSTEM_FAMILY) aliases.set(f.toLowerCase(), aliasOf(f));
+  for (const f of legacyConfigFonts(config)) if (f !== SYSTEM_FAMILY) aliases.set(f.toLowerCase(), aliasOf(f));
   const hasAlias = (lower: string) => aliases.has(lower);
   const mountCss = (css: string): string => {
     const r = css.length > MAX_STRING ? null : readCss(css, origin);
@@ -490,7 +490,7 @@ export function prepareCard(config: Record<string, unknown>, origin: string): Ca
   const sheets = [
     ...imports.map((url) => ({ url })),
     ...faces.map((css) => ({ css })),
-    ...[...aliases.keys()].map((k) => ({ url: googleFontUrl(configGoogleFonts(config).find((f) => f.toLowerCase() === k) as string) })),
+    ...[...aliases.keys()].map((k) => ({ url: legacyFontUrl(legacyConfigFonts(config).find((f) => f.toLowerCase() === k) as string) })),
   ];
   return { lock, plan: { fontHosts, sheets: lock ? [] : sheets }, mount, aliases };
 }
