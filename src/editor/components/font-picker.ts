@@ -88,7 +88,10 @@ export class FontPicker extends LitElement {
   @state() private _inView = new Set<string>();
   private _observer?: IntersectionObserver;
 
-  private _onSettings = (): void => this.requestUpdate();
+  private _onSettings = (): void => {
+    if (this._showModal) this._loadCatalogue();
+    this.requestUpdate();
+  };
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -105,7 +108,7 @@ export class FontPicker extends LitElement {
     const value = (e.target as HTMLInputElement).value;
     this.value = value;
     this.dispatchEvent(new CustomEvent('value-changed', {
-      detail: { value },
+      detail: { value, typing: true },
       bubbles: true,
       composed: true,
     }));
@@ -128,6 +131,10 @@ export class FontPicker extends LitElement {
     this._searchQuery = '';
     this._selectedFont = null;
     this._category = null;
+    this._loadCatalogue();
+  }
+
+  private _loadCatalogue(): void {
     if (googleFontsAllowed() && !this._catalogue.length) loadCatalogue().then((c) => { this._catalogue = c; }, () => 0);
   }
 
