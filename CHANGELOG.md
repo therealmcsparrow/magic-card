@@ -4,7 +4,9 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## [Unreleased]
+## 2026.11.04 (2026-11-12)
+
+This stable release holds everything from the 2026.11.04-beta.1 pre-release, listed below, plus the fixes in this section. Install Magic Card Utils 2026.11.03 first, then update Magic Card.
 
 ### Fixed
 -   **Google tab fills when the switch turns on.** A font picker that was open when the Google Fonts switch came on now lists the catalogue straight away, instead of "No fonts found" until it is reopened.
