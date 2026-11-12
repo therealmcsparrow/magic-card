@@ -1,0 +1,25 @@
+name: HACS
+
+# The HACS action on every push and pull request, weekly and by hand, as the Home Assistant marketplace guide asks.
+# Hassfest is not run here: it checks integrations (custom_components), and this repository is a dashboard plugin.
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-hacs:
+    name: HACS Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: hacs/action@d556e736723344f83838d08488c983a15381059a # 22.5.0
+        with:
+          category: plugin
