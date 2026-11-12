@@ -2856,8 +2856,8 @@
     "hash": "fe026169"
   },
   "card-editor.font-picker.results": {
-    "text": "{total} fonts",
-    "hash": "8c32ef24"
+    "text": "{total, plural, one {# font} other {# fonts}}",
+    "hash": "20f34339"
   },
   "card-editor.font-picker.save": {
     "text": "Save",

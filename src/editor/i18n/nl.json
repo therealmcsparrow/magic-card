@@ -2856,8 +2856,8 @@
     "hash": "fe026169"
   },
   "card-editor.font-picker.results": {
-    "text": "{total} lettertypen",
-    "hash": "8c32ef24"
+    "text": "{total, plural, one {# lettertype} other {# lettertypen}}",
+    "hash": "20f34339"
   },
   "card-editor.font-picker.save": {
     "text": "Opslaan",

@@ -3851,8 +3851,8 @@
     "max": 130
   },
   "card-editor.font-picker.results": {
-    "text": "{total} fonts",
-    "note": "Number of Google fonts that match the search and category filter. {total} is that number.",
+    "text": "{total, plural, one {# font} other {# fonts}}",
+    "note": "Number of Google fonts that match the search and category filter. {total} is that number, a whole number.",
     "max": 20,
     "vars": {
       "total": "The value that replaces total in the text."
