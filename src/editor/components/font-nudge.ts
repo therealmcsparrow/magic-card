@@ -3,10 +3,11 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { googleFontsAllowed, googleFontsChunk } from '../../utils/google-fonts';
 import { t } from '../i18n';
 
-/** Whether a font value names a Google family, answered once per value by the lazy catalogue chunk. */
-const named = new Map<string, boolean>();
+/** Whether a font value names a Google family, answered once per value by the lazy catalogue chunk; past NAMED_MAX answers the oldest goes. */
+export const named = new Map<string, boolean>();
+export const NAMED_MAX = 64;
 
-async function namesGoogleFont(value: string): Promise<boolean> {
+export async function namesGoogleFont(value: string): Promise<boolean> {
   const known = named.get(value);
   if (known !== undefined) return known;
   let result: boolean;
@@ -14,9 +15,10 @@ async function namesGoogleFont(value: string): Promise<boolean> {
     const m = await googleFontsChunk();
     result = (await m.resolveGoogleFonts(m.fontCandidates(value))).length > 0;
   } catch {
-    result = false;
+    return false;
   }
   named.set(value, result);
+  if (named.size > NAMED_MAX) named.delete(named.keys().next().value!);
   return result;
 }
 

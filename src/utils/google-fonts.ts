@@ -59,7 +59,7 @@ export const googleFontsChunk = () => import(/* webpackChunkName: "google-fonts"
 /** The whole catalogue, from the lazy chunk (a local import, not a Google request). */
 export const loadCatalogue = () => googleFontsChunk().then((m) => m.allFamilies());
 
-/** Font strings already handed on: each is looked at once per page, however often the card renders. */
+/** Font strings already handed on: each is looked at once per page, however often the card renders (again after a failed chunk load). */
 const asked = new Set<string>();
 
 /** Loads the Google Fonts a config names. Does nothing without a font string, and fetches the loader chunk only once the gate is open. */
@@ -68,6 +68,9 @@ export function loadConfigFonts(config: object): void {
   if (!fresh.length) return;
   fresh.forEach((s) => asked.add(s));
   whenGoogleFontsAllowed(() => {
-    googleFontsChunk().then((m) => m.loadFontsFor(fresh.flatMap(m.fontCandidates)), () => 0);
+    googleFontsChunk().then(
+      (m) => m.loadFontsFor(fresh.flatMap(m.fontCandidates)),
+      () => fresh.forEach((s) => asked.delete(s)),
+    );
   });
 }

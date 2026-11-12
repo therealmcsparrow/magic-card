@@ -46,6 +46,11 @@ export function loadGoogleFonts(families: GoogleFamily[]): void {
     link.rel = 'stylesheet';
     link.href = googleFontUrl(family);
     link.dataset.mcFont = family.name;
+    // a sheet that fails to load goes again, so the next render asks for it once more
+    link.onerror = () => {
+      link.remove();
+      for (const n of asked) if (findFamily(n) === family) asked.delete(n);
+    };
     document.head.appendChild(link);
   }
 }

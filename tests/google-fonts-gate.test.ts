@@ -1,5 +1,5 @@
 // @vitest-environment-options {"settings":{"handleDisabledFileLoadingAsSuccess":true}}
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { googleFontsAllowed } from '../src/utils/google-fonts';
 import { fontCandidates, googleFontUrl, loadFontsFor } from '../src/google-fonts/loader';
 
@@ -87,5 +87,43 @@ describe('loadConfigFonts', () => {
     loadConfigFonts({ type: 'x' });
     await flush();
     expect(links()).toHaveLength(0);
+  });
+});
+
+describe('retry after a failure', () => {
+  it('asks again for a font whose stylesheet failed to load', async () => {
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    loadFontsFor(['Cabin']);
+    await flush();
+    expect(links().filter((l) => l.dataset.mcFont === 'Cabin')).toHaveLength(1);
+    links().find((l) => l.dataset.mcFont === 'Cabin')!.dispatchEvent(new Event('error'));
+    expect(links().filter((l) => l.dataset.mcFont === 'Cabin')).toHaveLength(0);
+    loadFontsFor(['Cabin']);
+    await flush();
+    expect(links().filter((l) => l.dataset.mcFont === 'Cabin')).toHaveLength(1);
+  });
+
+  it('asks again for a config font after the loader chunk failed to load', async () => {
+    vi.resetModules();
+    let fail = true;
+    vi.doMock('../src/google-fonts/loader', async (orig) => {
+      if (fail) throw new TypeError('Failed to fetch dynamically imported module');
+      return orig();
+    });
+    try {
+      const { loadConfigFonts } = await import('../src/utils/google-fonts');
+      w.magicCardUtils = { settings: { googleFonts: true } };
+      const config = { font_family: '"Arvo", serif' };
+      loadConfigFonts(config);
+      for (let i = 0; i < 4; i++) await flush();
+      expect(links()).toHaveLength(0);
+      fail = false;
+      loadConfigFonts(config);
+      for (let i = 0; i < 40 && !links().length; i++) await flush();
+      expect(links().map((l) => l.dataset.mcFont)).toEqual(['Arvo']);
+    } finally {
+      vi.doUnmock('../src/google-fonts/loader');
+      vi.resetModules();
+    }
   });
 });
