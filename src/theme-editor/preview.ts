@@ -17,9 +17,9 @@ import { browserMode, scopeLabel } from './util';
 // The preview stage: every resolved draft variable is set inline on the stage element.
 
 export const PREVIEW_TAG = 'mcte-theme-preview';
-/** Updates after the first are batched for this long (acceptance criterion 5: under 200 ms in all). */
 const FONT_VARS = ['ha-font-family-body', 'ha-font-family-heading', 'ha-card-header-font-family'];
 
+/** Updates after the first are batched for this long (acceptance criterion 5: under 200 ms in all). */
 export const PREVIEW_DEBOUNCE_MS = 50;
 
 type Bag = Record<string, string>;
