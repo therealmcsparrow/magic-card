@@ -72,7 +72,7 @@ import { hasJinja, TemplateController, templateResultToString } from '../service
 import { SubscriptionController } from '../services/subscription-controller';
 import { MediaResolver } from '../services/media-resolver';
 import { mediaCssImage } from '../utils/media';
-import { configFontCandidates, loadFontsFor } from '../utils/google-fonts';
+import { loadConfigFonts } from '../utils/google-fonts';
 import { isRunnableAction } from '../utils/actions';
 import { RenderContext, withRenderContext } from '../services/render-context';
 import { renderModuleContent } from '../modules/render-module';
@@ -996,7 +996,7 @@ export class MagicCard extends LitElement {
     }
     this._wantShapes(config);
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page, only when Magic Card Utils allows them
-    loadFontsFor(configFontCandidates(config));
+    loadConfigFonts(config);
     const popup = isPopupEnabled(config.popup);
     const popupCtl = this._popupCtl;
     const popupHere = this._popupHidden;

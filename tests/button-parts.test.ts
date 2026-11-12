@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { buttonPartDecls, truncates } from '../src/utils/button-parts';
 import { designToStyle, hoverRule } from '../src/utils/css-utils';
-import { configFontCandidates as configGoogleFonts } from '../src/utils/google-fonts';
+import { configFontCandidates as configGoogleFonts } from '../src/google-fonts/loader';
 import { COLOR_KEYS } from '../src/utils/css-design-map';
 
 const d = (r: Record<string, unknown>) => buttonPartDecls(r);

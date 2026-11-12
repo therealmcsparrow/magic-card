@@ -3,7 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles, fontPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
-import { LOCAL_FONT_NAMES, loadFontsFor } from '../../utils/google-fonts';
+import { LOCAL_FONT_NAMES } from '../../google-fonts/local-fonts';
+import { loadConfigFonts } from '../../utils/google-fonts';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { t } from '../i18n';
 
@@ -121,7 +122,7 @@ export class FontPicker extends LitElement {
 
   private _getFilteredFonts(): FontOption[] {
     // the Google tab previews each font in its own face
-    if (this._activeTab === 'google') loadFontsFor(GOOGLE_FONTS.map((f) => f.name));
+    if (this._activeTab === 'google') loadConfigFonts({ font_family: GOOGLE_FONTS.map((f) => f.name).join(', ') });
     const fonts = this._activeTab === 'local' ? LOCAL_FONTS : GOOGLE_FONTS;
 
     if (!this._searchQuery) return fonts;

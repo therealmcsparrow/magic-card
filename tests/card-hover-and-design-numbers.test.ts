@@ -6,7 +6,7 @@ import { ModuleRegistry } from '../src/modules/module-registry';
 import { CARD_SYNC_KEYS, cardInstanceKeys, mergeTemplateWithOverrides } from '../src/services/template-merge';
 import { designNumbersToCss, hoverRule, resolveBorderLength, splitDeclarations } from '../src/utils/css-utils';
 import { isRunnableAction } from '../src/utils/actions';
-import { fontCandidates } from '../src/utils/google-fonts';
+import { fontCandidates } from '../src/google-fonts/loader';
 import { cardConfig, makeHass, mountCard } from './helpers/fake-hass';
 import type { CardModule, DesignConfig, MagicCardConfig } from '../src/types';
 import { editorFor } from './helpers/module-editor';

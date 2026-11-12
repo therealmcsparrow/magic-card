@@ -4,7 +4,7 @@ import '../src/index';
 import { cardConfig, makeHass, mountCard } from './helpers/fake-hass';
 import { tabLook } from '../src/modules/layout/tabs-look';
 import { tabsStyles } from '../src/modules/layout/tabs-styles';
-import { configFontCandidates as configGoogleFonts } from '../src/utils/google-fonts';
+import { configFontCandidates as configGoogleFonts } from '../src/google-fonts/loader';
 import { GOOGLE_FONTS } from '../src/editor/components/font-picker';
 
 afterEach(() => {

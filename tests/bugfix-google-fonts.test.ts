@@ -1,7 +1,7 @@
 // @vitest-environment-options {"settings":{"handleDisabledFileLoadingAsSuccess":true}}
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import '../src/index';
-import { configFontCandidates, fontCandidates, googleFontUrl, loadGoogleFonts } from '../src/utils/google-fonts';
+import { configFontCandidates, fontCandidates, googleFontUrl, loadGoogleFonts } from '../src/google-fonts/loader';
 import { cardConfig, makeHass, mountCard } from './helpers/fake-hass';
 import type { MagicCardConfig } from '../src/types';
 

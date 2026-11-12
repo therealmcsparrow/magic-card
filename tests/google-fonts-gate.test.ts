@@ -1,6 +1,7 @@
 // @vitest-environment-options {"settings":{"handleDisabledFileLoadingAsSuccess":true}}
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { fontCandidates, googleFontUrl, googleFontsAllowed, loadFontsFor } from '../src/utils/google-fonts';
+import { googleFontsAllowed } from '../src/utils/google-fonts';
+import { fontCandidates, googleFontUrl, loadFontsFor } from '../src/google-fonts/loader';
 
 const links = () => [...document.head.querySelectorAll<HTMLLinkElement>('link[data-mc-font]')];
 const w = window as unknown as { magicCardUtils?: { settings?: { googleFonts?: boolean } } };
@@ -61,5 +62,26 @@ describe('candidates', () => {
 describe('url', () => {
   it('omits the weights when no common one exists', () => {
     expect(googleFontUrl({ name: 'X Y', category: 'display', weights: [900] })).toBe('https://fonts.googleapis.com/css2?family=X+Y&display=swap');
+  });
+});
+
+describe('loadConfigFonts', () => {
+  it('fetches nothing while closed, then links once the switch opens', async () => {
+    const { loadConfigFonts } = await import('../src/utils/google-fonts');
+    loadConfigFonts({ cards: [{ font_family: 'Oswald, sans-serif' }] });
+    await flush();
+    expect(links()).toHaveLength(0);
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    window.dispatchEvent(new CustomEvent('mcu-settings'));
+    await flush();
+    expect(links()).toHaveLength(1);
+  });
+
+  it('does nothing for a config without fonts', async () => {
+    const { loadConfigFonts } = await import('../src/utils/google-fonts');
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    loadConfigFonts({ type: 'x' });
+    await flush();
+    expect(links()).toHaveLength(0);
   });
 });
