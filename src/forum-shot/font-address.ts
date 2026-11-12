@@ -375,8 +375,11 @@ function readCss(css: string, origin: string): CssRead {
   return { fail: false, hosts: [...hosts], outside, cannot, rest: parts.join(' '), imports, faces, pure: kept.join(' ') };
 }
 
-/** Whether a card can be picked and which hosts a Download would contact for its fonts. Makes no request. */
-export async function classifyCard(config: unknown, origin: string): Promise<CardClass> {
+/**
+ * Whether a card can be picked and which hosts a Download would contact for its fonts. `imageFonts` holds the font-family values of the
+ * library images the card shows (see imageFontValues); a Google family there asks Google too. Makes no request.
+ */
+export async function classifyCard(config: unknown, origin: string, imageFonts: string[] = []): Promise<CardClass> {
   const hosts = new Set<string>();
   let outside = false;
   let cannot = false;
@@ -408,6 +411,8 @@ export async function classifyCard(config: unknown, origin: string): Promise<Car
   };
   const stripped = rewrite(config, 0);
   const families = config && typeof config === 'object' ? await configGoogleFamilies(config) : [];
+  const fonts = imageFonts.length ? await loadGoogleFontsLib() : undefined;
+  if (fonts) families.push(...(await fonts.resolveGoogleFonts(imageFonts.flatMap(fonts.fontCandidates))).map((f) => f.name));
   const remote = findRemoteAssets(stripped, origin);
   if (families.length) GOOGLE_HOSTS.forEach((h) => hosts.add(h));
   for (const h of [...hosts]) FONT_HOST_PAIRS[h]?.forEach((x) => hosts.add(x));

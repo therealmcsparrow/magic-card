@@ -1,11 +1,14 @@
-// Finds the Magic Cards in the user's dashboards (two hass.callWS reads) and supplies the icon library for the three looks.
+// Finds the Magic Cards in the user's dashboards (two hass.callWS reads, plus images_get for cards that show library images while Google Fonts are allowed) and supplies the icon library for the three looks.
 import type { ForumShotErrorCode, MagicCardRef } from '../contracts/forum-shot';
 import type { IconStyle } from '../contracts/icon-library';
 import { loadIconLibrary } from '../anim-studio/icon-library-loader';
 import { styleDoc } from '../icon-anim/style';
 import type { LookSource } from './looks';
 import { classifyCard, configGoogleFamilies } from './font-address';
-import { findRemoteAssets } from './remote';
+import { decodeEntities, findRemoteAssets } from './remote';
+import { IMAGE_REF_RE } from '../contracts/svg-image';
+import { IMAGE_CMD, MAX_IMAGE_GET_IDS } from '../contracts/mcu-library-images';
+import { googleFontsAllowed } from '../utils/google-fonts';
 import { forumShotError } from './settle';
 
 export interface WsHass {
@@ -53,6 +56,7 @@ const configOf = (hass: WsHass, path: string | null): Promise<unknown> =>
 /** Every Magic Card of the dashboard configs the user can read, default dashboard first. */
 export async function listMagicCards(hass: WsHass): Promise<MagicCardRef[]> {
   const refs: MagicCardRef[] = [];
+  const images = new Map<string, string[]>();
   let readable = 0;
   for (const dash of await dashboards(hass)) {
     let config: unknown;
@@ -68,7 +72,7 @@ export async function listMagicCards(hass: WsHass): Promise<MagicCardRef[]> {
       if (!isObj(node) || ++nodes > MAX_NODES || refs.length >= MAX_CARDS) return;
       if (node.type === CARD_TYPE) {
         const cardName = text(node.name) || `#${refs.filter((r) => r.dashboard === dash.path && r.view === view).length + 1}`;
-        const { lock, fontHosts } = await classifyCard(node, location.origin);
+        const { lock, fontHosts } = await classifyCard(node, location.origin, await imageFontValues(hass, node, images));
         const families = await configGoogleFamilies(node);
         refs.push({
           dashboard: dash.path,
@@ -95,6 +99,42 @@ export async function listMagicCards(hass: WsHass): Promise<MagicCardRef[]> {
   if (!readable) throw forumShotError('config_read_failed');
   if (!refs.length) throw forumShotError('no_cards');
   return refs;
+}
+
+const SVG_FONT = /font-family\s*(?:=\s*(?:"([^"]*)"|'([^']*)')|:\s*([^;"'}]+))/gi;
+
+/**
+ * The font-family values of the library images a card shows (`mcu-image:` refs anywhere in its config), read with images_get through
+ * Home Assistant. None while Google Fonts are not allowed, or when the images cannot be read. `seen` keeps each image's answer for one listing.
+ */
+export async function imageFontValues(hass: WsHass, config: unknown, seen = new Map<string, string[]>()): Promise<string[]> {
+  if (!googleFontsAllowed()) return [];
+  const ids = new Set<string>();
+  let nodes = 0;
+  const walk = (v: unknown): void => {
+    if (++nodes > MAX_NODES) return;
+    if (typeof v === 'string') {
+      const m = IMAGE_REF_RE.exec(v);
+      if (m) ids.add(m[1]);
+    } else if (v && typeof v === 'object') Object.values(v).forEach(walk);
+  };
+  walk(config);
+  const todo = [...ids].filter((id) => !seen.has(id));
+  for (let i = 0; i < todo.length; i += MAX_IMAGE_GET_IDS) {
+    const batch = todo.slice(i, i + MAX_IMAGE_GET_IDS);
+    batch.forEach((id) => seen.set(id, []));
+    try {
+      const reply = await read(hass, { type: IMAGE_CMD.get, ids: batch });
+      const images = isObj(reply) && Array.isArray(reply.images) ? reply.images : [];
+      for (const img of images) {
+        if (!isObj(img) || typeof img.id !== 'string' || typeof img.svg !== 'string' || !seen.has(img.id)) continue;
+        seen.set(img.id, [...img.svg.matchAll(SVG_FONT)].map((m) => decodeEntities(m[1] ?? m[2] ?? m[3] ?? '')));
+      }
+    } catch {
+      // an image that cannot be read adds no font
+    }
+  }
+  return [...ids].flatMap((id) => seen.get(id) ?? []);
 }
 
 /** The card config at `ref`, read again so the picture shows what the dashboard holds now. */
