@@ -16,6 +16,9 @@ This stable release holds everything from the 2026.11.04-beta.1 pre-release, lis
 -   **Forum shot names Google for image text.** A card whose library image uses a Google font now lists the Google font sites on the Forum shot tab.
 -   **Google fonts retry after a failed load.** A font whose loader or stylesheet failed to download, for example after an update, is asked for again on the next render instead of only after a page reload.
 -   **Text measured during a drag.** Image text measured again while you drag a layer is applied when the drag ends.
+-   **A typed font is one undo step in the card editor.** Typing a font name in a design font field, and the tidied name stored when you leave the field, is now one undo step instead of one per key.
+-   **Cards retry a failed font stylesheet.** A Google font stylesheet that fails to download inside a card is asked for again the next time the card draws, up to three times per page load.
+-   **Forum shot Download names the same font sites as the list.** A Download of a card whose library image uses a Google font now checks the same font sites the Forum shot tab listed. It reuses the library images the list already read, so Home Assistant is not asked for them again.
 
 ## 2026.11.04-beta.1 (2026-11-12)
 

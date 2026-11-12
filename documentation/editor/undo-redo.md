@@ -16,6 +16,8 @@ Some actions change several things in one step:
 -   Adding a flow on the Studio canvas also gives the two modules ids when they had none.
 -   Picking a layout preset for a row also removes the row's own column widths.
 
+Typing a font name into a font field is one step, from the first key until you leave the field, including the tidied name Magic Card stores (for example `lato` becoming `"Lato", sans-serif`).
+
 Repeated actions on a column width handle are folded into one step:
 
 -   A drag of the handle in the Studio is one step, written when you release it. A drag that is cancelled is not recorded.

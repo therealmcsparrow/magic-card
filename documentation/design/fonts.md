@@ -23,9 +23,9 @@ The same picker is used in:
 -   The theme editor, in the font fields of a theme.
 -   The image editor, for image text.
 
-Save writes a CSS font stack, for example `"Open Sans", sans-serif`. If you type a catalogue name such as `lato` into a font field, Magic Card stores it as `"Lato", sans-serif`.
+Save writes a CSS font stack, for example `"Open Sans", sans-serif`. If you type a catalogue name such as `lato` into a font field, Magic Card stores it as `"Lato", sans-serif`. The typing and the tidied name are one undo step.
 
-A custom `font-family` in a card's css counts too. The card loads each catalogue font that its design or css names. Roboto is never loaded, because Home Assistant ships it.
+A custom `font-family` in a card's css counts too. The card loads each catalogue font that its design or css names. Roboto is never loaded, because Home Assistant ships it. If a font's stylesheet fails to download, the card asks for it again the next time it draws, up to three times per page load.
 
 ## Cards that already use a Google font
 
