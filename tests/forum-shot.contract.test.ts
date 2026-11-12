@@ -18,9 +18,9 @@ const unionOf = (name: string): string[] => {
   return [...body.matchAll(/'([^']+)'/g)].map((m) => m[1]);
 };
 
-describe('forum-shot 1.2.0 constants', () => {
+describe('forum-shot 1.3.0 constants', () => {
   it('holds the Contract values', () => {
-    expect(contract.FORUM_SHOT_CONTRACT_VERSION).toBe('1.2.0');
+    expect(contract.FORUM_SHOT_CONTRACT_VERSION).toBe('1.3.0');
     expect(contract.FORUM_SHOT_FILE).toBe('magic-card-forum-shot.js');
     expect(contract.FORUM_SHOT_TAG).toBe('magic-card-forum-shot');
     expect(contract.FORUM_SHOT_WIDTH).toBe(420);

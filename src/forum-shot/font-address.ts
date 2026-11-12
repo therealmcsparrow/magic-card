@@ -487,9 +487,9 @@ export interface CardKit {
   aliases: Map<string, string>;
 }
 
-/** Judges a freshly read config and builds what a Download needs for its fonts. Makes no request. */
-export async function prepareCard(config: Record<string, unknown>, origin: string): Promise<CardKit> {
-  const { lock, fontHosts } = await classifyCard(config, origin);
+/** Judges a freshly read config (with the font-family values of its library images) and builds what a Download needs for its fonts. Makes no request. */
+export async function prepareCard(config: Record<string, unknown>, origin: string, imageFonts: string[] = []): Promise<CardKit> {
+  const { lock, fontHosts } = await classifyCard(config, origin, imageFonts);
   const imports: string[] = [];
   const faces: string[] = [];
   const aliases = new Map<string, string>();

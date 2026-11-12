@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ForumShotLockReason, MagicCardRef } from '../src/contracts/forum-shot';
 import { aliasInText, classifyCard, configGoogleFamilies as configGoogleFonts, prepareCard } from '../src/forum-shot/font-address';
-import { listMagicCards } from '../src/forum-shot/pick';
+import { imageFontValues, listMagicCards } from '../src/forum-shot/pick';
 import { findRemoteAssets } from '../src/forum-shot/remote';
 
 (window as unknown as { magicCardUtils: unknown }).magicCardUtils = { settings: { googleFonts: true } };
@@ -224,5 +224,18 @@ describe('Google text in a library image', () => {
       ['fonts.googleapis.com', 'fonts.gstatic.com'],
     ]);
     expect(callWS.mock.calls.filter(([m]) => m.type === 'magic_card_utils/images_get')).toHaveLength(1);
+  });
+  it('a Download reads no image the listing already read, and its sheet lists the same hosts', async () => {
+    const callWS = vi.fn(async (msg: Record<string, unknown>) => {
+      if (msg.type === 'lovelace/dashboards/list') return [];
+      if (msg.type === 'magic_card_utils/images_get') return { images: (msg.ids as string[]).map((id) => ({ id, svg })) };
+      return { views: [{ title: 'Home', cards: [card] }] };
+    });
+    const [ref] = await listMagicCards({ callWS });
+    const fonts = await imageFontValues({ callWS }, card);
+    expect(callWS.mock.calls.filter(([m]) => m.type === 'magic_card_utils/images_get')).toHaveLength(1);
+    const kit = await prepareCard(card, origin, fonts);
+    expect(kit.plan.fontHosts).toEqual(ref.fontHosts);
+    expect((await prepareCard(card, origin)).plan.fontHosts).toEqual([]);
   });
 });
