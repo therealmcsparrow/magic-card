@@ -1049,11 +1049,6 @@
     "note": "Heading of the list of CSS theme variables. Variables are named style values, not programming variables.",
     "max": 15
   },
-  "theme-editor.editor-view.variables-panel": {
-    "text": "Variables panel",
-    "note": "Accessible name of the editor panel that holds the variable list. Same English as the side tab tooltip.",
-    "max": 25
-  },
   "theme-editor.editor-view.variables-you-set-now-stay-shared-you": {
     "text": "Variables you set now stay shared. You can then override any of them for light or dark.",
     "note": "Body of the add-modes confirmation; explains that existing values stay in Shared and can be overridden per mode.",

@@ -42450,12 +42450,6 @@
     "x-max-length": 15,
     "x-source-hash": "02db55ba"
   },
-  "theme-editor.editor-view.variables-panel": "Variables panel",
-  "@theme-editor.editor-view.variables-panel": {
-    "description": "Accessible name of the editor panel that holds the variable list. Same English as the side tab tooltip. Max 25 characters.",
-    "x-max-length": 25,
-    "x-source-hash": "aeb81548"
-  },
   "theme-editor.editor-view.variables-you-set-now-stay-shared-you": "Variables you set now stay shared. You can then override any of them for light or dark.",
   "@theme-editor.editor-view.variables-you-set-now-stay-shared-you": {
     "description": "Body of the add-modes confirmation; explains that existing values stay in Shared and can be overridden per mode. Max 140 characters.",

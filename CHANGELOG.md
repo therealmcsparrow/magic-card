@@ -19,6 +19,9 @@ A pre-release. Install Magic Card Utils 2026.11.3-beta.1 (or newer) first, then 
 ### Changed
 -   **Privacy.** With the switch off, or without Magic Card Utils, nothing is requested from Google. The privacy text in the README, the SVG allowlist and SECURITY.md describes the switch. See [Fonts and Google Fonts](documentation/design/fonts.md).
 
+### Fixed
+-   **Theme editor fits its space.** The theme list no longer draws a second canvas inside the Magic Card Utils panel, and nothing runs off its right edge. On narrower screens the theme editor's top bar drops the title and the "Previewing" note, and **Save as my preset** moves into the ⋯ menu, so the buttons no longer overlap.
+
 ## 2026.11.03 (2026-11-12)
 
 This stable release holds everything from the 2026.11.03 pre-releases, which are listed below, plus the changes in this section. Install Magic Card Utils 2026.11.02 first, then update Magic Card. With an older Utils, the Animate buttons are greyed out and images stay at 256 KiB. If you stayed on 2026.11.02, these are the main changes:
