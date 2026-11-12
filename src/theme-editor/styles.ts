@@ -61,8 +61,10 @@ const local: CSSResult = css`
     background: var(--mc-surface-2);
     font-family: var(--mc-mono);
     font-size: 0.8125rem;
-    overflow: auto;
-    white-space: pre;
+    overflow-x: hidden;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
     max-width: 100%;
   }
   /* the kit's selected segment is a raised pill; forced colours drop shadows and tints, so it needs a system colour */

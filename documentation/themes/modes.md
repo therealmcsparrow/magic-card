@@ -27,7 +27,7 @@ The header line reads **Editing** and **Previewing**, so you can see both at onc
 
 ## Preview each mode
 
-Use the Light and Dark switch in the preview to see each mode. The preview shows only that mode's values. Dark-only values do not appear in the light preview, and light-only values do not appear in the dark one.
+Use the Light and Dark switch in the top bar to see each mode. **Previewing light** or **Previewing dark** next to it says which one the preview shows. The preview shows only that mode's values. Dark-only values do not appear in the light preview, and light-only values do not appear in the dark one.
 
 For a flat theme the preview has no switch. It follows Home Assistant's dark mode setting instead.
 

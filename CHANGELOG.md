@@ -4,6 +4,17 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### New
+-   **Theme editor: click the preview to find a setting.** Click a part of the preview, such as a button, the sidebar, the heading or an alert, and the Variables pane opens on that setting with the cursor in its field. A card sample opens its whole group.
+
+### Changed
+-   **Theme editor layout.** The Light and Dark preview switch, **Previewing light/dark** and **Wall tablet** are in the top bar. The save status and the note about Try on dashboard are in a footer under the preview.
+
+### Fixed
+-   **Theme editor scrolling.** The setup lines in the include notice wrap instead of scrolling sideways.
+
 ## 2026.11.03-beta.3 (2026-11-12)
 
 A pre-release with fixes to the new studio look from 2026.11.03-beta.2. Magic Card Utils 2026.11.2-beta.2 stays the right version to use with it.
