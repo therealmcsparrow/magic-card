@@ -48,6 +48,21 @@ describe('theme editor font fields', () => {
     expect(seen).toEqual([{ name: 'ha-font-family-body', value: '"Lato", sans-serif' }]);
   });
 
+  it('waits for typing to pause before it commits, and commits a normalised value at once', async () => {
+    const el = await mountGroup();
+    const picker = el.shadowRoot!.querySelector('mc-font-picker')!;
+    const seen: unknown[] = [];
+    el.addEventListener('mcte-set', (e) => seen.push((e as CustomEvent).detail.value));
+    for (const v of ['"', '"L', '"La', '"Lat']) picker.dispatchEvent(new CustomEvent('value-changed', { detail: { value: v, typing: true } }));
+    expect(seen).toEqual([]);
+    await flush();
+    expect(seen).toEqual(['"Lat']);
+    picker.dispatchEvent(new CustomEvent('value-changed', { detail: { value: 'Lato', typing: true } }));
+    picker.dispatchEvent(new CustomEvent('value-changed', { detail: { value: '"Lato", sans-serif' } }));
+    await flush();
+    expect(seen).toEqual(['"Lat', '"Lato", sans-serif']);
+  });
+
   it('names the font textbox after its field, marks an error on it and focuses it on a jump', async () => {
     // a custom row is labelled with its variable name, which needs no translation table
     const el = await mountGroup(new Map([['ha-font-family-body', 'Not a font value']]), true);

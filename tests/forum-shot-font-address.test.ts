@@ -200,3 +200,29 @@ describe('Google Fonts are used only when Magic Card Utils allows them', () => {
     expect(kit.aliases.get('lato')).toBe('mc-shot-lato');
   });
 });
+
+describe('Google text in a library image', () => {
+  const origin = 'https://ha.local:8123';
+  const card = { type: 'custom:magic-card', name: 'Hall', background_layers: [{ image: 'mcu-image:sign' }] };
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><text font-family="&quot;Lato&quot;, sans-serif">Hi</text><text font-family='serif'>Ho</text></svg>`;
+
+  it('counts the image fonts the card is given', async () => {
+    expect((await classifyCard(card, origin)).fontHosts).toEqual([]);
+    expect((await classifyCard(card, origin, ['"Lato", sans-serif'])).fontHosts).toEqual(['fonts.googleapis.com', 'fonts.gstatic.com']);
+    expect((await classifyCard(card, origin, ['serif'])).fontHosts).toEqual([]);
+  });
+
+  it('reads the images of a listed card and names Google', async () => {
+    const callWS = vi.fn(async (msg: Record<string, unknown>) => {
+      if (msg.type === 'lovelace/dashboards/list') return [];
+      if (msg.type === 'magic_card_utils/images_get') return { images: (msg.ids as string[]).map((id) => ({ id, svg })) };
+      return { views: [{ title: 'Home', cards: [card, { ...card, name: 'Twin' }] }] };
+    });
+    const refs = await listMagicCards({ callWS });
+    expect(refs.map((r) => r.fontHosts)).toEqual([
+      ['fonts.googleapis.com', 'fonts.gstatic.com'],
+      ['fonts.googleapis.com', 'fonts.gstatic.com'],
+    ]);
+    expect(callWS.mock.calls.filter(([m]) => m.type === 'magic_card_utils/images_get')).toHaveLength(1);
+  });
+});

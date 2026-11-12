@@ -1,7 +1,7 @@
 // @vitest-environment-options {"settings":{"handleDisabledFileLoadingAsSuccess":true}}
 import { describe, it, expect, beforeEach } from 'vitest';
 import '../src/editor/components/font-nudge';
-import { renderFontNudge } from '../src/editor/components/font-nudge';
+import { NAMED_MAX, named, namesGoogleFont, renderFontNudge } from '../src/editor/components/font-nudge';
 import { render } from 'lit';
 import { t } from '../src/editor/i18n';
 
@@ -44,5 +44,14 @@ describe('font nudge', () => {
     w.magicCardUtils = { settings: { googleFonts: false } };
     expect(await lineFor('Arial')).toBe('');
     expect(await lineFor('')).toBe('');
+  });
+});
+
+describe('font nudge memory', () => {
+  it('keeps at most NAMED_MAX answers, dropping the oldest', async () => {
+    for (let i = 0; i < NAMED_MAX + 20; i++) await namesGoogleFont(`"L${i}", serif`);
+    expect(named.size).toBe(NAMED_MAX);
+    expect(named.has('"L0", serif')).toBe(false);
+    expect(named.has(`"L${NAMED_MAX + 19}", serif`)).toBe(true);
   });
 });

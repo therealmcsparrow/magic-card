@@ -137,3 +137,22 @@ describe('a drag that only moves a layer', () => {
     expect(el.doc.shapes[0].paths[0].anchors[0].x).toBe(4);
   });
 });
+
+describe('a settle during a drag', () => {
+  it('waits for the drag to end, then lands in the document it ends with', async () => {
+    const el = await open();
+    const id = el.doc.shapes[1].id;
+    moveFirst(el, 1, 1, false);
+    const base = el.base;
+    const flat = el.flatBase;
+    el.settle((d) => ({ ...d, shapes: d.shapes.map((s) => (s.id === id ? { ...s, name: 'Measured' } : s)) }));
+    expect(el.base).toBe(base);
+    expect(el.flatBase).toBe(flat);
+    moveFirst(el, 2, 2, false);
+    moveFirst(el, 2, 2, true);
+    await Promise.resolve();
+    expect(el.doc.shapes.find((s) => s.id === id)?.name).toBe('Measured');
+    expect(el.base.shapes.find((s) => s.id === id)?.name).toBe('Measured');
+    expect(el.doc.shapes[0].paths[0].anchors[0].x).toBe(el.base.shapes[0].paths[0].anchors[0].x);
+  });
+});

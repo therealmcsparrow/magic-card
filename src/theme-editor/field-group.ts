@@ -147,8 +147,8 @@ export class McteFieldGroup extends LitElement {
     fire(this, 'mcte-set', { name, value: v });
   }
 
-  private _typed(e: Event, name: string, shown: string, own: boolean): void {
-    const v = (e.target as HTMLInputElement).value;
+  /** Commits once typing pauses for 80 ms. */
+  private _later(name: string, v: string, shown: string, own: boolean): void {
     clearTimeout(this._timers.get(name));
     this._timers.set(
       name,
@@ -159,10 +159,19 @@ export class McteFieldGroup extends LitElement {
     );
   }
 
-  private _changed(e: Event, name: string, shown: string, own: boolean): void {
+  /** Commits now, dropping a commit still waiting for typing to pause. */
+  private _now(name: string, v: string, shown: string, own: boolean): void {
     clearTimeout(this._timers.get(name));
     this._timers.delete(name);
-    this._commit(name, (e.target as HTMLInputElement).value, shown, own);
+    this._commit(name, v, shown, own);
+  }
+
+  private _typed(e: Event, name: string, shown: string, own: boolean): void {
+    this._later(name, (e.target as HTMLInputElement).value, shown, own);
+  }
+
+  private _changed(e: Event, name: string, shown: string, own: boolean): void {
+    this._now(name, (e.target as HTMLInputElement).value, shown, own);
   }
 
   private _step(e: KeyboardEvent, name: string, shown: string, own: boolean): void {
@@ -198,7 +207,9 @@ export class McteFieldGroup extends LitElement {
         .hass=${this.hass}
         @value-changed=${(e: CustomEvent) => {
           e.stopPropagation();
-          this._commit(name, String(e.detail?.value ?? ''), shown, own);
+          const v = String(e.detail?.value ?? '');
+          if (e.detail?.typing) this._later(name, v, shown, own);
+          else this._now(name, v, shown, own);
         }}
       ></mc-font-picker>`;
     }

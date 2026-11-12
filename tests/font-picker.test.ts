@@ -187,3 +187,36 @@ describe('font picker name', () => {
     expect(input().getAttribute('aria-label')).toBe('Heading font');
   });
 });
+
+describe('switch turned on while the dialog is open', () => {
+  it('fills the Google tab without reopening', async () => {
+    const el = await mount();
+    await open(el);
+    expect(tabs(el)).toHaveLength(1);
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    window.dispatchEvent(new CustomEvent('mcu-settings'));
+    await el.updateComplete;
+    tabs(el)[1].click();
+    await el.updateComplete;
+    for (let i = 0; i < 20 && !rows(el).length; i++) {
+      await flush(25);
+      await el.updateComplete;
+    }
+    expect(rows(el).length).toBeGreaterThan(0);
+  });
+});
+
+describe('typing marks its events', () => {
+  it('flags keystrokes as typing and the change normalisation as not', async () => {
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    const el = await mount();
+    const events: Array<{ value: string; typing?: boolean }> = [];
+    el.addEventListener('value-changed', (e) => events.push((e as CustomEvent).detail));
+    const input = root(el).querySelector<HTMLInputElement>('.mc-picker-row input')!;
+    input.value = 'lato';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    await flush();
+    expect(events).toEqual([{ value: 'lato', typing: true }, { value: '"Lato", sans-serif' }]);
+  });
+});
