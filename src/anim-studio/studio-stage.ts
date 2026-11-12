@@ -366,18 +366,27 @@ export class AnimationStage extends LitElement {
   }
 
   private _boxOf(el: HTMLElement | null, frameEl: HTMLElement): { x: number; y: number; width: number; height: number } | undefined {
-    const parent = el?.offsetParent as HTMLElement | null | undefined;
-    if (!el || !parent || !el.offsetWidth) return undefined;
-    const frame = frameEl.getBoundingClientRect();
-    const p = parent.getBoundingClientRect();
-    const k = this._k || 1;
-    return {
-      x: Math.round((p.left - frame.left) / k + parent.clientLeft + el.offsetLeft),
-      y: Math.round((p.top - frame.top) / k + parent.clientTop + el.offsetTop),
-      width: el.offsetWidth,
-      height: el.offsetHeight,
+    if (!el || !el.offsetParent || !el.offsetWidth) return undefined;
+    // static offsets up to the frame: an animated ancestor (a scaled module wrapper) does not move the box
+    const inFrame = (n: Node | null): boolean => {
+      for (let c = n; c; c = c.parentNode ?? (c as ShadowRoot).host ?? null) if (c === frameEl) return true;
+      return false;
     };
+    let x = 0;
+    let y = 0;
+    let cur: HTMLElement = el;
+    for (let p = cur.offsetParent as HTMLElement | null; p && p !== frameEl && inFrame(p); p = cur.offsetParent as HTMLElement | null) {
+      x += cur.offsetLeft + p.clientLeft;
+      y += cur.offsetTop + p.clientTop;
+      cur = p;
+    }
+    const frame = frameEl.getBoundingClientRect();
+    const r = cur.getBoundingClientRect();
+    const k = this._k || 1;
+    const base = cur.offsetParent === frameEl ? { x: cur.offsetLeft, y: cur.offsetTop } : { x: (r.left - frame.left) / k, y: (r.top - frame.top) / k };
+    return { x: Math.round(base.x + x), y: Math.round(base.y + y), width: el.offsetWidth, height: el.offsetHeight };
   }
+
 
   setSpeed(v: number): void {
     this.speed = v;
