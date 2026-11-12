@@ -59,7 +59,7 @@ export const fieldErrorText = (entry: Pick<CatalogueEntry, 'kind'>, message: str
  * <mcte-field-group>: one accordion group of variable fields. Closed groups
  * render nothing inside. Events (all composed): `mcte-toggle` { id }, `mcte-set` { name, value } (an
  * empty value removes the key), `mcte-reset` { name }, `mcte-set-modes` { name, modes }, `mcte-copy`
- * { text, what }. Colour fields use `mc-color-picker` by tag (defined by magic-card.js).
+ * { text, what }. Colour fields use `mc-color-picker` and font fields `mc-font-picker`, both by tag (defined by the editor chunk, which the theme editor loads first).
  */
 export class McteFieldGroup extends LitElement {
   static properties: PropertyDeclarations = {
@@ -187,6 +187,17 @@ export class McteFieldGroup extends LitElement {
           this._commit(name, String(e.detail?.value ?? ''), shown, own);
         }}
       ></mc-color-picker>`;
+    }
+    if (entry.kind === 'font' && !this.ctx.readOnly) {
+      return html`<mc-font-picker
+        id="in-${name}"
+        .value=${shown}
+        .hass=${this.hass}
+        @value-changed=${(e: CustomEvent) => {
+          e.stopPropagation();
+          this._commit(name, String(e.detail?.value ?? ''), shown, own);
+        }}
+      ></mc-font-picker>`;
     }
     const rgb = entry.kind === 'rgb' && !err && shown ? shown : '';
     // A read-only theme shows its colours as text with a swatch; the picker is for editing only.
