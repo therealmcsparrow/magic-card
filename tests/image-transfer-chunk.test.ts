@@ -57,7 +57,7 @@ describe('createImageTransfer', () => {
   it('has a word for every key of the contract', () => {
     const { it: ix } = setup([]);
     for (const k of IMAGE_TRANSFER_TEXT) expect(ix.text(k, { name: 'House' }), k).not.toBe('');
-    expect(ix.text('export_all')).toBe('Export all images');
+    expect(ix.text('export_all')).toBe('Export all');
     expect(ix.text('view', { name: 'House' })).toBe('View House');
     expect(ix.text('copy_name', { name: 'House' })).toBe('House copy');
     expect(ix.text('delete_confirm', { name: 'House' })).toBe('Delete House? Cards that use it show that the image is missing. This cannot be undone.');

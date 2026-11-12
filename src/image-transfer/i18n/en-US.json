@@ -16,8 +16,8 @@
     "hash": "a0799a8a"
   },
   "image-transfer.chunk.export-all-images": {
-    "text": "Export all images",
-    "hash": "5e584b06"
+    "text": "Export all",
+    "hash": "51427688"
   },
   "image-transfer.chunk.n": {
     "text": "{n, plural, one {# connection} other {# connections}}",

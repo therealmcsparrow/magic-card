@@ -344,6 +344,7 @@ export const frameStyles: CSSResult = /* @__PURE__ */ css`
     border-radius: var(--bp-r-s);
     background: none;
     color: inherit;
+    font: inherit;
     cursor: pointer;
   }
   .ib:hover {
