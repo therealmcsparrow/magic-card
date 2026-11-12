@@ -452,6 +452,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.hist = this.chunk?.createHistory(doc);
     this.note = undefined;
     this.base = doc;
+    this.held = [];
     this.setDoc(doc);
     this.baseline = this.stamp(doc);
     this.sel = [];
@@ -616,11 +617,17 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** A drag or handle gesture is moving the document: the layers list keeps what it shows until the gesture ends. */
   private hot = false;
   private thaw = false;
+  /** Settles that came during a gesture: they wait until it ends, so its frames keep measuring from the document it started on. */
+  private held: Array<(d: Doc) => Doc> = [];
   /** Changes whenever the layers list has to show the document again. */
   listKey: object = {};
 
   /** `live`: a frame of a gesture that only moves or resizes layers; the commit that ends it (or any other edit) passes false. */
   setDoc(doc: Doc, live = false): void {
+    if (!live && this.held.length) {
+      const held = this.held.splice(0);
+      queueMicrotask(() => held.forEach((f) => this.settle(f)));
+    }
     if (this.hot && !live) this.thaw = true;
     this.hot = live;
     this.doc = doc;
@@ -871,9 +878,13 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** A change the user did not make (text measured again once its font loaded): no history step, no unsaved mark. */
   settle(f: (d: Doc) => Doc): void {
+    if (this.hot) {
+      this.held.push(f);
+      return;
+    }
     const clean = !this.dirty;
     this.base = f(this.base);
-    if (!this.hot) this.setDoc(f(this.doc));
+    this.setDoc(f(this.doc));
     if (clean) this.baseline = this.stamp(this.base);
     this.refresh();
   }

@@ -24,7 +24,7 @@ describe('svg editor contract revision', () => {
 describe('settle', () => {
   const settle = (customElements.get('mc-svg-editor') as unknown as { prototype: { settle(this: unknown, f: (d: unknown) => unknown): void } }).prototype.settle;
   const fake = (dirty: boolean, hot = false) => {
-    const me = { dirty, hot, base: 'b', doc: 'd', baseline: 'old', set: [] as unknown[], refreshed: 0, setDoc: (d: unknown) => me.set.push(d), stamp: (d: unknown) => 'stamp:' + String(d), refresh: () => void me.refreshed++ };
+    const me = { dirty, hot, held: [] as unknown[], base: 'b', doc: 'd', baseline: 'old', set: [] as unknown[], refreshed: 0, setDoc: (d: unknown) => me.set.push(d), stamp: (d: unknown) => 'stamp:' + String(d), refresh: () => void me.refreshed++ };
     return me;
   };
   it('changes the document and its committed copy, and keeps a clean editor clean', () => {
@@ -35,11 +35,19 @@ describe('settle', () => {
     expect(me.baseline).toBe('stamp:b+');
     expect(me.refreshed).toBe(1);
   });
-  it('leaves the unsaved mark and a running gesture alone', () => {
-    const me = fake(true, true);
+  it('leaves the unsaved mark alone', () => {
+    const me = fake(true);
     settle.call(me, (d) => d + '+');
     expect(me.base).toBe('b+');
-    expect(me.set).toEqual([]);
     expect(me.baseline).toBe('old');
+  });
+  it('holds a change that comes during a gesture until the gesture ends', () => {
+    const me = fake(false, true);
+    const f = (d: unknown) => String(d) + '+';
+    settle.call(me, f);
+    expect(me.base).toBe('b');
+    expect(me.set).toEqual([]);
+    expect(me.held).toEqual([f]);
+    expect(me.refreshed).toBe(0);
   });
 });
