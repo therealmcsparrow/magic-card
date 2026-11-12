@@ -128,6 +128,8 @@ export class EditorStateManager {
   private dragPace?: ReturnType<typeof setTimeout>;
   /** The newest config of a drag that has not gone out yet. */
   private dragNext?: MagicCardConfig;
+  /** Set while a text field is being typed in: false until its first write pushed an undo entry, then true. */
+  private typingUndone?: boolean;
 
   constructor(private fireEvent: (config: MagicCardConfig) => void) {
     this.state = {
@@ -167,6 +169,11 @@ export class EditorStateManager {
   sliderMoved(): void {
     if (Date.now() >= this.dragEnd) this.dragUndone = false;
     this.dragEnd = Date.now() + EDITOR_DRAG_IDLE_MS;
+  }
+
+  /** A text field started (true) or finished (false) an edit: every write in between is one undo step. */
+  typing(on: boolean): void {
+    this.typingUndone = on ? (this.typingUndone ?? false) : undefined;
   }
 
   // ── Subscription ──
@@ -262,9 +269,10 @@ export class EditorStateManager {
 
   updateConfig(config: MagicCardConfig, recordUndo = true): void {
     const prev = this.state.config;
-    if (recordUndo && !(Date.now() < this.dragEnd && this.dragUndone)) {
+    if (recordUndo && !(Date.now() < this.dragEnd && this.dragUndone) && !this.typingUndone) {
       this.undoRedo.push(this.state.config);
       this.dragUndone = Date.now() < this.dragEnd;
+      if (this.typingUndone === false) this.typingUndone = true;
     }
     // kept copies of saved icons and shapes nothing uses any more go (library.ts; not while typing YAML)
     const cloned = deepClone(config);
@@ -1138,6 +1146,7 @@ export class EditorStateManager {
   undo(): void {
     const prev = this.undoRedo.undo(this.state.config);
     if (prev) {
+      if (this.typingUndone) this.typingUndone = false;
       this.state = {
         ...this.state,
         config: prev,
@@ -1153,6 +1162,7 @@ export class EditorStateManager {
   redo(): void {
     const next = this.undoRedo.redo(this.state.config);
     if (next) {
+      if (this.typingUndone) this.typingUndone = false;
       this.state = {
         ...this.state,
         config: next,
