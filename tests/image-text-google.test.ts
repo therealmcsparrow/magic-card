@@ -92,3 +92,23 @@ describe('text field', () => {
     expect(options()).toContain('Google');
   });
 });
+
+describe('help under the font field', () => {
+  const host = document.createElement('div');
+  document.body.append(host);
+  const shape = (f: string) => ({ id: 's', look: { text: { s: 'Hi', z: 10, w: 400, a: 'start', f } } });
+  const x = { shell: { requestUpdate: () => undefined, settle: () => undefined }, edit: () => undefined, needColours: () => undefined, googleFont: false } as never;
+  const help = () => [...host.querySelectorAll('p.help')].map((p) => p.textContent ?? '').join('|');
+  it('says a Google font loads from Google Fonts while the switch is on, without the device line', () => {
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    render(textRows(x, shape('"Roboto", sans-serif') as never) ?? html``, host);
+    expect(help()).toContain('Roboto is a Google font. It loads from Google Fonts because the switch');
+    expect(help()).toContain('Viewers then contact Google.');
+    expect(help()).not.toContain('Nothing is downloaded');
+  });
+  it('keeps the device line while the switch is off', () => {
+    render(textRows(x, shape('"Roboto", sans-serif') as never) ?? html``, host);
+    expect(help()).toContain('while the switch in Magic Card Utils is on');
+    expect(help()).toContain('Nothing is downloaded');
+  });
+});

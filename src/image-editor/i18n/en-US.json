@@ -719,6 +719,10 @@
     "text": "{name} is a Google font. It loads from Google Fonts while the switch in Magic Card Utils is on.",
     "hash": "d899e889"
   },
+  "image-editor.text-ui.google-font-loads": {
+    "text": "{name} is a Google font. It loads from Google Fonts because the switch in Magic Card Utils is on. Viewers then contact Google.",
+    "hash": "2621b6cf"
+  },
   "image-editor.text-ui.italic": {
     "text": "Italic",
     "hash": "9bf37cb5"

@@ -996,6 +996,14 @@
       "name": "The font family name."
     }
   },
+  "image-editor.text-ui.google-font-loads": {
+    "text": "{name} is a Google font. It loads from Google Fonts because the switch in Magic Card Utils is on. Viewers then contact Google.",
+    "note": "Hint under the font choice when the text uses a Google font and the Google Fonts switch is on. {name} is the font family name.",
+    "max": 160,
+    "vars": {
+      "name": "The font family name."
+    }
+  },
   "image-editor.text-ui.italic": {
     "text": "Italic",
     "note": "Option for slanted letters in the text style choice.",

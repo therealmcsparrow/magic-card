@@ -148,9 +148,11 @@ function fontField(x: ImageExt, td: TextData, set: (patch: Partial<TextData>) =>
       : nothing}`;
 }
 
-const fontHint = (f: string): string =>
+const fontHint = (f: string, google: boolean): string =>
   googleFamilyOf(f)
-    ? t('image-editor.text-ui.google-font-hint', { name: googleFamilyOf(f)! })
+    ? google
+      ? t('image-editor.text-ui.google-font-loads', { name: googleFamilyOf(f)! })
+      : t('image-editor.text-ui.google-font-hint', { name: googleFamilyOf(f)! })
     : f === 'serif'
     ? t('image-editor.text-ui.with-small-feet-like-print')
     : f === 'monospace'
@@ -167,6 +169,7 @@ export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
   const set = (patch: Partial<TextData>, label: string, merge?: string): void => x.edit((q) => retext(q, patch), label, merge);
   const left = IMAGE_MAX_TEXT_CHARS - td.s.length;
   const countId = 'tx-count';
+  const google = googleFontsAllowed();
   loadGoogleFont(td.f, () => set({}, 'Text font', 'text-font-measure'));
   const done = (): void => {
     const cur = sh.doc.shapes.find((q) => q.id === s.id);
@@ -230,7 +233,7 @@ export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
       set(patch, 'Text font');
       if (patch.f) loadGoogleFont(patch.f, () => set({}, 'Text font', 'text-font-measure'));
     })}
-    <p class="help">${fontHint(td.f)}</p>
-    <p class="help">${t('image-editor.text-ui.text-uses-fonts-already-on-the-device')}</p>
+    <p class="help">${fontHint(td.f, google)}</p>
+    ${google && googleFamilyOf(td.f) ? nothing : html`<p class="help">${t('image-editor.text-ui.text-uses-fonts-already-on-the-device')}</p>`}
   </section>`;
 }
