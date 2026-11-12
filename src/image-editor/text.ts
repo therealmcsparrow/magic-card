@@ -1,5 +1,5 @@
 import type { EditPath } from '../contracts/path-model';
-import { IMAGE_FONT_FAMILIES, IMAGE_MAX_TEXT_CHARS } from '../contracts/svg-image';
+import { IMAGE_FONT_FAMILIES, IMAGE_FONT_RE, IMAGE_MAX_TEXT_CHARS } from '../contracts/svg-image';
 import type { Box, Flag } from './paint';
 
 // Text layers: a layer whose placeholder path is the text rectangle and whose words are in `look.text`, written as <text> with <tspan> lines.
@@ -16,12 +16,16 @@ export interface TextData {
   a: 'start' | 'middle' | 'end';
   /** Letter spacing in drawing units (absent = 0). */
   l?: number;
-  /** One of IMAGE_FONT_FAMILIES. */
+  /** One of IMAGE_FONT_FAMILIES, or a Google family as `"Name", <generic>`. */
   f: string;
 }
 
 export const WEIGHTS: readonly number[] = [300, 400, 500, 600, 700, 800];
 export const FONTS: readonly string[] = IMAGE_FONT_FAMILIES;
+/** True for a generic family or a Google family in the stored form. */
+export const validFont = (f: string): boolean => FONTS.includes(f) || IMAGE_FONT_RE.test(f);
+/** The Google family name of a stored font value, if it has one. */
+export const googleFamilyOf = (f: string): string | undefined => IMAGE_FONT_RE.exec(f)?.[1];
 export const MAX_TEXT_SIZE = 1000;
 /** Line distance as a multiple of the size; the top of the box lies ASCENT * size above the first baseline. */
 export const LINE = 1.2;
@@ -123,7 +127,7 @@ const esc = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;'
 /** The attributes that place and set the text (the layer's paint comes from layerPaint). */
 export function textAttrs(t: TextData, at: readonly [number, number]): string {
   return (
-    ` x="${r2(at[0])}" y="${r2(at[1])}" font-size="${r2(t.z)}" font-family="${t.f}" font-weight="${t.w}"` +
+    ` x="${r2(at[0])}" y="${r2(at[1])}" font-size="${r2(t.z)}" font-family=${t.f.includes('"') ? `'${t.f}'` : `"${t.f}"`} font-weight="${t.w}"` +
     (t.i ? ' font-style="italic"' : '') +
     ` text-anchor="${t.a}"` +
     (t.l ? ` letter-spacing="${r2(t.l)}"` : '')
@@ -183,7 +187,7 @@ export function readText(el: Element, flag: Flag): { t: TextData; at: [number, n
   const fam = inherited(el, 'font-family') ?? 'sans-serif';
   if (!weight || (style !== 'normal' && style !== 'italic') || (anchor !== 'start' && anchor !== 'middle' && anchor !== 'end')) return bad();
   if (!(size > 0 && size <= MAX_TEXT_SIZE) || f.v) return bad();
-  const t: TextData = { s: '', z: size, w: weight, a: anchor, f: FONTS.includes(fam) ? fam : 'sans-serif' };
+  const t: TextData = { s: '', z: size, w: weight, a: anchor, f: validFont(fam) ? fam : 'sans-serif' };
   if (style === 'italic') t.i = true;
   if (spacing) t.l = spacing;
   const kids = [...el.childNodes].filter((n) => n.nodeType === 1 || (n.nodeType === 3 && n.textContent!.trim()));
@@ -217,7 +221,7 @@ export function changed(t: TextData, box: Box | undefined, patch: Partial<TextDa
   n.s = cleanText(n.s);
   n.z = clamp(Number.isFinite(n.z) ? n.z : t.z, 1, MAX_TEXT_SIZE);
   n.w = safeWeight(n.w);
-  if (!FONTS.includes(n.f)) n.f = 'sans-serif';
+  if (!validFont(n.f)) n.f = 'sans-serif';
   if (!n.i) delete n.i;
   if (n.l) n.l = clamp(n.l, -100, 1000);
   else delete n.l;

@@ -711,6 +711,14 @@
     "text": "Lettertype",
     "hash": "64d0b3ad"
   },
+  "image-editor.text-ui.google-font": {
+    "text": "Google-lettertype…",
+    "hash": "8677baaa"
+  },
+  "image-editor.text-ui.google-font-hint": {
+    "text": "{name} is een Google-lettertype. Het wordt van Google Fonts geladen zolang de schakelaar in Magic Card Utils aan staat.",
+    "hash": "d899e889"
+  },
   "image-editor.text-ui.italic": {
     "text": "Cursief",
     "hash": "9bf37cb5"
