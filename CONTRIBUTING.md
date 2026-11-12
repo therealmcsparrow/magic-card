@@ -31,6 +31,12 @@ Other scripts you will use:
 
 Pull requests normally leave `dist/` alone. The maintainer rebuilds it in the release commit. The release steps are in [MAINTAINING.md](MAINTAINING.md#release-steps).
 
+## Checks on GitHub
+
+The HACS action checks the repository as a dashboard plugin on every push and pull request, once a week, and when the maintainer starts it by hand. The Home Assistant Marketplace needs this check to pass before it lists the card. The Validate workflow runs lint, the build with its size budget, the size caps and the dependency audit on pushes to `main` and on pull requests into it. A pull request can only be merged when all of these checks are green.
+
+Hassfest does not run here. It checks Home Assistant integrations, and Magic Card is a dashboard card with no integration. Hassfest runs in [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) instead.
+
 ## Text and translations
 
 Every sentence a user can read goes through `t()`. Write the source text in British English, and add the same key to the en-US and nl tables. Before you open a pull request, run:
