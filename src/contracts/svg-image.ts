@@ -5,10 +5,10 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
 import type { SvgCssOption, SvgMorphOption } from './svg-safety';
 import type { SanitisedImageMarkup } from './svg-reader';
 
-/** Contract: library images on cards. Version 1.2.0. A library image is a full drawing saved in Magic Card Utils
+/** Contract: library images on cards. Version 1.3.0. A library image is a full drawing saved in Magic Card Utils
  * (mcu-library 1.2.0, kind `images`). */
 
-export const SVG_IMAGE_CONTRACT = '1.2.0';
+export const SVG_IMAGE_CONTRACT = '1.3.0';
 export const SVG_IMAGE_CONTRACT_REVISION = 10;
 
 export const IMAGE_REF_PREFIX = 'mcu-image:';
