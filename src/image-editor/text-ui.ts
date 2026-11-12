@@ -6,6 +6,7 @@ import { button, field, fieldHelpId, sectionHead, seg } from '../ui-kit/template
 import { textDir } from '../ui-kit/templates/field';
 import type { ImageExt } from './chunk';
 import { googleFontsAllowed, googleFontsChunk, whenGoogleFontsAllowed } from '../utils/google-fonts';
+import { LOCAL_FONT_NAMES } from '../google-fonts/local-fonts';
 import { t } from './i18n';
 import { K } from './kit';
 import { num, pick } from './paint-ui';
@@ -104,7 +105,7 @@ const fontItems = (): Array<[string, string]> => [
 const GOOGLE = 'google';
 const loadedFonts = new Set<string>();
 
-/** Asks the font loader for a Google family once, then measures the text in that font again with the face in place. */
+/** Asks the font loader for a Google family once, then measures the text in that font again with the face in place. A failed chunk load is tried again on the next render. */
 export function loadGoogleFont(x: ImageExt, f: string): void {
   if (!googleFamilyOf(f) || loadedFonts.has(f)) return;
   loadedFonts.add(f);
@@ -114,23 +115,47 @@ export function loadGoogleFont(x: ImageExt, f: string): void {
         m.loadFontsFor(m.fontCandidates(f));
         return document.fonts?.load(`16px ${f}`);
       })
-      .then(() => x.shell.settle((d) => ({ ...d, shapes: d.shapes.map((q) => (q.look?.text?.f === f ? retext(q, {}) : q)) })), () => 0);
+      .then(
+        () => x.shell.settle((d) => ({ ...d, shapes: d.shapes.map((q) => (q.look?.text?.f === f ? retext(q, {}) : q)) })),
+        () => loadedFonts.delete(f),
+      );
   });
 }
 
+const PICKED = /^\s*"?([^",]+?)"?\s*,\s*([a-z-]+)\s*$/;
+let pickSeq = 0;
+
+/**
+ * The stored value for what the font picker sends, or undefined to ignore it: a local font becomes its generic, a Google family its stored form,
+ * and anything the catalogue does not know (a half-typed name) is dropped.
+ */
+export async function imageFontFor(v: string): Promise<string | undefined> {
+  const m = PICKED.exec(v);
+  if (!m) return undefined;
+  const [, family, generic] = m;
+  if (LOCAL_FONT_NAMES.some((n) => n.toLowerCase() === family.toLowerCase())) return FONTS.includes(generic) ? generic : 'sans-serif';
+  try {
+    const lib = await googleFontsChunk();
+    const found = lib.findFamily(family);
+    return found ? imageFontValue(found.name, lib.genericFor(found.category)) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /** The font field: the four generics, plus a Google family when the switch allows one. */
-function fontField(x: ImageExt, td: TextData, set: (patch: Partial<TextData>) => void): TemplateResult {
+function fontField(x: ImageExt, id: string, td: TextData, set: (patch: Partial<TextData>, merge?: string) => void): TemplateResult {
   const name = googleFamilyOf(td.f);
   const items = fontItems();
   if (!googleFontsAllowed()) return pick('tx-font', t('image-editor.text-ui.font'), td.f, items.filter(([v]) => FONTS.includes(v)), (f) => set({ f }));
   if (!customElements.get('mc-font-picker')) x.needColours();
-  const choice = name || x.googleFont ? GOOGLE : td.f;
+  const choice = name || x.googleFont === id ? GOOGLE : td.f;
   return html`${pick('tx-font', t('image-editor.text-ui.font'), choice, [...items, [GOOGLE, t('image-editor.text-ui.google-font')]], (f) => {
       if (f === GOOGLE) {
-        x.googleFont = true;
+        x.googleFont = id;
         x.shell.requestUpdate();
       } else {
-        x.googleFont = false;
+        x.googleFont = undefined;
         set({ f });
       }
     })}
@@ -140,9 +165,15 @@ function fontField(x: ImageExt, td: TextData, set: (patch: Partial<TextData>) =>
           .value=${name ?? ''}
           @value-changed=${(e: CustomEvent) => {
             e.stopPropagation();
-            const v = String((e.detail as { value?: unknown } | undefined)?.value ?? '');
-            const m = /^"([^"]+)",\s*([a-z-]+)$/.exec(v);
-            if (m) set({ f: imageFontValue(m[1], m[2]) });
+            const seq = ++pickSeq;
+            void imageFontFor(String((e.detail as { value?: unknown } | undefined)?.value ?? '')).then((f) => {
+              if (!f || seq !== pickSeq) return;
+              if (!googleFamilyOf(f)) {
+                x.googleFont = undefined;
+                x.shell.requestUpdate();
+              }
+              if (f !== td.f) set({ f }, 'text-font');
+            });
           }}
         ></mc-font-picker>`
       : nothing}`;
@@ -229,8 +260,8 @@ export function textRows(x: ImageExt, s: Shape): TemplateResult | undefined {
       })}
     </div>
     ${num('tx-spacing', t('image-editor.text-ui.letter-spacing-units'), td.l ?? 0, (n) => set({ l: n }, 'Letter spacing', 'text-spacing'), { min: -100, max: 1000, step: 1 })}
-    ${fontField(x, td, (patch) => {
-      set(patch, 'Text font');
+    ${fontField(x, s.id, td, (patch, merge) => {
+      set(patch, 'Text font', merge);
       if (patch.f) loadGoogleFont(x, patch.f);
     })}
     <p class="help">${fontHint(td.f, google)}</p>

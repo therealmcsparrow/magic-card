@@ -234,8 +234,8 @@ export class ImageExt implements ImageUi {
   replacing?: { doc: Doc; stripped: string[]; name: string };
   private back?: HTMLElement;
   private colours = false;
-  /** The Google font option is chosen in the text font field. */
-  googleFont = false;
+  /** The text layer whose font field has the Google option chosen before a family is picked. */
+  googleFont?: string;
   /** The paint whose gradient handles show, and the field with a message under it. */
   which: Which = 'fill';
   problemAt?: string;

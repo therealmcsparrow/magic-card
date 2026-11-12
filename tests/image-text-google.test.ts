@@ -5,7 +5,8 @@ import { IMAGE_FONT_RE, imageFontValue } from '../src/contracts/svg-image';
 import { IMAGE_POLICY } from '../src/svg-safety';
 import * as safety from '../src/svg-safety';
 import { cleanText, textAttrs, validFont, changed } from '../src/image-editor/text';
-import { textRows } from '../src/image-editor/text-ui';
+import { imageFontFor, loadGoogleFont, textRows } from '../src/image-editor/text-ui';
+import '../src/editor/components/font-picker';
 import { bindKit } from '../src/image-editor/kit';
 import { imageKit } from '../src/svg-editor/image-kit';
 import { install } from '../src/svg-image/chunk';
@@ -139,5 +140,82 @@ describe('measure again once a Google font loads', () => {
     const out = settled[0]({ shapes: [lato, other] });
     expect(out.shapes[0].paths.length).toBeGreaterThan(0);
     expect(out.shapes[1]).toBe(other);
+  });
+});
+
+describe('the Google option belongs to one layer', () => {
+  it('does not carry over to another layer', () => {
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    const host = document.createElement('div');
+    document.body.append(host);
+    const layer = (id: string) => ({ id, look: { text: { s: 'Hi', z: 10, w: 400, a: 'start', f: 'serif' } } });
+    const x = { shell: { requestUpdate: () => undefined, settle: () => undefined }, edit: () => undefined, needColours: () => undefined, googleFont: 'a' } as never;
+    const chosen = () => host.querySelector<HTMLOptionElement>('#tx-font option[selected]')?.value;
+    render(textRows(x, layer('a') as never) ?? html``, host);
+    expect(chosen()).toBe('google');
+    expect(host.querySelector('mc-font-picker')).not.toBeNull();
+    render(textRows(x, layer('b') as never) ?? html``, host);
+    expect(chosen()).toBe('serif');
+    expect(host.querySelector('mc-font-picker')).toBeNull();
+  });
+});
+
+describe('what the font picker sends', () => {
+  it('maps a local font to its generic', async () => {
+    expect(await imageFontFor('Arial, sans-serif')).toBe('sans-serif');
+    expect(await imageFontFor('"Times New Roman", serif')).toBe('serif');
+    expect(await imageFontFor('"Courier New", monospace')).toBe('monospace');
+    expect(await imageFontFor('"Comic Sans MS", cursive')).toBe('sans-serif');
+  });
+  it('keeps catalogue families in the stored form and drops the rest', async () => {
+    expect(await imageFontFor('"lato", serif')).toBe('"Lato", sans-serif');
+    expect(await imageFontFor('"Lat", serif')).toBeUndefined();
+    expect(await imageFontFor('"Lat')).toBeUndefined();
+    expect(await imageFontFor('Lato')).toBeUndefined();
+  });
+  it('stores a pick as one merged step, and a local pick as the generic', async () => {
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    const host = document.createElement('div');
+    document.body.append(host);
+    const layer = { id: 'a', look: { text: { s: 'Hi', z: 10, w: 400, a: 'start', f: '"Lato", sans-serif' } } };
+    const edits: Array<[string, string | undefined]> = [];
+    const x = {
+      shell: { requestUpdate: () => undefined, settle: () => undefined },
+      edit: (_f: unknown, label: string, merge?: string) => edits.push([label, merge]),
+      needColours: () => undefined,
+      googleFont: undefined,
+    } as never;
+    render(textRows(x, layer as never) ?? html``, host);
+    const picker = host.querySelector('mc-font-picker')!;
+    const send = (value: string) => picker.dispatchEvent(new CustomEvent('value-changed', { detail: { value } }));
+    send('"Lat", serif');
+    send('"Roboto", sans-serif');
+    await wait();
+    expect(edits).toEqual([['Text font', 'text-font']]);
+    send('Arial, sans-serif');
+    await wait();
+    expect(edits).toEqual([['Text font', 'text-font'], ['Text font', 'text-font']]);
+  });
+});
+
+describe('a Google font whose loader failed', () => {
+  it('is asked for again on the next render', async () => {
+    w.magicCardUtils = { settings: { googleFonts: true } };
+    const fonts = document.fonts as unknown as { load?: unknown } | undefined;
+    const had = fonts && 'load' in fonts ? fonts.load : undefined;
+    let calls = 0;
+    const settle = () => undefined;
+    const x = { shell: { settle } } as never;
+    Object.defineProperty(document, 'fonts', { configurable: true, value: { load: () => (calls++, Promise.reject(new Error('offline'))) } });
+    try {
+      loadGoogleFont(x, '"Bitter", serif');
+      await wait();
+      loadGoogleFont(x, '"Bitter", serif');
+      await wait();
+      expect(calls).toBe(2);
+    } finally {
+      if (fonts) Object.defineProperty(document, 'fonts', { configurable: true, value: fonts });
+      void had;
+    }
   });
 });
