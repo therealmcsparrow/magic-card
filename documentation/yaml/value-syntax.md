@@ -103,9 +103,9 @@ A `media-source://` id is what the editor's media browser stores. The card resol
 
 ## Fonts
 
-`font_family` takes a CSS font list: `"Open Sans", sans-serif`. When the list names one of the Google Fonts in the editor's font picker, the card loads that font from Google (`fonts.googleapis.com` and `fonts.gstatic.com`), once per page, in weights 300, 400, 500 and 700 where the family has them. A `font-family` declaration in a `css` string counts too. Names match in any case.
+`font_family` takes a CSS font list: `"Open Sans", sans-serif`. When the list names a font from the Google Fonts catalogue, the card loads that font from Google (`fonts.googleapis.com` and `fonts.gstatic.com`), once per page, in weights 300, 400, 500 and 700 where the family has them. A `font-family` declaration in a `css` string counts too. Names match in any case. A catalogue name typed in the editor, such as `lato`, is stored as `"Lato", sans-serif`.
 
-The fonts it loads: Open Sans, Lato, Montserrat, Oswald, Source Sans Pro, Raleway, PT Sans, Merriweather, Playfair Display, Lora, PT Serif, Noto Sans, Ubuntu, Poppins, Nunito, Inconsolata, Fira Code, Source Code Pro and Dancing Script. Roboto is in the picker too, but it is never fetched, because Home Assistant already ships it. Any other family must be installed on the device or loaded some other way.
+Google fonts load only when the Google Fonts switch in Magic Card Utils is on. See [Privacy](../../README.md#privacy) and [Fonts and Google Fonts](../design/fonts.md). Until then, the card shows the generic family at the end of the list. Roboto is never fetched, because Home Assistant already ships it. Any family outside the catalogue must be installed on the device or loaded some other way.
 
 Loading a font sends a request to Google from every device that shows the card, and the device needs internet access for it.
 

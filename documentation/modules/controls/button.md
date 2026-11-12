@@ -60,7 +60,7 @@ Things to know:
 -   Part colours take one colour. Gradients are not accepted. `entity 30%` needs a browser that supports `color-mix` (Chromium 111 and newer). In older ones the part keeps the colour it would inherit.
 -   With Use entity colour on, the icon keeps the entity colour. Otherwise `icon_color` wins over the design colour.
 -   Icon-only buttons have no label, so the label settings are hidden and ignored. They still show the state when Show state is on, and the state settings apply.
--   `label_font_family` loads a Google Font the same way the Font family setting does. The same notes apply, see [Typography](../../design/typography.md).
+-   `label_font_family` loads a Google Font the same way the Font family setting does. The same notes apply, see [Typography](../../design/typography.md). Google fonts load only when the Google Fonts switch in Magic Card Utils is on. See [Privacy](../../../README.md#privacy).
 -   A value that is not a plain length (no negative numbers, no `calc()`), a colour or one of the listed words is ignored.
 -   The animation `target: label` plays an animation on the label only. See [Animations](../../design/animations.md).
 

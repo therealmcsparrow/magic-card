@@ -50,4 +50,4 @@ Add a `transition` to the Default design for a smooth change. With reduced motio
 
 - On a template-linked card, the whole hover design is one field: editing it marks `hover` as overridden.
 - Copy design copies the hover design with the rest. See [Copy and paste](README.md#copy-and-paste).
-- A Google font in the hover design is loaded like any other. See [Font family](README.md#font-family).
+- A Google font in the hover design is loaded like any other. See [Font family](README.md#font-family). Google fonts load only when the Google Fonts switch in Magic Card Utils is on. See [Privacy](../../README.md#privacy).

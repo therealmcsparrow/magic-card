@@ -4,6 +4,21 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.11.04-beta.1
+
+A pre-release. Install Magic Card Utils 2026.11.3-beta.1 (or newer) first, then update Magic Card. To install it, choose **Include pre-releases** in the Marketplace, or turn on **Show beta versions** in HACS.
+
+### Breaking
+-   **Google fonts need Magic Card Utils and a switch.** A card that names a Google font now shows a fallback font until **Load Google Fonts** is on in Settings → Devices & services → Magic Card Utils → Configure, and the page is reloaded. The card editor shows a short note under such a font field. An `@import` of a Google Fonts address in a card's custom css is not affected.
+
+### New
+-   **Every Google font in every font picker.** With the switch on, each font picker has a Google tab with the full Google Fonts catalogue, search and category filters. It covers the card editor and Studio, the theme editor font fields and image editor text. Typing a catalogue name such as `lato` is stored as `"Lato", sans-serif`.
+-   **Theme fonts.** Fonts named by your Home Assistant theme load on every Home Assistant page when the switch is on.
+-   **Google fonts in images.** Image text can use a Google font, stored as `"Name", sans-serif`, `serif`, `monospace` or `system-ui`. A handwriting font falls back to sans-serif in images.
+
+### Changed
+-   **Privacy.** With the switch off, or without Magic Card Utils, nothing is requested from Google. The privacy text in the README, the SVG allowlist and SECURITY.md describes the switch. See [Fonts and Google Fonts](documentation/design/fonts.md).
+
 ## 2026.11.03 (2026-11-12)
 
 This stable release holds everything from the 2026.11.03 pre-releases, which are listed below, plus the changes in this section. Install Magic Card Utils 2026.11.02 first, then update Magic Card. With an older Utils, the Animate buttons are greyed out and images stay at 256 KiB. If you stayed on 2026.11.02, these are the main changes:

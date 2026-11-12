@@ -363,7 +363,7 @@ The sections sit in four headed groups in one list. Layout and Style start open,
 -   Style
     -   Backgrounds: background, colour, image (including media browser items), position, size, repeat, attachment, clip, origin, backdrop filter.
     -   Borders and outlines: border (all sides and per side), width, style, colour, radius, outline, box shadow, plus border length (below).
-    -   Typography: font family, size, weight and style, colour, alignment, decoration, transform, shadow, line height, letter and word spacing, white space, word break. The font picker offers system fonts and Google Fonts. A Google Font the card uses (in a design or in custom CSS) is loaded from `fonts.googleapis.com` once per page, in weights 300, 400, 500 and 700 where the family has them (so bold is a real bold face), and the browser needs internet access for it. Loading a font sends a request to Google, a third party, from every device that shows the card. Roboto is never loaded, because Home Assistant already ships it.
+    -   Typography: font family, size, weight and style, colour, alignment, decoration, transform, shadow, line height, letter and word spacing, white space, word break. The font picker offers system fonts, and with Magic Card Utils it offers the whole Google Fonts catalogue in a Google tab with search and category filters. To use it, turn on **Load Google Fonts** under Settings → Devices & services → Magic Card Utils → Configure, then reload the page. The switch is off by default and covers the whole Home Assistant install. Without it, a card that names a Google font shows a fallback font, and the Google tab is hidden. When it is on, every device that shows the card requests the font from Google (see [Privacy](#privacy)). Roboto is never loaded, because Home Assistant already ships it. See [Fonts](documentation/design/fonts.md).
     -   Shape (see [Shapes](#shapes)).
     -   Value background (see [Value backgrounds](#value-backgrounds)).
 -   Effects
@@ -1134,10 +1134,10 @@ Imported files are limited to 1 MB, parsed with a safe YAML reader, checked item
 
 Magic Card and Magic Card Utils have no telemetry and send nothing to the author. Your icons, shapes and presets are stored in your own Home Assistant (Magic Card Utils) or in the card configuration.
 
-Magic Card Utils makes no requests to other websites. Magic Card makes them only when your own configuration asks for it:
+Neither makes requests to other websites unless you turn on a feature or your own configuration asks for it:
 
--   A card that uses a Google font from the font picker loads that font from Google (`fonts.googleapis.com` and `fonts.gstatic.com`). Google can see the visitor's IP address. This also applies to a font set for a button label. To avoid it, use a font that is installed on the device.
--   An address you typed, such as an image, is requested by the browser, and that website can see the visitor's IP address.
+-   **Google Fonts**, when you turn on the switch in Magic Card Utils → Configure. Google Fonts are off by default. The administrator of the Home Assistant install turns them on with the **Load Google Fonts** switch in Magic Card Utils → Configure. The switch covers the whole install, and a change applies when the page is reloaded. When it is on, the browser of everyone who views a dashboard requests font files from Google (`fonts.googleapis.com` and `fonts.gstatic.com`). This happens in cards, the editors, the theme preview, images and the forum shot export. Google receives the viewer's IP address, browser details and the page address, and logs the request; see [Google's privacy policy](https://policies.google.com/privacy). When the switch is off, or Magic Card Utils is not installed, nothing is requested from Google and a font that only Google provides shows as a plain generic font. The switch does not cover an `@import url(https://fonts.googleapis.com/...)` that you typed into a card's custom css. That is an address you chose, like an image address, and the browser requests it either way. More in [Fonts](documentation/design/fonts.md#privacy).
+-   An address you typed, such as an image, is requested by the browser, and that website can see the visitor's IP address. A `@import` of a Google Fonts address in custom css is one of these.
 -   A theme file kept with **Import anyway** that points to another website is requested the same way.
 
 ## Compatibility

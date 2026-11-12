@@ -54,7 +54,7 @@ In the editor, the Tab bar section of the Design tab groups these keys into five
 | `tab_border_style` | 1 to 4 words: `none`, `hidden`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset`. The editor offers all ten. | `solid` | Style of each tab's border, one word or one per side in the same order. |
 | `tab_radius` | 1 to 4 lengths, each up to 999 | not set | Corner radius of each tab. One value for all corners, or one per corner from top left, clockwise: top left, top right, bottom right, bottom left. |
 | `tab_padding` | 1 to 4 lengths, each up to 256 | not set | Space inside each tab. |
-| `tab_font_family` | font names separated by commas | not set | Font of the tab labels. Names may be in quotes. Up to 128 characters. A Google Font chosen in the editor's font picker loads from Google. |
+| `tab_font_family` | font names separated by commas | not set | Font of the tab labels. Names may be in quotes. Up to 128 characters. A Google Font chosen in the editor's font picker loads from Google, but only when the Google Fonts switch in Magic Card Utils is on. See [Privacy](../../../README.md#privacy). |
 | `tab_font_size` | length or %, up to 512 | not set | Size of the tab labels. |
 | `tab_font_weight` | `normal`, `bold`, or `100` to `900` in steps of 100 | not set | Weight of the tab labels. |
 | `tab_text_transform` | `none`, `uppercase`, `lowercase`, `capitalize` | not set | Letter case of the tab labels. |

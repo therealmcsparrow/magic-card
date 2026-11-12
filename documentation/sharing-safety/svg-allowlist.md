@@ -112,7 +112,7 @@ Before most rules run, a value is removed if it holds any of these blocked token
 | paint | Images | A hex colour, a colour name of 3 to 20 letters, `url(#id)` into the same drawing, `var(--name)` with an optional hex fallback, or a colour function from the list above. At most 200 characters. |
 | keyword | Images | Letters, digits, spaces and hyphens, at most 40 characters. |
 | reference | Images | `none` or `url(#id)` into the same drawing. |
-| font | Images | One of sans-serif, serif, monospace or system-ui. Any other font becomes sans-serif, so a drawing cannot load a web font. |
+| font | Images | One of sans-serif, serif, monospace or system-ui, or a name written as `"Name", sans-serif` where the part after the comma is one of those four. The name is letters, digits and spaces, up to 64 characters. Anything else becomes sans-serif. A drawing holds no font file and no link. The card loads a named Google font only when the Google Fonts switch in Magic Card Utils is on; otherwise the drawing shows the generic font. See [Privacy](../images/privacy.md). |
 | data-name | Images | 1 to 80 characters with no `<`, `>`, `"`, `&`, backslash or control characters. |
 
 ## Attributes that point somewhere

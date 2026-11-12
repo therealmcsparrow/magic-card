@@ -4,6 +4,8 @@ Forty complete dashboards for Home Assistant. Each is a sections view built only
 
 Each folder has the dashboard YAML to paste into the raw configuration editor, the theme file, the font stylesheet where one is needed, and a README with the install steps and the entities it uses. The entity ids are placeholders: change them to your own. Dashboards 26 to 40 also use picture files, and their install steps say which folders to copy from [`_assets`](_assets). Where a dashboard draws backgrounds, pictures or icons in SVG, its `svg` folder holds a copy of each drawing to open or reuse. The dashboard itself doesn't load these files.
 
+Where a dashboard asks for a font stylesheet, you add it as a dashboard resource. Every browser requests that resource, and the Google Fonts switch in Magic Card Utils does not control it. See [Fonts and Google Fonts](../../design/fonts.md#privacy).
+
 Back to the [card gallery](../README.md).
 
 ## Sci-fi

@@ -10,6 +10,7 @@ The card itself has a shorter Design tab: background colour and image, border ra
 - [Borders and outlines](borders.md): borders, border radius, border length lines, outline, box shadow
 - [Positioning and layout](positioning.md): position, offsets, display, visibility, opacity, z-index, overflow, cursor
 - [Typography](typography.md): font, text colour, alignment, decoration, spacing, wrapping
+- [Fonts and Google Fonts](fonts.md): the Load Google Fonts switch, the Google tab in every font picker, theme and image fonts, and privacy
 - [Backgrounds](backgrounds.md): background colour and image, backdrop filter, and the card backdrop (up to four pictures, gradients, patterns and colours behind the card)
 - [Layers](layers.md): modules behind others or on top, position and offsets, blend and blur, darkening behind text, click-through and the Pause motion button
 - [Flexbox](flexbox.md) and [CSS grid](grid.md)
@@ -130,15 +131,16 @@ A colour field has a swatch, a text input and, on a module with an entity, an en
 
 ### Font family
 
-A text input with a Browse button. Browse opens Select font with two tabs, Local fonts and Google Fonts, a search field and a preview line. Save writes a CSS font stack, for example `"Open Sans", sans-serif`.
+A text input with a Browse button. Browse opens Select font with a Local fonts tab, a search field and a preview line. Save writes a CSS font stack, for example `"Open Sans", sans-serif`.
 
-The Google Fonts tab lists 20 popular families. Opening that tab loads them, so each one previews in its own face.
+With **Load Google Fonts** on in Magic Card Utils, Select font also has a Google tab with the whole Google Fonts catalogue, search and category filters. With the switch off, the Google tab is hidden. Typing a catalogue name such as `lato` is stored as `"Lato", sans-serif`. See [Fonts and Google Fonts](fonts.md).
 
-The card loads each listed Google font it uses, wherever it is set: `font_family` in any design, hover design or conditional rule, `label_font_family` on a button, and `font-family` in any custom CSS. Each family gets one stylesheet link from `fonts.googleapis.com` per page, in the weights 300, 400, 500 and 700 where the family has them, so bold text uses a real bold face. Roboto is never loaded, because Home Assistant already ships it.
+The card loads each catalogue font it uses, wherever it is set: `font_family` in any design, hover design or conditional rule, `label_font_family` on a button, and `font-family` in any custom CSS. Each family gets one stylesheet link from `fonts.googleapis.com` per page, in the weights 300, 400, 500 and 700 where the family has them, so bold text uses a real bold face. Roboto is never loaded, because Home Assistant already ships it.
 
-- The device that shows the card needs internet access for the font. Without it, the generic family at the end of the stack is used.
-- Loading a font sends a request to Google, a third party, from every device that shows the card.
-- A family that isn't on the list (typed by hand) is not loaded. It only shows when the device has it or your theme or dashboard resources load it.
+- Google fonts load only when the Google Fonts switch in Magic Card Utils is on. See [Privacy](../../README.md#privacy).
+- A card that names a Google font shows the generic family at the end of the stack until the switch is on. The card editor shows a short note under that field.
+- The device that shows the card needs internet access for the font.
+- A family that isn't in the catalogue (typed by hand) is not loaded. It only shows when the device has it or your theme or dashboard resources load it.
 
 ### Background image
 

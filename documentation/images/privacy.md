@@ -12,6 +12,8 @@ Library images are drawings you make in the Magic Card image editor and save in 
 
 **Export files.** Exporting an image gives you an SVG or a library file on your own device. It contains the drawing, including its animation, and may contain entity names from its bindings. Check a file before you post it in a forum or an issue.
 
+**Fonts.** Image text may use a Google font. The font loads from Google only when the Google Fonts switch in Magic Card Utils is on, and then Google sees the viewer's IP address. An exported SVG file holds no font file and shows the generic font.
+
 **Deleting an image.** An administrator can delete an image in the Images tab of Magic Card Utils. It is removed from the library at once and cards that use it show the missing-picture state. Copies stay in older Home Assistant backups and in files you exported until you delete those too.
 
 **A floor plan is sensitive.** A drawing of your home shows its layout, and bindings can reveal where cameras, locks, alarms or presence sensors are. Keep real detail to what the dashboard needs, avoid labelling bedrooms, valuables or entrances in text, and do not use real names in text or entity ids you plan to share. Share screenshots, exports and backups only after you have looked at them. If you do not run Home Assistant for your own household alone (for example for a business, a rental or a shared building), you are responsible for telling the people concerned and for your own GDPR duties.
