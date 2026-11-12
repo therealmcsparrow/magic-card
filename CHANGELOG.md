@@ -4,6 +4,17 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## [Unreleased]
+
+### Fixed
+-   **Google tab fills when the switch turns on.** A font picker that was open when the Google Fonts switch came on now lists the catalogue straight away, instead of "No fonts found" until it is reopened.
+-   **Fewer undo steps for typed theme fonts.** Typing in a theme editor font field waits for a short pause before it is stored, so partial names no longer flash an error or fill the history.
+-   **Google font choice per text layer.** Choosing "Google font" for one text layer no longer shows that option on the next layer you select.
+-   **Local fonts in image text.** Picking a local font such as Arial for image text now stores its generic family (`sans-serif`) instead of doing nothing, and Times New Roman is no longer called a Google font. Half-typed names are not stored, and a typed font is one undo step.
+-   **Forum shot names Google for image text.** A card whose library image uses a Google font now lists the Google font sites on the Forum shot tab.
+-   **Google fonts retry after a failed load.** A font whose loader or stylesheet failed to download, for example after an update, is asked for again on the next render instead of only after a page reload.
+-   **Text measured during a drag.** Image text measured again while you drag a layer is applied when the drag ends.
+
 ## 2026.11.04-beta.1 (2026-11-12)
 
 A pre-release. Install Magic Card Utils 2026.11.3-beta.1 (or newer) first, then update Magic Card. To install it, choose **Include pre-releases** in the Marketplace, or turn on **Show beta versions** in HACS.

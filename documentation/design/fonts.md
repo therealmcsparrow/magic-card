@@ -41,7 +41,7 @@ When the switch is on, Magic Card Utils also loads the fonts that your active Ho
 
 ## Fonts in images
 
-Image text can use a Google font. It is stored as `"Name", <generic>`, where the generic family is `sans-serif`, `serif`, `monospace` or `system-ui`. A handwriting font falls back to `sans-serif` in images.
+Image text can use a Google font. It is stored as `"Name", <generic>`, where the generic family is `sans-serif`, `serif`, `monospace` or `system-ui`. A handwriting font falls back to `sans-serif` in images. A font from the local fonts tab is stored as its generic family, so Arial becomes `sans-serif` and Times New Roman becomes `serif`. A name that is not in the catalogue is not stored.
 
 A drawing holds no font file and no link. With the switch off, the drawing shows the generic font. An exported SVG file shows the generic font as well. See [Privacy and your images](../images/privacy.md) and the [SVG allowlist](../sharing-safety/svg-allowlist.md).
 
