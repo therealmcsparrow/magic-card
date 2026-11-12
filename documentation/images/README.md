@@ -19,7 +19,7 @@ Library images need two parts:
 
 ## Limits
 
-- An image can be up to 1 MiB with Magic Card Utils 2026.11.2-beta.1 or newer, and 256 KiB with an older version.
+- An image can be up to 1 MiB with Magic Card Utils 2026.11.02 or newer, and 256 KiB with an older version.
 - The library has no limit on the number of images. The editor warns when the library passes 50 MiB.
 
 The editor shows a size meter while you draw. See [The size meter](editor.md#the-size-meter).

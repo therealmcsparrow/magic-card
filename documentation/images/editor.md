@@ -73,7 +73,7 @@ The window that opens for a new image has three tiles: **Blank canvas**, **Paste
 
 Both are cleaned and read in the same way as Import an SVG file, below, and the same summary says what was removed.
 
-If the file or text cannot be opened, the window stays open and says why in one line under the tiles, for example "That file is too big to open (over 8 MB). Try a smaller copy.", "That SVG is too big to open (over 8 MB). Try a smaller copy." or "That drawing is over 256 KiB." Nothing changes, your pasted text stays in the box, and the focus goes back to the button you used. A file or text can be up to 8 MB to be opened, but the cleaned drawing must still fit in the image size limit (256 KiB, or 1 MiB with Magic Card Utils 2026.11.2-beta.1 or newer).
+If the file or text cannot be opened, the window stays open and says why in one line under the tiles, for example "That file is too big to open (over 8 MB). Try a smaller copy.", "That SVG is too big to open (over 8 MB). Try a smaller copy." or "That drawing is over 256 KiB." Nothing changes, your pasted text stays in the box, and the focus goes back to the button you used. A file or text can be up to 8 MB to be opened, but the cleaned drawing must still fit in the image size limit (256 KiB, or 1 MiB with Magic Card Utils 2026.11.02 or newer).
 
 Start from… while you draw replaces your drawing with the new one as one step. Undo brings the old one back, and the image keeps its name, so Save updates the same image. Close or Esc closes the window and leaves the drawing as it is. In a new image, closing the window before the first drawing closes the editor.
 
@@ -108,7 +108,7 @@ A file that is only a script is refused with "That file has no shapes an image c
 
 ## The size meter
 
-The meter shows how big the drawing is, out of the size limit. The limit is 256 KiB, or 1 MiB with Magic Card Utils 2026.11.2-beta.1 or newer. The table below uses 256 KiB; with the higher limit the steps scale with it. An animation counts toward the size.
+The meter shows how big the drawing is, out of the size limit. The limit is 256 KiB, or 1 MiB with Magic Card Utils 2026.11.02 or newer. The table below uses 256 KiB; with the higher limit the steps scale with it. An animation counts toward the size.
 
 To make the image move, choose **Animate** in the toolbar. See [Animate a library image](animating-images.md).
 

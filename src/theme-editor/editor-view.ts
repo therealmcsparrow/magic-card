@@ -6,6 +6,7 @@ import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { glyph } from '../ui-kit/glyphs';
+import { kitBlueprint } from '../ui-kit/css/blueprint';
 import { DirectionController } from '../ui-kit/controllers/direction';
 import { outsideOf } from './outside';
 import { cloneDoc, docErrors, isDirty, previewVars, removeVar, resolveTheme, setVar, validateValue } from './model';
@@ -150,6 +151,8 @@ export class McteEditorView extends LitElement {
     _previewDoc: { state: true },
     _rawPending: { state: true },
     _usedLink: { state: true },
+    _tablet: { state: true },
+    _reveal: { state: true },
   };
 
   draft!: Draft;
@@ -198,6 +201,9 @@ export class McteEditorView extends LitElement {
   private _previewDoc: ThemeDoc = {};
   private _rawPending = false;
   private _usedLink = false;
+  private _tablet = false;
+  /** A variable a click on the preview showed: it stays listed while "Only changed" is on. */
+  private _reveal = '';
   private _pinned = new Set<string>();
 
   private _ro?: ResizeObserver;
@@ -300,6 +306,8 @@ export class McteEditorView extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
+    // the footer sits outside the frame and takes the same soft-blueprint tokens
+    this.setAttribute('data-bp-mode', this._scheme);
     if (changed.has('draft') && this.draft) {
       // A theme just opened (Create, a deep link): focus would otherwise be lost with the view that held it.
       void this.updateComplete.then(() => {
@@ -553,7 +561,7 @@ export class McteEditorView extends LitElement {
     for (const r of rows) seen.add(r.entry.name);
     const q = this._q;
     return rows.filter((r) => {
-      if (this._onlyChanged && !this._isModified(r.entry.name)) return false;
+      if (this._onlyChanged && !this._isModified(r.entry.name) && r.entry.name !== this._reveal) return false;
       if (!q) return true;
       const value = String(ownValue(this._doc, this._scope, r.entry.name) ?? ownValue(this._doc, 'shared', r.entry.name) ?? '').toLowerCase();
       return r.entry.name.toLowerCase().includes(q) || fold(r.custom ? r.entry.name : t(r.entry.label)).includes(fold(q)) || value.includes(q);
@@ -573,15 +581,33 @@ export class McteEditorView extends LitElement {
     const parts = e.path.replace(/^theme\./, '').split('.');
     const scope: Scope = parts[0] === 'modes' ? ((parts[1] as ThemeMode) ?? 'shared') : 'shared';
     const name = parts[0] === 'modes' ? parts.slice(2).join('.') : parts.join('.');
-    const group = entryByName(name)?.group ?? 'other';
     this._setScope(scope);
+    this._showVar(name);
+  }
+
+  /**
+   * Opens the variables panel on one variable and focuses its field: clears the search and "Only changed", opens its group.
+   * `group:<id>` opens and shows a whole group instead (a card sample on the preview).
+   */
+  private _showVar(target: string): void {
+    const groupOnly = target.startsWith('group:');
+    const name = groupOnly ? '' : target;
+    const group = groupOnly ? (target.slice(6) as CatalogueGroupId) : (entryByName(name)?.group ?? 'other');
+    if (!CATALOGUE_GROUPS.some((g) => g.id === group)) return;
     this._query = '';
     this._q = '';
+    this._reveal = name;
     this._open = new Set(this._open).add(group);
     this._frame()?.openDrawer(null, 'user');
     void this.updateComplete.then(() => {
       const g = this.renderRoot.querySelector<HTMLElement & { focusField(n: string): void }>(`mcte-field-group[data-id="${group}"]`);
-      g?.focusField(name);
+      if (!g) return;
+      g.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      if (!name) return;
+      void (g as unknown as LitElement).updateComplete?.then(() => {
+        g.shadowRoot?.querySelector(`#f-${CSS.escape(name)}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        g.focusField(name);
+      });
     });
   }
 
@@ -1011,12 +1037,15 @@ export class McteEditorView extends LitElement {
     return html`<header class="fr-bar" slot="top" aria-label=${t('theme-editor.editor-view.editor-panels')}>
       <button type="button" class="btn btn-text btn-sm back" @click=${() => this._back()}>${glyph('arrowLeft')} <span class="back-label">${t('theme-editor.editor-view.themes')}</span></button>
       <span class="vr" aria-hidden="true"></span>
+      <strong class="studio-title">${t('theme-editor.editor-view.theme-editor')}</strong>
       <h2 class="tname" tabindex="-1">${this._name}</h2>
       <div class="chips">${this._chips()}</div>
       <span class="spacer"></span>
+      ${this._viewControls(compact)}
       <div class="grp">
         ${this.backend?.presets && !compact ? html`<button type="button" class="btn btn-secondary btn-sm savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
         ${compact ? nothing : this._tryButton()}
+        <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         <button
           type="button"
           class="icon-btn vars-toggle"
@@ -1030,10 +1059,30 @@ export class McteEditorView extends LitElement {
         >
           ${glyph('palette')}
         </button>
-        <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         ${this._menuEl()}
       </div>
     </header>`;
+  }
+
+  /** The preview's mode switch, what it previews and the Wall tablet toggle, in the bar. */
+  private _viewControls(compact: boolean): TemplateResult {
+    return html`<div class="grp view">
+      ${this._hasModes
+        ? html`<mcte-mode-switch
+            label=${t('theme-editor.preview.preview-mode')}
+            .value=${this._mode}
+            .options=${[
+              { value: 'light', label: scopeLabel('light') },
+              { value: 'dark', label: scopeLabel('dark') },
+            ]}
+            @mcte-change=${(e: CustomEvent<{ value: ThemeMode }>) => (e.stopPropagation(), this._setMode(e.detail.value))}
+          ></mcte-mode-switch>`
+        : nothing}
+      ${compact ? nothing : html`<span class="previewing" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode: this._mode })}</span>`}
+      <button type="button" class="btn btn-secondary btn-sm tablet-toggle" data-wall-tablet-toggle aria-pressed=${this._tablet ? 'true' : 'false'} @click=${() => (this._tablet = !this._tablet)}>
+        ${t('theme-editor.preview.wall-tablet')}
+      </button>
+    </div>`;
   }
 
   /** Scope switch, the status line and what the open theme is doing: the top of the drawer. */
@@ -1199,7 +1248,11 @@ export class McteEditorView extends LitElement {
       .doc=${this._previewDoc}
       .mode=${this._mode}
       .hass=${this.hass}
+      .tablet=${this._tablet}
+      hide-toolbar
+      pickable
       @mcte-preview-mode=${(e: CustomEvent) => this._setMode(e.detail.mode as ThemeMode)}
+      @mcte-preview-pick=${(e: CustomEvent<{ name: string }>) => (e.stopPropagation(), this._showVar(e.detail.name))}
     ></mcte-theme-preview>`;
   }
 
@@ -1238,6 +1291,7 @@ export class McteEditorView extends LitElement {
   };
 
   private _onFrameModified = (e: Event): void => {
+    this._reveal = '';
     this._onlyChanged = (e as CustomEvent<{ on: boolean }>).detail.on;
   };
 
@@ -1284,7 +1338,7 @@ export class McteEditorView extends LitElement {
 
   /** With Modified only on and nothing changed, no drawer content is drawn and the frame shows its own note. */
   private get _nothingModified(): boolean {
-    return this._onlyChanged && !allKeys(this._doc).some((k) => this._isModified(k)) && !this._banner && !this._rawPending && !(this.include && this.include.state !== 'ok') && !this.checkResult;
+    return this._onlyChanged && !this._reveal && !allKeys(this._doc).some((k) => this._isModified(k)) && !this._banner && !this._rawPending && !(this.include && this.include.state !== 'ok') && !this.checkResult;
   }
 
   private _dialog(): TemplateResult | typeof nothing {
@@ -1339,14 +1393,14 @@ export class McteEditorView extends LitElement {
       >
         ${this._bar()}
         <div class="stage" slot="stage" role="region" aria-label=${t('theme-editor.editor-view.preview')}>
-          <div class="stage-note">
-            ${this._statusLine()}
-            ${compact ? nothing : html`<p class="help tryhelp" id="try-help">${this._tryHelp()}</p>`}
-          </div>
           ${this._previewPanel()}
         </div>
         ${this._nothingModified ? nothing : html`<div class="vars" id="vars" slot="drawer">${this._varsPanel()}</div>`}
       </mc-ui-studio-frame>
+      <footer class="foot">
+        ${this._statusLine()}
+        ${compact ? nothing : html`<p class="help tryhelp" id="try-help">${this._tryHelp()}</p>`}
+      </footer>
       <p class="sr-only" role="status">${this._msg}</p>
       <mc-ui-toast .offset=${this._trial ? 88 : 16} @mc-toast-action=${() => this._toastRun?.()}></mc-ui-toast>
       ${this._dialog()}
@@ -1356,14 +1410,18 @@ export class McteEditorView extends LitElement {
 
   static styles = [
     base,
+    kitBlueprint,
     css`
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
         height: 100%;
         position: relative;
+        overflow: hidden;
       }
       mc-ui-studio-frame {
-        block-size: 100%;
+        flex: 1 1 auto;
+        min-block-size: 0;
         --mc-ground: var(--bp-bg);
         --mc-surface: var(--bp-sheet);
         --mc-surface-2: var(--bp-surf2);
@@ -1399,6 +1457,12 @@ export class McteEditorView extends LitElement {
         inline-size: 1px;
         block-size: 20px;
         background: var(--bp-line);
+      }
+      .studio-title {
+        flex: none;
+        font-size: var(--bp-t-bar);
+        font-weight: 600;
+        white-space: nowrap;
       }
       .tname {
         flex: 0 1 auto;
@@ -1468,9 +1532,21 @@ export class McteEditorView extends LitElement {
         align-content: start;
         inline-size: 100%;
       }
-      .stage-note {
-        display: grid;
-        gap: var(--bp-s-2);
+      .foot {
+        flex: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0 var(--bp-s-6);
+        min-block-size: 36px;
+        padding: 0 var(--bp-s-5);
+        border-block-start: 1px solid var(--bp-line);
+        background: var(--bp-sheet);
+        color: var(--bp-mute);
+      }
+      .foot .help {
+        margin: 0;
       }
       .line {
         display: flex;
@@ -1478,6 +1554,22 @@ export class McteEditorView extends LitElement {
         align-items: center;
         gap: 4px 8px;
         min-block-size: 32px;
+      }
+      .fr-bar .view {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+      }
+      .previewing {
+        white-space: nowrap;
+        font-size: var(--bp-t-label, 0.8125rem);
+        color: var(--bp-mute);
+      }
+      .tablet-toggle[aria-pressed='true'] {
+        border-color: var(--bp-acc);
+        box-shadow: inset 0 0 0 1px var(--bp-acc);
+      }
+      .tablet-toggle[aria-pressed='true']::before {
+        content: '\\2713\\00a0';
       }
       .preview {
         display: block;

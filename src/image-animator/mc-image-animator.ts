@@ -710,7 +710,7 @@ export class McImageAnimator extends LitElement {
     const o = this._opened;
     const ready = this._phase === 'ready' && !!o;
     const title = html`<h2 id="title" tabindex="-1">${o ? t('image-animator.mc-image-animator.animate-name', { name: o.name }) : t('image-animator.mc-image-animator.animate-image')}</h2>`;
-    const close = html`<button class="btn btn-secondary close" type="button" @click=${this._close}>${t('image-animator.mc-image-animator.close')}</button>`;
+    const close = html`<button class="btn btn-secondary close back" type="button" @click=${this._close}><ha-icon icon="mdi:arrow-left"></ha-icon>${t('image-animator.mc-image-animator.close')}</button>`;
     return html`<div class="backdrop" @click=${this._close} aria-hidden="true"></div>
       <div class="window" role="dialog" aria-modal="true" aria-labelledby="title" @keydown=${this._onKey}>
         ${ready
@@ -725,8 +725,10 @@ export class McImageAnimator extends LitElement {
               @mc-frame-modified=${(e: CustomEvent<FrameModifiedChange>) => (this._modifiedOnly = e.detail.on)}
             >
               <div slot="top" class="bar">
+                ${close}
                 ${title}
                 ${this._status()}
+                <button class="btn btn-primary" type="button" ?disabled=${!o.canSave || this._saving || !!this._ask || !!this._leaving} @click=${this._save}>${t('image-animator.mc-image-animator.save')}</button>
                 <button
                   class="btn btn-secondary settings"
                   type="button"
@@ -738,12 +740,10 @@ export class McImageAnimator extends LitElement {
                 >
                   ${t('image-animator.mc-image-animator.settings')}
                 </button>
-                ${close}
-                <button class="btn btn-primary" type="button" ?disabled=${!o.canSave || this._saving || !!this._ask || !!this._leaving} @click=${this._save}>${t('image-animator.mc-image-animator.save')}</button>
               </div>
               ${this._stageSlot(o)} ${this._drawerSlot(o)}
             </mc-ui-studio-frame>`
-          : html`<header>${title}${close}</header>
+          : html`<header>${close}${title}</header>
               <div class="body">${this._body()}</div>
               <footer>${this._status()}<button class="btn btn-primary" type="button" disabled>${t('image-animator.mc-image-animator.save')}</button></footer>`}
         ${this._confirmBox()} ${this._leaveBox()}

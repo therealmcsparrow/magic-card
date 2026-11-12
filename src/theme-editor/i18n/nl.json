@@ -687,6 +687,10 @@
     "text": "Het bestand dat Opslaan zou schrijven. Het is hier alleen-lezen.",
     "hash": "de3e8bbb"
   },
+  "theme-editor.editor-view.theme-editor": {
+    "text": "Thema-editor",
+    "hash": "2c9d9e02"
+  },
   "theme-editor.editor-view.themes": {
     "text": "Thema's",
     "hash": "43ae3265"

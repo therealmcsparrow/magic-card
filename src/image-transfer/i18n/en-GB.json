@@ -29,7 +29,7 @@
     }
   },
   "image-transfer.chunk.export-all-images": {
-    "text": "Export all images",
+    "text": "Export all",
     "note": "Label of the action that exports every saved image to one file. It tells the user the whole image library is included.",
     "max": 30
   },

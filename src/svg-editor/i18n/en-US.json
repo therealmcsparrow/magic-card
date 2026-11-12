@@ -1023,10 +1023,6 @@
     "text": "Arrow keys move by 0.5. Turn on Snap to use the grid size.",
     "hash": "27ec574a"
   },
-  "svg-editor.views.back-to-card-editor": {
-    "text": "Back to card editor",
-    "hash": "89f5c8f1"
-  },
   "svg-editor.views.bevel": {
     "text": "Bevel",
     "hash": "72c3bce2"
@@ -1343,10 +1339,6 @@
     "text": "Inspector",
     "hash": "da188e3b"
   },
-  "svg-editor.views.inspector-panel": {
-    "text": "Inspector panel",
-    "hash": "20f92072"
-  },
   "svg-editor.views.it-is-saved-in-the-library": {
     "text": "It is saved in the library.",
     "hash": "8a196b4d"
@@ -1382,10 +1374,6 @@
   "svg-editor.views.layers": {
     "text": "Layers",
     "hash": "0bcd66e6"
-  },
-  "svg-editor.views.layers-and-library-panel": {
-    "text": "Layers and library panel",
-    "hash": "8c1a60b1"
   },
   "svg-editor.views.leave": {
     "text": "Leave",
@@ -1554,10 +1542,6 @@
   "svg-editor.views.out-handle-length": {
     "text": "Out handle length",
     "hash": "20f2d707"
-  },
-  "svg-editor.views.panel": {
-    "text": "Panel",
-    "hash": "d0d91173"
   },
   "svg-editor.views.paste-some-svg-first": {
     "text": "Paste some SVG first.",

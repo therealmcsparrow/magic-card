@@ -28,4 +28,8 @@ Imported theme values are checked against the kind of value each key takes, and 
 
 At 1024 px wide and more, the Variables pane sits beside the preview. It is open when the editor opens and stays open while you work on the preview. There is no edge button and no pin. The Variables button in the top bar hides the pane, so the preview takes its width; press it again to show the pane as it was. Ctrl+\ (Cmd+\ on a Mac) hides or shows the pane. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the button. The editor does not remember a hidden pane, and the next time you open it the pane is showing. Below 1024 px, Variables and Preview are tabs, and there is no button.
 
+Click a part of the preview, such as a button, the sidebar, the heading or an alert, to jump to its setting. The Variables pane opens on the right group, scrolls to the field and puts the cursor in it, even when **Only changed** is on. Click a card sample, such as the Magic Card, to open its whole group. Parts of the preview get an outline when the pointer is over them.
+
+The top bar holds the preview's Light and Dark switch, what the preview shows, and the **Wall tablet** button. The footer shows whether the theme can be saved (for example **No changes to save**, or the time it was saved) and how **Try on dashboard** works.
+
 Related: [Magic Card Utils panel](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/README.md) and the [Magic Card Utils WebSocket API](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/api/README.md) for the commands the editor uses.

@@ -140,11 +140,15 @@ export class McteThemePreview extends LitElement {
   @property({ attribute: false }) hass: unknown;
   @property() mode: ThemeMode | undefined;
   @property({ type: Boolean, attribute: 'hide-toolbar' }) hideToolbar = false;
+  /** The Wall tablet preview is shown. With `hideToolbar` the host draws the toggle and sets this. */
+  @property({ type: Boolean }) tablet = false;
+  /** Clicks on the stage name the variable under the pointer (`mcte-preview-pick`). */
+  @property({ type: Boolean }) pickable = false;
 
   @state() private _skipped = 0;
   @state() private _samples = new Map<SampleId, SampleState>();
   @state() private _third: SampleId[] = [];
-  @state() private _tablet = false;
+  @state() private _hover: { x: number; y: number; w: number; h: number } | null = null;
 
   private _scope?: ScopedVars;
   private _timer?: ReturnType<typeof setTimeout>;
@@ -244,12 +248,46 @@ export class McteThemePreview extends LitElement {
     this.dispatchEvent(new CustomEvent('mcte-preview-mode', { detail: { mode }, bubbles: true, composed: true }));
   }
 
-  private _sample(id: SampleId, name: string): TemplateResult {
+  /** The smallest marked part of the stage under a point: its `data-var` (a variable, or `group:<id>`) and its element. */
+  private _hit(x: number, y: number): { name: string; el: HTMLElement } | null {
+    let best: { name: string; el: HTMLElement; area: number } | null = null;
+    for (const el of this.renderRoot.querySelectorAll<HTMLElement>('.stage[data-var], .stage [data-var]')) {
+      const r = el.getBoundingClientRect();
+      if (x < r.left || x > r.right || y < r.top || y > r.bottom) continue;
+      const area = r.width * r.height;
+      if (!best || area < best.area) best = { name: el.dataset.var ?? '', el, area };
+    }
+    return best;
+  }
+
+  private _onStageMove(e: PointerEvent): void {
+    if (!this.pickable || e.pointerType === 'touch') return;
+    const hit = this._hit(e.clientX, e.clientY);
+    if (!hit) {
+      if (this._hover) this._hover = null;
+      return;
+    }
+    const stage = e.currentTarget as HTMLElement;
+    const r = hit.el.getBoundingClientRect();
+    const s = stage.getBoundingClientRect();
+    const next = { x: r.left - s.left + stage.scrollLeft - stage.clientLeft, y: r.top - s.top + stage.scrollTop - stage.clientTop, w: r.width, h: r.height };
+    const h = this._hover;
+    if (!h || h.x !== next.x || h.y !== next.y || h.w !== next.w || h.h !== next.h) this._hover = next;
+  }
+
+  private _onStageClick(e: MouseEvent): void {
+    if (!this.pickable) return;
+    const hit = this._hit(e.clientX, e.clientY);
+    if (hit?.name) this.dispatchEvent(new CustomEvent('mcte-preview-pick', { detail: { name: hit.name }, bubbles: true, composed: true }));
+  }
+
+  private _sample(id: SampleId, name: string, pick?: string): TemplateResult {
     const s = this._samples.get(id) ?? 'loading';
-    if (s instanceof HTMLElement) return html`<div class="sample">${s}</div>`;
-    if (s === 'error') return html`<div class="placeholder"><p class="error">${t('theme-editor.preview.preview-of-name-could-not-load', { name })}</p></div>`;
-    if (s === 'no-entity') return html`<div class="placeholder"><p class="help">${t('theme-editor.preview.add-a-light-or-a-switch-to-home', { name })}</p></div>`;
-    return html`<div class="placeholder" aria-busy="true"></div>`;
+    const v = pick ?? nothing;
+    if (s instanceof HTMLElement) return html`<div class="sample" data-var=${v}>${s}</div>`;
+    if (s === 'error') return html`<div class="placeholder" data-var=${v}><p class="error">${t('theme-editor.preview.preview-of-name-could-not-load', { name })}</p></div>`;
+    if (s === 'no-entity') return html`<div class="placeholder" data-var=${v}><p class="help">${t('theme-editor.preview.add-a-light-or-a-switch-to-home', { name })}</p></div>`;
+    return html`<div class="placeholder" aria-busy="true" data-var=${v}></div>`;
   }
 
   protected render(): TemplateResult {
@@ -270,43 +308,52 @@ export class McteThemePreview extends LitElement {
                 ></mcte-mode-switch>`
               : html`<span class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</span>`}
             <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode })}</span>
+            <button type="button" class="tablet-toggle" data-wall-tablet-toggle aria-pressed=${this.tablet ? 'true' : 'false'} @click=${() => (this.tablet = !this.tablet)}>${t('theme-editor.preview.wall-tablet')}</button>
           </div>`}
-      <button type="button" class="tablet-toggle" data-wall-tablet-toggle aria-pressed=${this._tablet ? 'true' : 'false'} @click=${() => (this._tablet = !this._tablet)}>${t('theme-editor.preview.wall-tablet')}</button>
-      ${this._tablet ? html`<mc-wall-tablet .vars=${this._tabletVars(mode)} .labels=${this._tabletLabels(mode)}></mc-wall-tablet>` : nothing}
+      ${this.tablet ? html`<mc-wall-tablet .vars=${this._tabletVars(mode)} .labels=${this._tabletLabels(mode)}></mc-wall-tablet>` : nothing}
       ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
-      <section class="stage" aria-label=${t('theme-editor.preview.theme-preview-mode', { mode })} tabindex="0">
+      <section
+        class="stage ${this.pickable ? 'pickable' : ''} ${this._hover ? 'on-part' : ''}"
+        aria-label=${t('theme-editor.preview.theme-preview-mode', { mode })}
+        tabindex="0"
+        data-var="primary-background-color"
+        @pointermove=${this._onStageMove}
+        @pointerleave=${() => (this._hover = null)}
+        @click=${this._onStageClick}
+      >
+        ${this._hover ? html`<div class="pick" aria-hidden="true" style="left:${this._hover.x}px;top:${this._hover.y}px;width:${this._hover.w}px;height:${this._hover.h}px"></div>` : nothing}
         <p class="sr">${mode === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
         ${this._skipped > 0
           ? html`<p class="strip" role="status">${t('theme-editor.preview.showing-the-last-valid-value-for-c', { c: this._skipped })}</p>`
           : nothing}
         <div class="content" inert aria-hidden="true">
-          <div class="fake-header"><span class="burger">☰</span><span>${t('theme-editor.preview.overview')}</span></div>
+          <div class="fake-header" data-var="app-header-background-color"><span class="burger">☰</span><span>${t('theme-editor.preview.overview')}</span></div>
           <div class="body">
-            <nav class="fake-side"><span class="on">${t('theme-editor.preview.overview')}</span><span>${t('theme-editor.preview.map')}</span><span>${t('theme-editor.preview.settings')}</span></nav>
+            <nav class="fake-side" data-var="sidebar-background-color"><span class="on" data-var="sidebar-selected-text-color">${t('theme-editor.preview.overview')}</span><span>${t('theme-editor.preview.map')}</span><span>${t('theme-editor.preview.settings')}</span></nav>
             <div class="samples">
-              <div class="pair">${this._sample('tile-on', t('theme-editor.preview.tile-card'))}${this._sample('tile-off', t('theme-editor.preview.tile-card'))}</div>
-              ${this._sample('entities', t('theme-editor.preview.entities-card'))}
-              <ha-card class="plain">
-                <div class="card-header">${t('theme-editor.preview.controls')}</div>
+              <div class="pair">${this._sample('tile-on', t('theme-editor.preview.tile-card'), 'card-background-color')}${this._sample('tile-off', t('theme-editor.preview.tile-card'), 'card-background-color')}</div>
+              ${this._sample('entities', t('theme-editor.preview.entities-card'), 'card-background-color')}
+              <ha-card class="plain" data-var="card-background-color">
+                <div class="card-header" data-var="ha-card-header-color">${t('theme-editor.preview.controls')}</div>
                 <div class="card-content controls">
-                  <button class="b-primary" tabindex="-1">${t('theme-editor.preview.primary')}</button>
-                  <button class="b-secondary" tabindex="-1">${t('theme-editor.preview.secondary')}</button>
-                  <button class="b-text" tabindex="-1">${t('theme-editor.preview.text')}</button>
-                  <span class="switch" aria-hidden="true"></span>
-                  <span class="accent-chip"><i class="dot" aria-hidden="true"></i>${t('theme-editor.preview.accent')}</span>
-                  <span class="field">${t('theme-editor.preview.text-field')}</span>
-                  <span class="slider" aria-hidden="true"><i></i></span>
+                  <button class="b-primary" tabindex="-1" data-var="primary-color">${t('theme-editor.preview.primary')}</button>
+                  <button class="b-secondary" tabindex="-1" data-var="primary-color">${t('theme-editor.preview.secondary')}</button>
+                  <button class="b-text" tabindex="-1" data-var="primary-color">${t('theme-editor.preview.text')}</button>
+                  <span class="switch" aria-hidden="true" data-var="primary-color"></span>
+                  <span class="accent-chip" data-var="accent-color"><i class="dot" aria-hidden="true"></i>${t('theme-editor.preview.accent')}</span>
+                  <span class="field" data-var="secondary-background-color">${t('theme-editor.preview.text-field')}</span>
+                  <span class="slider" aria-hidden="true" data-var="disabled-color"><i data-var="primary-color"></i></span>
                 </div>
               </ha-card>
               ${this._alerts()}
-              <ha-card class="plain">
+              <ha-card class="plain" data-var="card-background-color">
                 <div class="card-content">
-                  <h3>${t('theme-editor.preview.heading')}</h3>
-                  <p>${t('theme-editor.preview.body-text-in-the-primary-text-colour')}</p>
-                  <p class="sec">${tx('theme-editor.preview.secondary-text-and-link', { link: html`<span class="link">${t('theme-editor.preview.a-link')}</span>` })}</p>
+                  <h3 data-var="primary-text-color">${t('theme-editor.preview.heading')}</h3>
+                  <p data-var="primary-text-color">${t('theme-editor.preview.body-text-in-the-primary-text-colour')}</p>
+                  <p class="sec" data-var="secondary-text-color">${tx('theme-editor.preview.secondary-text-and-link', { link: html`<span class="link" data-var="primary-color">${t('theme-editor.preview.a-link')}</span>` })}</p>
                 </div>
               </ha-card>
-              ${this._sample('magic-card', 'Magic Card')}
+              ${this._sample('magic-card', 'Magic Card', 'group:magic-card')}
               ${this._third.map((id) => this._thirdSample(id))}
             </div>
           </div>
@@ -342,13 +389,13 @@ export class McteThemePreview extends LitElement {
     ];
     const real = !!customElements.get('ha-alert');
     return html`<div class="alerts">
-      ${types.map(([type, text]) => (real ? html`<ha-alert alert-type=${type}>${text}</ha-alert>` : html`<div class="alert a-${type}">${text}</div>`))}
+      ${types.map(([type, text]) => (real ? html`<ha-alert alert-type=${type} data-var=${`${type}-color`}>${text}</ha-alert>` : html`<div class="alert a-${type}" data-var=${`${type}-color`}>${text}</div>`))}
     </div>`;
   }
 
   private _thirdSample(id: SampleId): TemplateResult {
     const meta = THIRD_PARTY_SAMPLES.find((s) => s.id === id);
-    return html`<div class="cond"><p class="help">${meta?.name}</p>${this._sample(id, meta?.name ?? id)}</div>`;
+    return html`<div class="cond" data-var=${`group:${id}`}><p class="help">${meta?.name}</p>${this._sample(id, meta?.name ?? id)}</div>`;
   }
 
   static styles = css`
@@ -414,6 +461,17 @@ export class McteThemePreview extends LitElement {
       background: var(--lovelace-background, var(--primary-background-color, #fafafa));
       color: var(--primary-text-color, #212121);
       font-family: var(--primary-font-family, Roboto, sans-serif);
+    }
+    .stage.pickable.on-part {
+      cursor: pointer;
+    }
+    .pick {
+      position: absolute;
+      z-index: 2;
+      box-sizing: border-box;
+      border: 2px solid var(--mc-accent, #0276ab);
+      border-radius: 4px;
+      pointer-events: none;
     }
     .stage:focus-visible {
       outline: 3px solid var(--mc-focus, #0276ab);

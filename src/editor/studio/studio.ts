@@ -506,21 +506,10 @@ export class Studio extends LitElement {
       <div slot="top" class="bar-row">
         <div class="grp">
           <button type="button" class="btn btn-secondary btn-sm" @click=${this._close}>
-            <ha-icon class="back-arrow" icon="mdi:arrow-left"></ha-icon>${t('card-editor.studio.back-to-dialog')}
-          </button>
-          <button
-            type="button"
-            class="icon-btn layers-toggle"
-            aria-label=${t('card-editor.studio.layers-2')}
-            title=${t('card-editor.studio.layers-2')}
-            aria-controls="layers"
-            aria-expanded=${this._layersOpen ? 'true' : 'false'}
-            ?hidden=${live}
-            @click=${this._toggleLayers}
-          >
-            <ha-icon icon="mdi:layers-outline"></ha-icon>
+            <ha-icon class="back-arrow" icon="mdi:arrow-left"></ha-icon>${t('card-editor.studio.close')}
           </button>
           <span class="vr" aria-hidden="true"></span>
+          <strong class="studio-title">${t('card-editor.studio.magic-card-studio')}</strong>
           <div class="title">
             <strong>${s.config.name?.trim() || t('card-editor.studio.untitled-card')}</strong>
             <mc-template-bar compact .config=${s.config} .hass=${this.hass} .disabled=${live} class=${live ? 'dim' : nothing}></mc-template-bar>
@@ -573,12 +562,24 @@ export class Studio extends LitElement {
             ?disabled=${live || !sm.canUndo()} @click=${() => sm.undo()}><ha-icon icon="mdi:undo"></ha-icon></button>
           <button type="button" class="icon-btn" aria-label=${t('card-editor.studio.redo-ctrl-y')} title=${t('card-editor.studio.redo-ctrl-y')}
             ?disabled=${live || !sm.canRedo()} @click=${() => sm.redo()}><ha-icon icon="mdi:redo"></ha-icon></button>
+          <button type="button" class="btn btn-primary btn-sm" @click=${this._close}>
+            <ha-icon icon="mdi:check"></ha-icon>${t('card-editor.studio.done')}
+          </button>
+          <button
+            type="button"
+            class="icon-btn layers-toggle"
+            aria-label=${t('card-editor.studio.layers-2')}
+            title=${t('card-editor.studio.layers-2')}
+            aria-controls="layers"
+            aria-expanded=${this._layersOpen ? 'true' : 'false'}
+            ?hidden=${live}
+            @click=${this._toggleLayers}
+          >
+            <ha-icon icon="mdi:layers-outline"></ha-icon>
+          </button>
           <button type="button" class="icon-btn drawer-toggle" aria-label=${t('card-editor.studio.inspector-panel')} title=${t('card-editor.studio.inspector-panel')}
             aria-controls="inspector" aria-expanded=${this._frame?.drawerOpen ? 'true' : 'false'} ?hidden=${live} @click=${this._toggleDrawer}>
             <ha-icon icon="mdi:tune-variant"></ha-icon>
-          </button>
-          <button type="button" class="btn btn-primary btn-sm" @click=${this._close}>
-            <ha-icon icon="mdi:check"></ha-icon>${t('card-editor.studio.done')}
           </button>
         </div>
       </div>

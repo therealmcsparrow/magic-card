@@ -1456,11 +1456,6 @@
     "note": "Hint under the grid settings about nudging with arrow keys. 0.5 is a distance in units; Snap is the toggle label.",
     "max": 105
   },
-  "svg-editor.views.back-to-card-editor": {
-    "text": "Back to card editor",
-    "note": "Button that leaves the SVG editor and returns to the card editor.",
-    "max": 35
-  },
   "svg-editor.views.bevel": {
     "text": "Bevel",
     "note": "Option name for the stroke line-join style with a cut-off corner. Pairs with Round and Miter.",
@@ -1874,11 +1869,6 @@
     "note": "Name of the Inspector tab in the image editor drawer, and of the drawer itself.",
     "max": 15
   },
-  "svg-editor.views.inspector-panel": {
-    "text": "Inspector panel",
-    "note": "Accessible name of the side panel with properties of the selected shape.",
-    "max": 25
-  },
   "svg-editor.views.it-is-saved-in-the-library": {
     "text": "It is saved in the library.",
     "note": "Status line in the icon editor use dialog. Tells the user the icon is stored in the shared library.",
@@ -1923,11 +1913,6 @@
     "text": "Layers",
     "note": "Heading of the list of drawing layers. Plural of Layer.",
     "max": 10
-  },
-  "svg-editor.views.layers-and-library-panel": {
-    "text": "Layers and library panel",
-    "note": "Accessible name of the side panel that holds the layers list and the saved icon library.",
-    "max": 40
   },
   "svg-editor.views.leave": {
     "text": "Leave",
@@ -2144,11 +2129,6 @@
     "text": "Out handle length",
     "note": "Label for the reach of the handle on the outgoing side of a curve point. Pairs with In handle length.",
     "max": 30
-  },
-  "svg-editor.views.panel": {
-    "text": "Panel",
-    "note": "Short label for a side panel of the editor, used on the show or hide button.",
-    "max": 10
   },
   "svg-editor.views.paste-some-svg-first": {
     "text": "Paste some SVG first.",

@@ -14,7 +14,7 @@ All seven studios share one layout: the Studio, the animation studio, the image 
 
 On a screen 1024 px wide or more:
 
--   A thin top bar with the studio's name and its controls.
+-   A thin top bar in the same order in every studio: Close, the studio's name, the name field, the actions, Save, the panel buttons and Help. The theme editor's back button goes to the theme list, and the animation studio's editor goes back to its library.
 -   Hairline rulers along the top and left edges, and a measured grid behind your work. The rulers and grid are decoration. Screen readers skip them.
 -   A rounded zoom pill under the stage, where the studio has a zoom. The Studio has no zoom, so its pill is empty and its canvas width switch stays in the top bar.
 -   A drawer on the right with the settings of the selection.

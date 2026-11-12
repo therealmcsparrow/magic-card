@@ -687,6 +687,10 @@
     "text": "The file Save would write. It is read only here.",
     "hash": "de3e8bbb"
   },
+  "theme-editor.editor-view.theme-editor": {
+    "text": "Theme editor",
+    "hash": "2c9d9e02"
+  },
   "theme-editor.editor-view.themes": {
     "text": "Themes",
     "hash": "43ae3265"

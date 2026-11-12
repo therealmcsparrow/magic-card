@@ -111,14 +111,6 @@
     "text": "op {name}, {w} x {h}",
     "hash": "56d77cd3"
   },
-  "shape-editor.mc-shape-studio.back": {
-    "text": "Terug",
-    "hash": "76900f1b"
-  },
-  "shape-editor.mc-shape-studio.back-to-card-editor": {
-    "text": "Terug naar kaarteditor",
-    "hash": "89f5c8f1"
-  },
   "shape-editor.mc-shape-studio.bottom": {
     "text": "Onder",
     "hash": "479ad21a"
@@ -308,8 +300,8 @@
     "hash": "54ca21d3"
   },
   "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": {
-    "text": "Esc sluit de editor niet. Gebruik Klaar of Terug naar kaarteditor.",
-    "hash": "17988495"
+    "text": "Esc sluit de editor niet. Gebruik Klaar of Sluiten.",
+    "hash": "24fc6da2"
   },
   "shape-editor.mc-shape-studio.export-file": {
     "text": "Bestand exporteren",

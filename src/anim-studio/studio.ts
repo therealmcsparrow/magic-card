@@ -419,7 +419,7 @@ export class AnimationStudio extends LitElement {
 
   protected updated(changed: PropertyValues): void {
     this._syncDrawer();
-    const full = this._view === 'editor';
+    const full = true;
     if (full !== this.hasAttribute('editing')) {
       this.toggleAttribute('editing', full);
       this.dispatchEvent(new CustomEvent('mc-editor-fullscreen', { detail: { open: full }, bubbles: true, composed: true }));
@@ -846,6 +846,11 @@ export class AnimationStudio extends LitElement {
     this._guard(() => this._closeEditor());
   }
 
+  /** Leave the studio from the library: the host puts its own list back. */
+  private _closeStudio(): void {
+    void this._emit('mc-anim-close', {}, false);
+  }
+
   /** One edit of the open document (`key`: typing in one field merges into one undo step). */
   private _set(patch: Partial<AnimationDoc>, key: string): void {
     if (!this._doc) return;
@@ -1019,6 +1024,7 @@ export class AnimationStudio extends LitElement {
       const t = errorText(err);
       this._errors = t.errors;
       this._saveError = t.message;
+      this._say(t.message);
       return false;
     } finally {
       this._busy = false;
@@ -1277,7 +1283,9 @@ export class AnimationStudio extends LitElement {
     return this._frameHost(
       html`
       <header class="fr-bar" slot="top">
-        <strong class="doc-name">${t('anim-studio.studio.my-animations')}</strong>
+        <button type="button" class="btn btn-secondary btn-sm back" @click=${() => this._closeStudio()}><ha-icon icon="mdi:arrow-left"></ha-icon>${t('anim-studio.studio.close')}</button>
+        <span class="vr" aria-hidden="true"></span>
+        <strong class="studio-title">${t('anim-studio.studio.animation-studio')}</strong>
         <span class="spacer"></span>
         <div class="grp bar">
           <button type="button" class="btn btn-secondary btn-sm" ?disabled=${!shown.length} @click=${() => this._export(picked.length ? picked : shown)}>
@@ -2231,17 +2239,7 @@ export class AnimationStudio extends LitElement {
         <div class="grp">
           <button type="button" class="btn btn-secondary btn-sm back" @click=${() => this._back()}><ha-icon icon="mdi:arrow-left"></ha-icon>${t('anim-studio.studio.library')}</button>
           <span class="vr" aria-hidden="true"></span>
-          <button
-            type="button"
-            class="icon-btn layers-toggle"
-            aria-controls="layers"
-            aria-expanded=${layersShown ? 'true' : 'false'}
-            aria-label=${t('anim-studio.studio.layers-2')}
-            title=${t('anim-studio.studio.layers-2')}
-            @click=${() => this._toggleLayers()}
-          >
-            <ha-icon icon="mdi:layers-outline"></ha-icon>
-          </button>
+          <strong class="studio-title">${t('anim-studio.studio.animation-studio')}</strong>
           <div class="title">
             <strong class="doc-name">${name}</strong>
             <span class="chip kind"><ha-icon icon=${KIND_ICON[d.kind]}></ha-icon>${t(KIND_LABEL[d.kind])}</span>
@@ -2271,7 +2269,6 @@ export class AnimationStudio extends LitElement {
           >
             <ha-icon icon="mdi:redo"></ha-icon>
           </button>
-          ${this._drawerToggle()}
           <button
             type="button"
             class="btn btn-primary btn-sm save"
@@ -2281,6 +2278,18 @@ export class AnimationStudio extends LitElement {
           >
             <ha-icon icon=${this._busy ? 'mdi:progress-upload' : 'mdi:content-save-outline'}></ha-icon>${this._busy ? t('anim-studio.studio.saving') : t('anim-studio.studio.save')}
           </button>
+          <button
+            type="button"
+            class="icon-btn layers-toggle"
+            aria-controls="layers"
+            aria-expanded=${layersShown ? 'true' : 'false'}
+            aria-label=${t('anim-studio.studio.layers-2')}
+            title=${t('anim-studio.studio.layers-2')}
+            @click=${() => this._toggleLayers()}
+          >
+            <ha-icon icon="mdi:layers-outline"></ha-icon>
+          </button>
+          ${this._drawerToggle()}
         </div>
       </header>
       <output class="zoom-read" slot="zoom">${new Intl.NumberFormat(locale(), { style: 'percent', maximumFractionDigits: 0 }).format(this._stageScale > 0 ? this._stageScale : 1)}</output>

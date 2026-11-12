@@ -114,7 +114,7 @@ describe('<mc-library-view kinds=["image"]>', () => {
   it('is read-only for a non-admin: the list, View and Export, nothing that changes the library', async () => {
     const el = await mount(backend([make('house', 'House')]), {}, false);
     expect(btn(el, 'View House')).toBeTruthy();
-    expect(btn(el, 'Export all images')).toBeTruthy();
+    expect(btn(el, 'Export all')).toBeTruthy();
     for (const l of ['Edit House', 'Rename House', 'Duplicate House', 'Delete House', 'New image', 'Import']) expect(btn(el, l), l).toBeUndefined();
   });
 
@@ -190,7 +190,7 @@ describe('<mc-library-view kinds=["image"]>', () => {
   it('Export all reads the images in calls of at most 8 and writes a JSON envelope without thumbnails', async () => {
     const be = backend(Array.from({ length: 20 }, (_, i) => make(`img-${String(i).padStart(2, '0')}`, `Image ${String(i).padStart(2, '0')}`, { thumb: THUMB, bindings: i === 3 ? BINDINGS : undefined })));
     const el = await mount(be);
-    btn(el, 'Export all images')!.click();
+    btn(el, 'Export all')!.click();
     await flush();
     const sizes = be.of('images_get').map((c) => (c.ids as string[]).length);
     expect(sizes).toEqual([8, 8, 4]);

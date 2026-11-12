@@ -4,6 +4,32 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.11.03 (2026-11-12)
+
+This stable release holds everything from the 2026.11.03 pre-releases, which are listed below, plus the changes in this section. Install Magic Card Utils 2026.11.02 first, then update Magic Card. With an older Utils, the Animate buttons are greyed out and images stay at 256 KiB. If you stayed on 2026.11.02, these are the main changes:
+
+-   **Image animator.** Make a library image move with effects, morphs and clips that start always, on hover, on a tap or on an entity state.
+-   **Bigger images.** An image can be up to 1 MiB, with no limit on the number of images.
+-   **One studio look.** All studios share one look, one top bar order and one way to show and hide their panels, and follow Home Assistant's light or dark mode.
+-   **Theme editor.** Click a part of the preview to open its setting.
+-   **Animation studio.** Opened from Magic Card Utils, it fills the whole window.
+
+### New
+-   **Theme editor: click the preview to find a setting.** Click a part of the preview, such as a button, the sidebar, the heading or an alert, and the Variables pane opens on that setting with the cursor in its field. A card sample opens its whole group.
+
+### Changed
+-   **One top bar for every studio.** The Studio, the icon, image and shape editors, the image animator, the animation studio and the theme editor put their top bar in the same order: Close, the studio's name, the name field, the actions, Save, the panel buttons and Help. Back to dialog and Back to card editor are now called Close.
+-   **Icon editor look.** The icon editor uses the same frame as the image editor: rulers, the tool rail on the left and one panel on the right with Inspector, Layers and Library tabs.
+-   **Animation studio full screen.** Opened from Magic Card Utils, the animation studio fills the whole window instead of sitting inside the panel. Close returns to the panel.
+-   **Export all.** The Images tab's button is called Export all, like the other library tabs.
+-   **Theme editor layout.** The Light and Dark preview switch, **Previewing light/dark** and **Wall tablet** are in the top bar. The save status and the note about Try on dashboard are in a footer under the preview.
+
+### Fixed
+-   **Start window.** The An icon, Paste SVG and Blank canvas tiles no longer show an arrow after their name.
+-   **Studio buttons.** The icon buttons in the studio panels use the studio font.
+-   **Animation studio save errors.** A save that fails shows a message instead of failing silently.
+-   **Theme editor scrolling.** The setup lines in the include notice wrap instead of scrolling sideways.
+
 ## 2026.11.03-beta.3 (2026-11-12)
 
 A pre-release with fixes to the new studio look from 2026.11.03-beta.2. Magic Card Utils 2026.11.2-beta.2 stays the right version to use with it.

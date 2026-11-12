@@ -340,6 +340,12 @@ export const kitTopbar: CSSResult = /* @__PURE__ */ css`
   .topbar .spacer {
     flex: 1;
   }
+  .studio-title {
+    flex: none;
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
 `;
 
 /** Panel headings: plain (.group-head in editorPrimitives) and the collapsible head that wraps .sector-btn. */

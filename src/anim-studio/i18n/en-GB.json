@@ -6756,6 +6756,11 @@
     "note": "Tooltip of the button that opens the animation settings; Esc is the keyboard shortcut.",
     "max": 40
   },
+  "anim-studio.studio.animation-studio": {
+    "text": "Animation studio",
+    "note": "Title of the animation studio in its top bar.",
+    "max": 25
+  },
   "anim-studio.studio.blank-keyframes": {
     "text": "Blank keyframes",
     "note": "Start option in the new-animation menu: an empty keyframe animation.",
@@ -6795,6 +6800,11 @@
     "text": "Cards use it as",
     "note": "Label before the technical identifier cards must use to pick this animation.",
     "max": 25
+  },
+  "anim-studio.studio.close": {
+    "text": "Close",
+    "note": "Button in the animation studio's top bar that leaves the studio.",
+    "max": 12
   },
   "anim-studio.studio.close-layers": {
     "text": "Close layers",
