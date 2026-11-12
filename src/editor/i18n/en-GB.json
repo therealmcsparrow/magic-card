@@ -3843,10 +3843,10 @@
   "card-editor.font-picker.results": {
     "text": "{total} fonts",
     "note": "Number of Google fonts that match the search and category filter. {total} is that number.",
+    "max": 20,
     "vars": {
       "total": "The value that replaces total in the text."
-    },
-    "max": 20
+    }
   },
   "card-editor.font-picker.save": {
     "text": "Save",
@@ -3866,11 +3866,11 @@
   "card-editor.font-picker.showing-first": {
     "text": "Showing the first {n} of {total}. Refine your search to see more.",
     "note": "Line under a long Google fonts list: only the first {n} of {total} matches are shown, so the user should narrow the search.",
+    "max": 70,
     "vars": {
       "n": "The value that replaces n in the text.",
       "total": "The value that replaces total in the text."
-    },
-    "max": 70
+    }
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
     "text": "The quick brown fox jumps over the lazy dog",

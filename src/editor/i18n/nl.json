@@ -2864,7 +2864,7 @@
     "hash": "2c9bc7a2"
   },
   "card-editor.font-picker.showing-first": {
-    "text": "De eerste {n} van {total} worden getoond. Verfijn je zoekopdracht voor meer.",
+    "text": "Eerste {n} van {total} getoond. Verfijn je zoekopdracht.",
     "hash": "61cfb4bd"
   },
   "card-editor.font-picker.the-quick-brown-fox-jumps-over-the-lazy": {
