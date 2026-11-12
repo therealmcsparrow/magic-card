@@ -1037,6 +1037,7 @@ export class McteEditorView extends LitElement {
     return html`<header class="fr-bar" slot="top" aria-label=${t('theme-editor.editor-view.editor-panels')}>
       <button type="button" class="btn btn-text btn-sm back" @click=${() => this._back()}>${glyph('arrowLeft')} <span class="back-label">${t('theme-editor.editor-view.themes')}</span></button>
       <span class="vr" aria-hidden="true"></span>
+      <strong class="studio-title">${t('theme-editor.editor-view.theme-editor')}</strong>
       <h2 class="tname" tabindex="-1">${this._name}</h2>
       <div class="chips">${this._chips()}</div>
       <span class="spacer"></span>
@@ -1044,6 +1045,7 @@ export class McteEditorView extends LitElement {
       <div class="grp">
         ${this.backend?.presets && !compact ? html`<button type="button" class="btn btn-secondary btn-sm savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
         ${compact ? nothing : this._tryButton()}
+        <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         <button
           type="button"
           class="icon-btn vars-toggle"
@@ -1057,7 +1059,6 @@ export class McteEditorView extends LitElement {
         >
           ${glyph('palette')}
         </button>
-        <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         ${this._menuEl()}
       </div>
     </header>`;
@@ -1456,6 +1457,12 @@ export class McteEditorView extends LitElement {
         inline-size: 1px;
         block-size: 20px;
         background: var(--bp-line);
+      }
+      .studio-title {
+        flex: none;
+        font-size: var(--bp-t-bar);
+        font-weight: 600;
+        white-space: nowrap;
       }
       .tname {
         flex: 0 1 auto;

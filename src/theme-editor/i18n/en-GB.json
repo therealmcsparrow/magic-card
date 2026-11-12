@@ -968,6 +968,11 @@
     "note": "Caption above the YAML view; says it shows the exact file that Save would write and cannot be edited there.",
     "max": 80
   },
+  "theme-editor.editor-view.theme-editor": {
+    "text": "Theme editor",
+    "note": "Title of the theme editor in its top bar.",
+    "max": 25
+  },
   "theme-editor.editor-view.themes": {
     "text": "Themes",
     "note": "Breadcrumb link in the editor that goes back to the list of themes. Same English as the start view heading.",

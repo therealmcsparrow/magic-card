@@ -27,6 +27,7 @@ describe('layer action row at the narrowest panel (320 px)', () => {
     document.body.append(el);
     const t = Date.now();
     while (el.stage === 'loading' && Date.now() - t < 4000) await new Promise((r) => setTimeout(r, 5));
+    (el as unknown as { tab: string }).tab = 'layers';
     await el.updateComplete;
     const rows = el.shadowRoot!.querySelectorAll('.layers > .acts');
     expect(rows.length).toBe(1);

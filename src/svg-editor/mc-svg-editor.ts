@@ -171,7 +171,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   decimals = 2;
   nudgePad = true;
   /** The image drawer: its open tab, Modified only, the frame being narrow (a sheet), the drawer being open, and the grid the image started with. */
-  tab: 'inspector' | 'layers' = 'inspector';
+  tab: 'inspector' | 'layers' | 'library' = 'inspector';
   modOnly = false;
   narrow = false;
   drawer = false;
@@ -269,7 +269,6 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** The side panel and the inspector columns, shown and hidden by the top bar buttons; Ctrl/Cmd + backslash toggles both. Every opening starts with both shown. */
   readonly lips = new PanelLips(this, { editor: 'svg-editor', panels: lipSpecs(), strings: lipStrings('en') });
   private lipLocale = 'en';
-  private wasEditing = false;
   private drawerFrame?: StudioFrameElement;
   private drawerNarrow = false;
 
@@ -1400,7 +1399,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
     const field = this.inField(e);
     const mod = e.ctrlKey || e.metaKey;
-    if (mod && !e.altKey && !e.shiftKey && !e.repeat && this.img && this.frame && (e.key === '\\' || e.code === 'Backslash')) {
+    if (mod && !e.altKey && !e.shiftKey && !e.repeat && this.frame && (e.key === '\\' || e.code === 'Backslash')) {
       e.preventDefault();
       if (this.drawer) this.frame.closeDrawer('user');
       else this.frame.openDrawer(null, 'user');
@@ -1709,6 +1708,12 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
   }
 
+  /** Opens a tab of the drawer; the Library tab loads the saved icons the first time. */
+  showTab(k: 'inspector' | 'layers' | 'library'): void {
+    this.tab = k;
+    if (k === 'library') this.openPanel('library');
+  }
+
   openPanel(p: 'layers' | 'library'): void {
     this.panel = p;
     if (p === 'library' && (this.lib.state === 'idle' || this.lib.state === 'unreachable')) void this.loadLib();
@@ -1963,8 +1968,8 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   startLibrary(): void {
     this.take(this.blankStart());
-    this.openPanel('library');
-    void this.lips.reveal('side');
+    this.showTab('library');
+    this.frame?.openDrawer(null, 'user');
   }
 
   /** Open file in the start window. */
@@ -2217,15 +2222,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.lipLocale = language;
       this.lips.setPanels(lipSpecs(), lipStrings(language));
     }
-    // a panel is a column beside the stage in the wide layouts; the side panel is a sheet in the compact layout
-    const editing = this.stage === 'edit' && !this.img;
-    this.lips.columns({ side: editing && (this.layout === 'wide' || this.layout === 'mid'), inspector: editing && this.layout !== 'stacked' });
-    // every opening shows both panels, whatever an earlier visit left behind
-    if (editing && !this.wasEditing) {
-      this.lips.show('side');
-      this.lips.show('inspector');
-    }
-    this.wasEditing = editing;
+    this.lips.columns({ side: false, inspector: false });
     if (changed.has('dlg') && this.dlg && !changed.get('dlg')) this.dlgReturn = deepActive();
     if (changed.has('tool') || changed.has('sel')) this.syncPen();
     if (this.pt && (changed.has('sel') || changed.has('doc'))) ptLater(this);
@@ -2243,7 +2240,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** The image drawer opens beside the stage at the wide width and stays; it closes when the window narrows into the sheet width and opens again on widening. */
   private syncDrawer(): void {
-    const f = this.img && this.stage === 'edit' && !this.img.readOnly ? this.frame : null;
+    const f = this.framed ? this.frame : null;
     if (!f) {
       this.drawerFrame = undefined;
       return;
@@ -2259,7 +2256,12 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
   }
 
-  /** The studio frame of the image editor, when it is on screen. */
+  /** The editor runs inside the studio frame once it has a document, except for an image that can only be viewed. */
+  get framed(): boolean {
+    return this.stage === 'edit' && !this.img?.readOnly;
+  }
+
+  /** The studio frame of the editor, when it is on screen. */
   get frame(): StudioFrameElement | null {
     return this.renderRoot.querySelector<StudioFrameElement>(UI_STUDIO_FRAME_TAG);
   }

@@ -11,7 +11,7 @@ The editor is part of the Magic Card Utils integration and comes with Magic Card
 
 The start window has one row of tiles: Blank, An icon, Paste SVG, Open file and (when the library answers) My icons. The image editor uses the same window and the same top bar, with Blank canvas in place of Blank and An icon. In both, the window has no footer: Close or Esc closes it, and Tab and Shift+Tab stay inside it.
 
-The editor opens full-screen in the panel. To change a saved icon, choose Edit on it in the library. Your changes are saved only when you choose Save.
+The editor opens full-screen in the panel. It has the same look as the other studios: a thin top bar, rulers along the canvas, a tool rail on the left and a panel on the right. To change a saved icon, choose Edit on it in the library. Your changes are saved only when you choose Save.
 
 No card or entity is needed. You can make an icon before you add it to any dashboard.
 
@@ -28,9 +28,13 @@ Warnings (for example an icon that reaches outside the safe area), import messag
 
 ## Side panels
 
-Above 900 px wide, the Layers and Library panel sits on the left of the canvas and the inspector on the right. Both are open when the editor opens and stay open while you work. There are no edge buttons and no pin. Two buttons in the top bar, one for Layers and Library and one for the Inspector, hide and show the panels, so the canvas takes their width; press one again to show its panel as it was, with the same selection. Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown, and shows them again when both are hidden. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the buttons. Hidden panels are not remembered; the next time you open the editor both are showing. The image editor has one panel, the Inspector and Layers drawer on the right, with the same Inspector button and shortcut.
+The icon editor has one panel on the right with three tabs: Inspector, Layers and Library. The image editor has the same panel with Inspector and Layers. The panel is open when the editor opens and stays open while you work. There are no edge buttons and no pin. The panel button in the top bar hides and shows it, so the canvas takes its width; press it again to show the panel as it was, with the same tab and selection. Ctrl+\ (Cmd+\ on a Mac) does the same. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the button. A hidden panel is not remembered; the next time you open the editor it is showing.
 
-Between 641 and 900 px the Layers and Library button in the top bar opens that panel as a sheet, and the inspector stays a column. At 640 px and below, the panels stack under the canvas and the buttons are not shown. The tool rail and the top bar stay as they are at every width.
+On narrow screens the panel opens over the canvas. The tool rail and the top bar stay as they are at every width.
+
+## Top bar
+
+Every studio in Magic Card Utils puts its top bar in the same order: Close, the studio's name, the name field, the actions, Save, the panel button and Help. In the icon editor the actions are Start from…, Undo, Redo, the size meter and Export / Import. When the bar is too narrow, the studio's name is read by screen readers only, and secondary buttons keep their icon and lose their word.
 
 ## Limits
 

@@ -22,6 +22,8 @@ async function open(): Promise<Ed> {
   mounted.push(el);
   await until(() => el.stage !== 'loading');
   await el.updateComplete;
+  el.tab = 'layers';
+  await el.updateComplete;
   const cv = el.canvas();
   if (cv) {
     cv.getBoundingClientRect = rect;

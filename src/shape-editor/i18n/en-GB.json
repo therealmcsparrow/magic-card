@@ -173,16 +173,6 @@
       "w": "The value that replaces w in the text."
     }
   },
-  "shape-editor.mc-shape-studio.back": {
-    "text": "Back",
-    "note": "Button that leaves the current step or picker and returns to the previous view of the studio.",
-    "max": 10
-  },
-  "shape-editor.mc-shape-studio.back-to-card-editor": {
-    "text": "Back to card editor",
-    "note": "Button in the shape studio header. Closes the studio and returns the user to the card editor.",
-    "max": 35
-  },
   "shape-editor.mc-shape-studio.bottom": {
     "text": "Bottom",
     "note": "Label for the bottom side of the card, used for the text space and anchor fields. Same English as the names key.",
@@ -442,8 +432,8 @@
     "max": 65
   },
   "shape-editor.mc-shape-studio.esc-doesn-t-close-the-editor-use-done-or": {
-    "text": "Esc doesn't close the editor. Use Done or Back to card editor.",
-    "note": "Hint shown when Esc is pressed in the full-page studio. Esc is the key name; Done and Back to card editor are button labels.",
+    "text": "Esc doesn't close the editor. Use Done or Close.",
+    "note": "Hint shown when Esc is pressed in the full-page studio. Esc is the key name; Done and Close are button labels.",
     "max": 100
   },
   "shape-editor.mc-shape-studio.export-file": {

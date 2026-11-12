@@ -6015,13 +6015,13 @@
     "text": "Up",
     "hash": "55490a4b"
   },
-  "card-editor.studio.back-to-dialog": {
-    "text": "Back to dialog",
-    "hash": "3158bd66"
-  },
   "card-editor.studio.canvas-width": {
     "text": "Canvas width",
     "hash": "d17d81dc"
+  },
+  "card-editor.studio.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
   },
   "card-editor.studio.done": {
     "text": "Done",

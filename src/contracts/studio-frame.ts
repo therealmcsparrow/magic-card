@@ -11,7 +11,7 @@ export const FRAME_WIDE_MIN_PX = 1024;
 
 /** Studios that use the frame. One id each; also the value of the frame's `studio` attribute. */
 export const FRAME_STUDIOS = [
-  'card-studio', 'anim-studio', 'image-animator', 'image-editor', 'look-editor', 'shape-studio', 'theme-editor',
+  'card-studio', 'anim-studio', 'image-animator', 'image-editor', 'icon-editor', 'look-editor', 'shape-studio', 'theme-editor',
 ] as const;
 export type FrameStudioId = (typeof FRAME_STUDIOS)[number];
 

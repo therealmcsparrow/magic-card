@@ -18,7 +18,7 @@ Opening an animation switches the studio to the editor. The editor fills the bro
 
 | Part | What it holds |
 | --- | --- |
-| Top bar | Library (back to the list), the animation's name, its kind chip, a New or Unsaved changes chip, Undo, Redo and Save |
+| Top bar | Library (back to the list), Animation studio, the animation's name, its kind chip, a New or Unsaved changes chip, Undo, Redo and Save |
 | Layers | The left column: what the animation can move. See [Layers](#layers). |
 | Stage | The live preview with its transport row, in the middle |
 | Timeline | Under the stage, for keyframes animations. See [Keyframes](keyframes.md). |

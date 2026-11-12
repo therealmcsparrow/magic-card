@@ -4791,6 +4791,10 @@
     "text": "Animation settings (Esc)",
     "hash": "38f19123"
   },
+  "anim-studio.studio.animation-studio": {
+    "text": "Animation studio",
+    "hash": "c98a7b94"
+  },
   "anim-studio.studio.blank-keyframes": {
     "text": "Blank keyframes",
     "hash": "09007f4b"
@@ -4822,6 +4826,10 @@
   "anim-studio.studio.cards-use-it-as": {
     "text": "Cards use it as",
     "hash": "8239a9a2"
+  },
+  "anim-studio.studio.close": {
+    "text": "Close",
+    "hash": "7d9eb7ac"
   },
   "anim-studio.studio.close-layers": {
     "text": "Close layers",

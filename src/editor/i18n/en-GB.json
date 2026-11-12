@@ -8188,15 +8188,15 @@
     "note": "Short label for the up arrow button that nudges the selected item upwards. Direction, not a state.",
     "max": 10
   },
-  "card-editor.studio.back-to-dialog": {
-    "text": "Back to dialog",
-    "note": "Button in the studio header that leaves the studio and returns to the normal editor dialog.",
-    "max": 25
-  },
   "card-editor.studio.canvas-width": {
     "text": "Canvas width",
     "note": "Label for the control that sets how wide the studio preview area is.",
     "max": 20
+  },
+  "card-editor.studio.close": {
+    "text": "Close",
+    "note": "Button in the studio header that leaves the studio and returns to the normal editor dialog.",
+    "max": 12
   },
   "card-editor.studio.done": {
     "text": "Done",

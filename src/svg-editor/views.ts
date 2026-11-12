@@ -194,8 +194,8 @@ function xferWin(ed: McSvgEditor): TemplateResult {
 export function renderEditor(ed: McSvgEditor): TemplateResult {
   return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${ed.img ? ed.img.title : t('svg-editor.views.icon-editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
-    ${ed.lips.status()} ${skipLinks(ed)} ${ed.img && ed.stage === 'edit' && !ed.img.readOnly ? imageFrame(ed) : topBar(ed)}
-    ${ed.stage === 'edit' ? (ed.img ? (ed.img.readOnly ? ed.img.viewer() : nothing) : workspace(ed)) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${ed.source.kind.startsWith('image') ? t('svg-editor.views.loading-the-image-editor') : t('svg-editor.views.loading-the-icon-editor')}</p>` : html`<div class="center-msg" role="alert"><p>${ed.img?.problem ?? (ed.source.kind.startsWith('image') ? t('svg-editor.views.the-image-editor-could-not-load-check') : t('svg-editor.views.the-icon-editor-could-not-load-check'))}</p>${btn(t('svg-editor.views.try-again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
+    ${ed.lips.status()} ${skipLinks(ed)} ${ed.framed ? studioFrame(ed) : topBar(ed)}
+    ${ed.stage === 'edit' ? (ed.img?.readOnly ? ed.img.viewer() : nothing) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${ed.source.kind.startsWith('image') ? t('svg-editor.views.loading-the-image-editor') : t('svg-editor.views.loading-the-icon-editor')}</p>` : html`<div class="center-msg" role="alert"><p>${ed.img?.problem ?? (ed.source.kind.startsWith('image') ? t('svg-editor.views.the-image-editor-could-not-load-check') : t('svg-editor.views.the-icon-editor-could-not-load-check'))}</p>${btn(t('svg-editor.views.try-again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
     ${ed.img?.dialogs()}
     ${ed.startOpen ? startWindow(ed) : nothing}
     ${ed.dlg === 'save' ? saveWin(ed) : nothing} ${ed.dlg === 'single' ? singleWin(ed) : nothing} ${ed.leaving ? leaveWin(ed) : nothing} ${ed.newAsk ? newWin(ed) : nothing} ${ed.xfer ? xferWin(ed) : nothing}
@@ -216,20 +216,20 @@ function skipLinks(ed: McSvgEditor): TemplateResult | typeof nothing {
   return html`<nav class="skips">
     ${btn(t('svg-editor.views.skip-to-canvas'), undefined, go('mc-path-canvas'), { text: true })}
     ${ed.pointCtx ? btn(t('svg-editor.views.skip-to-point-fields'), undefined, go('[data-field="px"]'), { text: true }) : nothing}
-    ${btn(t('svg-editor.views.skip-to-inspector'), undefined, () => void ed.lips.reveal('inspector').then(() => go('.insp input, .insp button')()), { text: true })}
+    ${btn(t('svg-editor.views.skip-to-inspector'), undefined, () => { ed.tab = 'inspector'; ed.frame?.openDrawer(null, 'user'); void ed.updateComplete.then(() => go('.insp input, .insp button')()); }, { text: true })}
   </nav>`;
 }
 
 const SAVE_KEY = (): string => (/Mac|iPhone|iPad/.test(navigator.platform ?? '') ? 'Meta+S' : 'Control+S');
 
-/** The top bar, slot by slot in the order of ICON_TOP_BAR, IMAGE_TOP_BAR and IMAGE_READONLY_TOP_BAR (DOM, visual and Tab order are the same). */
+/** The top bar, left to right: Close, title, name with its status, a spacer, the studio actions, the primary button, the Inspector button and Shortcuts. */
 function topBar(ed: McSvgEditor, tail = true): TemplateResult {
   const img = ed.img;
   const edit = ed.stage === 'edit';
   const ro = !!img?.readOnly;
   const sm = ed.layout === 'stacked';
   const z = sm ? 'sm' : 'md';
-  // narrow windows (and 200 % zoom): the title is read by screen readers only, secondary buttons keep their glyph and lose the word, so the bar needs two rows at most
+  // narrow windows (and 200 % zoom): the title is read by screen readers only and secondary buttons keep their glyph and lose the word, so the bar needs two rows at most
   const tight = ed.layout === 'compact' || sm || ed.crowdW > 0;
   const image = ed.source.kind.startsWith('image');
   const o = ed.out;
@@ -238,50 +238,32 @@ function topBar(ed: McSvgEditor, tail = true): TemplateResult {
   const chip_ = ed.savedLabel;
   const exported = img ? img.slot('transfer', z, tight) : button({ label: t('svg-editor.views.export-import'), glyph: tight ? 'swapVertical' : undefined, iconOnly: tight, variant: 'secondary', size: z, haspopup: 'menu', expanded: ed.menu?.key === 'xfer', onClick: (e) => ed.xferMenu(e.currentTarget as HTMLElement) });
   return html`<header class="topbar">
-    ${button({ label: image || ed.mcu ? t('svg-editor.views.close') : t('svg-editor.views.back-to-card-editor'), glyph: 'arrowLeft', variant: 'secondary', size: z, iconOnly: tight, onClick: () => ed.back() })}
+    ${button({ label: t('svg-editor.views.close'), glyph: 'arrowLeft', variant: 'secondary', size: z, onClick: () => ed.back() })}
     <h1 class=${tight ? 'title sr' : 'title'}>${image ? t('svg-editor.views.image-editor') : t('svg-editor.views.icon-editor')}</h1>
-    ${edit && !ro ? button({ label: t('svg-editor.views.start-from'), glyph: 'fileOutline', variant: 'secondary', size: z, iconOnly: tight, haspopup: 'dialog', onClick: (e) => ed.openStart(e.currentTarget as HTMLElement) }) : nothing}
-    ${edit && !ro && !img && ed.layout !== 'stacked' ? panelToggle(ed, 'side', z) : nothing}
     ${edit
       ? ro
         ? html`<strong class="title">${ed.doc.name}</strong><span class="spacer"></span>${exported}`
         : html`<div class="nm-field">
-            <label class=${tight ? 'sr' : 'nm-label'} for="title-name">${img ? img.nameLabel : t('svg-editor.views.icon-name')}</label>
+            <label class="nm-label" for="title-name">${img ? img.nameLabel : t('svg-editor.views.icon-name')}</label>
             <div class="name"
               ><input id="title-name" class="input" type="text" maxlength="80" aria-required=${ed.mcu && !img ? 'true' : nothing} title=${img ? nothing : t('svg-editor.views.name-used-in-the-library')} .value=${ed.doc.name} @change=${(e: Event) => ed.apply({ ...ed.doc, name: (e.target as HTMLInputElement).value }, img ? 'Rename image' : 'Rename icon', 'name')}
             /></div>
             ${chip_ ? chip({ label: chip_, tone: chip_ === t('svg-editor.views.saved') ? undefined : 'warn' }) : nothing}
           </div>
           <span class="spacer"></span>
+          ${button({ label: t('svg-editor.views.start-from'), glyph: 'fileOutline', variant: 'secondary', size: z, iconOnly: tight, haspopup: 'dialog', onClick: (e) => ed.openStart(e.currentTarget as HTMLElement) })}
           ${btn(t('svg-editor.views.undo'), 'undo', () => ed.undo(), { disabled: !ed.hist?.canUndo, keys: 'Control+Z', size: z })}${btn(t('svg-editor.views.redo'), 'redo', () => ed.redo(), { disabled: !ed.hist?.canRedo, keys: 'Control+Shift+Z', size: z })}
           ${img
-            ? html`${img.slot('canvas', z, tight)}${img.slot('reference', z, tight)}${exported}${img.slot('more', z, tight)}${primary(ed, sm)}`
+            ? html`${img.slot('canvas', z, tight)}${img.slot('reference', z, tight)}${exported}${img.slot('more', z, tight)}`
             : html`<span class=${`chip meter${zone}`} title=${t('svg-editor.views.size-of-the-icon-markup-in-your')}>${t('svg-editor.views.size-32-kb-c', { size: o.error === 'empty' ? 0 : kbOf(o.bytes), c: o.points })}${o.bytes >= 4096 && !zone && !tight ? html` · ${t('svg-editor.views.heavy-for-wall-tablets')}` : nothing}</span>
               ${exported}
               ${ed.mcu ? nothing : html`<button type="button" data-act="save-library" class=${`btn btn-secondary${sm ? ' btn-sm' : ''}`} aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} aria-keyshortcuts="Control+S" @click=${() => !needLib && ed.openSave()}>${t('svg-editor.views.save-to-library')}</button>`}
-              ${needLib ? html`<span id="lib-hint" class="sr">${t('svg-editor.views.keep-your-own-icons-for-every-dashboard')}</span>` : nothing}
-              ${primary(ed, sm)}`}
-          ${!img && ed.layout !== 'stacked' ? panelToggle(ed, 'inspector', z) : nothing}
-          ${button({ label: t('svg-editor.views.shortcuts'), glyph: 'helpCircle', iconOnly: true, size: z, expanded: ed.dlg === 'help', controls: 'help-pop', keys: '?', onClick: () => (ed.dlg = ed.dlg === 'help' ? undefined : 'help') })}
-          ${img && tail === false ? button({ label: ed.narrow ? t('svg-editor.views.settings') : t('svg-editor.views.inspector'), glyph: 'information', iconOnly: true, size: z, expanded: ed.drawer, controls: 'drawer-body', haspopup: ed.narrow ? 'dialog' : undefined, onClick: (e) => (ed.drawer && !ed.narrow ? ed.frame?.closeDrawer() : ed.frame?.openDrawer(e.currentTarget as HTMLElement)) }) : nothing}`
+              ${needLib ? html`<span id="lib-hint" class="sr">${t('svg-editor.views.keep-your-own-icons-for-every-dashboard')}</span>` : nothing}`}
+          ${primary(ed, sm)}
+          ${tail === false ? button({ label: ed.narrow ? t('svg-editor.views.settings') : t('svg-editor.views.inspector'), glyph: 'information', iconOnly: true, size: z, expanded: ed.drawer, controls: 'drawer-body', haspopup: ed.narrow ? 'dialog' : undefined, onClick: (e) => (ed.drawer && !ed.narrow ? ed.frame?.closeDrawer() : ed.frame?.openDrawer(e.currentTarget as HTMLElement)) }) : nothing}
+          ${button({ label: t('svg-editor.views.shortcuts'), glyph: 'helpCircle', iconOnly: true, size: z, expanded: ed.dlg === 'help', controls: 'help-pop', keys: '?', onClick: () => (ed.dlg = ed.dlg === 'help' ? undefined : 'help') })}`
       : nothing}
   </header>${edit && !ro && tail ? img?.barTail() : nothing}`;
-}
-
-/** The top bar button that shows or hides the side panel (a sheet in the compact layout) or the inspector. */
-function panelToggle(ed: McSvgEditor, id: 'side' | 'inspector', size: 'md' | 'sm'): TemplateResult {
-  const side = id === 'side';
-  const shown = side && ed.layout === 'compact' ? ed.overlay : !ed.lips.isHidden(id);
-  const label = side ? t('svg-editor.views.layers-and-library-panel') : t('svg-editor.views.inspector');
-  return button({
-    label,
-    glyph: side ? 'layersOutline' : 'tuneVariant',
-    iconOnly: true,
-    size,
-    expanded: shown,
-    controls: id,
-    onClick: () => (side && ed.layout === 'compact' ? (ed.overlay = !ed.overlay) : ed.lips.toggle(id)),
-  });
 }
 
 /** Done (Save in the Magic Card Utils panel and for an image): stays focusable while it cannot act, with its reason read out. */
@@ -456,7 +438,7 @@ const TOOLS: Array<[Tool, GlyphName, string]> = [
 function rail(ed: McSvgEditor): TemplateResult {
   return toolbar({
     label: t('svg-editor.views.tools'),
-    orientation: ed.layout === 'stacked' && !ed.img ? 'horizontal' : 'vertical',
+    orientation: 'vertical',
     kind: 'rail',
     items: [
       ...TOOLS.map(([t, g, k]) => ({
@@ -496,19 +478,6 @@ function picker(ed: McSvgEditor): TemplateResult {
   </div>`;
 }
 
-function workspace(ed: McSvgEditor): TemplateResult {
-  const stacked = ed.layout === 'stacked';
-  const left = ed.layout === 'wide' || ed.layout === 'mid' || stacked || ed.overlay;
-  const lips = ed.lips;
-  return html`<div class=${`work${ed.overlay ? ' ov' : ''}${lips.isHidden('side') ? ' no-side' : ''}${lips.isHidden('inspector') ? ' no-insp' : ''}`}>
-    ${rail(ed)}
-    ${ed.picker ? picker(ed) : nothing}
-    ${left ? leftPanel(ed) : nothing}
-    ${stageSection(ed, false)}
-    ${inspector(ed)}
-  </div>`;
-}
-
 /** Which settings of the selected layers (or of the drawing) differ from their defaults: Modified only renders only those. */
 function mods(ed: McSvgEditor): Record<'pos' | 'opt' | 'paint' | 'layer' | 'doc' | 'live', boolean> {
   const sel = ed.selected;
@@ -524,33 +493,35 @@ function mods(ed: McSvgEditor): Record<'pos' | 'opt' | 'paint' | 'layer' | 'doc'
   };
 }
 
-/** The image editor in the studio frame: bar, tool rail, stage with its zoom pill, and the Inspector and Layers drawer. */
-function imageFrame(ed: McSvgEditor): TemplateResult {
+/** The editor in the studio frame: bar, tool rail, stage with its zoom pill, and the Inspector, Layers and Library drawer. */
+function studioFrame(ed: McSvgEditor): TemplateResult {
   ed.gridBase ||= ed.grid;
   const sel = ed.selected;
   const b = ed.unionBox;
   const strings: StudioFrameStrings = { pin: t('svg-editor.views.keep-the-inspector-open'), modifiedOnly: t('svg-editor.views.modified-only'), noneModified: t('svg-editor.views.nothing-modified'), close: t('svg-editor.views.close'), drawer: t('svg-editor.views.inspector'), zoom: t('svg-editor.views.zoom') };
+  const order = ed.img ? (['inspector', 'layers'] as const) : (['inspector', 'layers', 'library'] as const);
   const inspect = ed.tab === 'inspector';
   const empty = inspect && ed.modOnly && !Object.values(mods(ed)).some(Boolean);
-  const tabs = (['inspector', 'layers'] as const).map((k) => html`<button type="button" role="tab" id=${`tab-${k}`} aria-selected=${aria(ed.tab === k)} aria-controls="drawer-body" tabindex=${ed.tab === k ? '0' : '-1'} @click=${() => (ed.tab = k)}>${k === 'layers' ? t('svg-editor.views.layers') : t('svg-editor.views.inspector')}</button>`);
-  return html`<mc-ui-studio-frame studio="image-editor" fixed-drawer edge-to-edge start-mode="rail" .scheme=${(ed.hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode ? 'dark' : 'light'} .strings=${strings}
-    .selectionLabel=${sel.length === 1 ? sel[0].name || t('svg-editor.views.layer') : sel.length ? t('svg-editor.views.c-shapes-selected', { c: sel.length }) : ed.doc.name || t('svg-editor.views.image-editor')}
+  const tabs = order.map((k) => html`<button type="button" role="tab" id=${`tab-${k}`} aria-selected=${aria(ed.tab === k)} aria-controls="drawer-body" tabindex=${ed.tab === k ? '0' : '-1'} @click=${() => ed.showTab(k)}>${k === 'layers' ? t('svg-editor.views.layers') : k === 'library' ? t('svg-editor.views.library') : t('svg-editor.views.inspector')}</button>`);
+  return html`<mc-ui-studio-frame studio=${ed.img ? 'image-editor' : 'icon-editor'} fixed-drawer edge-to-edge start-mode="rail" .scheme=${(ed.hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode ? 'dark' : 'light'} .strings=${strings}
+    .selectionLabel=${sel.length === 1 ? sel[0].name || t('svg-editor.views.layer') : sel.length ? t('svg-editor.views.c-shapes-selected', { c: sel.length }) : ed.doc.name || (ed.img ? t('svg-editor.views.image-editor') : t('svg-editor.views.icon-editor'))}
     .measure=${stageMeasure(ed, b)}
     @mc-frame-drawer=${(e: CustomEvent<FrameDrawerChange>) => (ed.drawer = e.detail.open)}
     @mc-frame-modified=${(e: CustomEvent<FrameModifiedChange>) => (ed.modOnly = e.detail.on)}>
     <div slot="top" class="ftop">${topBar(ed, false)}</div>
     <div slot="start" class="frail">${rail(ed)}</div>
     ${stageSection(ed, true)}
-    <div slot="zoom" class="zoomp">${zoomGroup(ed, true)}</div>
+    <div slot="zoom" class="zoomp">${zoomGroup(ed, !!ed.img)}</div>
     ${empty
       ? nothing
       : html`<div slot="drawer" id="drawer-body" class="drawer-body">
           <div class="tabs" role="tablist" @keydown=${(e: KeyboardEvent) => {
             if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-            ed.tab = ed.tab === 'layers' ? 'inspector' : 'layers';
+            const at = (order as readonly string[]).indexOf(ed.tab);
+            ed.showTab(order[(at + (e.key === 'ArrowRight' ? 1 : order.length - 1)) % order.length]);
             void ed.updateComplete.then(() => ed.renderRoot.querySelector<HTMLElement>(`#tab-${ed.tab}`)?.focus());
           }}>${tabs}</div>
-          ${inspect ? html`<div class="insp" id="inspector" role="tabpanel" aria-labelledby="tab-inspector">${inspectorBody(ed)}</div>` : html`<div role="tabpanel" aria-labelledby="tab-layers">${guard([ed.listKey, ed.sel, ed.cur, ed.drag, ed.tmsg, ed.renaming, ed.menu, ed.layout, ed.tool], () => layersPanel(ed))}</div>`}
+          ${inspect ? html`<div class="insp" id="inspector" role="tabpanel" aria-labelledby="tab-inspector">${inspectorBody(ed)}</div>` : ed.tab === 'library' ? html`<div class="lib-tab" role="tabpanel" aria-labelledby="tab-library">${libraryPanel(ed)}</div>` : html`<div role="tabpanel" aria-labelledby="tab-layers">${guard([ed.listKey, ed.sel, ed.cur, ed.drag, ed.tmsg, ed.renaming, ed.menu, ed.layout, ed.tool], () => layersPanel(ed))}</div>`}
         </div>`}
   </mc-ui-studio-frame>`;
 }
@@ -630,7 +601,7 @@ function stageSection(ed: McSvgEditor, framed: boolean): TemplateResult {
       ${toolOptions(ed)}
       </div>
       ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${nudgePad(ed)}
-      ${framed ? dimsLine(ed) : nothing}
+      ${framed && ed.img ? dimsLine(ed) : nothing}
     </section>`;
 }
 
@@ -668,7 +639,6 @@ function floatBar(ed: McSvgEditor): TemplateResult {
     return html`<button type="button" class="btn btn-secondary btn-sm" data-menu=${k} aria-haspopup="menu" aria-expanded=${aria(ed.menu?.key === k)} aria-busy=${busy ? 'true' : nothing} @click=${(e: Event) => ed.toolMenu(k, e.currentTarget as HTMLElement)}>${label}</button>`;
   };
   return html`<div class="toolbar" role="toolbar" aria-label=${ed.img ? ed.img.canvasLabel : t('svg-editor.views.icon-canvas')}>
-    ${ed.img ? nothing : zoomGroup(ed)}
     ${ed.img ? ed.img.previewButton() : html`<button type="button" class="btn btn-secondary btn-sm" data-pv aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}>${t('svg-editor.views.preview')}</button>`}
     ${btn(t('svg-editor.views.grid-size', { size: ed.grid }), 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'", text: true })}${btn(t('svg-editor.views.snap-to-grid'), 'magnet', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}
     <span class="sep" aria-hidden="true" data-dir="vertical"></span>
@@ -680,7 +650,7 @@ export function artLayer(ed: McSvgEditor): TemplateResult {
   const v = ed.view;
   const f = ed.doc.vb;
   const live = ed.liveShape?.shape;
-  return html`<svg class="art" aria-hidden="true" style=${ed.img?.artColours() ?? (ed.mcu ? `--m:${ed.pvMain};--a:${ed.pvAccent}` : '--m: var(--mc-text, #212121); --a: var(--art-accent)')}>
+  return html`<svg class="art" aria-hidden="true" style=${ed.img?.artColours() ?? (ed.mcu ? `--m:${ed.pvMain};--a:${ed.pvAccent}` : '--m: var(--bp-ink, var(--mc-text, #212121)); --a: var(--art-accent)')}>
     <g transform=${`translate(${v.x} ${v.y}) scale(${v.zoom})`}>
       <rect class="board" x=${f.x} y=${f.y} width=${f.w} height=${f.h}></rect>
       ${guard([ed.doc.shapes, ed.doc.groups, ed.moving], () => svg`${ed.img ? svg`<defs>${ed.img.defs(ed.doc)}</defs>` : nothing}${artNodes(ed.doc, true, ed.moving, ed.img)}`)}
@@ -771,15 +741,7 @@ function nudgePad(ed: McSvgEditor): TemplateResult | typeof nothing {
   </div>`;
 }
 
-// ── left panel ──
-
-function leftPanel(ed: McSvgEditor): TemplateResult {
-  return html`<aside class=${`left${ed.overlay ? ' sheet' : ''}`} id="side" aria-label=${t('svg-editor.views.layers-and-library-panel')} ?inert=${ed.lips.isHidden('side')} data-lip=${ed.lips.state('side')} data-dir=${ed.lips.dir} role=${ed.overlay ? 'dialog' : nothing} aria-modal=${ed.overlay ? 'false' : nothing}>
-    ${ed.overlay ? html`<div class="sheet-head">${btn(t('svg-editor.views.close'), 'close', () => (ed.overlay = false))}</div>` : nothing}
-    ${ed.img ? nothing : seg({ role: 'radiogroup', label: t('svg-editor.views.panel'), full: true, value: ed.panel, items: [{ value: 'layers', label: t('svg-editor.views.layers') }, { value: 'library', label: t('svg-editor.views.library') }], onChange: (p) => ed.openPanel(p) })}
-    ${ed.panel === 'layers' || ed.img ? guard([ed.listKey, ed.sel, ed.cur, ed.drag, ed.tmsg, ed.renaming, ed.menu, ed.layout, ed.tool], () => layersPanel(ed)) : libraryPanel(ed)}
-  </aside>`;
-}
+// ── layers ──
 
 function layersPanel(ed: McSvgEditor): TemplateResult {
   const some = ed.sel.length > 0;
@@ -832,12 +794,6 @@ function libraryPanel(ed: McSvgEditor): TemplateResult {
 }
 
 // ── inspector ──
-
-function inspector(ed: McSvgEditor): TemplateResult {
-  return html`<aside class="insp" id="inspector" aria-label=${t('svg-editor.views.inspector-panel')} ?inert=${ed.lips.isHidden('inspector')} data-lip=${ed.lips.state('inspector')} data-dir=${ed.lips.dir}>
-    ${inspectorBody(ed)}
-  </aside>`;
-}
 
 function inspectorBody(ed: McSvgEditor): TemplateResult {
   const sel = ed.selected;

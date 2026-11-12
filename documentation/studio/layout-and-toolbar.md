@@ -13,7 +13,8 @@ From left to right:
 
 | Control | What it does |
 | --- | --- |
-| Back to dialog | Closes the Studio. |
+| Close | Closes the Studio. |
+| Magic Card studio | The studio's name. |
 | Layers button | Shows or hides the Layers panel. Only visible on narrow screens (900 px wide or less). |
 | Card name | The card's name, or "Untitled card". |
 | Template bar | A compact template bar: the template name and override count, or a No template button. See [Templates](../editor/templates.md). |

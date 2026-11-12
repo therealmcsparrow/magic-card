@@ -6015,13 +6015,13 @@
     "text": "Omhoog",
     "hash": "55490a4b"
   },
-  "card-editor.studio.back-to-dialog": {
-    "text": "Terug naar dialoogvenster",
-    "hash": "3158bd66"
-  },
   "card-editor.studio.canvas-width": {
     "text": "Canvasbreedte",
     "hash": "d17d81dc"
+  },
+  "card-editor.studio.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
   },
   "card-editor.studio.done": {
     "text": "Klaar",

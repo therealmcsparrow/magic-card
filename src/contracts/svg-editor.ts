@@ -123,8 +123,8 @@ export interface EditorProfile {
 }
 
 /** Top bar order, left to right (DOM, visual and Tab order). */
-export const ICON_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'start', 'name', 'undo-redo', 'size', 'transfer', 'save', 'done', 'shortcuts'];
-export const IMAGE_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'start', 'name', 'undo-redo', 'canvas', 'reference', 'transfer', 'more', 'save', 'shortcuts'];
+export const ICON_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'name', 'start', 'undo-redo', 'size', 'transfer', 'save', 'done', 'shortcuts'];
+export const IMAGE_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'name', 'start', 'undo-redo', 'canvas', 'reference', 'transfer', 'more', 'save', 'shortcuts'];
 export const IMAGE_READONLY_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'name', 'transfer'];
 /** Start window tiles in order (DOM, visual and Tab order); 'import' is the button under them. */
 export const ICON_START: readonly StartEntry[] = ['blank', 'icon', 'paste', 'open-file', 'library', 'import'];

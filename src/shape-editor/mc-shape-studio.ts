@@ -1620,13 +1620,13 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
     const actions: KitButtonOptions[] = [];
     // narrow window or 200 % zoom: shorter words, Export / Import as a glyph, the title for screen readers only (styles.ts), so the bar needs one or two rows
     const tight = this.layout === 'compact' || this.layout === 'stacked';
-    actions.push({ label: `${this.tab === 'path' ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')}${this.msgCount() ? ` (${this.msgCount()})` : ''}`, controls: 'side', expanded: this.sideShown, onClick: () => this.toggleSide() });
     actions.push({ label: t('shape-editor.mc-shape-studio.export-import'), icon: 'mdi:swap-vertical', iconOnly: tight, haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
     if (mcu) actions.push({ label: t('shape-editor.mc-shape-studio.save'), variant: 'primary', disabledReason: this.saveBusy ? t('shape-editor.mc-shape-studio.working') : undefined, onClick: () => void this.saveMcu() });
     else actions.push({ label: t('shape-editor.mc-shape-studio.save-to-library'), onClick: () => this.openSave() }, { label: t('shape-editor.mc-shape-studio.done'), variant: 'primary', onClick: () => this.done() });
+    actions.push({ label: `${this.tab === 'path' ? t('shape-editor.mc-shape-studio.points') : t('shape-editor.mc-shape-studio.outline')}${this.msgCount() ? ` (${this.msgCount()})` : ''}`, controls: 'side', expanded: this.sideShown, onClick: () => this.toggleSide() });
     actions.push({ label: this.narrowFrame ? t('shape-editor.mc-shape-studio.frame-settings') : t('shape-editor.mc-shape-studio.inspector-panel'), icon: 'mdi:tune-variant', iconOnly: true, haspopup: this.narrowFrame ? 'dialog' : undefined, controls: 'inspector', expanded: this.drawerOpen, onClick: (e) => this.toggleDrawer(e.currentTarget as HTMLElement) });
     return topBar({
-      back: { label: mcu ? t('shape-editor.mc-shape-studio.close') : tight ? t('shape-editor.mc-shape-studio.back') : t('shape-editor.mc-shape-studio.back-to-card-editor'), onClick: () => (mcu ? this.close() : this.leave(false)) },
+      back: { label: t('shape-editor.mc-shape-studio.close'), onClick: () => (mcu ? this.close() : this.leave(false)) },
       title,
       name: { label: t('shape-editor.mc-shape-studio.shape-name'), placeholder: mcu ? t('shape-editor.mc-shape-studio.shape-name') : undefined, value: this.name, error: mcu && this.nameErr ? t('shape-editor.mc-shape-studio.give-the-shape-a-name') : undefined, onInput: (v) => ((this.name = v), (this.nameErr = false)) },
       undo: { label: t('shape-editor.mc-shape-studio.undo'), glyph: 'undo', keys: 'Control+Z', disabledReason: this.canUndo ? undefined : t('shape-editor.mc-shape-studio.nothing-to-undo'), onClick: () => this.undo() },

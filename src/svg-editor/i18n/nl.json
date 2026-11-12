@@ -1023,10 +1023,6 @@
     "text": "De pijltjestoetsen verplaatsen met 0,5. Zet Uitlijnen op raster aan om de rastergrootte te gebruiken.",
     "hash": "27ec574a"
   },
-  "svg-editor.views.back-to-card-editor": {
-    "text": "Terug naar kaarteditor",
-    "hash": "89f5c8f1"
-  },
   "svg-editor.views.bevel": {
     "text": "Afgeschuind",
     "hash": "72c3bce2"
@@ -1343,10 +1339,6 @@
     "text": "Inspecteur",
     "hash": "da188e3b"
   },
-  "svg-editor.views.inspector-panel": {
-    "text": "Inspectorpaneel",
-    "hash": "20f92072"
-  },
   "svg-editor.views.it-is-saved-in-the-library": {
     "text": "Het is opgeslagen in de bibliotheek.",
     "hash": "8a196b4d"
@@ -1382,10 +1374,6 @@
   "svg-editor.views.layers": {
     "text": "Lagen",
     "hash": "0bcd66e6"
-  },
-  "svg-editor.views.layers-and-library-panel": {
-    "text": "Lagen- en bibliotheekpaneel",
-    "hash": "8c1a60b1"
   },
   "svg-editor.views.leave": {
     "text": "Verlaten",
@@ -1554,10 +1542,6 @@
   "svg-editor.views.out-handle-length": {
     "text": "Lengte van buitenhandvat",
     "hash": "20f2d707"
-  },
-  "svg-editor.views.panel": {
-    "text": "Paneel",
-    "hash": "d0d91173"
   },
   "svg-editor.views.paste-some-svg-first": {
     "text": "Plak eerst wat SVG.",

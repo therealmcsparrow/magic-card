@@ -182,98 +182,16 @@ export const editorStyles: CSSResult[] = [
       display: contents;
     }
 
-    /* the working area */
-    .work {
-      --lw: 260px;
-      --iw: 340px;
-      position: relative;
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: 56px var(--lt, var(--lw)) minmax(0, 1fr) var(--it, var(--iw));
-      grid-template-areas: 'rail left center insp';
-      overflow: hidden;
-    }
-    [data-layout='mid'] .work {
-      --lw: 240px;
-      --iw: 320px;
-    }
-    [data-layout='compact'] .work {
-      --iw: 300px;
-      grid-template-columns: 56px minmax(0, 1fr) var(--it, var(--iw));
-      grid-template-areas: 'rail center insp';
-    }
-    /*
-     * A hidden panel gives its whole track to the stage but keeps its own width,
-     * so its content never reflows and a nested scroller keeps its place. It slides off its edge.
-     */
-    .no-side {
-      --lt: 0px;
-    }
-    .no-insp {
-      --it: 0px;
-    }
-    .left {
-      --mc-lip-off: -100%;
-    }
-    .insp {
-      --mc-lip-off: 100%;
-    }
-    .left[data-lip='hidden'] {
-      width: var(--lw);
-      justify-self: start;
-    }
-    .insp[data-lip='hidden'] {
-      width: var(--iw);
-      justify-self: end;
-    }
-    [data-layout='stacked'] .work {
-      display: flex;
-      flex-direction: column;
-      overflow: auto;
-    }
-    [data-layout='stacked'] .work > * {
-      flex: none;
-      overflow: visible;
-    }
     [data-layout='stacked'] .center {
       order: 1;
     }
     [data-layout='stacked'] .rail {
       order: 2;
     }
-    [data-layout='stacked'] .left {
-      order: 5;
-    }
-    [data-layout='stacked'] .insp {
-      order: 6;
-    }
     [data-layout='stacked'] .stagebox {
       flex: none;
       min-height: max(320px, 70vh);
     }
-    /* the kit turns the rail into a row under 800 px of viewport; here the layer's own width decides */
-    .work > .rail {
-      position: relative;
-      z-index: 1;
-      grid-area: rail;
-      flex-direction: column;
-      width: 56px;
-      padding: 8px 0;
-      border-inline-end: 1px solid var(--mc-divider);
-      border-bottom: 0;
-      overflow-x: visible;
-    }
-    [data-layout='stacked'] .work > .rail {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      width: auto;
-      padding: 4px 8px;
-      border-inline-end: 0;
-      border-bottom: 1px solid var(--mc-divider);
-    }
-    .left,
     .insp {
       display: flex;
       flex-direction: column;
@@ -283,27 +201,9 @@ export const editorStyles: CSSResult[] = [
       padding: 12px;
       background: var(--mc-surface);
     }
-    .left {
-      grid-area: left;
-      border-inline-end: 1px solid var(--mc-divider);
-    }
     .insp {
-      grid-area: insp;
       padding: 12px 16px;
       border-inline-start: 1px solid var(--mc-divider);
-    }
-    .left.sheet {
-      position: absolute;
-      z-index: 10;
-      top: 0;
-      bottom: 0;
-      inset-inline-start: 56px;
-      width: min(80vw, 300px);
-      box-shadow: var(--mc-shadow-float);
-    }
-    .sheet-head {
-      display: flex;
-      justify-content: flex-end;
     }
     .center {
       grid-area: center;
