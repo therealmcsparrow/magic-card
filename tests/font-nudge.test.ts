@@ -34,7 +34,7 @@ describe('font nudge', () => {
   });
   it('names installing Utils when it is missing', async () => {
     expect(await lineFor('"Lato", sans-serif')).toBe(t('card-editor.font-picker.nudge-utils-missing'));
-    expect(t('card-editor.font-picker.nudge-utils-missing')).toContain('Install Magic Card Utils');
+    expect(t('card-editor.font-picker.nudge-utils-missing')).toContain('Install Utils');
   });
   it('shows nothing when Google Fonts are on', async () => {
     w.magicCardUtils = { settings: { googleFonts: true } };

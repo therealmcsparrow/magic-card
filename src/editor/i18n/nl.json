@@ -2848,12 +2848,12 @@
     "hash": "6cfe7c1e"
   },
   "card-editor.font-picker.nudge-utils-missing": {
-    "text": "Dit lettertype komt van Google Fonts. Installeer Magic Card Utils om Google Fonts te gebruiken.",
-    "hash": "837a213d"
+    "text": "Dit lettertype vraagt Google Fonts en Magic Card Utils. Installeer Utils en zet Google Fonts aan. Kijkers benaderen dan Google.",
+    "hash": "3b84dd87"
   },
   "card-editor.font-picker.nudge-utils-off": {
-    "text": "Dit lettertype komt van Google Fonts, dat is uitgeschakeld. Zet Google Fonts aan bij Magic Card Utils → Configureren.",
-    "hash": "fb1a7014"
+    "text": "Dit Google-lettertype staat uit. Zet Google Fonts aan bij Magic Card Utils → Configureren. Kijkers benaderen dan Google.",
+    "hash": "fe026169"
   },
   "card-editor.font-picker.results": {
     "text": "{total} lettertypen",

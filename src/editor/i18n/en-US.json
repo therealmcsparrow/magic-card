@@ -2848,12 +2848,12 @@
     "hash": "6cfe7c1e"
   },
   "card-editor.font-picker.nudge-utils-missing": {
-    "text": "This font comes from Google Fonts, which needs Magic Card Utils. Install Magic Card Utils to use Google Fonts.",
-    "hash": "837a213d"
+    "text": "This font needs Google Fonts and Magic Card Utils. Install Utils, then turn on Google Fonts. Viewers then contact Google.",
+    "hash": "3b84dd87"
   },
   "card-editor.font-picker.nudge-utils-off": {
-    "text": "This font comes from Google Fonts, which is switched off. Turn on Google Fonts under Magic Card Utils → Configure.",
-    "hash": "fb1a7014"
+    "text": "This Google font is switched off. Turn on Google Fonts in Magic Card Utils → Configure. Viewers then contact Google.",
+    "hash": "fe026169"
   },
   "card-editor.font-picker.results": {
     "text": "{total} fonts",
