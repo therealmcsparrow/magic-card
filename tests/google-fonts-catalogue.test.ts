@@ -6,8 +6,9 @@ describe('google fonts catalogue', () => {
   it('finds families case-insensitively', () => {
     expect(findFamily('lato')?.name).toBe('Lato');
   });
-  it('applies aliases', () => {
-    expect(findFamily('Source Sans Pro')?.name).toBe('Source Sans 3');
+  it('finds a family only under the name its stylesheet declares', () => {
+    expect(findFamily('Source Sans Pro')).toBeUndefined();
+    expect(findFamily('source sans 3')?.name).toBe('Source Sans 3');
   });
   it('knows no system fonts', () => {
     expect(findFamily('Segoe UI')).toBeUndefined();

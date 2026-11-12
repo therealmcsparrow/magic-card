@@ -42,11 +42,15 @@ describe('gate', () => {
     expect(links()).toHaveLength(0);
   });
 
-  it('follows renames', async () => {
+  it('requests a family only under the name the config renders with', async () => {
     w.magicCardUtils = { settings: { googleFonts: true } };
-    loadFontsFor(['Source Sans Pro']);
+    const stored = ['Source Sans Pro', 'source sans 3', 'LATO', 'Open Sans', 'Playfair Display'];
+    loadFontsFor(stored);
     await flush();
-    expect(links()[0]?.getAttribute('href')).toContain('family=Source+Sans+3');
+    const requested = links().map((l) => decodeURIComponent(new URL(l.getAttribute('href')!).searchParams.get('family')!.split(':')[0]));
+    expect(requested).toEqual(['Source Sans 3', 'Lato', 'Open Sans', 'Playfair Display']);
+    // font-family matching ignores case, so each request names a family the stored value also names
+    for (const name of requested) expect(stored.map((s) => s.toLowerCase())).toContain(name.toLowerCase());
   });
 });
 

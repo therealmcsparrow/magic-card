@@ -41,7 +41,7 @@ export function googleFontUrl(f: GoogleFamily): string {
 export function loadGoogleFonts(families: GoogleFamily[]): void {
   if (!googleFontsAllowed()) return;
   for (const family of families) {
-    if (document.head.querySelector(`link[data-mc-font="${family.name}"]`)) continue;
+    if (document.head.querySelector(`link[data-mc-font="${CSS.escape(family.name)}"]`)) continue;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = googleFontUrl(family);
