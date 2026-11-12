@@ -6,7 +6,7 @@ import type { SavedIcon } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
 import type { TransferItem } from '../contracts/preset-transfer';
 import { KEEP_COPY_DEFAULT_MAX_BYTES } from '../contracts/mcu-library';
-import { MCU_PREVIEW_ACCENT, MCU_PREVIEW_MAIN, SVG_EDITOR_TAG, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange, type SvgEditorHost, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
+import { MCU_PREVIEW_ACCENT, MCU_PREVIEW_MAIN, SVG_EDITOR_CONTRACT_REVISION, SVG_EDITOR_TAG, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange, type SvgEditorHost, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
 import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
 import { svgIconApi } from '../utils/svg-icon-loader';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
@@ -140,7 +140,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** 'mcu' = hosted by the Magic Card Utils panel (no card, no module). */
   host: SvgEditorHost = 'card';
   /** The element revision the panel checks against SVG_EDITOR_MCU_MIN_REVISION. */
-  static contractRevision = 7;
+  static contractRevision = SVG_EDITOR_CONTRACT_REVISION;
   /** Set when the editor was opened on an image source: everything image-only goes through it. */
   img?: ImageUi;
   /** Layers being dragged, moved by handles or nudged: they carry will-change until the gesture ends. */

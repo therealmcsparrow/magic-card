@@ -5,12 +5,13 @@ import type { SavedImageInput } from './mcu-library-images';
 import type { BooleanOp } from './path-booleans';
 import type { IntakePolicy } from './svg-intake';
 
-/** Contract: svg editor. Version 1.2.0 (SVG_EDITOR_CONTRACT_VERSION), element revision 7. SVG editor and shape editor
+/** Contract: svg editor. Version 1.2.0 (SVG_EDITOR_CONTRACT_VERSION), element revision 8. SVG editor and shape editor
  * hosts. */
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.2.0';
-/** Revision number of <mc-svg-editor> (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION. */
-export const SVG_EDITOR_CONTRACT_REVISION = 7;
+/** Revision number of <mc-svg-editor> (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION.
+ * Revision 8 keeps image text in a Google font on save. */
+export const SVG_EDITOR_CONTRACT_REVISION = 8;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 /**
  * Elements of the card editor chunk (module-editor contract) that the SVG editor uses by tag, never by import:

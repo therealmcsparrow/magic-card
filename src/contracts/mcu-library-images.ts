@@ -27,7 +27,7 @@ export const BODY_CACHE_BYTES = 16 * 1024 * 1024;
 /** `caps.animation` of this version: the record version of image-animation it stores. */
 export const IMAGE_CAPS_ANIMATION = 1;
 export const MAX_IMAGE_BOX = 4096;
-export const IMAGES_MIN_CONTRACT_REVISION = 6;
+export const IMAGES_MIN_CONTRACT_REVISION = 8;
 export const BINDING_COLOUR_RE = /^(#[0-9a-fA-F]{3,8}|theme:[a-z0-9][a-z0-9-]{0,63}|main|accent|entity)$/;
 export const THUMB_RE = /^data:image\/(png|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
 /** The one xmlns value the server takes, on the root <svg> only. */
