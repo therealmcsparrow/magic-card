@@ -25,21 +25,21 @@ export interface McuGetSettingsResult {
 
 /**
  * Options flow, enforced by Magic Card Utils; `look_gallery` defaults to false. On: an information step names the gallery host
- * (GALLERY_ORIGIN in look-index), fonts.googleapis.com and fonts.gstatic.com and what each receives (IP address, standard request
- * headers), Continue / Cancel; then a confirm step (applies to everyone, turns Load Google Fonts on, needs a dashboard reload), Turn
- * on / Cancel. Only confirm stores (`look_gallery: true`, `google_fonts: true`); Cancel or close on either step stores nothing.
+ * (GALLERY_ORIGIN in look-index), what it receives (IP address, standard request headers) and that fonts.googleapis.com and
+ * fonts.gstatic.com are contacted only while Load Google Fonts is on, Continue / Cancel; then a confirm step (everyone, leaves Load
+ * Google Fonts as it is, dashboard reload), Turn on / Cancel. Only confirm stores, only `look_gallery: true`; Cancel or close: nothing.
  */
 export const MCU_OPTION_LOOK_GALLERY = 'look_gallery';
 /**
- * The form refuses `look_gallery: true` with `google_fonts: false` (error key `gallery_needs_fonts`), so one switch never silently
- * turns on the other's traffic; turning the gallery off leaves Load Google Fonts as it is. So whenever the gallery shows,
- * `googleFonts` is true and a previewed or kept look's Google font loads in the editor and on every dashboard through the one
- * existing font loader (AC15). The gallery reads `googleFonts` only through the gate; it has no "fonts off" state to show.
+ * Independent of `look_gallery` both ways: turning the gallery on or off never changes Load Google Fonts, and the form accepts
+ * `look_gallery: true` with `google_fonts: false`. Utils then only advises turning Load Google Fonts on; it does not refuse. With it
+ * off, the one existing font loader skips a look's Google font, so the editor and dashboards show a fallback font.
  */
 export const MCU_OPTION_GOOGLE_FONTS = 'google_fonts';
 
 /**
- * The card's gate: the gallery shows only when both switches are on. Read on demand from `window.magicCardUtils.settings`
- * (never cached across editor opens), so turning the switch off takes effect at the next editor open after a page reload.
+ * The card's gate: the gallery shows when `lookGallery` is true; it does not read `googleFonts`. Read on demand from
+ * `window.magicCardUtils.settings` (never cached across editor opens), so turning the switch off takes effect at the next editor
+ * open after a page reload.
  */
 export type LookGalleryAllowed = () => boolean;
