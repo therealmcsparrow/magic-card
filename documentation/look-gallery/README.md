@@ -15,13 +15,13 @@ Turning it on is an administrator task, because the switch covers everyone who u
    Result: a screen titled "Turn on the look gallery?" lists the websites your browser will contact. Nothing is saved yet.
 3. Read it, then select **Continue**. Select **Cancel** to keep the gallery off.
    Result: a second screen titled "Turn on the look gallery for everyone?" explains that the switch applies to every user.
-4. Select **Turn on**. Both switches are stored together: **Look gallery** and **Load Google Fonts**. Cancelling or closing either screen stores nothing.
+4. Select **Turn on**. Only **Look gallery** is stored. Cancelling or closing either screen stores nothing.
    Result: the options close.
 5. Reload each open dashboard. In a browser, refresh the page. In the Home Assistant app on an iPad or iPhone, pull down to refresh, or close and reopen the app.
 
-The gallery needs **Load Google Fonts**, because many looks use Google fonts. Turning the gallery on turns that switch on too. If you turn **Load Google Fonts** off later, the gallery stops being available, and the options form tells you so.
+Turning the gallery on does not change **Load Google Fonts**, and the gallery works with it off. Many looks use Google fonts, so while the gallery is on and **Load Google Fonts** is off, Magic Card Utils suggests turning it on. Without it, cards show a standard font.
 
-To turn the gallery off, switch **Look gallery** off. That stops requests to the gallery host. It leaves **Load Google Fonts** as it is, so cards that use Google fonts keep loading them. Turn that switch off as well to stop those requests; cards then show a standard font instead. Cards that already use a look keep their style settings either way.
+To turn the gallery off, switch **Look gallery** off. That stops requests to the gallery host only. Google Fonts requests stop only when **Load Google Fonts** is off; cards then show a standard font instead. Cards that already use a look keep their style settings either way.
 
 ## When the gallery is off
 
@@ -36,8 +36,6 @@ If Magic Card Utils is installed but the gallery is off, the card editor shows o
 3. Open **Details** to see what the look changes. Under **What changes**, the list names the settings that Keep replaces, grouped by card and module type, with a count. These settings replace the values your card has now.
 
 The preview is a still picture of the card's style. It does not show hover or tap styles, so check those after you keep the look. An animated look can slow older tablets and wall displays, and the bar warns you before you keep one. Under reduced motion the preview stays paused.
-
-If the look uses a Google font and **Load Google Fonts** is off, the bar says other screens will show a plain font and to ask an administrator to turn it on.
 
 A tile that has no picture is still a usable look. You can preview and keep it the same way.
 
@@ -72,7 +70,7 @@ To report a look that you think should not be listed, select **Tell the gallery 
 
 ## Privacy
 
-The gallery host receives your internet address when the editor loads the list. Read the full note in the [README](../../README.md#privacy).
+Your browser contacts the gallery host, therealmcsparrow.github.io (run by GitHub), when the editor loads the list, and it sees your internet address. The gallery does not turn on Load Google Fonts. While Load Google Fonts is on, browsers that show a card with a look that uses a Google font also contact fonts.googleapis.com and fonts.gstatic.com (run by Google), which see the address too. Read the full note in the [README](../../README.md#privacy).
 
 ## Sending a look
 

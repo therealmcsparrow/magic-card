@@ -260,7 +260,7 @@ Rows, columns and modules have Copy design, Paste design and Merge pasted design
 
 The look gallery lets you try looks that other people shared on your own card. A look changes only how a card looks, never what it does. It needs Magic Card Utils and is off by default.
 
-1. In Settings → Devices & services → Magic Card Utils → Configure, turn on **Look gallery** and select **Submit**. Read the two screens that follow and confirm. This also turns on **Load Google Fonts**.
+1. In Settings → Devices & services → Magic Card Utils → Configure, turn on **Look gallery** and select **Submit**. Read the two screens that follow and confirm. This does not change **Load Google Fonts**. Many looks use Google fonts, so Magic Card Utils suggests turning that switch on too.
 2. Reload each open dashboard.
 3. Open a card in the editor and select **Browse looks**.
 4. Select a tile to preview it on your card. Select **Keep this look** to apply it, or **Cancel** to put your card back. After Keep, **Undo** restores the card.
@@ -1153,12 +1153,13 @@ Neither makes requests to other websites unless you turn on a feature or your ow
 
 **Look gallery.** The look gallery is off by default. While it is off, Magic Card sends no request to the gallery host. Requests to Google Fonts depend on the separate **Load Google Fonts** switch.
 
-When you turn the gallery on with the **Look gallery** switch in Magic Card Utils, **Load Google Fonts** is turned on with it, and your browser contacts these websites. They will see your internet address (IP address) and the usual details a browser sends, such as its type and language:
+When you turn the gallery on with the **Look gallery** switch in Magic Card Utils, your browser contacts the gallery host. It sees your internet address (IP address) and the usual details a browser sends, such as its type and language:
 
 -   **The gallery host**, `therealmcsparrow.github.io`, run by GitHub. Only the card editor contacts it, and only while the gallery is open. It loads the list of looks and the preview images.
--   **Google Fonts**, `fonts.googleapis.com` and `fonts.gstatic.com`, run by Google. Any browser that shows a card with a look that uses a Google font contacts it, whether or not the editor is open, while **Load Google Fonts** is on. Turning the gallery off does not turn Load Google Fonts off; turn that off too to stop these requests. Cards then show a standard font instead.
 
-We do not receive this data. We run no server and no analytics. The legal basis is your consent, which you give by confirming the switch and can withdraw by turning it off (and Load Google Fonts, for the font requests). The switch is shared by everyone who uses the same Home Assistant, so the person who turns it on gives the consent for the household or organisation. If other people use your Home Assistant, tell them.
+The gallery does not turn on **Load Google Fonts**, and works without it. Many looks use Google fonts. While Load Google Fonts is on, any browser that shows a card with such a look contacts **Google Fonts**, `fonts.googleapis.com` and `fonts.gstatic.com`, run by Google, whether or not the editor is open. They see the same details. With Load Google Fonts off, no request goes to Google and cards show a standard font. Magic Card Utils suggests turning it on when the gallery is on.
+
+We do not receive this data. We run no server and no analytics. The legal basis is your consent, which you give by confirming the gallery switch (and by turning on Load Google Fonts, for the font requests) and can withdraw by turning the switch off. The switches are shared by everyone who uses the same Home Assistant, so the person who turns one on gives the consent for the household or organisation. If other people use your Home Assistant, tell them.
 
 The list of looks is signed, and Magic Card checks the signature and every look before it shows anything. A copy of the list is kept in your browser storage so the gallery works offline. It holds no personal data. When you apply a look, its style settings are copied into your card. The saved card has no link to the gallery, so it works the same if the gallery goes offline or removes the look. A copy does not update when the original look changes.
 
