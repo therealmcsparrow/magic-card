@@ -14,7 +14,7 @@ const LOGICAL = [
   [/^padding-(left|right)$/, ['padding-inline']],
   [/^border-(left|right)(-(width|style|color))?$/, ['border-inline', 'border-inline-width', 'border-inline-style', 'border-inline-color']],
 ];
-const EDITOR_DIRS = ['src/ui-kit', 'src/editor', 'src/anim-studio', 'src/theme-editor', 'src/svg-editor', 'src/shape-editor', 'src/path-canvas', 'src/image-editor', 'src/image-tools', 'src/transfer', 'src/look-editor'];
+const EDITOR_DIRS = ['src/ui-kit', 'src/editor', 'src/anim-studio', 'src/theme-editor', 'src/svg-editor', 'src/shape-editor', 'src/path-canvas', 'src/image-editor', 'src/image-tools', 'src/transfer', 'src/look-editor', 'src/look-gallery'];
 const VALUE_SIDES = { 'text-align': /^(left|right)\b/, float: /^(left|right)\b/, clear: /^(left|right)\b/ };
 const VALUE_LOGICAL = { 'text-align': /^(start|end)\b/ };
 

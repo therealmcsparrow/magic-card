@@ -5897,15 +5897,38 @@
       "what": "The value that replaces what in the text."
     }
   },
+  "card-editor.magic-card-editor.browse-looks": {
+    "text": "Browse looks",
+    "note": "Button in the card editor that opens the looks gallery.",
+    "max": 20
+  },
   "card-editor.magic-card-editor.could-not-load-the-template-so-the": {
     "text": "Could not load the template, so the column was not reset.",
     "note": "Error toast in the card editor when a column reset fails because the template could not be loaded; nothing changed.",
     "max": 95
   },
+  "card-editor.magic-card-editor.dismiss": {
+    "text": "Dismiss",
+    "note": "Button in the applied-look banner that removes the banner.",
+    "max": 20
+  },
   "card-editor.magic-card-editor.loading-editor": {
     "text": "Loading editor",
     "note": "Busy text shown while the card editor code downloads after it is opened.",
     "max": 25
+  },
+  "card-editor.magic-card-editor.look-gallery-turn-it-on-in-the-magic": {
+    "text": "Look gallery: turn it on in the Magic Card Utils options.",
+    "note": "One line of help text shown in the card editor when Magic Card Utils is installed and the looks gallery is switched off.",
+    "max": 70
+  },
+  "card-editor.magic-card-editor.look-name-applied": {
+    "text": "Look \"{name}\" applied.",
+    "note": "Banner under the Browse looks button after a look was kept. name is the look name.",
+    "max": 60,
+    "vars": {
+      "name": "The display name of the look."
+    }
   },
   "card-editor.magic-card-editor.n-removed-undo-to-get-them-back": {
     "text": "{n, plural, one {# setting it does not support was} other {# settings it does not support were}} removed. Undo to get them back.",
@@ -5955,6 +5978,11 @@
     "vars": {
       "name": "The value that replaces name in the text."
     }
+  },
+  "card-editor.magic-card-editor.undo": {
+    "text": "Undo",
+    "note": "Button in the applied-look banner that restores the card as it was before the look.",
+    "max": 20
   },
   "card-editor.magic-card-editor.update-all-linked-cards": {
     "text": "Update all linked cards",

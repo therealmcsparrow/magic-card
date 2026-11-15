@@ -1,6 +1,6 @@
 // Self-test of tools/check-dist-size.mjs on synthetic dists and caps files.
 // Covers: equal gzip lengths and body digests on two runs, a raised cap with no approved_raises entry fails,
-// an unlisted dist file fails, another zlib or brotli is non-authoritative locally and a failure in CI.
+// an unlisted dist file fails, a .mjs is gated like a .js, another zlib or brotli is non-authoritative locally and a failure in CI.
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -86,6 +86,18 @@ r = run(fixture(here, { 'magic-card.js': body }));
 expect('listed file missing from dist fails', r.code === 1 && /magic-card-a\.js: missing/.test(r.out), r.out);
 r = run(fixture(here, { ...dist, 'magic-card-a.0a1b2c3d.js': 'x'.repeat(3000) }));
 expect('file over its raw cap fails', r.code === 1 && /> cap 2048/.test(r.out), r.out);
+
+// 4a. a .mjs in dist is gated on raw size and needs an entry; it carries no .br/.gz
+const mjsCaps = clone(here);
+mjsCaps.files['kit.mjs'] = { raw: 2048, ceiling: 2048, note: 'fixture' };
+r = run(fixture(mjsCaps, { ...dist, 'kit.mjs': 'export {};\n' }));
+expect('a .mjs within its raw cap passes', r.code === 0 && /kit\.mjs: \d+ B <= 2048 B/.test(r.out), r.out);
+r = run(fixture(mjsCaps, { ...dist, 'kit.mjs': 'x'.repeat(3000) }));
+expect('a .mjs over its raw cap fails', r.code === 1 && /kit\.mjs: 3000 B > cap 2048 B/.test(r.out), r.out);
+r = run(fixture(here, { ...dist, 'kit.mjs': 'export {};\n' }));
+expect('an unlisted .mjs fails', r.code === 1 && /kit\.mjs.*no entry/.test(r.out), r.out);
+r = run(fixture(mjsCaps, dist));
+expect('a listed .mjs missing from dist fails', r.code === 1 && /kit\.mjs: missing/.test(r.out), r.out);
 
 // 5. raises against a base file
 const baseFile = join(tmp, 'base.json');

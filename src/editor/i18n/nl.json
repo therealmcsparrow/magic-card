@@ -4343,13 +4343,29 @@
     "text": "Deze lamp heeft geen {what}; de bediening is verborgen.",
     "hash": "ec44ff96"
   },
+  "card-editor.magic-card-editor.browse-looks": {
+    "text": "Looks bekijken",
+    "hash": "7db538ce"
+  },
   "card-editor.magic-card-editor.could-not-load-the-template-so-the": {
     "text": "Het sjabloon kon niet worden geladen, dus de kolom is niet teruggezet.",
     "hash": "52ac6575"
   },
+  "card-editor.magic-card-editor.dismiss": {
+    "text": "Sluiten",
+    "hash": "48845bff"
+  },
   "card-editor.magic-card-editor.loading-editor": {
     "text": "Editor laden",
     "hash": "231db777"
+  },
+  "card-editor.magic-card-editor.look-gallery-turn-it-on-in-the-magic": {
+    "text": "Lookgalerij: zet die aan in de opties van Magic Card Utils.",
+    "hash": "ff2ca7a3"
+  },
+  "card-editor.magic-card-editor.look-name-applied": {
+    "text": "Look \"{name}\" toegepast.",
+    "hash": "6d9f030b"
   },
   "card-editor.magic-card-editor.n-removed-undo-to-get-them-back": {
     "text": "{n, plural, one {# instelling die de nieuwe module niet ondersteunt} other {# instellingen die de nieuwe module niet ondersteunen}} verwijderd. Maak ongedaan om ze terug te halen.",
@@ -4374,6 +4390,10 @@
   "card-editor.magic-card-editor.this-card-is-linked-to-template-name-do": {
     "text": "Deze kaart is gekoppeld aan sjabloon {name}. Wil je alle gekoppelde kaarten bijwerken met deze structuurwijziging?",
     "hash": "678c92e3"
+  },
+  "card-editor.magic-card-editor.undo": {
+    "text": "Ongedaan maken",
+    "hash": "a8283ade"
   },
   "card-editor.magic-card-editor.update-all-linked-cards": {
     "text": "Alle gekoppelde kaarten bijwerken",

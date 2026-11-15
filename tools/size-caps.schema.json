@@ -72,7 +72,7 @@
       }
     },
     "files": {
-      "description": "Every other dist .js file by logical name (the content hash stripped: magic-card-<name>.<hash8>.js -> magic-card-<name>.js). A dist file with no entry fails. An entry with no file fails unless `optional` is true. The .js.br and .js.gz siblings are not listed: the checker requires both next to every .js, requires each to decompress to that .js byte for byte, and fails on a sibling whose .js is missing.",
+      "description": "Every other dist .js and .mjs file by logical name (the content hash stripped: magic-card-<name>.<hash8>.js -> magic-card-<name>.js; a .mjs keeps its extension and is gated on raw size only, with no .br/.gz siblings). A dist file with no entry fails. An entry with no file fails unless `optional` is true. The .js.br and .js.gz siblings are not listed: the checker requires both next to every .js, requires each to decompress to that .js byte for byte, and fails on a sibling whose .js is missing.",
       "type": "object",
       "additionalProperties": {
         "type": "object",

@@ -1,0 +1,230 @@
+{
+  "look-gallery.preview.anim-warn": {
+    "text": "Deze look is geanimeerd. Dat kan oudere tablets en wandpanelen trager maken.",
+    "hash": "9e44d357"
+  },
+  "look-gallery.preview.area-card": {
+    "text": "Kaart",
+    "hash": "be3702e3"
+  },
+  "look-gallery.preview.area-type": {
+    "text": "Modules van het type {type}",
+    "hash": "4f33c411"
+  },
+  "look-gallery.preview.cancel": {
+    "text": "Annuleren",
+    "hash": "19766ed6"
+  },
+  "look-gallery.preview.changes-count": {
+    "text": "{count, plural, one {# stijlinstelling} other {# stijlinstellingen}}",
+    "hash": "f5a463e8"
+  },
+  "look-gallery.preview.changes-note": {
+    "text": "Deze instellingen vervangen de waarden die je kaart nu heeft. Ongedaan maken brengt ze terug.",
+    "hash": "ca341759"
+  },
+  "look-gallery.preview.changes-title": {
+    "text": "Wat verandert",
+    "hash": "9f036d41"
+  },
+  "look-gallery.preview.cleared": {
+    "text": "Verwijderd",
+    "hash": "4118fb4f"
+  },
+  "look-gallery.preview.details": {
+    "text": "Details",
+    "hash": "45989de4"
+  },
+  "look-gallery.preview.font-off": {
+    "text": "{font} wordt niet geladen, want Google Fonts laden staat uit. De voorvertoning gebruikt een vervangend lettertype.",
+    "hash": "f3a2176b"
+  },
+  "look-gallery.preview.font-ok": {
+    "text": "{font} laadt op elk scherm, want Google Fonts laden staat aan.",
+    "hash": "4bdd226b"
+  },
+  "look-gallery.preview.keep": {
+    "text": "Deze look behouden",
+    "hash": "e833594c"
+  },
+  "look-gallery.preview.pause": {
+    "text": "Animatie pauzeren",
+    "hash": "8a754f71"
+  },
+  "look-gallery.preview.play": {
+    "text": "Animatie afspelen",
+    "hash": "76bced7d"
+  },
+  "look-gallery.preview.region": {
+    "text": "Voorvertoning van de look",
+    "hash": "825eecd0"
+  },
+  "look-gallery.preview.set": {
+    "text": "Ingesteld",
+    "hash": "b6f6f3ad"
+  },
+  "look-gallery.preview.stage": {
+    "text": "Voorvertoning van {name}",
+    "hash": "e8371112"
+  },
+  "look-gallery.preview.status": {
+    "text": "Voorvertoning van \"{name}\". Er is nog niets opgeslagen.",
+    "hash": "1ac1b82f"
+  },
+  "look-gallery.preview.summary": {
+    "text": "Behouden past de kleuren, lettertypen en vormen van deze look toe op deze kaart. Je entiteiten, tekst, acties en sjablonen blijven ongewijzigd.",
+    "hash": "fa381b4b"
+  },
+  "look-gallery.reason.c-tamper": {
+    "text": "De opgeslagen kopie voldeed niet aan de controle en is weggegooid.",
+    "hash": "778c48a2"
+  },
+  "look-gallery.reason.i-parse": {
+    "text": "De lijst kon niet worden gelezen.",
+    "hash": "4b746262"
+  },
+  "look-gallery.reason.i-roll": {
+    "text": "De lijst is ouder dan de lijst die op dit apparaat is opgeslagen.",
+    "hash": "eef13e68"
+  },
+  "look-gallery.reason.i-sig": {
+    "text": "De handtekening van de lijst klopt niet.",
+    "hash": "498b6588"
+  },
+  "look-gallery.reason.i-ver": {
+    "text": "De lijst gebruikt een formaat dat deze versie van Magic Card niet kent. Werk Magic Card bij.",
+    "hash": "95e883f4"
+  },
+  "look-gallery.reason.l-fetch": {
+    "text": "Deze look kon niet worden geladen.",
+    "hash": "095efb3d"
+  },
+  "look-gallery.reason.l-grammar": {
+    "text": "Deze look heeft een nieuwere versie van Magic Card nodig. Werk Magic Card bij.",
+    "hash": "50db1829"
+  },
+  "look-gallery.reason.l-hash": {
+    "text": "Deze look is veranderd nadat hij was gecontroleerd en is daarom geblokkeerd.",
+    "hash": "22043d6b"
+  },
+  "look-gallery.reason.l-meta": {
+    "text": "Deze look komt niet overeen met zijn beschrijving in de lijst en is daarom geblokkeerd.",
+    "hash": "1a71b65b"
+  },
+  "look-gallery.reason.l-parse": {
+    "text": "Deze look bevat meer dan stijlinstellingen en is daarom geblokkeerd.",
+    "hash": "09782e98"
+  },
+  "look-gallery.reason.n-fetch": {
+    "text": "De galerij is niet bereikbaar.",
+    "hash": "6097d496"
+  },
+  "look-gallery.tile.animated": {
+    "text": "Geanimeerd",
+    "hash": "d1d63279"
+  },
+  "look-gallery.tile.by": {
+    "text": "Door {author}",
+    "hash": "c63374c5"
+  },
+  "look-gallery.tile.chip": {
+    "text": "Alleen stijl, gecontroleerd",
+    "hash": "ae94dca2"
+  },
+  "look-gallery.tile.code": {
+    "text": "Code {code}",
+    "hash": "09430bf0"
+  },
+  "look-gallery.tile.font": {
+    "text": "Gebruikt Google Fonts",
+    "hash": "5e2a0177"
+  },
+  "look-gallery.tile.label": {
+    "text": "{name}, door {author}, {spdx}, alleen stijl, gecontroleerd{fonts, select, yes {, gebruikt Google Fonts} other {}}{animated, select, yes {, geanimeerd} other {}}",
+    "hash": "346bfffe"
+  },
+  "look-gallery.tile.licence": {
+    "text": "Licentie: {spdx}",
+    "hash": "515df804"
+  },
+  "look-gallery.tile.refused-section": {
+    "text": "Niet beschikbaar ({count})",
+    "hash": "976a69a0"
+  },
+  "look-gallery.tile.report": {
+    "text": "Meld het bij de galerijbeheerder",
+    "hash": "1dc02e01"
+  },
+  "look-gallery.tile.report-label": {
+    "text": "Meld {name} bij de galerijbeheerder (GitHub-account nodig, opent in een nieuw tabblad)",
+    "hash": "a877263e"
+  },
+  "look-gallery.window.back": {
+    "text": "Terug",
+    "hash": "76900f1b"
+  },
+  "look-gallery.window.close": {
+    "text": "Sluiten",
+    "hash": "7d9eb7ac"
+  },
+  "look-gallery.window.error-code": {
+    "text": "Code {code}",
+    "hash": "09430bf0"
+  },
+  "look-gallery.window.error-title": {
+    "text": "De galerij kon niet worden geladen",
+    "hash": "a3bc8c96"
+  },
+  "look-gallery.window.grid-label": {
+    "text": "Looks",
+    "hash": "c64fb087"
+  },
+  "look-gallery.window.intro": {
+    "text": "Een look verandert hoe een kaart eruitziet, nooit wat hij doet. Je entiteiten, tekst en acties blijven zoals ze zijn.",
+    "hash": "ea578d7e"
+  },
+  "look-gallery.window.loading": {
+    "text": "Looks laden",
+    "hash": "0c319169"
+  },
+  "look-gallery.window.notice-old": {
+    "text": "Deze lijst is verlopen. Looks werken nog, maar nieuwere ontbreken mogelijk.",
+    "hash": "b6877912"
+  },
+  "look-gallery.window.notice-refused": {
+    "text": "De nieuwe lijst is geweigerd, daarom zie je een opgeslagen kopie. {reason} Code {code}",
+    "hash": "063a4907"
+  },
+  "look-gallery.window.notice-saved": {
+    "text": "Je ziet een opgeslagen kopie van de lijst.",
+    "hash": "7d056f58"
+  },
+  "look-gallery.window.offline-body": {
+    "text": "Je bent offline en er is nog geen opgeslagen kopie. Maak verbinding en probeer het opnieuw.",
+    "hash": "d81af13e"
+  },
+  "look-gallery.window.offline-title": {
+    "text": "Geen looks om te tonen",
+    "hash": "cade3e99"
+  },
+  "look-gallery.window.report": {
+    "text": "Meld het bij de galerijbeheerder",
+    "hash": "1dc02e01"
+  },
+  "look-gallery.window.report-open": {
+    "text": "Meld het bij de galerijbeheerder (GitHub-account nodig, opent in een nieuw tabblad)",
+    "hash": "d624edc1"
+  },
+  "look-gallery.window.retry": {
+    "text": "Opnieuw proberen",
+    "hash": "d8b8392e"
+  },
+  "look-gallery.window.title": {
+    "text": "Looks-galerij",
+    "hash": "3c7dc4d6"
+  },
+  "look-gallery.window.zero-title": {
+    "text": "Nog geen looks in de lijst",
+    "hash": "b7f16362"
+  }
+}

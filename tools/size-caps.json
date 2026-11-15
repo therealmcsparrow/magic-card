@@ -319,6 +319,16 @@
       "ceiling": 46080,
       "note": "Google Fonts catalogue, loaded only when a font name needs checking and Magic Card Utils allows Google Fonts (lazy-module 1.13.0). 45 KiB, measured 43,760 (Windows build) + 5 %, rounded up to 1 KiB."
     },
+    "magic-card-look-gallery.js": {
+      "raw": 63488,
+      "ceiling": 65536,
+      "note": "Looks gallery window, the look kit and its i18n tables, loaded from the card editor only when both Magic Card Utils switches are on (contract look-gallery 1.0.0). 62 KiB, measured 60,158 (Windows build) + 5 %, rounded up to 1 KiB; re-measure on the Linux release build. The ceiling is LOOK_GALLERY_CHUNK_CEILING (lazy-module 1.14.0)."
+    },
+    "look-kit.mjs": {
+      "raw": 36864,
+      "ceiling": 36864,
+      "note": "Look kit module shipped next to the card for the Looks gallery (36 KiB). Gated on raw size only; it has no .br or .gz copy."
+    },
     "magic-card-studio-fonts.js": {
       "raw": 74752,
       "ceiling": 98304,
@@ -1315,6 +1325,18 @@
       "field": "/files/magic-card-animation-studio.js/ceiling",
       "from": 1002496,
       "to": 1010688
+    },
+    {
+      "id": "look-kit-raw-36864",
+      "field": "/files/look-kit.mjs/raw",
+      "from": 32768,
+      "to": 36864
+    },
+    {
+      "id": "look-kit-ceiling-36864",
+      "field": "/files/look-kit.mjs/ceiling",
+      "from": 32768,
+      "to": 36864
     }
   ]
 }

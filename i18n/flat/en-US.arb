@@ -18154,6 +18154,13 @@
     "x-max-length": 80,
     "x-source-hash": "ec44ff96"
   },
+  "card-editor.magic-card-editor.browse-looks": "Browse looks",
+  "@card-editor.magic-card-editor.browse-looks": {
+    "description": "Button in the card editor that opens the looks gallery. Max 20 characters.",
+    "source_text": "Browse looks",
+    "x-max-length": 20,
+    "x-source-hash": "7db538ce"
+  },
   "card-editor.magic-card-editor.could-not-load-the-template-so-the": "Could not load the template, so the column was not reset.",
   "@card-editor.magic-card-editor.could-not-load-the-template-so-the": {
     "description": "Error toast in the card editor when a column reset fails because the template could not be loaded; nothing changed. Max 95 characters.",
@@ -18161,12 +18168,36 @@
     "x-max-length": 95,
     "x-source-hash": "52ac6575"
   },
+  "card-editor.magic-card-editor.dismiss": "Dismiss",
+  "@card-editor.magic-card-editor.dismiss": {
+    "description": "Button in the applied-look banner that removes the banner. Max 20 characters.",
+    "source_text": "Dismiss",
+    "x-max-length": 20,
+    "x-source-hash": "48845bff"
+  },
   "card-editor.magic-card-editor.loading-editor": "Loading editor",
   "@card-editor.magic-card-editor.loading-editor": {
     "description": "Busy text shown while the card editor code downloads after it is opened. Max 25 characters.",
     "source_text": "Loading editor",
     "x-max-length": 25,
     "x-source-hash": "231db777"
+  },
+  "card-editor.magic-card-editor.look-gallery-turn-it-on-in-the-magic": "Look gallery: turn it on in the Magic Card Utils options.",
+  "@card-editor.magic-card-editor.look-gallery-turn-it-on-in-the-magic": {
+    "description": "One line of help text shown in the card editor when Magic Card Utils is installed and the looks gallery is switched off. Max 70 characters.",
+    "source_text": "Look gallery: turn it on in the Magic Card Utils options.",
+    "x-max-length": 70,
+    "x-source-hash": "ff2ca7a3",
+    "x-aliases": [
+      "card-editor.magic-card-editor.looks-gallery-turn-it-on-in-the-magic"
+    ]
+  },
+  "card-editor.magic-card-editor.look-name-applied": "Look \"{name}\" applied.",
+  "@card-editor.magic-card-editor.look-name-applied": {
+    "description": "Banner under the Browse looks button after a look was kept. name is the look name. {name}: The display name of the look. Max 60 characters.",
+    "source_text": "Look \"{name}\" applied.",
+    "x-max-length": 60,
+    "x-source-hash": "6d9f030b"
   },
   "card-editor.magic-card-editor.n-removed-undo-to-get-them-back": "{n, plural, one {# setting it does not support was} other {# settings it does not support were}} removed. Undo to get them back.",
   "@card-editor.magic-card-editor.n-removed-undo-to-get-them-back": {
@@ -18217,6 +18248,13 @@
     "source_text": "This card is linked to template {name}. Do you want to update all linked cards with this structural change?",
     "x-max-length": 175,
     "x-source-hash": "678c92e3"
+  },
+  "card-editor.magic-card-editor.undo": "Undo",
+  "@card-editor.magic-card-editor.undo": {
+    "description": "Button in the applied-look banner that restores the card as it was before the look. Max 20 characters.",
+    "source_text": "Undo",
+    "x-max-length": 20,
+    "x-source-hash": "a8283ade"
   },
   "card-editor.magic-card-editor.update-all-linked-cards": "Update all linked cards",
   "@card-editor.magic-card-editor.update-all-linked-cards": {
@@ -39655,6 +39693,409 @@
     "source_text": "Water",
     "x-max-length": 10,
     "x-source-hash": "7ca7dea9"
+  },
+  "look-gallery.preview.anim-warn": "This look is animated. It can slow older tablets and wall displays.",
+  "@look-gallery.preview.anim-warn": {
+    "description": "Warning in the preview bar for an animated look. Max 90 characters.",
+    "source_text": "This look is animated. It can slow older tablets and wall displays.",
+    "x-max-length": 90,
+    "x-source-hash": "9e44d357"
+  },
+  "look-gallery.preview.area-card": "Card",
+  "@look-gallery.preview.area-card": {
+    "description": "Name of the card-level group in the What changes list. Max 24 characters.",
+    "source_text": "Card",
+    "x-max-length": 24,
+    "x-source-hash": "be3702e3"
+  },
+  "look-gallery.preview.area-type": "Modules of type {type}",
+  "@look-gallery.preview.area-type": {
+    "description": "Name of a module group in the What changes list. {type}: The module type, such as button. Max 40 characters.",
+    "source_text": "Modules of type {type}",
+    "x-max-length": 40,
+    "x-source-hash": "4f33c411"
+  },
+  "look-gallery.preview.cancel": "Cancel",
+  "@look-gallery.preview.cancel": {
+    "description": "Button of the preview bar that ends the preview and leaves the card as it was. Max 24 characters.",
+    "source_text": "Cancel",
+    "x-max-length": 24,
+    "x-source-hash": "19766ed6"
+  },
+  "look-gallery.preview.changes-count": "{count, plural, one {# style setting} other {# style settings}}",
+  "@look-gallery.preview.changes-count": {
+    "description": "Total of settings that Keep writes or clears. {count}: The number of settings. Max 80 characters.",
+    "source_text": "{count, plural, one {# style setting} other {# style settings}}",
+    "x-max-length": 80,
+    "x-source-hash": "f5a463e8",
+    "x-plural": [
+      "one",
+      "other"
+    ]
+  },
+  "look-gallery.preview.changes-note": "These settings replace the values your card has now. Undo brings them back.",
+  "@look-gallery.preview.changes-note": {
+    "description": "Note under the What changes heading. Max 110 characters.",
+    "source_text": "These settings replace the values your card has now. Undo brings them back.",
+    "x-max-length": 110,
+    "x-source-hash": "ca341759"
+  },
+  "look-gallery.preview.changes-title": "What changes",
+  "@look-gallery.preview.changes-title": {
+    "description": "Heading of the list of settings that Keep replaces. Max 24 characters.",
+    "source_text": "What changes",
+    "x-max-length": 24,
+    "x-source-hash": "9f036d41"
+  },
+  "look-gallery.preview.cleared": "Removed",
+  "@look-gallery.preview.cleared": {
+    "description": "Label before the settings a look clears in the What changes list. Max 24 characters.",
+    "source_text": "Removed",
+    "x-max-length": 24,
+    "x-source-hash": "4118fb4f"
+  },
+  "look-gallery.preview.details": "Details",
+  "@look-gallery.preview.details": {
+    "description": "Button of the preview bar that shows or hides the details. Max 24 characters.",
+    "source_text": "Details",
+    "x-max-length": 24,
+    "x-source-hash": "45989de4"
+  },
+  "look-gallery.preview.font-off": "{font} is not loaded, because Load Google Fonts is off. The preview shows it in a fallback font.",
+  "@look-gallery.preview.font-off": {
+    "description": "Calm line in the preview bar for a look that names a Google font while Load Google Fonts is off. {font}: The font names, joined by commas. Max 120 characters.",
+    "source_text": "{font} is not loaded, because Load Google Fonts is off. The preview shows it in a fallback font.",
+    "x-max-length": 120,
+    "x-source-hash": "f3a2176b"
+  },
+  "look-gallery.preview.font-ok": "{font} loads on every screen, because Load Google Fonts is on.",
+  "@look-gallery.preview.font-ok": {
+    "description": "Calm line in the preview bar for a look that names a Google font. {font}: The font names, joined by commas. Max 80 characters.",
+    "source_text": "{font} loads on every screen, because Load Google Fonts is on.",
+    "x-max-length": 80,
+    "x-source-hash": "4bdd226b"
+  },
+  "look-gallery.preview.keep": "Keep this look",
+  "@look-gallery.preview.keep": {
+    "description": "Main button of the preview bar; copies the look into the card. Max 30 characters.",
+    "source_text": "Keep this look",
+    "x-max-length": 30,
+    "x-source-hash": "e833594c"
+  },
+  "look-gallery.preview.pause": "Pause animation",
+  "@look-gallery.preview.pause": {
+    "description": "Button that pauses the animation of the previewed look. Max 24 characters.",
+    "source_text": "Pause animation",
+    "x-max-length": 24,
+    "x-source-hash": "8a754f71"
+  },
+  "look-gallery.preview.play": "Play animation",
+  "@look-gallery.preview.play": {
+    "description": "Button that starts the animation of the previewed look. Max 24 characters.",
+    "source_text": "Play animation",
+    "x-max-length": 24,
+    "x-source-hash": "76bced7d"
+  },
+  "look-gallery.preview.region": "Preview of the look",
+  "@look-gallery.preview.region": {
+    "description": "Accessible name of the bar under the tiles while a look is previewed. Max 30 characters.",
+    "source_text": "Preview of the look",
+    "x-max-length": 30,
+    "x-source-hash": "825eecd0"
+  },
+  "look-gallery.preview.set": "Set",
+  "@look-gallery.preview.set": {
+    "description": "Label before the settings a look writes in the What changes list. Max 24 characters.",
+    "source_text": "Set",
+    "x-max-length": 24,
+    "x-source-hash": "b6f6f3ad"
+  },
+  "look-gallery.preview.stage": "Preview of {name}",
+  "@look-gallery.preview.stage": {
+    "description": "Accessible name of the card preview image while a look is previewed. {name}: The look name. Max 60 characters.",
+    "source_text": "Preview of {name}",
+    "x-max-length": 60,
+    "x-source-hash": "e8371112"
+  },
+  "look-gallery.preview.status": "Previewing \"{name}\". Nothing is saved yet.",
+  "@look-gallery.preview.status": {
+    "description": "Status line of the preview bar. {name}: The look name. Max 70 characters.",
+    "source_text": "Previewing \"{name}\". Nothing is saved yet.",
+    "x-max-length": 70,
+    "x-source-hash": "1ac1b82f"
+  },
+  "look-gallery.preview.summary": "Keep applies this look's colors, fonts and shapes to this card. Your entities, text, actions and templates stay unchanged.",
+  "@look-gallery.preview.summary": {
+    "description": "Sentence in the details of the preview bar that says what Keep does. Max 170 characters.",
+    "source_text": "Keep applies this look's colours, fonts and shapes to this card. Your entities, text, actions and templates stay unchanged.",
+    "x-max-length": 170,
+    "x-source-hash": "fa381b4b"
+  },
+  "look-gallery.reason.c-tamper": "The saved copy failed its check and was discarded.",
+  "@look-gallery.reason.c-tamper": {
+    "description": "Reason shown when the saved list failed its check. Max 80 characters.",
+    "source_text": "The saved copy failed its check and was discarded.",
+    "x-max-length": 80,
+    "x-source-hash": "778c48a2"
+  },
+  "look-gallery.reason.i-parse": "The list could not be read.",
+  "@look-gallery.reason.i-parse": {
+    "description": "Reason shown when the list is malformed or too large. Max 40 characters.",
+    "source_text": "The list could not be read.",
+    "x-max-length": 40,
+    "x-source-hash": "4b746262"
+  },
+  "look-gallery.reason.i-roll": "The list is older than the one saved on this device.",
+  "@look-gallery.reason.i-roll": {
+    "description": "Reason shown when the list is older than the saved one. Max 80 characters.",
+    "source_text": "The list is older than the one saved on this device.",
+    "x-max-length": 80,
+    "x-source-hash": "eef13e68"
+  },
+  "look-gallery.reason.i-sig": "The signature of the list did not check out.",
+  "@look-gallery.reason.i-sig": {
+    "description": "Reason shown when the list signature is wrong. Max 60 characters.",
+    "source_text": "The signature of the list did not check out.",
+    "x-max-length": 60,
+    "x-source-hash": "498b6588"
+  },
+  "look-gallery.reason.i-ver": "The list uses a format this version of Magic Card does not know. Update Magic Card.",
+  "@look-gallery.reason.i-ver": {
+    "description": "Reason shown when the list format is unknown. Max 110 characters.",
+    "source_text": "The list uses a format this version of Magic Card does not know. Update Magic Card.",
+    "x-max-length": 110,
+    "x-source-hash": "95e883f4"
+  },
+  "look-gallery.reason.l-fetch": "This look could not be loaded.",
+  "@look-gallery.reason.l-fetch": {
+    "description": "Reason shown on a look that could not be fetched. Max 40 characters.",
+    "source_text": "This look could not be loaded.",
+    "x-max-length": 40,
+    "x-source-hash": "095efb3d"
+  },
+  "look-gallery.reason.l-grammar": "This look needs a newer version of Magic Card. Update Magic Card.",
+  "@look-gallery.reason.l-grammar": {
+    "description": "Reason shown on a blocked look that uses a newer look format. Max 90 characters.",
+    "source_text": "This look needs a newer version of Magic Card. Update Magic Card.",
+    "x-max-length": 90,
+    "x-source-hash": "50db1829"
+  },
+  "look-gallery.reason.l-hash": "This look changed after it was checked, so it is blocked.",
+  "@look-gallery.reason.l-hash": {
+    "description": "Reason shown on a blocked look whose file does not match its checksum. Max 90 characters.",
+    "source_text": "This look changed after it was checked, so it is blocked.",
+    "x-max-length": 90,
+    "x-source-hash": "22043d6b"
+  },
+  "look-gallery.reason.l-meta": "This look does not match its description in the list, so it is blocked.",
+  "@look-gallery.reason.l-meta": {
+    "description": "Reason shown on a blocked look whose animated or font details differ from the list. Max 110 characters.",
+    "source_text": "This look does not match its description in the list, so it is blocked.",
+    "x-max-length": 110,
+    "x-source-hash": "1a71b65b"
+  },
+  "look-gallery.reason.l-parse": "This look contains more than style settings, so it is blocked.",
+  "@look-gallery.reason.l-parse": {
+    "description": "Reason shown on a blocked look that failed the style-only check. Max 80 characters.",
+    "source_text": "This look contains more than style settings, so it is blocked.",
+    "x-max-length": 80,
+    "x-source-hash": "09782e98"
+  },
+  "look-gallery.reason.n-fetch": "The gallery could not be reached.",
+  "@look-gallery.reason.n-fetch": {
+    "description": "Reason shown when the gallery cannot be reached. Max 40 characters.",
+    "source_text": "The gallery could not be reached.",
+    "x-max-length": 40,
+    "x-source-hash": "6097d496"
+  },
+  "look-gallery.tile.animated": "Animated",
+  "@look-gallery.tile.animated": {
+    "description": "Chip on a look tile and in the preview bar when the look moves. Max 24 characters.",
+    "source_text": "Animated",
+    "x-max-length": 24,
+    "x-source-hash": "d1d63279"
+  },
+  "look-gallery.tile.by": "By {author}",
+  "@look-gallery.tile.by": {
+    "description": "Author line on a look tile. {author}: The look author name from the signed list. Max 24 characters.",
+    "source_text": "By {author}",
+    "x-max-length": 24,
+    "x-source-hash": "c63374c5"
+  },
+  "look-gallery.tile.chip": "Style only, verified",
+  "@look-gallery.tile.chip": {
+    "description": "Chip on a look tile: the look holds style settings only and passed the checks. Max 40 characters.",
+    "source_text": "Style only, verified",
+    "x-max-length": 40,
+    "x-source-hash": "ae94dca2"
+  },
+  "look-gallery.tile.code": "Code {code}",
+  "@look-gallery.tile.code": {
+    "description": "Small secondary text with the short code of why a look is blocked. {code}: The short code, such as L-HASH. Max 24 characters.",
+    "source_text": "Code {code}",
+    "x-max-length": 24,
+    "x-source-hash": "09430bf0"
+  },
+  "look-gallery.tile.font": "Uses Google Fonts",
+  "@look-gallery.tile.font": {
+    "description": "Chip on a look tile when the look names a Google font. Max 30 characters.",
+    "source_text": "Uses Google Fonts",
+    "x-max-length": 30,
+    "x-source-hash": "5e2a0177"
+  },
+  "look-gallery.tile.label": "{name}, by {author}, {spdx}, style only, verified{fonts, select, yes {, uses Google Fonts} other {}}{animated, select, yes {, animated} other {}}",
+  "@look-gallery.tile.label": {
+    "description": "Accessible name of a look tile; fonts and animated are yes or no. {animated}: yes when the look is animated, otherwise no. {author}: The look author. {fonts}: yes when the look names a Google font, otherwise no. {name}: The look name. {spdx}: The licence identifier. Max 130 characters.",
+    "source_text": "{name}, by {author}, {spdx}, style only, verified{fonts, select, yes {, uses Google Fonts} other {}}{animated, select, yes {, animated} other {}}",
+    "x-max-length": 130,
+    "x-source-hash": "346bfffe"
+  },
+  "look-gallery.tile.licence": "License: {spdx}",
+  "@look-gallery.tile.licence": {
+    "description": "Licence line on a look tile. {spdx}: The licence identifier, such as MIT. Max 24 characters.",
+    "source_text": "Licence: {spdx}",
+    "x-max-length": 24,
+    "x-source-hash": "515df804"
+  },
+  "look-gallery.tile.refused-section": "Not available ({count})",
+  "@look-gallery.tile.refused-section": {
+    "description": "Heading above the looks that are blocked. {count}: How many looks are blocked. Max 30 characters.",
+    "source_text": "Not available ({count})",
+    "x-max-length": 30,
+    "x-source-hash": "976a69a0"
+  },
+  "look-gallery.tile.report": "Tell the gallery owner",
+  "@look-gallery.tile.report": {
+    "description": "Link text on a blocked look that opens the gallery issue form. Max 40 characters.",
+    "source_text": "Tell the gallery owner",
+    "x-max-length": 40,
+    "x-source-hash": "1dc02e01"
+  },
+  "look-gallery.tile.report-label": "Tell the gallery owner about {name} (needs a GitHub account, opens in a new tab)",
+  "@look-gallery.tile.report-label": {
+    "description": "Accessible name of the report link on a blocked look. {name}: The look name. Max 100 characters.",
+    "source_text": "Tell the gallery owner about {name} (needs a GitHub account, opens in a new tab)",
+    "x-max-length": 100,
+    "x-source-hash": "a877263e"
+  },
+  "look-gallery.window.back": "Back",
+  "@look-gallery.window.back": {
+    "description": "Button at the top of the gallery that leaves the gallery. Hidden while a look is previewed. Max 24 characters.",
+    "source_text": "Back",
+    "x-max-length": 24,
+    "x-source-hash": "76900f1b"
+  },
+  "look-gallery.window.close": "Close",
+  "@look-gallery.window.close": {
+    "description": "Accessible name of the close button of the gallery window. Max 24 characters.",
+    "source_text": "Close",
+    "x-max-length": 24,
+    "x-source-hash": "7d9eb7ac"
+  },
+  "look-gallery.window.error-code": "Code {code}",
+  "@look-gallery.window.error-code": {
+    "description": "Small secondary text with the short code of a refusal. {code}: The short code of the refusal, such as I-SIG. Max 24 characters.",
+    "source_text": "Code {code}",
+    "x-max-length": 24,
+    "x-source-hash": "09430bf0"
+  },
+  "look-gallery.window.error-title": "The gallery could not be loaded",
+  "@look-gallery.window.error-title": {
+    "description": "Heading of the error state when the list was refused and there is no saved copy. Max 40 characters.",
+    "source_text": "The gallery could not be loaded",
+    "x-max-length": 40,
+    "x-source-hash": "a3bc8c96"
+  },
+  "look-gallery.window.grid-label": "Looks",
+  "@look-gallery.window.grid-label": {
+    "description": "Accessible name of the group of look tiles (a radio group). Max 24 characters.",
+    "source_text": "Looks",
+    "x-max-length": 24,
+    "x-source-hash": "c64fb087"
+  },
+  "look-gallery.window.intro": "Looks change how a card looks, never what it does. Your entities, text and actions stay as they are.",
+  "@look-gallery.window.intro": {
+    "description": "Sentence under the title of the gallery window; sets what a look can and cannot change. Max 140 characters.",
+    "source_text": "Looks change how a card looks, never what it does. Your entities, text and actions stay as they are.",
+    "x-max-length": 140,
+    "x-source-hash": "ea578d7e"
+  },
+  "look-gallery.window.loading": "Loading looks",
+  "@look-gallery.window.loading": {
+    "description": "Status text while the gallery list is being fetched. Max 24 characters.",
+    "source_text": "Loading looks",
+    "x-max-length": 24,
+    "x-source-hash": "0c319169"
+  },
+  "look-gallery.window.notice-old": "This list passed its expiry date. Looks still work, but newer ones may be missing.",
+  "@look-gallery.window.notice-old": {
+    "description": "Notice above the tiles when the signed list is past its expiry date. Max 100 characters.",
+    "source_text": "This list passed its expiry date. Looks still work, but newer ones may be missing.",
+    "x-max-length": 100,
+    "x-source-hash": "b6877912"
+  },
+  "look-gallery.window.notice-refused": "The new list was refused, so a saved copy is shown. {reason} Code {code}",
+  "@look-gallery.window.notice-refused": {
+    "description": "Alert above the tiles when the fetched list was refused and a saved copy is used instead. {code}: The short code of the refusal, such as I-SIG. {reason}: The fixed reason sentence of the refusal. Max 100 characters.",
+    "source_text": "The new list was refused, so a saved copy is shown. {reason} Code {code}",
+    "x-max-length": 100,
+    "x-source-hash": "063a4907"
+  },
+  "look-gallery.window.notice-saved": "Showing a saved copy of the list.",
+  "@look-gallery.window.notice-saved": {
+    "description": "Notice above the tiles when the list comes from this device because the gallery could not be reached. Max 50 characters.",
+    "source_text": "Showing a saved copy of the list.",
+    "x-max-length": 50,
+    "x-source-hash": "7d056f58"
+  },
+  "look-gallery.window.offline-body": "You are offline and there is no saved copy yet. Connect, then try again.",
+  "@look-gallery.window.offline-body": {
+    "description": "Body of the empty state when the gallery cannot be reached and nothing is saved. Max 110 characters.",
+    "source_text": "You are offline and there is no saved copy yet. Connect, then try again.",
+    "x-max-length": 110,
+    "x-source-hash": "d81af13e"
+  },
+  "look-gallery.window.offline-title": "No looks to show",
+  "@look-gallery.window.offline-title": {
+    "description": "Heading of the empty state when the gallery cannot be reached and nothing is saved. Max 30 characters.",
+    "source_text": "No looks to show",
+    "x-max-length": 30,
+    "x-source-hash": "cade3e99"
+  },
+  "look-gallery.window.report": "Tell the gallery owner",
+  "@look-gallery.window.report": {
+    "description": "Link text that opens the gallery issue form when the whole list is refused. Max 40 characters.",
+    "source_text": "Tell the gallery owner",
+    "x-max-length": 40,
+    "x-source-hash": "1dc02e01"
+  },
+  "look-gallery.window.report-open": "Tell the gallery owner (needs a GitHub account, opens in a new tab)",
+  "@look-gallery.window.report-open": {
+    "description": "Accessible name of the report link under an error state. Max 100 characters.",
+    "source_text": "Tell the gallery owner (needs a GitHub account, opens in a new tab)",
+    "x-max-length": 100,
+    "x-source-hash": "d624edc1"
+  },
+  "look-gallery.window.retry": "Try again",
+  "@look-gallery.window.retry": {
+    "description": "Button that fetches the gallery list again. Max 24 characters.",
+    "source_text": "Try again",
+    "x-max-length": 24,
+    "x-source-hash": "d8b8392e"
+  },
+  "look-gallery.window.title": "Looks gallery",
+  "@look-gallery.window.title": {
+    "description": "Title of the full-screen looks gallery window. Max 24 characters.",
+    "source_text": "Looks gallery",
+    "x-max-length": 24,
+    "x-source-hash": "3c7dc4d6"
+  },
+  "look-gallery.window.zero-title": "No looks listed yet",
+  "@look-gallery.window.zero-title": {
+    "description": "Heading of the empty state when the gallery list is valid but holds no looks. Max 30 characters.",
+    "source_text": "No looks listed yet",
+    "x-max-length": 30,
+    "x-source-hash": "b7f16362"
   },
   "mcu-panel.panel.a-template-named-name-already-exists": "A template named ‘{name}’ already exists.",
   "@mcu-panel.panel.a-template-named-name-already-exists": {

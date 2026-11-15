@@ -256,6 +256,17 @@ Templates are stored by the `magic_card_utils` backend integration. Without it, 
 
 Rows, columns and modules have Copy design, Paste design and Merge pasted design in their item menu, and Copy design and Paste design at the top of the Design tab (Paste design there opens a menu with Replace design and Merge into design). The card's own Design tab has no copy or paste. Paste either replaces the target's design or merges into it. The copy is kept in the browser and also placed on the system clipboard as YAML, so you can paste between cards and dialogs.
 
+### Look gallery
+
+The look gallery lets you try looks that other people shared on your own card. A look changes only how a card looks, never what it does. It needs Magic Card Utils and is off by default.
+
+1. In Settings → Devices & services → Magic Card Utils → Configure, turn on **Look gallery** and select **Submit**. Read the two screens that follow and confirm. This does not change **Load Google Fonts**. Many looks use Google fonts, so Magic Card Utils suggests turning that switch on too.
+2. Reload each open dashboard.
+3. Open a card in the editor and select **Browse looks**.
+4. Select a tile to preview it on your card. Select **Keep this look** to apply it, or **Cancel** to put your card back. After Keep, **Undo** restores the card.
+
+The preview does not show hover or tap styles. A tile without a picture is still a usable look. See [Look gallery](documentation/look-gallery/README.md) for the details, and for what to do when a look is listed as not available.
+
 ## Card structure
 
 ```
@@ -1139,6 +1150,20 @@ Neither makes requests to other websites unless you turn on a feature or your ow
 -   **Google Fonts**, when you turn on the switch in Magic Card Utils → Configure. Google Fonts are off by default. The administrator of the Home Assistant install turns them on with the **Load Google Fonts** switch in Magic Card Utils → Configure. The switch covers the whole install, and a change applies when the page is reloaded. When it is on, the browser of everyone who views a dashboard requests font files from Google (`fonts.googleapis.com` and `fonts.gstatic.com`). This happens in cards, the editors, the theme preview, images and the forum shot export. Google receives the viewer's IP address, browser details and the page address, and logs the request; see [Google's privacy policy](https://policies.google.com/privacy). When the switch is off, or Magic Card Utils is not installed, nothing is requested from Google and a font that only Google provides shows as a plain generic font. The switch does not cover an `@import url(https://fonts.googleapis.com/...)` that you typed into a card's custom css. That is an address you chose, like an image address, and the browser requests it either way. More in [Fonts](documentation/design/fonts.md#privacy).
 -   An address you typed, such as an image, is requested by the browser, and that website can see the visitor's IP address. A `@import` of a Google Fonts address in custom css is one of these.
 -   A theme file kept with **Import anyway** that points to another website is requested the same way.
+
+**Look gallery.** The look gallery is off by default. While it is off, Magic Card sends no request to the gallery host. Requests to Google Fonts depend on the separate **Load Google Fonts** switch.
+
+When you turn the gallery on with the **Look gallery** switch in Magic Card Utils, your browser contacts the gallery host. It sees your internet address (IP address) and the usual details a browser sends, such as its type and language:
+
+-   **The gallery host**, `therealmcsparrow.github.io`, run by GitHub. Only the card editor contacts it, and only while the gallery is open. It loads the list of looks and the preview images.
+
+The gallery does not turn on **Load Google Fonts**, and works without it. Many looks use Google fonts. While Load Google Fonts is on, any browser that shows a card with such a look contacts **Google Fonts**, `fonts.googleapis.com` and `fonts.gstatic.com`, run by Google, whether or not the editor is open. They see the same details. With Load Google Fonts off, no request goes to Google and cards show a standard font. Magic Card Utils suggests turning it on when the gallery is on.
+
+We do not receive this data. We run no server and no analytics. The legal basis is your consent, which you give by confirming the gallery switch (and by turning on Load Google Fonts, for the font requests) and can withdraw by turning the switch off. The switches are shared by everyone who uses the same Home Assistant, so the person who turns one on gives the consent for the household or organisation. If other people use your Home Assistant, tell them.
+
+The list of looks is signed, and Magic Card checks the signature and every look before it shows anything. A copy of the list is kept in your browser storage so the gallery works offline. It holds no personal data. When you apply a look, its style settings are copied into your card. The saved card has no link to the gallery, so it works the same if the gallery goes offline or removes the look. A copy does not update when the original look changes.
+
+Looks list the author's name or GitHub username and a licence. That is public information the author chose. To send a look, you use GitHub with your own account, under GitHub's own terms and privacy policy.
 
 ## Compatibility
 

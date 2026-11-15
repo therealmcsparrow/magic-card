@@ -117,6 +117,7 @@ export const I18N_MODULES = {
   'forum-shot': { bundle: 'magic-card-forum-shot.js', folders: ['src/forum-shot'], tables: 'inline', status: 'complete', slice: 'forum-shot', dashboard: false },
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
   'share-kit': { bundle: 'magic-card-share-kit.js', folders: ['src/share-kit'], tables: 'inline', status: 'complete', slice: 'sharing-safety', dashboard: false },
+  'look-gallery': { bundle: 'magic-card-look-gallery.js', folders: ['src/look-gallery'], tables: 'inline', status: 'complete', slice: 'looks-gallery', dashboard: false },
   'image-animator': { bundle: 'magic-card-image-animator.js', folders: ['src/image-animator'], tables: 'inline', status: 'complete', slice: 'image-animator', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;
