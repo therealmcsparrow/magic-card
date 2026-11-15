@@ -347,3 +347,5 @@ theme-presets	theme-presets.picker.presets-use-genre-and-colour-words-not	Preset
 share-kit	share-kit.theme-check.text-on-the-primary-colour	Text on the primary color
 share-kit	share-kit.wall-tablet.wall-tablet-caption	Drawn at one fifth size, as the text looks from 3 meters away.
 share-kit	share-kit.wall-tablet.wall-tablet-label	Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 meters.
+look-gallery	look-gallery.preview.summary	Keep applies this look's colors, fonts and shapes to this card. Your entities, text, actions and templates stay unchanged.
+look-gallery	look-gallery.tile.licence	License: {spdx}
