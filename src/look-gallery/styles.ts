@@ -236,6 +236,9 @@ export const galleryStyles = [
       margin: 16px 0 8px;
       font-size: 0.9375rem;
     }
+    .refused {
+      padding-bottom: var(--bar-h, 0px);
+    }
     .refused ul {
       display: grid;
       gap: 8px;

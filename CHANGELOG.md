@@ -4,6 +4,12 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Fixed
+-   **Looks gallery.** The preview bar no longer covers the link of the last not-available look until you scroll. When the gallery opens, keyboard focus stays on the first look instead of moving to the Close button.
+-   **HACS.** HACS now installs the `magic-card.zip` release asset (`zip_release` is on in `hacs.json`).
+
 ## 2026.11.05-beta.1 (2026-11-15)
 
 ### New
