@@ -1,0 +1,3875 @@
+[
+ {
+  "name": "json-empty-string",
+  "text": "",
+  "expect": {
+   "ok": false,
+   "code": "json"
+  }
+ },
+ {
+  "name": "json-open-brace",
+  "text": "{",
+  "expect": {
+   "ok": false,
+   "code": "json"
+  }
+ },
+ {
+  "name": "json-unquoted-key",
+  "text": "{grammar:1}",
+  "expect": {
+   "ok": false,
+   "code": "json"
+  }
+ },
+ {
+  "name": "json-trailing-comma",
+  "text": "{\"grammar\":1,}",
+  "expect": {
+   "ok": false,
+   "code": "json"
+  }
+ },
+ {
+  "name": "json-nan",
+  "text": "NaN",
+  "expect": {
+   "ok": false,
+   "code": "json"
+  }
+ },
+ {
+  "name": "json-two-documents",
+  "text": "{\"grammar\":1}{\"a\":1}",
+  "expect": {
+   "ok": false,
+   "code": "json"
+  }
+ },
+ {
+  "name": "json-single-quotes",
+  "text": "{'grammar':1}",
+  "expect": {
+   "ok": false,
+   "code": "json"
+  }
+ },
+ {
+  "name": "not-object-top-array",
+  "text": "[]",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-top-null",
+  "text": "null",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-top-string",
+  "text": "\"x\"",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-top-number",
+  "text": "42",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-top-true",
+  "text": "true",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-card-string",
+  "text": "{\"grammar\":1,\"card\":\"x\"}",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-card-array",
+  "text": "{\"grammar\":1,\"card\":[]}",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-card-number",
+  "text": "{\"grammar\":1,\"card\":3}",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-modules-array",
+  "text": "{\"grammar\":1,\"modules\":[]}",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-target-array",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":[]}}",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "not-object-target-string",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":\"x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "not_object"
+  }
+ },
+ {
+  "name": "grammar-missing",
+  "text": "{\"card\":{\"background\":\"#112233\"}}",
+  "expect": {
+   "ok": false,
+   "code": "grammar_unsupported"
+  }
+ },
+ {
+  "name": "grammar-two",
+  "text": "{\"grammar\":2,\"card\":{\"background\":\"#112233\"}}",
+  "expect": {
+   "ok": false,
+   "code": "grammar_unsupported"
+  }
+ },
+ {
+  "name": "grammar-fraction",
+  "text": "{\"grammar\":1.5,\"card\":{\"background\":\"#112233\"}}",
+  "expect": {
+   "ok": false,
+   "code": "grammar_unsupported"
+  }
+ },
+ {
+  "name": "grammar-string",
+  "text": "{\"grammar\":\"1\",\"card\":{\"background\":\"#112233\"}}",
+  "expect": {
+   "ok": false,
+   "code": "grammar_unsupported"
+  }
+ },
+ {
+  "name": "grammar-true",
+  "text": "{\"grammar\":true,\"card\":{\"background\":\"#112233\"}}",
+  "expect": {
+   "ok": false,
+   "code": "grammar_unsupported"
+  }
+ },
+ {
+  "name": "grammar-null",
+  "text": "{\"grammar\":null,\"card\":{\"background\":\"#112233\"}}",
+  "expect": {
+   "ok": false,
+   "code": "grammar_unsupported"
+  }
+ },
+ {
+  "name": "unknown-target-foo",
+  "text": "{\"grammar\":1,\"modules\":{\"foo\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unknown_target"
+  }
+ },
+ {
+  "name": "unknown-target-camera",
+  "text": "{\"grammar\":1,\"modules\":{\"camera\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unknown_target"
+  }
+ },
+ {
+  "name": "unknown-target-video-bg",
+  "text": "{\"grammar\":1,\"modules\":{\"video-bg\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unknown_target"
+  }
+ },
+ {
+  "name": "unknown-target-custom-card",
+  "text": "{\"grammar\":1,\"modules\":{\"custom-card\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unknown_target"
+  }
+ },
+ {
+  "name": "unknown-target-Text",
+  "text": "{\"grammar\":1,\"modules\":{\"Text\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unknown_target"
+  }
+ },
+ {
+  "name": "unknown-target-empty-name",
+  "text": "{\"grammar\":1,\"modules\":{\"\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unknown_target"
+  }
+ },
+ {
+  "name": "unknown-target-__proto__",
+  "text": "{\"grammar\":1,\"modules\":{\"__proto__\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unknown_target"
+  }
+ },
+ {
+  "name": "size-exactly-16384-bytes",
+  "text": "{\"grammar\":1,\"card\":{\"opacity\":0.5}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "size-16385-bytes",
+  "text": "{\"grammar\":1,\"card\":{\"opacity\":0.5}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ",
+  "expect": {
+   "ok": false,
+   "code": "too_large"
+  }
+ },
+ {
+  "name": "size-bytes-not-chars",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€\"}}",
+  "expect": {
+   "ok": false,
+   "code": "too_large"
+  }
+ },
+ {
+  "name": "depth-20",
+  "text": "{\"grammar\":1,\"card\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":{\"zzz\":1}}}}}}}}}}}}}}}}}}}}}}",
+  "expect": {
+   "ok": false,
+   "code": "too_large"
+  }
+ },
+ {
+  "name": "array-32-items",
+  "text": "{\"grammar\":1,\"modules\":{\"gauge\":{\"severity\":[{\"from\":0,\"to\":1,\"color\":\"#ffffff\"},{\"from\":1,\"to\":2,\"color\":\"#ffffff\"},{\"from\":2,\"to\":3,\"color\":\"#ffffff\"},{\"from\":3,\"to\":4,\"color\":\"#ffffff\"},{\"from\":4,\"to\":5,\"color\":\"#ffffff\"},{\"from\":5,\"to\":6,\"color\":\"#ffffff\"},{\"from\":6,\"to\":7,\"color\":\"#ffffff\"},{\"from\":7,\"to\":8,\"color\":\"#ffffff\"},{\"from\":8,\"to\":9,\"color\":\"#ffffff\"},{\"from\":9,\"to\":10,\"color\":\"#ffffff\"},{\"from\":10,\"to\":11,\"color\":\"#ffffff\"},{\"from\":11,\"to\":12,\"color\":\"#ffffff\"},{\"from\":12,\"to\":13,\"color\":\"#ffffff\"},{\"from\":13,\"to\":14,\"color\":\"#ffffff\"},{\"from\":14,\"to\":15,\"color\":\"#ffffff\"},{\"from\":15,\"to\":16,\"color\":\"#ffffff\"},{\"from\":16,\"to\":17,\"color\":\"#ffffff\"},{\"from\":17,\"to\":18,\"color\":\"#ffffff\"},{\"from\":18,\"to\":19,\"color\":\"#ffffff\"},{\"from\":19,\"to\":20,\"color\":\"#ffffff\"},{\"from\":20,\"to\":21,\"color\":\"#ffffff\"},{\"from\":21,\"to\":22,\"color\":\"#ffffff\"},{\"from\":22,\"to\":23,\"color\":\"#ffffff\"},{\"from\":23,\"to\":24,\"color\":\"#ffffff\"},{\"from\":24,\"to\":25,\"color\":\"#ffffff\"},{\"from\":25,\"to\":26,\"color\":\"#ffffff\"},{\"from\":26,\"to\":27,\"color\":\"#ffffff\"},{\"from\":27,\"to\":28,\"color\":\"#ffffff\"},{\"from\":28,\"to\":29,\"color\":\"#ffffff\"},{\"from\":29,\"to\":30,\"color\":\"#ffffff\"},{\"from\":30,\"to\":31,\"color\":\"#ffffff\"},{\"from\":31,\"to\":32,\"color\":\"#ffffff\"}]}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "array-33-items",
+  "text": "{\"grammar\":1,\"modules\":{\"gauge\":{\"severity\":[{\"from\":0,\"to\":1,\"color\":\"#ffffff\"},{\"from\":1,\"to\":2,\"color\":\"#ffffff\"},{\"from\":2,\"to\":3,\"color\":\"#ffffff\"},{\"from\":3,\"to\":4,\"color\":\"#ffffff\"},{\"from\":4,\"to\":5,\"color\":\"#ffffff\"},{\"from\":5,\"to\":6,\"color\":\"#ffffff\"},{\"from\":6,\"to\":7,\"color\":\"#ffffff\"},{\"from\":7,\"to\":8,\"color\":\"#ffffff\"},{\"from\":8,\"to\":9,\"color\":\"#ffffff\"},{\"from\":9,\"to\":10,\"color\":\"#ffffff\"},{\"from\":10,\"to\":11,\"color\":\"#ffffff\"},{\"from\":11,\"to\":12,\"color\":\"#ffffff\"},{\"from\":12,\"to\":13,\"color\":\"#ffffff\"},{\"from\":13,\"to\":14,\"color\":\"#ffffff\"},{\"from\":14,\"to\":15,\"color\":\"#ffffff\"},{\"from\":15,\"to\":16,\"color\":\"#ffffff\"},{\"from\":16,\"to\":17,\"color\":\"#ffffff\"},{\"from\":17,\"to\":18,\"color\":\"#ffffff\"},{\"from\":18,\"to\":19,\"color\":\"#ffffff\"},{\"from\":19,\"to\":20,\"color\":\"#ffffff\"},{\"from\":20,\"to\":21,\"color\":\"#ffffff\"},{\"from\":21,\"to\":22,\"color\":\"#ffffff\"},{\"from\":22,\"to\":23,\"color\":\"#ffffff\"},{\"from\":23,\"to\":24,\"color\":\"#ffffff\"},{\"from\":24,\"to\":25,\"color\":\"#ffffff\"},{\"from\":25,\"to\":26,\"color\":\"#ffffff\"},{\"from\":26,\"to\":27,\"color\":\"#ffffff\"},{\"from\":27,\"to\":28,\"color\":\"#ffffff\"},{\"from\":28,\"to\":29,\"color\":\"#ffffff\"},{\"from\":29,\"to\":30,\"color\":\"#ffffff\"},{\"from\":30,\"to\":31,\"color\":\"#ffffff\"},{\"from\":31,\"to\":32,\"color\":\"#ffffff\"},{\"from\":32,\"to\":33,\"color\":\"#ffffff\"}]}}}",
+  "expect": {
+   "ok": false,
+   "code": "too_large"
+  }
+ },
+ {
+  "name": "target-state",
+  "text": "{\"grammar\":1,\"modules\":{\"state\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-text",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-icon",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-info",
+  "text": "{\"grammar\":1,\"modules\":{\"info\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-image",
+  "text": "{\"grammar\":1,\"modules\":{\"image\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-markdown",
+  "text": "{\"grammar\":1,\"modules\":{\"markdown\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-bar",
+  "text": "{\"grammar\":1,\"modules\":{\"bar\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-graphs",
+  "text": "{\"grammar\":1,\"modules\":{\"graphs\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-button",
+  "text": "{\"grammar\":1,\"modules\":{\"button\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-slider",
+  "text": "{\"grammar\":1,\"modules\":{\"slider\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-spinbox",
+  "text": "{\"grammar\":1,\"modules\":{\"spinbox\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-dropdown",
+  "text": "{\"grammar\":1,\"modules\":{\"dropdown\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-light",
+  "text": "{\"grammar\":1,\"modules\":{\"light\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-gauge",
+  "text": "{\"grammar\":1,\"modules\":{\"gauge\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-horizontal",
+  "text": "{\"grammar\":1,\"modules\":{\"horizontal\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-vertical",
+  "text": "{\"grammar\":1,\"modules\":{\"vertical\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-row",
+  "text": "{\"grammar\":1,\"modules\":{\"row\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-tabs",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-separator",
+  "text": "{\"grammar\":1,\"modules\":{\"separator\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-slider-layout",
+  "text": "{\"grammar\":1,\"modules\":{\"slider-layout\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-clock",
+  "text": "{\"grammar\":1,\"modules\":{\"clock\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-weather",
+  "text": "{\"grammar\":1,\"modules\":{\"weather\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-forecast",
+  "text": "{\"grammar\":1,\"modules\":{\"forecast\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-*",
+  "text": "{\"grammar\":1,\"modules\":{\"*\":{\"design\":{\"color\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "target-names-are-not-dropped-keys",
+  "text": "{\"grammar\":1,\"modules\":{\"state\":{\"design\":{\"color\":\"#ffffff\"}},\"text\":{\"design\":{\"color\":\"#eeeeee\"}},\"icon\":{\"icon_color\":\"#dddddd\"},\"image\":{\"fit\":\"cover\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-actions",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"actions\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/actions"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-actions",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"actions\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/actions"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-tap_action",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"tap_action\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/tap_action"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-tap_action",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"tap_action\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/tap_action"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-hold_action",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"hold_action\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/hold_action"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-hold_action",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"hold_action\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/hold_action"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-double_tap_action",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"double_tap_action\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/double_tap_action"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-double_tap_action",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"double_tap_action\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/double_tap_action"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-entity",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"entity\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-entity",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"entity\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-entities",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"entities\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/entities"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-entities",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"entities\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/entities"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-entity_id",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"entity_id\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/entity_id"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-entity_id",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"entity_id\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/entity_id"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-attribute",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"attribute\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/attribute"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-attribute",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"attribute\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/attribute"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-use_entity",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"use_entity\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/use_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-use_entity",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"use_entity\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/use_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-use_entity_icon",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"use_entity_icon\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/use_entity_icon"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-use_entity_icon",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"use_entity_icon\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/use_entity_icon"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-use_module_entity",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"use_module_entity\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/use_module_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-use_module_entity",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"use_module_entity\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/use_module_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-share_entity",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"share_entity\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/share_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-share_entity",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"share_entity\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/share_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-weather_entity",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"weather_entity\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/weather_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-weather_entity",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"weather_entity\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/weather_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-trigger_entity",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"trigger_entity\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/trigger_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-trigger_entity",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"trigger_entity\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/trigger_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-popup",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"popup\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/popup"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-popup",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"popup\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/popup"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-display",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"display\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/display"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-display",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"display\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/display"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-conditional_appearance",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"conditional_appearance\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/conditional_appearance"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-conditional_appearance",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"conditional_appearance\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/conditional_appearance"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-conditional",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"conditional\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/conditional"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-conditional",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"conditional\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/conditional"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-template",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"template\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/template"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-template",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"template\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/template"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-use_template",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"use_template\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/use_template"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-use_template",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"use_template\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/use_template"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-not_synced",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"not_synced\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/not_synced"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-not_synced",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"not_synced\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/not_synced"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-text",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"text\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/text"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-text",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"text\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/text"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-label",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"label\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/label"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-label",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"label\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/label"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-content",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"content\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/content"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-content",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"content\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/content"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-flows",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"flows\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/flows"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-flows",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"flows\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/flows"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-rows",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"rows\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/rows"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-rows",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"rows\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/rows"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-custom_icons",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"custom_icons\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/custom_icons"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-custom_icons",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"custom_icons\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/custom_icons"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-custom_shapes",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"custom_shapes\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/custom_shapes"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-custom_shapes",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"custom_shapes\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/custom_shapes"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-custom_animations",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"custom_animations\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/custom_animations"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-custom_animations",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"custom_animations\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/custom_animations"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-icon",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"icon\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/icon"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-icon",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"icon\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/icon"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-image",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"image\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/image"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-image",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"image\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/image"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-background_image",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"background_image\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/background_image"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-background_image",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"background_image\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/background_image"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-border_image",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"border_image\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/border_image"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-border_image",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"border_image\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/border_image"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-layers",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"layers\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/layers"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-layers",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"layers\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/layers"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-theme",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"theme\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/theme"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-theme",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"theme\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/theme"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-use_page_theme",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"use_page_theme\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/use_page_theme"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-use_page_theme",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"use_page_theme\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/use_page_theme"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-placement",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"placement\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/placement"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-placement",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"placement\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/placement"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-layer",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"layer\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/layer"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-layer",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"layer\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/layer"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-state",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"state\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/state"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-state",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"state\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/state"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-ref",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"ref\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/ref"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-ref",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"ref\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/ref"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-card-id",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"id\":\"url(https://x.test/a.png) {{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/id"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-id",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_color\":\"#ffffff\",\"id\":\"url(https://x.test/a.png) {{ x }}\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/id"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-actions-object",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#000000\",\"actions\":{\"tap_action\":{\"action\":\"url\",\"url_path\":\"javascript:alert(1)\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/actions"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-popup-object",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#000000\",\"popup\":{\"hash\":\"x\",\"trigger\":{\"entity\":\"sensor.x\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/popup"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-display-object",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#000000\",\"display\":{\"conditions\":[{\"entity\":\"sensor.x\",\"state\":\"on\"}]}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/display"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-conditional-appearance",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#000000\",\"conditional_appearance\":[{\"conditions\":[],\"background\":\"red\"}]}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/conditional_appearance"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-flows-object",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#000000\",\"flows\":[{\"id\":\"f\",\"from\":\"a\",\"to\":\"b\"}]}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/flows"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-rows-with-modules",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#000000\",\"rows\":[{\"id\":\"r\",\"columns\":[{\"id\":\"c\",\"modules\":[{\"id\":\"m\",\"type\":\"text\",\"text\":\"hi\"}]}]}]}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/rows"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-custom-icons-svg",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#000000\",\"custom_icons\":{\"a\":\"<svg onload=alert(1)></svg>\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/custom_icons"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-design-conditional",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\",\"conditional\":[{\"condition\":{},\"design\":{\"color\":\"red\"}}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/conditional"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-text-template",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\"},\"text\":\"<b>{{ states(\\\"sensor.x\\\") }}</b>\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/text"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-module-design-actions",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"design\":{\"color\":\"#ffffff\",\"actions\":{\"tap_action\":{\"action\":\"none\"}}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/design/actions"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-ring-entity-fields",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"value\",\"color\":\"#00ffff\",\"width\":3,\"entity\":\"sensor.x\",\"attribute\":\"temp\",\"trigger_entity\":\"sensor.t\",\"state\":\"on\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/ring/entity",
+    "/card/ring/attribute",
+    "/card/ring/trigger_entity",
+    "/card/ring/state"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-value-background-entity",
+  "text": "{\"grammar\":1,\"card\":{\"value_background\":{\"type\":\"fill\",\"color\":\"entity 50%\",\"entity\":\"sensor.x\",\"attribute\":\"a\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/value_background/entity",
+    "/card/value_background/attribute"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-seasonal-entity-and-weather-entity",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":{\"scene\":\"weather\",\"intensity\":40,\"entity\":\"switch.s\",\"weather_entity\":\"weather.home\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/seasonal/entity",
+    "/card/seasonal/weather_entity"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-icon-fx-fill-entity",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"fill\":{\"color\":\"#ff0000\",\"direction\":\"up\",\"entity\":\"sensor.x\",\"attribute\":\"a\"}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/icon_fx/fill/entity",
+    "/modules/icon/icon_fx/fill/attribute"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-hover-entity",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"design\":{\"color\":\"#ffffff\",\"hover\":{\"color\":\"#ff0000\",\"entity\":\"sensor.x\"}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/design/hover/entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-made-up-entity-suffix-card",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"zone_entity\":\"sensor.x\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/zone_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-made-up-entity-suffix-design",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"design\":{\"color\":\"#ffffff\",\"glow_entity\":\"abc\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/design/glow_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-made-up-entity-suffix-ring",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"value\",\"color\":\"#00ffff\",\"source_entity\":\"abc\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/ring/source_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-entity-id-under-card-style-key",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"border_color\":\"sensor.temperature\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/border_color"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-entity-id-under-design-key",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\",\"background\":\"light.kitchen\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/background"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-entity-id-in-array-gradient",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"colors\":{\"style\":\"gradient\",\"gradient\":[\"light.kitchen\",\"#ffffff\"]}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/icon_fx/colors/gradient"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-entity-id-in-array-combine",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":{\"scene\":\"winter\",\"combine\":[\"daynight\",\"sensor.x\"]}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/seasonal/combine"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "keep-number-like-strings",
+  "text": "{\"grammar\":1,\"card\":{\"padding\":\".5em\",\"margin\":\"1.5em\",\"opacity\":\"0.5\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-card-key",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"zzz_unknown\":1}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/zzz_unknown"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-design-key",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\",\"zzz_unknown\":1}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/zzz_unknown"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-ring-key",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"value\",\"color\":\"#00ffff\",\"zzz_unknown\":1}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/ring/zzz_unknown"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-shape-options-key",
+  "text": "{\"grammar\":1,\"card\":{\"shape\":\"squircle\",\"shape_options\":{\"smoothing\":0.6,\"zzz_unknown\":1}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/shape_options/zzz_unknown"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-icon-fx-key",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"draw\":\"off\",\"morph\":false,\"zzz_unknown\":1}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/icon_fx/zzz_unknown"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-tab-state-key",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_active\":{\"tab_color\":\"#ffffff\",\"tab_background\":\"#000000\",\"zzz_unknown\":1}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/tabs/design/tab_active/zzz_unknown"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-tab-disabled-key",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_disabled\":{\"tab_color\":\"#999999\",\"zzz_unknown\":\"x\"}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/tabs/design/tab_disabled/zzz_unknown"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-module-key-for-type",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\"},\"size\":\"10px\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/size"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-bar-keys",
+  "text": "{\"grammar\":1,\"modules\":{\"bar\":{\"bar_color\":\"#00ff00\",\"min\":0,\"max\":100}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/bar/min",
+    "/modules/bar/max"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-card-keys-not-card-level",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"animations\":[{\"preset\":\"pulse\"}],\"background_layers\":[],\"name\":\"x\",\"type\":\"custom:magic-card\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/animations",
+    "/card/background_layers",
+    "/card/name",
+    "/card/type"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "null-value-dropped",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"padding\":null}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/padding"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "pointer-escapes",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"a/b\":1,\"c~d\":2}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/a~1b",
+    "/card/c~0d"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "proto-key-dropped",
+  "text": "{\"grammar\":1,\"card\":{\"__proto__\":{\"background\":\"red\"},\"opacity\":0.5}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/__proto__"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "constructor-key-dropped",
+  "text": "{\"grammar\":1,\"card\":{\"constructor\":{\"prototype\":{\"x\":1}},\"opacity\":0.5}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/constructor"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "empty-grammar-only",
+  "text": "{\"grammar\":1}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "empty-card-object",
+  "text": "{\"grammar\":1,\"card\":{}}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "empty-modules-object",
+  "text": "{\"grammar\":1,\"modules\":{}}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "empty-target-object",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{}}}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "empty-only-entity",
+  "text": "{\"grammar\":1,\"card\":{\"entity\":\"sensor.a\"}}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "empty-only-dropped-in-module",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"text\":\"x\",\"actions\":{}}}}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "empty-only-null",
+  "text": "{\"grammar\":1,\"card\":{\"background\":null}}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "empty-only-unknown-keys",
+  "text": "{\"grammar\":1,\"card\":{\"zzz\":1}}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "bad-type-object-under-value-key",
+  "text": "{\"grammar\":1,\"card\":{\"background\":{\"color\":\"red\"}}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-array-under-value-key",
+  "text": "{\"grammar\":1,\"card\":{\"border_radius\":[\"4px\"]}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-object-under-design-value",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":{\"r\":1}}}}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-string-for-object",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":\"snake\"}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-number-for-object",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":5}}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-object-for-array",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"value\",\"thresholds\":{\"from\":1,\"color\":\"red\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-scalar-item-in-object-array",
+  "text": "{\"grammar\":1,\"modules\":{\"gauge\":{\"severity\":[\"red\"]}}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-object-item-in-scalar-array",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"colors\":{\"style\":\"gradient\",\"gradient\":[{\"a\":1}]}}}}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-infinite-number",
+  "text": "{\"grammar\":1,\"card\":{\"opacity\":1e999}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "bad-type-nested-array-under-value",
+  "text": "{\"grammar\":1,\"card\":{\"margin\":[[\"1px\"]]}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "keep-boolean-and-numbers",
+  "text": "{\"grammar\":1,\"card\":{\"layers_low_power\":true,\"card_height\":200,\"opacity\":0.5,\"border_width\":2}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "keep-min-number",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"value\",\"color\":\"#00ffff\",\"min\":20,\"max\":80}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unsafe-url-http-background",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"url(https://evil.test/a.png)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-url-relative-background",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"url(a.png)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-url-uppercase",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"URL(a.png)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-url-in-gradient",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"linear-gradient(red, url(a.png))\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-url-in-design-background",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"background\":\"url(a.png)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-url-in-hover-design",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\",\"hover\":{\"background\":\"url(a.png)\"}}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-url-in-star-target",
+  "text": "{\"grammar\":1,\"modules\":{\"*\":{\"design\":{\"filter\":\"url(a.png)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-url-in-ring-colour",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"value\",\"color\":\"url(a.png)\"}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-url-in-seasonal-calendar",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":{\"scene\":\"auto\",\"calendar\":{\"christmas\":\"url(a.png)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-import-in-css",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"@import url(https://evil.test/x.css)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-at-rule-in-css",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"@media (min-width: 1px)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-at-sign-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"@import\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-expression",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"expression(alert(1))\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-backslash-escape",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"\\\\75rl(a.png)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-backslash-in-css",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: \\\\72ed\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-html-tag-box-shadow",
+  "text": "{\"grammar\":1,\"card\":{\"box_shadow\":\"<img src=x onerror=alert(1)>\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-html-in-css",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: red; <style>\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-template-double-brace",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"{{ states(\\\"sensor.x\\\") }}\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-template-block",
+  "text": "{\"grammar\":1,\"card\":{\"border_color\":\"{% if x %}red{% endif %}\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-template-dollar-brace",
+  "text": "{\"grammar\":1,\"card\":{\"padding\":\"${x}\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-template-button-card-js",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"[[[ return 1 ]]]\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-slash-slash",
+  "text": "{\"grammar\":1,\"card\":{\"padding\":\"calc(1px//2)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-slash-star-comment",
+  "text": "{\"grammar\":1,\"card\":{\"padding\":\"red/* x */\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-colon-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"a:b\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-semicolon-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"red; x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-bang-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"red !important\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-quote-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"\\\"red\\\"\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-equals-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"a=b\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-ampersand-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"a&b\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-brackets-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"a[0]\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-braces-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"{red}\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-newline-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"red\\nblue\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-nul-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"red\\u0000\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-bidi-override-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"red‮\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-non-ascii-letter",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"rød\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-fullwidth-url",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"ｕｒｌ(x)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-value-513-chars",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "value-512-chars",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unsafe-removed-function-color-mix",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"color-mix(in srgb, red 50%, blue)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-removed-function-hwb",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"hwb(194 0% 0%)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-removed-function-lab",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"lab(50% 40 59)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-removed-function-lch",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"lch(50% 40 59)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-removed-function-oklab",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"oklab(59% 0.1 0.1)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-removed-function-oklch",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"oklch(60% 0.15 50)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-removed-function-color",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"color(display-p3 1 0 0)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-image-set",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"image-set(a 1x)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-image",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"image(a)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-cross-fade",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"cross-fade(a, b)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-element",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"element(a)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-src",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"src(a)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-paint",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"paint(a)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-attr",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"attr(a)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-env",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"env(a)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-translate3d",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"translate3d(0,0,0)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-function-unknown-fn",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"transform\":\"unknown-fn(1)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-var-with-fallback",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"var(--a, red)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-var-not-custom-property",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"var(a)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-var-two-names",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"var(--a --b)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-cursor",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"cursor: pointer\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-behavior",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"behavior: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-moz-binding",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"-moz-binding: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-content",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"content: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-src",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"src: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-list-style-image",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"list-style-image: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-mask-image",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"mask-image: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-background-image",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"background-image: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-border-image",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"border-image: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-border-image-source",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"border-image-source: x\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-custom-property",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"--evil: red\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-property-starts-with-digit",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"1color: red\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-braces",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: red } body { x: y\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-url-value",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"background: url(a.png)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-comment",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: red /* x */\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-too-long",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-in-design",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"css\":\"cursor: pointer\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-colon-in-value",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: a:b\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-bang-in-middle",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: re!d\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-css-no-colon",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color red\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-refused-beats-drops",
+  "text": "{\"grammar\":1,\"card\":{\"entity\":\"sensor.x\",\"actions\":{},\"background\":\"url(a.png)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-one-bad-module-refuses-whole-look",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\"},\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\"}},\"icon\":{\"design\":{\"color\":\"url(a.png)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-deep-in-tab-state",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_active\":{\"tab_background\":\"url(a.png)\"}}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-deep-in-shape-options",
+  "text": "{\"grammar\":1,\"card\":{\"shape\":\"wave\",\"shape_options\":{\"amplitude\":\"url(a.png)\"}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-deep-in-icon-fx-colors",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"colors\":{\"style\":\"solid\",\"primary\":\"url(a.png)\"}}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-deep-in-animation-colour",
+  "text": "{\"grammar\":1,\"modules\":{\"*\":{\"design\":{\"animations\":[{\"preset\":\"glow\",\"trigger\":\"always\",\"color\":\"url(a.png)\"}]}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-deep-in-severity",
+  "text": "{\"grammar\":1,\"modules\":{\"gauge\":{\"severity\":[{\"from\":0,\"color\":\"url(a.png)\"}]}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-deep-in-bar-colour",
+  "text": "{\"grammar\":1,\"modules\":{\"bar\":{\"bar_color\":\"url(a.png)\"}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-value-under-dropped-key-is-only-dropped",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"background_image\":\"url(https://evil.test/a.png)\",\"text\":\"{{ x }}\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/background_image",
+    "/card/text"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-gradient-and-shadow",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)\",\"box_shadow\":\"0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)\",\"border_radius\":\"calc(1rem + 2px)\",\"padding\":\"clamp(1rem, 2vw + 1rem, 3rem)\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-nested-parentheses",
+  "text": "{\"grammar\":1,\"card\":{\"padding\":\"calc((100% - 4px) / 2)\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-var-whole",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"var(--primary-color)\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-var-spaces",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"var( --card-background )\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-backdrop-filter",
+  "text": "{\"grammar\":1,\"card\":{\"backdrop_filter\":\"blur(8px) saturate(120%)\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-kitchen-sink",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"border_radius\":\"12px\",\"padding\":\"8px\",\"border_width\":\"1px\",\"border_style\":\"solid\",\"border_color\":\"#445566\",\"opacity\":0.9,\"backdrop_filter\":\"blur(4px)\",\"margin\":\"4px\",\"box_shadow\":\"0 1px 2px #000000\",\"card_height\":\"200px\",\"overflow\":\"hidden\",\"shape\":\"squircle\",\"shape_options\":{\"smoothing\":0.6},\"layers_low_power\":true},\"modules\":{\"*\":{\"design\":{\"color\":\"#ffffff\",\"border_radius\":\"8px\"}},\"icon\":{\"size\":\"32px\",\"icon_color\":\"#ffcc00\"},\"bar\":{\"bar_color\":\"#00ff00\",\"bar_height\":\"8px\",\"severity\":[{\"from\":0,\"to\":30,\"color\":\"#ff0000\"}]},\"graphs\":{\"line_color\":\"#00ffff\",\"line_width\":2,\"fill\":true,\"fill_color\":\"#003344\"},\"slider\":{\"slider_color\":\"#ff00ff\",\"track_color\":\"#222222\"},\"button\":{\"button_style\":\"outline\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-seasonal-calendar",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":{\"scene\":\"christmas\",\"calendar\":{\"christmas\":\"12-01..12-31\",\"easter\":false,\"halloween\":\"auto\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-ring-thresholds",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"value\",\"color\":\"#00ffff\",\"thresholds\":[{\"from\":0,\"to\":20,\"color\":\"#ff0000\"},{\"from\":20,\"color\":\"#00ff00\"}]}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-image-fit",
+  "text": "{\"grammar\":1,\"modules\":{\"image\":{\"fit\":\"cover\",\"aspect_ratio\":\"16/9\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-gauge-severity",
+  "text": "{\"grammar\":1,\"modules\":{\"gauge\":{\"severity\":[{\"from\":0,\"to\":30,\"color\":\"#00ff00\"}]}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-star-design-animations",
+  "text": "{\"grammar\":1,\"modules\":{\"*\":{\"design\":{\"color\":\"#ffffff\",\"animations\":[{\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-animations-id-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"animations\":[{\"id\":\"a1\",\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animations/0/id"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-trigger-tap",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"animations\":[{\"preset\":\"bounce\",\"trigger\":\"tap\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-trigger-entity-on-entity-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"animations\":[{\"preset\":\"glow\",\"trigger\":\"entity_on\",\"trigger_entity\":\"light.x\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animations/0/trigger_entity"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-trigger-state-entry-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"animations\":[{\"preset\":\"pulse\",\"trigger\":\"state\"},{\"preset\":\"spin\",\"trigger\":\"tap\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animations/0"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-in-card-hover",
+  "text": "{\"grammar\":1,\"card\":{\"hover\":{\"color\":\"#ffffff\",\"animations\":[{\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-in-design-hover",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"hover\":{\"animations\":[{\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-tab-animations",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_animations\":[{\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-tab-state-animations",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_active\":{\"tab_color\":\"#ffffff\",\"tab_animations\":[{\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-seasonal-scene-name",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":\"winter\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-seasonal-true",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":true}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-seasonal-auto",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":\"auto\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-seasonal-object-scene",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":{\"scene\":\"autumn\",\"intensity\":\"60%\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-seasonal-object-no-scene",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":{\"intensity\":\"60%\",\"hemisphere\":\"south\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-seasonal-none-scene-object",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"seasonal\":{\"scene\":\"none\",\"intensity\":50}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-seasonal-none-string",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"seasonal\":\"none\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-seasonal-false",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"seasonal\":false}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-shape-options-animate",
+  "text": "{\"grammar\":1,\"card\":{\"shape\":\"blob\",\"shape_options\":{\"animate\":true,\"seed\":3}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-shape-options-animate-false",
+  "text": "{\"grammar\":1,\"card\":{\"shape\":\"blob\",\"shape_options\":{\"animate\":false,\"seed\":3}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-shape-options-ref-dropped",
+  "text": "{\"grammar\":1,\"card\":{\"shape\":\"custom\",\"shape_options\":{\"animate\":true,\"ref\":\"my-shape\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/shape_options/ref"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-icon-fx-device-auto",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"device\":\"auto\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-icon-fx-device-off",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"device\":\"off\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-icon-fx-draw-loop",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"draw\":\"loop\",\"draw_duration\":\"2s\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-icon-fx-draw-off",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"draw\":\"off\",\"draw_duration\":\"2s\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-icon-fx-morph",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"morph\":true}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-icon-fx-morph-false",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"morph\":false}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-css-animation-shorthand",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"filter: blur(2px); animation: spin 2s linear infinite\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-css-animation-name",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"animation-name: pulse\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-css-animation-fill-mode",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"css\":\"color: red; animation-fill-mode: forwards\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-css-transition",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"transition: all 1s\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-css-important",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: red !important\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-css-no-spaces",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color:red;margin:0\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-plain-style-look",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#112233\",\"border_radius\":\"8px\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "fonts-single",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"Roboto\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Roboto"
+   ]
+  }
+ },
+ {
+  "name": "fonts-double-quoted-with-generic",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"\\\"Open Sans\\\", sans-serif\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Open Sans"
+   ]
+  }
+ },
+ {
+  "name": "fonts-single-quoted",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"'Playfair Display', serif\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Playfair Display"
+   ]
+  }
+ },
+ {
+  "name": "fonts-generics-only",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"system-ui, sans-serif, monospace\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "fonts-label-and-main-sorted-unique",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"Lobster, Abel\",\"label_font_family\":\"Abel\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Abel",
+    "Lobster"
+   ]
+  }
+ },
+ {
+  "name": "fonts-four-items",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"Abel, Bree, Cabin, Dosis\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Abel",
+    "Bree",
+    "Cabin",
+    "Dosis"
+   ]
+  }
+ },
+ {
+  "name": "fonts-name-64-chars",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+   ]
+  }
+ },
+ {
+  "name": "fonts-tab-font-family-and-state",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_font_family\":\"Oswald\",\"tab_active\":{\"tab_font_family\":\"Bebas Neue\"}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Bebas Neue",
+    "Oswald"
+   ]
+  }
+ },
+ {
+  "name": "fonts-card-css-font-family",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"font-family: \\\"Fira Code\\\", monospace\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Fira Code"
+   ]
+  }
+ },
+ {
+  "name": "fonts-card-css-font-family-among-others",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"color: red; font-family: Lobster, cursive\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Lobster"
+   ]
+  }
+ },
+ {
+  "name": "fonts-design-css-font-family",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"css\":\"font-family: 'Abril Fatface'\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": [
+    "Abril Fatface"
+   ]
+  }
+ },
+ {
+  "name": "fonts-with-animation-together",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"Pacifico\",\"css\":\"animation: spin 1s linear infinite\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": [
+    "Pacifico"
+   ]
+  }
+ },
+ {
+  "name": "unsafe-font-five-items",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"A, B, C, D, E\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-name-65-chars",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-mismatched-quotes",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"\\\"Foo'\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-unterminated-quote",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"\\\"Foo Bar\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-semicolon",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"Roboto; color: red\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-parentheses",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"Foo(bar)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-url",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"url(x)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-non-ascii-name",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"Åkesson\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-punctuation",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"font_family\":\"Foo.Bar\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-in-css-five-items",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"font-family: A, B, C, D, E\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-in-css-url",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"font-family: url(x)\"}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-label-family-bad",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"label_font_family\":\"x; y\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "unsafe-font-tab-family-bad",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_font_family\":\"x{y}\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "animated-trigger-hover-entry-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"animations\":[{\"preset\":\"pulse\",\"trigger\":\"hover\"},{\"preset\":\"spin\",\"trigger\":\"tap\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animations/0"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-custom-preset-entry-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"animations\":[{\"preset\":\"custom:mine\",\"trigger\":\"always\"},{\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animations/0"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-missing-preset-entry-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"animations\":[{\"trigger\":\"always\"},{\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animations/0"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-bad-preset-pattern-entry-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"animations\":[{\"preset\":\"Not Valid\",\"trigger\":\"always\"},{\"preset\":\"pulse\",\"trigger\":\"always\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animations/0"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-only-animation-entry-dropped-array-gone",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\",\"animations\":[{\"preset\":\"custom:x\",\"trigger\":\"always\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animations/0"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-tab-animations-hover-trigger-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"color\":\"#ffffff\",\"tab_animations\":[{\"preset\":\"pulse\",\"trigger\":\"hover\"}]}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/tabs/design/tab_animations/0"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-design-legacy-animation-keys",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\",\"animation\":{\"preset\":\"pulse\"},\"animation_preset\":\"pulse\",\"animation_target\":\"icon\",\"animation_speed\":\"2s\",\"animation_trigger\":\"always\",\"animation_state\":\"on\",\"animation_color\":\"#ff0000\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/design/animation",
+    "/modules/text/design/animation_preset",
+    "/modules/text/design/animation_target",
+    "/modules/text/design/animation_speed",
+    "/modules/text/design/animation_trigger",
+    "/modules/text/design/animation_state",
+    "/modules/text/design/animation_color"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-icon-position-module-level-text",
+  "text": "{\"grammar\":1,\"modules\":{\"text\":{\"design\":{\"color\":\"#ffffff\"},\"icon_position\":\"left\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/text/icon_position"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-icon-position-module-level-button",
+  "text": "{\"grammar\":1,\"modules\":{\"button\":{\"button_style\":\"outline\",\"icon_position\":\"left\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/button/icon_position"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-icon-position-module-level-star",
+  "text": "{\"grammar\":1,\"modules\":{\"*\":{\"design\":{\"color\":\"#ffffff\"},\"icon_position\":\"left\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/*/icon_position"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-design-icon-position",
+  "text": "{\"grammar\":1,\"modules\":{\"button\":{\"design\":{\"icon_position\":\"left\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-slider-keys",
+  "text": "{\"grammar\":1,\"modules\":{\"slider\":{\"slider_color\":\"#ff00ff\",\"track_color\":\"#222222\",\"slider_color_to\":\"#00ffff\",\"icon_position\":\"center\",\"thumb_size\":\"20px\",\"segments\":5,\"segment_gap\":2,\"show_limits\":true,\"track_shape\":\"squircle\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-slider-track-shape-options-animate",
+  "text": "{\"grammar\":1,\"modules\":{\"slider\":{\"track_shape\":\"blob\",\"track_shape_options\":{\"animate\":true,\"seed\":3}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "still-slider-track-shape-options-ref-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"slider\":{\"track_shape\":\"custom\",\"track_shape_options\":{\"animate\":false,\"ref\":\"my-shape\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/slider/track_shape_options/ref"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-slider-entity-fields",
+  "text": "{\"grammar\":1,\"modules\":{\"slider\":{\"slider_color\":\"#ff00ff\",\"entity\":\"light.x\",\"min_entity\":\"sensor.m\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/slider/entity",
+    "/modules/slider/min_entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "valid-image-colors",
+  "text": "{\"grammar\":1,\"modules\":{\"image\":{\"fit\":\"cover\",\"aspect_ratio\":\"16/9\",\"colors\":{\"main\":\"#112233\",\"accent\":\"#ff0000\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "unknown-image-colors-key",
+  "text": "{\"grammar\":1,\"modules\":{\"image\":{\"colors\":{\"main\":\"#112233\",\"zzz_unknown\":\"#ffffff\"}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/image/colors/zzz_unknown"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "bad-type-string-for-image-colors",
+  "text": "{\"grammar\":1,\"modules\":{\"image\":{\"colors\":\"#112233\"}}}",
+  "expect": {
+   "ok": false,
+   "code": "bad_type"
+  }
+ },
+ {
+  "name": "unsafe-url-in-image-colors",
+  "text": "{\"grammar\":1,\"modules\":{\"image\":{\"colors\":{\"main\":\"url(https://x.test/a.png)\"}}}}",
+  "expect": {
+   "ok": false,
+   "code": "unsafe_value"
+  }
+ },
+ {
+  "name": "drop-ring-min-entity-attribute-object-gone",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"value\",\"color\":\"#00ffff\",\"min\":{\"entity\":\"sensor.x\",\"attribute\":\"a\"},\"max\":80}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/ring/min/entity",
+    "/card/ring/min/attribute"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-emptied-parent-has-no-own-pointer",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"design\":{\"color\":\"#ffffff\",\"hover\":{\"entity\":\"sensor.x\"}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/icon/design/hover/entity"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "empty-only-emptied-parent",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"entity\":\"sensor.x\"}}}",
+  "expect": {
+   "ok": false,
+   "code": "empty"
+  }
+ },
+ {
+  "name": "still-tab-icon-fx-morph-dropped",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_icon_fx\":{\"device\":\"off\",\"draw\":\"off\",\"morph\":true}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/modules/tabs/design/tab_icon_fx/morph"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-tab-icon-fx-draw-loop",
+  "text": "{\"grammar\":1,\"modules\":{\"tabs\":{\"design\":{\"tab_icon_fx\":{\"device\":\"off\",\"draw\":\"loop\",\"draw_duration\":\"2s\"}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-icon-fx-fill-wave",
+  "text": "{\"grammar\":1,\"modules\":{\"icon\":{\"icon_fx\":{\"fill\":{\"color\":\"#ff0000\",\"direction\":\"up\",\"wave\":true}}}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-ring-mode-animated",
+  "text": "{\"grammar\":1,\"card\":{\"ring\":{\"mode\":\"animated\",\"color\":\"#00ffff\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-value-background-wave",
+  "text": "{\"grammar\":1,\"card\":{\"value_background\":{\"color\":\"#00ffff\",\"wave\":true}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-seasonal-weather-entity-dropped-still-animated",
+  "text": "{\"grammar\":1,\"card\":{\"seasonal\":{\"scene\":\"weather\",\"weather_entity\":\"weather.home\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/seasonal/weather_entity"
+   ],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "drop-theme-keys-and-custom-animations",
+  "text": "{\"grammar\":1,\"card\":{\"background\":\"#000000\",\"theme\":\"dark\",\"use_page_theme\":true,\"custom_animations\":{\"a\":\"x\"}}}",
+  "expect": {
+   "ok": true,
+   "dropped": [
+    "/card/theme",
+    "/card/use_page_theme",
+    "/card/custom_animations"
+   ],
+   "animated": false,
+   "fonts": []
+  }
+ }
+]
