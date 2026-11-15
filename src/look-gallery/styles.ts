@@ -116,7 +116,7 @@ export const galleryStyles = [
       padding: 4px;
       scroll-padding-bottom: var(--bar-h, 0px);
     }
-    .tile {
+    .lg-tile {
       position: relative;
       display: grid;
       align-content: start;
@@ -131,30 +131,30 @@ export const galleryStyles = [
       text-align: start;
       cursor: pointer;
     }
-    .tile:hover {
+    .lg-tile:hover {
       border-color: var(--mc-text);
     }
-    .tile[aria-checked='true'] {
+    .lg-tile[aria-checked='true'] {
       border: 2px solid var(--mc-accent-ink);
       background: var(--mc-accent-tint);
     }
-    :host([data-ink='text']) .tile[aria-checked='true'] {
+    :host([data-ink='text']) .lg-tile[aria-checked='true'] {
       border-color: var(--mc-text);
     }
-    .tile:focus {
+    .lg-tile:focus {
       outline: 2px solid var(--mc-text);
       outline-offset: 2px;
     }
     @supports selector(:focus-visible) {
-      .tile:focus:not(:focus-visible) {
+      .lg-tile:focus:not(:focus-visible) {
         outline: none;
       }
-      .tile:focus-visible {
+      .lg-tile:focus-visible {
         outline: 2px solid var(--mc-text);
         outline-offset: 2px;
       }
     }
-    .check {
+    .lg-check {
       position: absolute;
       top: 6px;
       right: 6px;
@@ -167,7 +167,7 @@ export const galleryStyles = [
       background: var(--mc-accent-ink);
       color: var(--mc-surface);
     }
-    :host([data-ink='text']) .check {
+    :host([data-ink='text']) .lg-check {
       background: var(--mc-text);
     }
     .thumb {

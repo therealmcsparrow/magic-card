@@ -71,7 +71,7 @@ export const tileTemplate = (tile: GalleryTile, v: TileView): TemplateResult => 
   // an image only from a preview that passed its check (blob URL); anything else is the no-image state
   const img = tile.previewUrl && tile.previewUrl.startsWith('blob:') ? tile.previewUrl : null;
   return html`<div
-    class="tile"
+    class="lg-tile"
     role="radio"
     aria-checked=${v.selected ? 'true' : 'false'}
     aria-label=${label}
@@ -88,7 +88,7 @@ export const tileTemplate = (tile: GalleryTile, v: TileView): TemplateResult => 
       ${tile.fonts.length ? html`<span class="pill">${t('look-gallery.tile.font')}</span>` : nothing}
       ${tile.animated ? html`<span class="pill warn">${t('look-gallery.tile.animated')}</span>` : nothing}
     </div>
-    ${v.selected ? html`<span class="check" data-check>${glyph('check', 14)}</span>` : nothing}
+    ${v.selected ? html`<span class="lg-check" data-check>${glyph('check', 14)}</span>` : nothing}
   </div>`;
 };
 
