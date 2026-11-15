@@ -39,6 +39,13 @@ jobs:
         # before the build: the build regenerates en-US.json, so a stale committed file is caught here. Strict through I18N_RELEASE_STRICT in the contract.
         run: node tools/check-i18n.mjs --ci
 
+      - name: Look index seq floor is not above the newest published index
+        # reads the gallery's index-<seq> releases (public, size-capped); the token only lifts the API rate limit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node tools/check-look-min-seq.mjs
+
+      # also writes dist/look-kit.mjs and dist/look-fixtures.json and fails on any look corpus mismatch
       - run: npm run build
 
       - name: Committed dist matches the build
@@ -78,6 +85,12 @@ jobs:
         # the tool is a pinned devDependency, installed from the lockfile by npm ci
         run: npm run sbom
 
+      - name: Name the vendored TweetNaCl in the SBOM
+        # src/look-kit/nacl-verify.ts is a trimmed copy, so the lockfile does not list it
+        run: |
+          jq '.components += [{"type":"library","name":"tweetnacl","version":"1.0.3","description":"Trimmed copy (Ed25519 verify, SHA-512) vendored in src/look-kit/nacl-verify.ts","licenses":[{"license":{"id":"Unlicense"}}],"purl":"pkg:npm/tweetnacl@1.0.3","externalReferences":[{"type":"vcs","url":"https://github.com/dchest/tweetnacl-js"}]}]' sbom.cdx.json > sbom.vendored.json
+          mv sbom.vendored.json sbom.cdx.json
+
       - name: Release title (the tag without the v)
         id: title
         env:
@@ -91,6 +104,8 @@ jobs:
             dist/*.js
             dist/*.js.br
             dist/*.js.gz
+            dist/look-kit.mjs
+            dist/look-fixtures.json
             sbom.cdx.json
             THIRD-PARTY-NOTICES.md
 
@@ -110,6 +125,8 @@ jobs:
             dist/*.js
             dist/*.js.br
             dist/*.js.gz
+            dist/look-kit.mjs
+            dist/look-fixtures.json
             sbom.cdx.json
             THIRD-PARTY-NOTICES.md
           fail_on_unmatched_files: true
