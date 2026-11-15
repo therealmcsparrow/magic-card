@@ -324,6 +324,11 @@
       "ceiling": 65536,
       "note": "Looks gallery window, the look kit and its i18n tables, loaded from the card editor only when both Magic Card Utils switches are on (contract look-gallery 1.0.0). 62 KiB, measured 60,158 (Windows build) + 5 %, rounded up to 1 KiB; re-measure on the Linux release build. The ceiling is LOOK_GALLERY_CHUNK_CEILING (lazy-module 1.14.0)."
     },
+    "look-kit.mjs": {
+      "raw": 36864,
+      "ceiling": 36864,
+      "note": "Look kit module shipped next to the card for the Looks gallery (36 KiB). Gated on raw size only; it has no .br or .gz copy."
+    },
     "magic-card-studio-fonts.js": {
       "raw": 74752,
       "ceiling": 98304,

@@ -1,11 +1,12 @@
-// Size gate for the built dist/*.js. Every number lives in tools/size-caps.json (shape: tools/size-caps.schema.json);
+// Size gate for the built dist/*.js and dist/*.mjs. Every number lives in tools/size-caps.json (shape: tools/size-caps.schema.json);
 // this file holds only the final-cap constant. Rules:
 // - magic-card.js, which every dashboard loads, is gated on gzip bytes: zlib.gzipSync(buffer, { level: 9 }), one shot on the whole file.
 //   The active stage cap applies; while the first stage cap is null the cap is entry.base.gzip.
 //   Gzip bytes depend on the zlib build, so the result is authoritative only on the Node pinned in .nvmrc (zlib and brotli versions are
 //   recorded in the caps file). Another zlib or brotli: CI fails, a local run prints "not authoritative".
-// - every other dist .js is gated on raw bytes: size <= raw cap <= ceiling. File names are matched with the content hash
-//   stripped (magic-card-<name>.<hash8>.js -> magic-card-<name>.js). A dist file with no entry fails.
+// - every other dist .js and .mjs is gated on raw bytes: size <= raw cap <= ceiling. File names are matched with the content hash
+//   stripped (magic-card-<name>.<hash8>.js -> magic-card-<name>.js; a .mjs keeps its extension). A dist file with no entry fails.
+//   Only .js files carry .br/.gz siblings; a .mjs is gated on size alone.
 // - raises: with --base-ref the caps file is compared with the same file at that git ref. Any entry cap, stage cap, br cap, ceiling or
 //   base figure that went up (or a number that was removed) fails unless approved_raises carries a matching entry (field, from, to).
 //   Entries already in the base file must keep their field, from and to, in place.
@@ -107,7 +108,7 @@ function validateShape(c) {
   if (isObj(c.files)) {
     for (const [name, f] of Object.entries(c.files)) {
       const w = `files["${name}"]`;
-      need(/^[a-z0-9][a-z0-9-]*\.js$/.test(name) && name !== 'magic-card.js', `${w}: name must be a logical dist .js name without a hash`);
+      need(/^[a-z0-9][a-z0-9-]*\.m?js$/.test(name) && name !== 'magic-card.js', `${w}: name must be a logical dist .js or .mjs name without a hash`);
       if (!isObj(f)) {
         errs.push(`${w} must be an object`);
         continue;
@@ -261,13 +262,14 @@ function checkNvmrc(c) {
 }
 
 /** Logical name of a dist file: content hash stripped. */
-const logicalName = (f) => f.replace(/\.[0-9a-f]{8}\.js$/, '.js');
+const logicalName = (f) => f.replace(/\.[0-9a-f]{8}\.(m?js)$/, '.$1');
 
 function checkDist(c, activeCap, authoritative) {
   if (!existsSync(distDir)) return fail(`${distDir} does not exist: run npm run build first`);
   const files = readdirSync(distDir).filter((f) => f.endsWith('.js')).sort();
+  const gated = readdirSync(distDir).filter((f) => f.endsWith('.js') || f.endsWith('.mjs')).sort();
   const seen = new Map();
-  for (const f of files) {
+  for (const f of gated) {
     const name = logicalName(f);
     if (seen.has(name)) fail(`${f} and ${seen.get(name)} both map to ${name}`);
     seen.set(name, f);
