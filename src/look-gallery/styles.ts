@@ -236,9 +236,6 @@ export const galleryStyles = [
       margin: 16px 0 8px;
       font-size: 0.9375rem;
     }
-    .refused {
-      padding-bottom: var(--bar-h, 0px);
-    }
     .refused ul {
       display: grid;
       gap: 8px;
@@ -253,6 +250,7 @@ export const galleryStyles = [
       border: 1px dashed var(--mc-divider);
       border-radius: var(--mc-radius);
       background: var(--mc-surface);
+      scroll-margin-bottom: calc(var(--bar-h, 0px) + 16px);
     }
     .reason {
       display: flex;
@@ -268,6 +266,7 @@ export const galleryStyles = [
       opacity: 0.8;
     }
     a.report {
+      scroll-margin-bottom: calc(var(--bar-h, 0px) + 16px);
       color: var(--mc-accent-ink);
       font-size: 0.8125rem;
       overflow-wrap: anywhere;

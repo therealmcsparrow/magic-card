@@ -123,9 +123,6 @@ export class UiWindow extends LitElement {
   }
 
   private focusFirst(): void {
-    // a child that focused itself before the window opened keeps focus
-    const held = (this.getRootNode() as Document).activeElement;
-    if (held && held !== this && this.contains(held)) return;
     const byId = this.initialFocus ? this.querySelector<HTMLElement>(`#${CSS.escape(this.initialFocus)}`) : null;
     const target = byId ?? this.querySelector<HTMLElement>(FOCUSABLE);
     (target ?? this.renderRoot.querySelector<HTMLElement>('.close'))?.focus({ preventScroll: true });
