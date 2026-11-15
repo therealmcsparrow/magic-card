@@ -43,7 +43,7 @@ const entryMoves = (key: string, v: unknown): boolean => {
       return isPlain(v) && v.wave === true && (v.type === undefined || v.type === 'fill');
     case 'css': {
       const list = typeof v === 'string' ? readCssDeclarations(v) : null;
-      return list !== null && list.some((d) => d.property.indexOf('animation') === 0);
+      return list !== null && list.some((d) => d.property.replace(/^-[a-z]+-/, '').indexOf('animation') === 0);
     }
     default:
       return false;
