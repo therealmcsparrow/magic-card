@@ -1325,6 +1325,18 @@
       "field": "/files/magic-card-animation-studio.js/ceiling",
       "from": 1002496,
       "to": 1010688
+    },
+    {
+      "id": "look-kit-raw-36864",
+      "field": "/files/look-kit.mjs/raw",
+      "from": 32768,
+      "to": 36864
+    },
+    {
+      "id": "look-kit-ceiling-36864",
+      "field": "/files/look-kit.mjs/ceiling",
+      "from": 32768,
+      "to": 36864
     }
   ]
 }
