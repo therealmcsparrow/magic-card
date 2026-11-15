@@ -1,0 +1,326 @@
+{
+  "look-gallery.preview.anim-warn": {
+    "text": "This look is animated. It can slow older tablets and wall displays.",
+    "note": "Warning in the preview bar for an animated look.",
+    "max": 90
+  },
+  "look-gallery.preview.area-card": {
+    "text": "Card",
+    "note": "Name of the card-level group in the What changes list.",
+    "max": 24
+  },
+  "look-gallery.preview.area-type": {
+    "text": "Modules of type {type}",
+    "note": "Name of a module group in the What changes list.",
+    "max": 40,
+    "vars": {
+      "type": "The module type, such as button."
+    }
+  },
+  "look-gallery.preview.cancel": {
+    "text": "Cancel",
+    "note": "Button of the preview bar that ends the preview and leaves the card as it was.",
+    "max": 24
+  },
+  "look-gallery.preview.changes-count": {
+    "text": "{count, plural, one {# style setting} other {# style settings}}",
+    "note": "Total of settings that Keep writes or clears.",
+    "max": 80,
+    "vars": {
+      "count": "The number of settings."
+    }
+  },
+  "look-gallery.preview.changes-note": {
+    "text": "These settings replace the values your card has now. Undo brings them back.",
+    "note": "Note under the What changes heading.",
+    "max": 110
+  },
+  "look-gallery.preview.changes-title": {
+    "text": "What changes",
+    "note": "Heading of the list of settings that Keep replaces.",
+    "max": 24
+  },
+  "look-gallery.preview.cleared": {
+    "text": "Removed",
+    "note": "Label before the settings a look clears in the What changes list.",
+    "max": 24
+  },
+  "look-gallery.preview.details": {
+    "text": "Details",
+    "note": "Button of the preview bar that shows or hides the details.",
+    "max": 24
+  },
+  "look-gallery.preview.font-ok": {
+    "text": "{font} loads on every screen, because Load Google Fonts is on.",
+    "note": "Calm line in the preview bar for a look that names a Google font.",
+    "max": 80,
+    "vars": {
+      "font": "The font names, joined by commas."
+    }
+  },
+  "look-gallery.preview.keep": {
+    "text": "Keep this look",
+    "note": "Main button of the preview bar; copies the look into the card.",
+    "max": 30
+  },
+  "look-gallery.preview.pause": {
+    "text": "Pause animation",
+    "note": "Button that pauses the animation of the previewed look.",
+    "max": 24
+  },
+  "look-gallery.preview.play": {
+    "text": "Play animation",
+    "note": "Button that starts the animation of the previewed look.",
+    "max": 24
+  },
+  "look-gallery.preview.region": {
+    "text": "Preview of the look",
+    "note": "Accessible name of the bar under the tiles while a look is previewed.",
+    "max": 30
+  },
+  "look-gallery.preview.set": {
+    "text": "Set",
+    "note": "Label before the settings a look writes in the What changes list.",
+    "max": 24
+  },
+  "look-gallery.preview.status": {
+    "text": "Previewing \"{name}\". Nothing is saved yet.",
+    "note": "Status line of the preview bar.",
+    "max": 70,
+    "vars": {
+      "name": "The look name."
+    }
+  },
+  "look-gallery.preview.summary": {
+    "text": "Keep applies this look's colours, fonts and shapes to this card. Your entities, text, actions and templates stay unchanged.",
+    "note": "Sentence in the details of the preview bar that says what Keep does.",
+    "max": 170
+  },
+  "look-gallery.reason.c-tamper": {
+    "text": "The saved copy failed its check and was discarded.",
+    "note": "Reason shown when the saved list failed its check.",
+    "max": 80
+  },
+  "look-gallery.reason.i-parse": {
+    "text": "The list could not be read.",
+    "note": "Reason shown when the list is malformed or too large.",
+    "max": 40
+  },
+  "look-gallery.reason.i-roll": {
+    "text": "The list is older than the one saved on this device.",
+    "note": "Reason shown when the list is older than the saved one.",
+    "max": 80
+  },
+  "look-gallery.reason.i-sig": {
+    "text": "The signature of the list did not check out.",
+    "note": "Reason shown when the list signature is wrong.",
+    "max": 60
+  },
+  "look-gallery.reason.i-ver": {
+    "text": "The list uses a format this version of Magic Card does not know. Update Magic Card.",
+    "note": "Reason shown when the list format is unknown.",
+    "max": 110
+  },
+  "look-gallery.reason.l-fetch": {
+    "text": "This look could not be loaded.",
+    "note": "Reason shown on a look that could not be fetched.",
+    "max": 40
+  },
+  "look-gallery.reason.l-grammar": {
+    "text": "This look needs a newer version of Magic Card. Update Magic Card.",
+    "note": "Reason shown on a blocked look that uses a newer look format.",
+    "max": 90
+  },
+  "look-gallery.reason.l-hash": {
+    "text": "This look changed after it was checked, so it is blocked.",
+    "note": "Reason shown on a blocked look whose file does not match its checksum.",
+    "max": 90
+  },
+  "look-gallery.reason.l-meta": {
+    "text": "This look does not match its description in the list, so it is blocked.",
+    "note": "Reason shown on a blocked look whose animated or font details differ from the list.",
+    "max": 110
+  },
+  "look-gallery.reason.l-parse": {
+    "text": "This look contains more than style settings, so it is blocked.",
+    "note": "Reason shown on a blocked look that failed the style-only check.",
+    "max": 80
+  },
+  "look-gallery.reason.n-fetch": {
+    "text": "The gallery could not be reached.",
+    "note": "Reason shown when the gallery cannot be reached.",
+    "max": 40
+  },
+  "look-gallery.tile.animated": {
+    "text": "Animated",
+    "note": "Chip on a look tile and in the preview bar when the look moves.",
+    "max": 24
+  },
+  "look-gallery.tile.by": {
+    "text": "By {author}",
+    "note": "Author line on a look tile.",
+    "max": 24,
+    "vars": {
+      "author": "The look author name from the signed list."
+    }
+  },
+  "look-gallery.tile.chip": {
+    "text": "Style only, verified",
+    "note": "Chip on a look tile: the look holds style settings only and passed the checks.",
+    "max": 40
+  },
+  "look-gallery.tile.code": {
+    "text": "Code {code}",
+    "note": "Small secondary text with the short code of why a look is blocked.",
+    "max": 24,
+    "vars": {
+      "code": "The short code, such as L-HASH."
+    }
+  },
+  "look-gallery.tile.font": {
+    "text": "Uses Google Fonts",
+    "note": "Chip on a look tile when the look names a Google font.",
+    "max": 30
+  },
+  "look-gallery.tile.label": {
+    "text": "{name}, by {author}, {spdx}, style only, verified",
+    "note": "Accessible name of a look tile.",
+    "max": 70,
+    "vars": {
+      "author": "The look author.",
+      "name": "The look name.",
+      "spdx": "The licence identifier."
+    }
+  },
+  "look-gallery.tile.label-anim": {
+    "text": ", animated",
+    "note": "Added to the accessible name of a tile whose look is animated.",
+    "max": 24
+  },
+  "look-gallery.tile.label-font": {
+    "text": ", uses Google Fonts",
+    "note": "Added to the accessible name of a tile whose look names a Google font.",
+    "max": 30
+  },
+  "look-gallery.tile.licence": {
+    "text": "Licence: {spdx}",
+    "note": "Licence line on a look tile.",
+    "max": 24,
+    "vars": {
+      "spdx": "The licence identifier, such as MIT."
+    }
+  },
+  "look-gallery.tile.refused-section": {
+    "text": "Not available ({count})",
+    "note": "Heading above the looks that are blocked.",
+    "max": 30,
+    "vars": {
+      "count": "How many looks are blocked."
+    }
+  },
+  "look-gallery.tile.report": {
+    "text": "Tell the gallery owner",
+    "note": "Link text on a blocked look that opens the gallery issue form.",
+    "max": 40
+  },
+  "look-gallery.tile.report-label": {
+    "text": "Tell the gallery owner about {name} (needs a GitHub account, opens in a new tab)",
+    "note": "Accessible name of the report link on a blocked look.",
+    "max": 100,
+    "vars": {
+      "name": "The look name."
+    }
+  },
+  "look-gallery.window.back": {
+    "text": "Back",
+    "note": "Button at the top of the gallery that leaves the gallery. Hidden while a look is previewed.",
+    "max": 24
+  },
+  "look-gallery.window.close": {
+    "text": "Close",
+    "note": "Accessible name of the close button of the gallery window.",
+    "max": 24
+  },
+  "look-gallery.window.error-code": {
+    "text": "Code {code}",
+    "note": "Small secondary text with the short code of a refusal.",
+    "max": 24,
+    "vars": {
+      "code": "The short code of the refusal, such as I-SIG."
+    }
+  },
+  "look-gallery.window.error-title": {
+    "text": "The gallery could not be loaded",
+    "note": "Heading of the error state when the list was refused and there is no saved copy.",
+    "max": 40
+  },
+  "look-gallery.window.grid-label": {
+    "text": "Looks",
+    "note": "Accessible name of the group of look tiles (a radio group).",
+    "max": 24
+  },
+  "look-gallery.window.intro": {
+    "text": "Looks change how a card looks, never what it does. Your entities, text and actions stay as they are.",
+    "note": "Sentence under the title of the gallery window; sets what a look can and cannot change.",
+    "max": 140
+  },
+  "look-gallery.window.loading": {
+    "text": "Loading looks",
+    "note": "Status text while the gallery list is being fetched.",
+    "max": 24
+  },
+  "look-gallery.window.notice-old": {
+    "text": "This list passed its expiry date. Looks still work, but newer ones may be missing.",
+    "note": "Notice above the tiles when the signed list is past its expiry date.",
+    "max": 100
+  },
+  "look-gallery.window.notice-refused": {
+    "text": "The new list was refused, so a saved copy is shown. {reason} Code {code}",
+    "note": "Alert above the tiles when the fetched list was refused and a saved copy is used instead.",
+    "max": 100,
+    "vars": {
+      "code": "The short code of the refusal, such as I-SIG.",
+      "reason": "The fixed reason sentence of the refusal."
+    }
+  },
+  "look-gallery.window.notice-saved": {
+    "text": "Showing a saved copy of the list.",
+    "note": "Notice above the tiles when the list comes from this device because the gallery could not be reached.",
+    "max": 50
+  },
+  "look-gallery.window.offline-body": {
+    "text": "You are offline and there is no saved copy yet. Connect, then try again.",
+    "note": "Body of the empty state when the gallery cannot be reached and nothing is saved.",
+    "max": 110
+  },
+  "look-gallery.window.offline-title": {
+    "text": "No looks to show",
+    "note": "Heading of the empty state when the gallery cannot be reached and nothing is saved.",
+    "max": 30
+  },
+  "look-gallery.window.report": {
+    "text": "Tell the gallery owner",
+    "note": "Link text that opens the gallery issue form when the whole list is refused.",
+    "max": 40
+  },
+  "look-gallery.window.report-open": {
+    "text": "Tell the gallery owner (needs a GitHub account, opens in a new tab)",
+    "note": "Accessible name of the report link under an error state.",
+    "max": 100
+  },
+  "look-gallery.window.retry": {
+    "text": "Try again",
+    "note": "Button that fetches the gallery list again.",
+    "max": 24
+  },
+  "look-gallery.window.title": {
+    "text": "Looks gallery",
+    "note": "Title of the full-screen looks gallery window.",
+    "max": 24
+  },
+  "look-gallery.window.zero-title": {
+    "text": "No looks listed yet",
+    "note": "Heading of the empty state when the gallery list is valid but holds no looks.",
+    "max": 30
+  }
+}
