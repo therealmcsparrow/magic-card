@@ -31,6 +31,7 @@ import './components/template-picker';
 import { t, tx, locale } from './i18n';
 import { loadLayerEditor } from './layers/layer-editor-loader';
 import { setI18nLocale } from '../i18n/runtime';
+import { utilsPresent } from './look-gallery-loader';
 
 /**
  * Events that never leave the editor when a descendant fires them. HA's card dialog
@@ -314,7 +315,7 @@ export class MagicCardEditor extends LitElement {
 
     // While the studio is open, overlays are slotted into its modal <dialog> so they stack above it.
     const overlays = this._renderOverlays(this._editorState);
-    return html`<mc-pane-editor .stateManager=${this._stateManager} .hass=${this.hass}></mc-pane-editor>
+    return html`${utilsPresent() ? html`<mc-look-entry .sm=${this._stateManager} .hass=${this.hass}></mc-look-entry>` : nothing}<mc-pane-editor .stateManager=${this._stateManager} .hass=${this.hass}></mc-pane-editor>
 ${this._studioMounted
   ? html`<mc-studio .stateManager=${this._stateManager} .hass=${this.hass} .lovelace=${this.lovelace} .open=${this._studioOpen}>${this._studioOpen ? overlays : nothing}</mc-studio>`
   : nothing}

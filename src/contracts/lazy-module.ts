@@ -2,11 +2,11 @@ import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
-/** Contract: lazy modules and lazy card chunks. Version 1.13.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
+/** Contract: lazy modules and lazy card chunks. Version 1.14.0 (LAZY_MODULE_CONTRACT). Swiper, seasonal decor, markdown
  * and the rarely used modules leave magic-card.js. A quiet chunk (lazyChunk option `silent`) shows no failure notice. */
 
-export const LAZY_MODULE_CONTRACT = '1.13.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 28;
+export const LAZY_MODULE_CONTRACT = '1.14.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 29;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -118,6 +118,15 @@ export const GOOGLE_FONTS_CHUNK = 'google-fonts';
 export const GOOGLE_FONTS_CHUNK_FILE = 'magic-card-google-fonts.js';
 /** Same meaning as LAZY_CHUNK_CEILINGS. The catalogue is about 43 KiB minified. */
 export const GOOGLE_FONTS_CHUNK_CEILING = 46_080;
+
+/**
+ * The look-gallery chunk (contract look-gallery 1.0.0): the Looks gallery window, loaded only from the card editor when the
+ * gallery gate is on. It is not a lazyChunk() card chunk: it has no install() and no BUILD, the editor's loader imports it.
+ */
+export const LOOK_GALLERY_CHUNK = 'look-gallery';
+export const LOOK_GALLERY_CHUNK_FILE = 'magic-card-look-gallery.js';
+/** Same meaning as LAZY_CHUNK_CEILINGS. */
+export const LOOK_GALLERY_CHUNK_CEILING = 65_536;
 
 /** What every chunk entry exports. */
 export interface LazyChunkModule {

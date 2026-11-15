@@ -4343,13 +4343,29 @@
     "text": "This light has no {what}; the control is hidden.",
     "hash": "ec44ff96"
   },
+  "card-editor.magic-card-editor.browse-looks": {
+    "text": "Browse looks",
+    "hash": "7db538ce"
+  },
   "card-editor.magic-card-editor.could-not-load-the-template-so-the": {
     "text": "Could not load the template, so the column was not reset.",
     "hash": "52ac6575"
   },
+  "card-editor.magic-card-editor.dismiss": {
+    "text": "Dismiss",
+    "hash": "48845bff"
+  },
   "card-editor.magic-card-editor.loading-editor": {
     "text": "Loading editor",
     "hash": "231db777"
+  },
+  "card-editor.magic-card-editor.look-name-applied": {
+    "text": "Look \"{name}\" applied.",
+    "hash": "6d9f030b"
+  },
+  "card-editor.magic-card-editor.looks-gallery-turn-it-on-in-the-magic": {
+    "text": "Looks gallery: turn it on in the Magic Card Utils options.",
+    "hash": "6e0e8018"
   },
   "card-editor.magic-card-editor.n-removed-undo-to-get-them-back": {
     "text": "{n, plural, one {# setting it does not support was} other {# settings it does not support were}} removed. Undo to get them back.",
@@ -4374,6 +4390,10 @@
   "card-editor.magic-card-editor.this-card-is-linked-to-template-name-do": {
     "text": "This card is linked to template {name}. Do you want to update all linked cards with this structural change?",
     "hash": "678c92e3"
+  },
+  "card-editor.magic-card-editor.undo": {
+    "text": "Undo",
+    "hash": "a8283ade"
   },
   "card-editor.magic-card-editor.update-all-linked-cards": {
     "text": "Update all linked cards",
