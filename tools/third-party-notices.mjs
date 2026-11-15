@@ -60,6 +60,15 @@ const COMPONENTS = [
       ];
     },
   },
+  {
+    title: 'TweetNaCl.js',
+    label: 'TweetNaCl.js 1.0.3 (trimmed: Ed25519 signature check and SHA-512)',
+    packages: [],
+    licenceNote: 'Public domain, Unlicense',
+    intro:
+      '**TweetNaCl.js 1.0.3** (trimmed: Ed25519 signature check and SHA-512). Public domain, Unlicense. https://github.com/dchest/tweetnacl-js. Used to check the signature of the look list.',
+    extra: { heading: 'Unlicense', file: `${root}tools/licenses/Unlicense.txt` },
+  },
 ];
 const NOT_BUNDLED = []; // production dependencies that never reach dist/, with a reason in a comment
 
