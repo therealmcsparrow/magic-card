@@ -8,6 +8,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ### Fixed
 -   **Looks gallery.** The link on the last not-available look now stays clear of the preview bar when you tab to it.
+-   **Looks gallery.** A look you reach with the arrow keys no longer ends up under the preview bar.
 -   **HACS.** HACS now installs the `magic-card.zip` release asset (`zip_release` is on in `hacs.json`).
 
 ## 2026.11.05-beta.1 (2026-11-15)
