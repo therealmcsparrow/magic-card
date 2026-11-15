@@ -1,7 +1,6 @@
 // Contract: look index. Version 2.0.0 (LOOK_INDEX_CONTRACT), index format 1 (LOOK_INDEX_FORMAT). The signed list of gallery looks
-// that the gallery repository publishes on its Pages site and the card reads: the envelope, the signed payload, the look entries,
-// the two public keys, how a fetched or cached index is accepted, and the fixed codes the card shows. `verifyIndex` and
-// `acceptIndex` live in src/look-kit/ next to `parseLook` and ship in the same dist/look-kit.mjs the gallery CI and smoke test run.
+// on the gallery's Pages site: envelope, payload, entries, the two public keys, acceptance of a fetched or cached index and the
+// codes the card shows. verifyIndex and acceptIndex live in src/look-kit/ next to parseLook and ship in dist/look-kit.mjs.
 
 import type { LookParseCode } from './look-grammar';
 
@@ -33,11 +32,10 @@ export const LOOK_INDEX_PUBLIC_KEYS: readonly [string, string] = [
 export const LOOK_INDEX_SIGN_PREFIX = 'magic-card-look-index-v1\n';
 
 /**
- * Crypto, the same code on every path (card chunk, dist/look-kit.mjs in gallery CI and smoke test): Ed25519 verify and SHA-512
- * from a trimmed, vendored TweetNaCl.js 1.0.3 (src/look-kit/nacl-verify.ts). No Web Crypto, no `crypto.subtle`, no random bytes,
- * so it runs on a plain-http origin. SHA-512 is the only hash: content addresses, entry hashes and preview hashes are all SHA-512.
- * Before the curve check a signature's S half (bytes 32-63, little-endian) must be below the group order L; otherwise
- * `index_signature`. The signer is node:crypto (standard RFC 8032 signatures).
+ * Crypto, the same code on every path (card chunk, dist/look-kit.mjs): Ed25519 verify and SHA-512 from a trimmed, vendored
+ * TweetNaCl.js 1.0.3 (src/look-kit/nacl-verify.ts), no Web Crypto and no random bytes, so it runs on a plain-http origin. SHA-512 is
+ * the only hash (content addresses, entry and preview hashes). Before the curve check a signature's S half (bytes 32-63,
+ * little-endian) must be below the group order L, else `index_signature`. The signer is node:crypto (RFC 8032 signatures).
  */
 export const LOOK_HASH = 'sha512';
 
@@ -49,17 +47,19 @@ export const LOOK_PREVIEW_MAX_BYTES = 96 * 1024;
 export const LOOK_PREVIEW_MAX_SIDE = 1024;
 
 /**
- * Previews. The submitted `preview.webp` is never published or hashed. The gallery CI decodes it and re-encodes it with the WebP
- * encoder pinned to an exact version in the gallery's package.json and package-lock.json (sharp, which bundles libvips and libwebp),
- * and only that output is written to `previews/<sha512>.webp` and named in the index:
- * - input: RIFF/WEBP magic bytes, at most LOOK_PREVIEW_MAX_BYTES, width and height 1-LOOK_PREVIEW_MAX_SIDE read from the header and
- *   enforced again as the decoder's pixel limit, one frame only (an animated WebP is refused), decoder warnings are failures;
- * - output: a still WebP with no EXIF, XMP or ICC chunk, the input's width and height, at most LOOK_PREVIEW_MAX_BYTES, else the look fails;
- * - the decoder runs in the PR check and in a deploy job that holds no secret; the job that signs never decodes an image.
- * The card shows a preview only when its bytes are at most LOOK_PREVIEW_MAX_BYTES, their SHA-512 equals the entry's `preview`, they
- * start with `RIFF` … `WEBP` and the first chunk is `VP8 `, `VP8L` or a `VP8X` whose animation flag is clear; otherwise the tile
- * shows no image, as while loading, and the look stays applicable (a preview is never part of the look).
+ * Previews, gallery CI. The submitted `preview.webp` is never published or hashed. Input: RIFF/WEBP magic bytes, at most
+ * LOOK_PREVIEW_MAX_BYTES, width and height 1-LOOK_PREVIEW_MAX_SIDE from the header (also the decoder's pixel limit), one frame only,
+ * decoder warnings are failures. Output, re-encoded by sharp pinned to an exact version in the gallery's package.json and lock file:
+ * a still WebP, no EXIF, XMP or ICC chunk, the input's size, at most LOOK_PREVIEW_MAX_BYTES (else the look fails).
  */
+
+/**
+ * Only that output is written to `previews/<sha512>.webp` and named in the index. Decoding runs in the PR check and in a deploy job
+ * that holds no secret; the signing job never decodes. The card shows a preview only when its bytes are at most
+ * LOOK_PREVIEW_MAX_BYTES, their SHA-512 equals the entry's `preview`, they start with `RIFF` … `WEBP` and the first chunk is `VP8 `,
+ * `VP8L` or a `VP8X` whose animation flag is clear; otherwise the tile shows no image, as while loading, and the look stays applicable.
+ */
+
 /** Days from `issued` to `expires` the gallery CI writes; the card only reads `expires`. */
 export const LOOK_INDEX_EXPIRY_DAYS = 180;
 
@@ -125,11 +125,10 @@ export interface LookIndexPayload {
 export const LOOK_INDEX_MAX_SEQ = 2_147_483_647;
 
 /**
- * Seq floor: `LOOK_INDEX_MIN_SEQ`, exported by src/look-kit/min-seq.ts (data, not part of this file, so a release does not change the
- * Contract), is the lowest seq this card build accepts, fetched or cached. Each card release sets it to the seq of the gallery's
- * newest `index-<seq>` release at the time the release is built (1 while the gallery has none), so a device with no cache cannot be
- * served an old signed index that a later deploy replaced. The release workflow fails when it is above that newest seq (it would
- * lock every card out) and warns when it is below. A positive safe integer, never above LOOK_INDEX_MAX_SEQ.
+ * Seq floor: `LOOK_INDEX_MIN_SEQ` in src/look-kit/min-seq.ts (data, so a release leaves this Contract alone), a positive safe integer
+ * up to LOOK_INDEX_MAX_SEQ, is the lowest seq this build accepts, fetched or cached. Each card release sets it to the seq of the gallery's
+ * newest `index-<seq>` release at build time (1 while there is none), so a device with no cache cannot get an old signed index back. The
+ * release workflow fails when it is above that newest seq (it would lock every card out) and warns when it is below.
  */
 export type LookIndexMinSeq = number;
 

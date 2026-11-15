@@ -22,13 +22,16 @@ export interface LookGalleryOpenOptions {
 }
 
 /**
- * The chunk's export. Opens the gallery as a full-screen ui-kit window (mc-ui-window appended to `host`) over the editor and
- * returns a closer. The preview is a separate magic-card element inside the window, built from applyLook(config, parsed look).config,
- * and is inert three ways: the `inert` attribute on the element, `pointer-events: none` on its wrapper, and `hass` passed through
- * inertHass (src/utils/inert-hass.ts). Pointer events alone are not enough: the modules are focusable, so Tab and Enter would still
- * run actions. The wrapper has `role="img"` and the look name as `aria-label`. Escape is handled on the gallery root with
- * preventDefault and stopPropagation, so HA's editor dialog stays open. The chunk fetches nothing until `open` is called, and `open`
- * is only called when LookGalleryAllowed() is true.
+ * Preview: a separate magic-card element inside the gallery window, built from applyLook(config, parsed look).config, and inert
+ * three ways: the `inert` attribute on the element, `pointer-events: none` on its wrapper, and `hass` passed through inertHass
+ * (src/utils/inert-hass.ts). Pointer events alone are not enough: the modules are focusable, so Tab and Enter would still run
+ * actions. The wrapper has `role="img"` and the look name as `aria-label`.
+ */
+
+/**
+ * The chunk's export. Opens the gallery as a full-screen ui-kit window (mc-ui-window appended to `host`) over the editor and returns
+ * a closer. Escape is handled on the gallery root with preventDefault and stopPropagation, so HA's editor dialog stays open. The
+ * chunk fetches nothing until `open` is called, and `open` is only called when LookGalleryAllowed() is true.
  */
 export interface LookGalleryModule {
   openLookGallery(host: HTMLElement, options: LookGalleryOpenOptions): () => void;
