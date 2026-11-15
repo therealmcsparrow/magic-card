@@ -24,11 +24,10 @@ export interface McuGetSettingsResult {
 }
 
 /**
- * Options flow, enforced by Magic Card Utils. `look_gallery` defaults to false. Turning it on opens two steps: an information step
- * that names the gallery host (GALLERY_ORIGIN in look-index), fonts.googleapis.com and fonts.gstatic.com and what each receives (IP
- * address and standard request headers), with Continue / Cancel; then a confirm step saying the switch applies to everyone, turns
- * Load Google Fonts on with it and needs a dashboard reload, with Turn on / Cancel. Only the confirm step stores anything
- * (`look_gallery: true` and `google_fonts: true`); Cancel or close on either step stores nothing, so the switch stays off.
+ * Options flow, enforced by Magic Card Utils; `look_gallery` defaults to false. On: an information step names the gallery host
+ * (GALLERY_ORIGIN in look-index), fonts.googleapis.com and fonts.gstatic.com and what each receives (IP address, standard request
+ * headers), Continue / Cancel; then a confirm step (applies to everyone, turns Load Google Fonts on, needs a dashboard reload), Turn
+ * on / Cancel. Only confirm stores (`look_gallery: true`, `google_fonts: true`); Cancel or close on either step stores nothing.
  */
 export const MCU_OPTION_LOOK_GALLERY = 'look_gallery';
 /**
