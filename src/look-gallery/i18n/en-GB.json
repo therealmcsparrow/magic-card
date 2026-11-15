@@ -50,6 +50,14 @@
     "note": "Button of the preview bar that shows or hides the details.",
     "max": 24
   },
+  "look-gallery.preview.font-off": {
+    "text": "{font} is not loaded, because Load Google Fonts is off. The preview shows it in a fallback font.",
+    "note": "Calm line in the preview bar for a look that names a Google font while Load Google Fonts is off.",
+    "max": 120,
+    "vars": {
+      "font": "The font names, joined by commas."
+    }
+  },
   "look-gallery.preview.font-ok": {
     "text": "{font} loads on every screen, because Load Google Fonts is on.",
     "note": "Calm line in the preview bar for a look that names a Google font.",

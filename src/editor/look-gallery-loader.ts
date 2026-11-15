@@ -96,14 +96,17 @@ export class LookEntry extends LitElement {
     const before = deepClone(sm.getConfig());
     const done = (): void => {
       this._open = false;
+      this._focusButton();
     };
     const mount = this.renderRoot.querySelector<HTMLElement>('#mc-look-gallery-mount') ?? this;
     openGallery(mount, {
       hass: this.hass,
       config: before,
       onKeep: (config, kept) => {
+        this._open = false;
         sm.updateConfig(deepClone(config));
         this._applied = { name: kept.name, before, kept: JSON.stringify(sm.getConfig()) };
+        this._focusButton();
       },
       onClose: done,
     }).then((close) => close || done(), done);
@@ -114,8 +117,12 @@ export class LookEntry extends LitElement {
     if (!a || !this.sm) return;
     this._applied = undefined;
     this.sm.updateConfig(deepClone(a.before));
-    this.renderRoot.querySelector<HTMLElement>('#' + LOOK_GALLERY_BUTTON_ID)?.focus();
+    this._focusButton();
   };
+
+  private _focusButton(): void {
+    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('#' + LOOK_GALLERY_BUTTON_ID)?.focus());
+  }
 
   protected render(): TemplateResult | typeof nothing {
     if (!utilsPresent()) return nothing;

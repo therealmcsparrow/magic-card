@@ -2,7 +2,7 @@ import { html, nothing, type TemplateResult } from 'lit';
 import type { LookApplyArea, LookApplySummary } from '../contracts/look-grammar';
 import type { HomeAssistant, MagicCardConfig } from '../types';
 import { applyLook } from '../look-kit/index';
-import { loadConfigFonts } from '../utils/google-fonts';
+import { googleFontsAllowed, loadConfigFonts } from '../utils/google-fonts';
 import { inertHass } from '../utils/inert-hass';
 import { t } from './i18n';
 import type { GalleryTile } from './store';
@@ -105,7 +105,7 @@ export const barTemplate = (p: Preview, v: BarView): TemplateResult => html`<div
       )}
     </ul>
     <p>${t('look-gallery.preview.changes-note')}</p>
-    ${p.tile.fonts.length ? html`<p>${t('look-gallery.preview.font-ok', { font: p.tile.fonts.join(', ') })}</p>` : nothing}
+    ${p.tile.fonts.length ? html`<p>${googleFontsAllowed() ? t('look-gallery.preview.font-ok', { font: p.tile.fonts.join(', ') }) : t('look-gallery.preview.font-off', { font: p.tile.fonts.join(', ') })}</p>` : nothing}
   </div>
   <div class="buttons">
     ${p.tile.animated

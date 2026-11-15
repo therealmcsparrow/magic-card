@@ -35,6 +35,10 @@
     "text": "Details",
     "hash": "45989de4"
   },
+  "look-gallery.preview.font-off": {
+    "text": "{font} is not loaded, because Load Google Fonts is off. The preview shows it in a fallback font.",
+    "hash": "f3a2176b"
+  },
   "look-gallery.preview.font-ok": {
     "text": "{font} loads on every screen, because Load Google Fonts is on.",
     "hash": "4bdd226b"

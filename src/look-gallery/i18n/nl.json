@@ -35,6 +35,10 @@
     "text": "Details",
     "hash": "45989de4"
   },
+  "look-gallery.preview.font-off": {
+    "text": "{font} wordt niet geladen, want Google Fonts laden staat uit. De voorvertoning gebruikt een vervangend lettertype.",
+    "hash": "f3a2176b"
+  },
   "look-gallery.preview.font-ok": {
     "text": "{font} laadt op elk scherm, want Google Fonts laden staat aan.",
     "hash": "4bdd226b"
