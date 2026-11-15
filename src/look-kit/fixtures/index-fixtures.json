@@ -1,0 +1,91 @@
+{
+  "note": "Data for tests/look-kit verify-index, accept-index and crypto. Envelopes are signed at test time by node:crypto with generated test keypairs; no private key is stored here.",
+  "groupOrderL": "7237005577332262213973186563042994240857116359379907606001950938285454250989",
+  "payload": {
+    "format": 1,
+    "seq": 7,
+    "issued": "2026-11-15T10:00:00Z",
+    "expires": "2027-05-14T10:00:00Z",
+    "looks": [
+      { "id": "calm-night", "name": "Calm night", "author": "therealmcsparrow", "licence": "CC0-1.0", "grammar": 1, "sha512": "", "bytes": 812, "preview": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "animated": false, "fonts": [] },
+      { "id": "neon-pulse", "name": "Neon pulse", "author": "someone", "licence": "MIT", "grammar": 1, "sha512": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "bytes": 1500, "preview": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "animated": true, "fonts": ["Orbitron", "Roboto"] }
+    ]
+  },
+  "payloadCases": [
+    { "name": "format 2", "set": { "format": 2 }, "code": "index_version" },
+    { "name": "format as string", "set": { "format": "1" }, "code": "index_version" },
+    { "name": "seq 0", "set": { "seq": 0 }, "code": "index_parse" },
+    { "name": "seq negative", "set": { "seq": -1 }, "code": "index_parse" },
+    { "name": "seq 1.5", "set": { "seq": 1.5 }, "code": "index_parse" },
+    { "name": "seq 2^31", "set": { "seq": 2147483648 }, "code": "index_parse" },
+    { "name": "seq 2^53 (unsafe)", "rawSeq": "9007199254740992", "code": "index_parse" },
+    { "name": "seq as string", "set": { "seq": "7" }, "code": "index_parse" },
+    { "name": "seq missing", "unset": ["seq"], "code": "index_parse" },
+    { "name": "extra payload member", "set": { "extra": 1 }, "code": "index_parse" },
+    { "name": "issued missing", "unset": ["issued"], "code": "index_parse" },
+    { "name": "expires missing", "unset": ["expires"], "code": "index_parse" },
+    { "name": "issued not ISO", "set": { "issued": "yesterday" }, "code": "index_parse" },
+    { "name": "looks not an array", "set": { "looks": {} }, "code": "index_parse" },
+    { "name": "more than 50 looks", "tooManyLooks": 51, "code": "index_parse" },
+    { "name": "duplicate id", "set": { "looks.1.id": "calm-night" }, "code": "index_parse" },
+    { "name": "duplicate sha512", "set": { "looks.1.sha512": "" }, "code": "index_parse" },
+    { "name": "entry missing animated", "unset": ["looks.0.animated"], "code": "index_parse" },
+    { "name": "entry animated not boolean", "set": { "looks.0.animated": "false" }, "code": "index_parse" },
+    { "name": "entry missing fonts", "unset": ["looks.0.fonts"], "code": "index_parse" },
+    { "name": "entry fonts not an array", "set": { "looks.0.fonts": "Roboto" }, "code": "index_parse" },
+    { "name": "entry fonts holds a number", "set": { "looks.0.fonts": [1] }, "code": "index_parse" },
+    { "name": "entry extra member", "set": { "looks.0.extra": true }, "code": "index_parse" },
+    { "name": "entry missing preview", "unset": ["looks.0.preview"], "code": "index_parse" },
+    { "name": "entry missing name", "unset": ["looks.0.name"], "code": "index_parse" },
+    { "name": "name empty", "set": { "looks.0.name": "" }, "code": "index_parse" },
+    { "name": "name of 41 code points", "set": { "looks.0.name": { "$repeat": ["a", 41] } }, "code": "index_parse" },
+    { "name": "name of 41 astral code points", "set": { "looks.0.name": { "$repeat": ["😀", 41] } }, "code": "index_parse" },
+    { "name": "name with a bidi override", "set": { "looks.0.name": "Calm ‮night" }, "code": "index_parse" },
+    { "name": "name with a control character", "set": { "looks.0.name": "Calm\u0007night" }, "code": "index_parse" },
+    { "name": "id too short", "set": { "looks.0.id": "a" }, "code": "index_parse" },
+    { "name": "id upper case", "set": { "looks.0.id": "Calm-Night" }, "code": "index_parse" },
+    { "name": "author with a space", "set": { "looks.0.author": "not valid" }, "code": "index_parse" },
+    { "name": "licence outside the open list", "set": { "looks.0.licence": "GPL-3.0" }, "code": "index_parse" },
+    { "name": "grammar not an integer", "set": { "looks.0.grammar": 1.5 }, "code": "index_parse" },
+    { "name": "sha512 of 127 characters", "set": { "looks.0.sha512": { "$repeat": ["a", 127] } }, "code": "index_parse" },
+    { "name": "sha512 upper case", "set": { "looks.0.sha512": { "$repeat": ["A", 128] } }, "code": "index_parse" },
+    { "name": "preview not 128 hex", "set": { "looks.0.preview": "abc" }, "code": "index_parse" },
+    { "name": "bytes not an integer", "set": { "looks.0.bytes": 1.5 }, "code": "index_parse" },
+    { "name": "bytes negative", "set": { "looks.0.bytes": -1 }, "code": "index_parse" }
+  ],
+  "payloadAccepted": [
+    { "name": "name of exactly 40 code points", "set": { "looks.0.name": { "$repeat": ["a", 40] } } },
+    { "name": "name of 40 astral code points (80 UTF-16 units)", "set": { "looks.0.name": { "$repeat": ["😀", 40] } } },
+    { "name": "no looks", "set": { "looks": [] } },
+    { "name": "already expired (never refuses)", "set": { "expires": "2020-01-01T00:00:00Z" } },
+    { "name": "exactly 50 looks", "tooManyLooks": 50 }
+  ],
+  "envelopeShapeCases": [
+    { "name": "empty text", "text": "" },
+    { "name": "not JSON", "text": "not json at all" },
+    { "name": "JSON array", "text": "[]" },
+    { "name": "JSON null", "text": "null" },
+    { "name": "empty object", "text": "{}" },
+    { "name": "missing sig", "text": "{\"payload\":\"e30=\"}" },
+    { "name": "missing payload", "text": "{\"sig\":\"AAAA\"}" },
+    { "name": "payload not a string", "text": "{\"payload\":1,\"sig\":\"AAAA\"}" }
+  ],
+  "sp1Vectors": [
+    { "pk": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", "msg": "", "sig": "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b" },
+    { "pk": "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "msg": "72", "sig": "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00" }
+  ],
+  "hashLengths": [0, 1, 3, 55, 56, 63, 64, 65, 111, 112, 113, 119, 120, 127, 128, 129, 239, 240, 255, 256, 257, 1000, 100000],
+  "signLengths": [0, 1, 37, 74, 111, 112, 127, 128, 129, 255, 256, 1000, 5000],
+  "smallOrderPoints": [
+    "0100000000000000000000000000000000000000000000000000000000000000",
+    "ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f",
+    "0000000000000000000000000000000000000000000000000000000000000080",
+    "0000000000000000000000000000000000000000000000000000000000000000",
+    "26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05",
+    "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a",
+    "26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85",
+    "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa",
+    "edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f",
+    "eeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"
+  ]
+}
