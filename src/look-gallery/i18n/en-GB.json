@@ -91,6 +91,14 @@
     "note": "Label before the settings a look writes in the What changes list.",
     "max": 24
   },
+  "look-gallery.preview.stage": {
+    "text": "Preview of {name}",
+    "note": "Accessible name of the card preview image while a look is previewed.",
+    "max": 60,
+    "vars": {
+      "name": "The look name."
+    }
+  },
   "look-gallery.preview.status": {
     "text": "Previewing \"{name}\". Nothing is saved yet.",
     "note": "Status line of the preview bar.",

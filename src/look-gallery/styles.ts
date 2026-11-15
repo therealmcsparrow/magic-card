@@ -276,6 +276,7 @@ export const galleryStyles = [
       flex-direction: column;
       gap: 8px;
       max-height: 40vh;
+      overflow: auto;
       margin-top: 12px;
       padding: 12px;
       border: 1px solid var(--mc-divider);
@@ -308,6 +309,14 @@ export const galleryStyles = [
       flex-wrap: wrap;
       gap: 8px;
       justify-content: flex-end;
+    }
+    .bar > * {
+      flex-shrink: 0;
+    }
+    .bar .buttons:last-child {
+      position: sticky;
+      bottom: 0;
+      background: var(--mc-surface);
     }
     .bar .buttons .grow {
       margin-right: auto;

@@ -144,10 +144,13 @@ export class MagicCardLookGallery extends LitElement {
       else this.removeAttribute('data-ink');
     }
     if (this._preview) mountPreview(this.renderRoot, this._preview, this.hass);
-    if (this._focusFirst && this._s) {
+    if (this._focusFirst && (this._s || this._failed)) {
       this._focusFirst = false;
-      this._radios()[0]?.focus();
+      (this._radios()[0] ?? this.renderRoot.querySelector<HTMLElement>('[role=alert] button'))?.focus();
     }
+    const bar = this.renderRoot.querySelector<HTMLElement>('.bar');
+    if (bar) this.style.setProperty('--bar-h', `${bar.offsetHeight}px`);
+    else this.style.removeProperty('--bar-h');
   }
 
   private _report(label: string): TemplateResult {
@@ -155,7 +158,7 @@ export class MagicCardLookGallery extends LitElement {
   }
 
   private _retry(): TemplateResult {
-    return html`<button type="button" class="btn" @click=${() => void this._load()}>${t('look-gallery.window.retry')}</button>`;
+    return html`<button type="button" class="btn btn-secondary" @click=${() => void this._load()}>${t('look-gallery.window.retry')}</button>`;
   }
 
   private _notices(s: GalleryState): TemplateResult | typeof nothing {
@@ -225,7 +228,7 @@ export class MagicCardLookGallery extends LitElement {
 
   protected render(): TemplateResult {
     return html`<div class="head">
-        <button type="button" class="btn" ?hidden=${!!this._preview} @click=${() => this.onLeave()}>${glyph('back', 18)}${t('look-gallery.window.back')}</button>
+        <button type="button" class="btn btn-secondary" ?hidden=${!!this._preview} @click=${() => this.onLeave()}>${glyph('back', 18)}${t('look-gallery.window.back')}</button>
       </div>
       <p class="intro">${t('look-gallery.window.intro')}</p>
       <div class="live" role="status">${this._s || this._failed ? nothing : t('look-gallery.window.loading')}</div>

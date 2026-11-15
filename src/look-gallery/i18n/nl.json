@@ -63,6 +63,10 @@
     "text": "Ingesteld",
     "hash": "b6f6f3ad"
   },
+  "look-gallery.preview.stage": {
+    "text": "Voorvertoning van {name}",
+    "hash": "e8371112"
+  },
   "look-gallery.preview.status": {
     "text": "Voorvertoning van \"{name}\". Er is nog niets opgeslagen.",
     "hash": "1ac1b82f"

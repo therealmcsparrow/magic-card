@@ -61,7 +61,7 @@ export const stageTemplate = (p: Preview): TemplateResult =>
   html`<div class="stage"><div
     class="card-wrap"
     role="img"
-    aria-label=${p.tile.name}
+    aria-label=${t('look-gallery.preview.stage', { name: p.tile.name })}
     style="pointer-events:none"
     @hass-action=${stop}
     @hass-more-info=${stop}
@@ -87,7 +87,7 @@ export const barTemplate = (p: Preview, v: BarView): TemplateResult => html`<div
     ? html`<div class="chips"><span class="pill warn">${t('look-gallery.tile.animated')}</span><span>${t('look-gallery.preview.anim-warn')}</span></div>`
     : nothing}
   <div class="buttons">
-    <button type="button" class="btn grow" aria-expanded=${p.open ? 'true' : 'false'} aria-controls="look-details" @click=${v.onDetails}>${t('look-gallery.preview.details')}</button>
+    <button type="button" class="btn btn-secondary grow" aria-expanded=${p.open ? 'true' : 'false'} aria-controls="look-details" @click=${v.onDetails}>${t('look-gallery.preview.details')}</button>
   </div>
   <div class="details" id="look-details" ?hidden=${!p.open}>
     <p>${t('look-gallery.preview.summary')}</p>
@@ -109,9 +109,9 @@ export const barTemplate = (p: Preview, v: BarView): TemplateResult => html`<div
   </div>
   <div class="buttons">
     ${p.tile.animated
-      ? html`<button type="button" class="btn grow" @click=${v.onPlay}>${p.paused ? t('look-gallery.preview.play') : t('look-gallery.preview.pause')}</button>`
+      ? html`<button type="button" class="btn btn-secondary grow" @click=${v.onPlay}>${p.paused ? t('look-gallery.preview.play') : t('look-gallery.preview.pause')}</button>`
       : nothing}
-    <button type="button" class="btn" @click=${v.onCancel}>${t('look-gallery.preview.cancel')}</button>
+    <button type="button" class="btn btn-secondary" @click=${v.onCancel}>${t('look-gallery.preview.cancel')}</button>
     <button type="button" class="btn btn-primary" @click=${v.onKeep}>${t('look-gallery.preview.keep')}</button>
   </div>
 </div>`;

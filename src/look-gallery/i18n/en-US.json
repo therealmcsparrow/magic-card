@@ -63,6 +63,10 @@
     "text": "Set",
     "hash": "b6f6f3ad"
   },
+  "look-gallery.preview.stage": {
+    "text": "Preview of {name}",
+    "hash": "e8371112"
+  },
   "look-gallery.preview.status": {
     "text": "Previewing \"{name}\". Nothing is saved yet.",
     "hash": "1ac1b82f"
