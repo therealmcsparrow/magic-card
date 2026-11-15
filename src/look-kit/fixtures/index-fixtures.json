@@ -7,7 +7,7 @@
     "issued": "2026-11-15T10:00:00Z",
     "expires": "2027-05-14T10:00:00Z",
     "looks": [
-      { "id": "calm-night", "name": "Calm night", "author": "therealmcsparrow", "licence": "CC0-1.0", "grammar": 1, "sha512": "", "bytes": 812, "preview": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "animated": false, "fonts": [] },
+      { "id": "calm-night", "name": "Calm night", "author": "therealmcsparrow", "licence": "CC0-1.0", "grammar": 1, "sha512": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "bytes": 812, "preview": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "animated": false, "fonts": [] },
       { "id": "neon-pulse", "name": "Neon pulse", "author": "someone", "licence": "MIT", "grammar": 1, "sha512": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "bytes": 1500, "preview": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "animated": true, "fonts": ["Orbitron", "Roboto"] }
     ]
   },
@@ -28,7 +28,7 @@
     { "name": "looks not an array", "set": { "looks": {} }, "code": "index_parse" },
     { "name": "more than 50 looks", "tooManyLooks": 51, "code": "index_parse" },
     { "name": "duplicate id", "set": { "looks.1.id": "calm-night" }, "code": "index_parse" },
-    { "name": "duplicate sha512", "set": { "looks.1.sha512": "" }, "code": "index_parse" },
+    { "name": "duplicate sha512", "set": { "looks.1.sha512": { "$repeat": ["a", 128] } }, "code": "index_parse" },
     { "name": "entry missing animated", "unset": ["looks.0.animated"], "code": "index_parse" },
     { "name": "entry animated not boolean", "set": { "looks.0.animated": "false" }, "code": "index_parse" },
     { "name": "entry missing fonts", "unset": ["looks.0.fonts"], "code": "index_parse" },
