@@ -4359,13 +4359,13 @@
     "text": "Editor laden",
     "hash": "231db777"
   },
+  "card-editor.magic-card-editor.look-gallery-turn-it-on-in-the-magic": {
+    "text": "Lookgalerij: zet die aan in de opties van Magic Card Utils.",
+    "hash": "ff2ca7a3"
+  },
   "card-editor.magic-card-editor.look-name-applied": {
     "text": "Look \"{name}\" toegepast.",
     "hash": "6d9f030b"
-  },
-  "card-editor.magic-card-editor.looks-gallery-turn-it-on-in-the-magic": {
-    "text": "Looks-galerij: zet die aan in de opties van Magic Card Utils.",
-    "hash": "6e0e8018"
   },
   "card-editor.magic-card-editor.n-removed-undo-to-get-them-back": {
     "text": "{n, plural, one {# instelling die de nieuwe module niet ondersteunt} other {# instellingen die de nieuwe module niet ondersteunen}} verwijderd. Maak ongedaan om ze terug te halen.",

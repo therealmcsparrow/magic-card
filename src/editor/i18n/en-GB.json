@@ -5917,6 +5917,11 @@
     "note": "Busy text shown while the card editor code downloads after it is opened.",
     "max": 25
   },
+  "card-editor.magic-card-editor.look-gallery-turn-it-on-in-the-magic": {
+    "text": "Look gallery: turn it on in the Magic Card Utils options.",
+    "note": "One line of help text shown in the card editor when Magic Card Utils is installed and the looks gallery is switched off.",
+    "max": 70
+  },
   "card-editor.magic-card-editor.look-name-applied": {
     "text": "Look \"{name}\" applied.",
     "note": "Banner under the Browse looks button after a look was kept. name is the look name.",
@@ -5924,11 +5929,6 @@
     "vars": {
       "name": "The display name of the look."
     }
-  },
-  "card-editor.magic-card-editor.looks-gallery-turn-it-on-in-the-magic": {
-    "text": "Looks gallery: turn it on in the Magic Card Utils options.",
-    "note": "One line of help text shown in the card editor when Magic Card Utils is installed and the looks gallery is switched off.",
-    "max": 70
   },
   "card-editor.magic-card-editor.n-removed-undo-to-get-them-back": {
     "text": "{n, plural, one {# setting it does not support was} other {# settings it does not support were}} removed. Undo to get them back.",

@@ -97,7 +97,8 @@ export class LookEntry extends LitElement {
     const done = (): void => {
       this._open = false;
     };
-    openGallery(this, {
+    const mount = this.renderRoot.querySelector<HTMLElement>('#mc-look-gallery-mount') ?? this;
+    openGallery(mount, {
       hass: this.hass,
       config: before,
       onKeep: (config, kept) => {
@@ -118,9 +119,10 @@ export class LookEntry extends LitElement {
 
   protected render(): TemplateResult | typeof nothing {
     if (!utilsPresent()) return nothing;
-    if (!lookGalleryAllowed()) return html`<p class="hint" id=${LOOK_GALLERY_HINT_ID}>${t('card-editor.magic-card-editor.looks-gallery-turn-it-on-in-the-magic')}</p>`;
+    if (!lookGalleryAllowed()) return html`<p class="hint" id=${LOOK_GALLERY_HINT_ID}>${t('card-editor.magic-card-editor.look-gallery-turn-it-on-in-the-magic')}</p>`;
     const a = this._applied;
     return html`<button type="button" class="btn btn-secondary" id=${LOOK_GALLERY_BUTTON_ID} @click=${this._openGallery}>${t('card-editor.magic-card-editor.browse-looks')}</button>
+<div id="mc-look-gallery-mount"></div>
 ${a ? html`<div class="banner" id=${LOOK_GALLERY_BANNER_ID} role="status" aria-live="polite"><span>${t('card-editor.magic-card-editor.look-name-applied', { name: a.name })}</span>
 <button type="button" class="btn btn-secondary" @click=${this._undo}>${t('card-editor.magic-card-editor.undo')}</button>
 <button type="button" class="btn btn-secondary" @click=${() => { this._applied = undefined; }}>${t('card-editor.magic-card-editor.dismiss')}</button></div>` : nothing}`;
