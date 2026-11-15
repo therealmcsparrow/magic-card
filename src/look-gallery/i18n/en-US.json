@@ -132,16 +132,8 @@
     "hash": "5e2a0177"
   },
   "look-gallery.tile.label": {
-    "text": "{name}, by {author}, {spdx}, style only, verified",
-    "hash": "3922360f"
-  },
-  "look-gallery.tile.label-anim": {
-    "text": ", animated",
-    "hash": "2ccc82e6"
-  },
-  "look-gallery.tile.label-font": {
-    "text": ", uses Google Fonts",
-    "hash": "1d479d91"
+    "text": "{name}, by {author}, {spdx}, style only, verified{fonts, select, yes {, uses Google Fonts} other {}}{animated, select, yes {, animated} other {}}",
+    "hash": "346bfffe"
   },
   "look-gallery.tile.licence": {
     "text": "License: {spdx}",

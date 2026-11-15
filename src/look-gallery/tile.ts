@@ -61,10 +61,13 @@ export interface TileView {
 }
 
 export const tileTemplate = (tile: GalleryTile, v: TileView): TemplateResult => {
-  const label =
-    t('look-gallery.tile.label', { name: tile.name, author: tile.author, spdx: tile.licence }) +
-    (tile.fonts.length ? t('look-gallery.tile.label-font') : '') +
-    (tile.animated ? t('look-gallery.tile.label-anim') : '');
+  const label = t('look-gallery.tile.label', {
+    name: tile.name,
+    author: tile.author,
+    spdx: tile.licence,
+    fonts: tile.fonts.length ? 'yes' : 'no',
+    animated: tile.animated ? 'yes' : 'no',
+  });
   // an image only from a preview that passed its check (blob URL); anything else is the no-image state
   const img = tile.previewUrl && tile.previewUrl.startsWith('blob:') ? tile.previewUrl : null;
   return html`<div
@@ -102,7 +105,7 @@ export const refusedTemplate = (refused: GalleryTile[]): TemplateResult | typeof
               <span class="code">${t('look-gallery.tile.code', { code: reason })}</span>
               <a
                 class="report"
-                href=${`${GALLERY_REPORT_URL}&title=${encodeURIComponent(`Look ${r.id}`)}`}
+                href=${`${GALLERY_REPORT_URL}&title=${encodeURIComponent(`Look ${r.id}`)}&look=${encodeURIComponent(r.id)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label=${t('look-gallery.tile.report-label', { name: r.name })}

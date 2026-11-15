@@ -183,24 +183,16 @@
     "max": 30
   },
   "look-gallery.tile.label": {
-    "text": "{name}, by {author}, {spdx}, style only, verified",
-    "note": "Accessible name of a look tile.",
-    "max": 70,
+    "text": "{name}, by {author}, {spdx}, style only, verified{fonts, select, yes {, uses Google Fonts} other {}}{animated, select, yes {, animated} other {}}",
+    "note": "Accessible name of a look tile; fonts and animated are yes or no.",
+    "max": 130,
     "vars": {
+      "animated": "yes when the look is animated, otherwise no.",
       "author": "The look author.",
+      "fonts": "yes when the look names a Google font, otherwise no.",
       "name": "The look name.",
       "spdx": "The licence identifier."
     }
-  },
-  "look-gallery.tile.label-anim": {
-    "text": ", animated",
-    "note": "Added to the accessible name of a tile whose look is animated.",
-    "max": 24
-  },
-  "look-gallery.tile.label-font": {
-    "text": ", uses Google Fonts",
-    "note": "Added to the accessible name of a tile whose look names a Google font.",
-    "max": 30
   },
   "look-gallery.tile.licence": {
     "text": "Licence: {spdx}",

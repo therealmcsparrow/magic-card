@@ -5,7 +5,7 @@ import type { HomeAssistant, MagicCardConfig } from '../types';
 import { glyph, notice } from '../ui-kit';
 import { t } from './i18n';
 import { barTemplate, buildPreview, mountPreview, stageTemplate, type Preview } from './preview';
-import { loadGallery, type GalleryState, type GalleryTile } from './store';
+import { loadGallery, revokePreviews, type GalleryState, type GalleryTile } from './store';
 import { galleryStyles, resolvedColour, selectedBorder } from './styles';
 import { indexReason, reasonText, refusedTemplate, tileTemplate } from './tile';
 
@@ -68,6 +68,7 @@ export class MagicCardLookGallery extends LitElement {
 
   private async _load(): Promise<void> {
     const run = ++this._run;
+    if (this._s) revokePreviews(this._s);
     this._s = null;
     this._failed = false;
     this._preview = null;

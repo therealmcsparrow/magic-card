@@ -55,7 +55,8 @@ export const openLookGallery: LookGalleryModule['openLookGallery'] = (host: HTML
   win.addEventListener('keydown', onKey, true);
   win.addEventListener('mc-window-close', onClose);
   win.append(gallery);
-  host.append(win);
+  // a host with a shadow root takes the window inside it, since its light DOM is not drawn without a slot
+  (host.shadowRoot ?? host).append(win);
   win.show();
 
   return onClose;

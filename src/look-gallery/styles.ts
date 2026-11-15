@@ -67,7 +67,7 @@ export const galleryStyles = [
       display: block;
       color: var(--mc-text);
       font-family: var(--mc-font, inherit);
-      padding-block-end: 8px;
+      padding-bottom: 8px;
     }
     [hidden] {
       display: none !important;
@@ -88,18 +88,18 @@ export const galleryStyles = [
       display: none;
     }
     .live {
-      margin-block: 8px;
+      margin: 8px 0;
       font-size: 0.875rem;
     }
     .notices {
       display: grid;
       gap: 8px;
-      margin-block-end: 12px;
+      margin-bottom: 12px;
     }
     .stage {
       display: grid;
       justify-items: center;
-      margin-block-end: 12px;
+      margin-bottom: 12px;
       padding: 12px;
       border: 1px solid var(--mc-divider);
       border-radius: var(--mc-radius-lg, 12px);
@@ -114,7 +114,7 @@ export const galleryStyles = [
       grid-template-columns: repeat(auto-fill, minmax(min(168px, 100%), 1fr));
       gap: 8px;
       padding: 4px;
-      scroll-padding-block-end: var(--bar-h, 0px);
+      scroll-padding-bottom: var(--bar-h, 0px);
     }
     .tile {
       position: relative;
@@ -156,8 +156,9 @@ export const galleryStyles = [
     }
     .check {
       position: absolute;
-      inset-block-start: 6px;
-      inset-inline-end: 6px;
+      top: 6px;
+      right: 6px;
+      inset-inline: auto 6px;
       display: grid;
       place-items: center;
       width: 20px;
@@ -173,10 +174,16 @@ export const galleryStyles = [
       display: grid;
       place-items: center;
       width: 100%;
-      aspect-ratio: 4 / 3;
+      height: 126px;
       border-radius: 6px;
       background: var(--mc-canvas);
       overflow: hidden;
+    }
+    @supports (aspect-ratio: 4 / 3) {
+      .thumb {
+        height: auto;
+        aspect-ratio: 4 / 3;
+      }
     }
     .thumb img {
       width: 100%;
@@ -264,12 +271,12 @@ export const galleryStyles = [
     }
     .bar {
       position: sticky;
-      inset-block-end: 0;
+      bottom: 0;
       display: flex;
       flex-direction: column;
       gap: 8px;
       max-height: 40vh;
-      margin-block-start: 12px;
+      margin-top: 12px;
       padding: 12px;
       border: 1px solid var(--mc-divider);
       border-radius: var(--mc-radius-lg, 12px);
@@ -293,7 +300,8 @@ export const galleryStyles = [
       margin: 0;
     }
     .bar .details ul {
-      padding-inline-start: 18px;
+      padding: 0 0 0 18px;
+      padding-inline: 18px 0;
     }
     .bar .buttons {
       display: flex;
@@ -302,7 +310,8 @@ export const galleryStyles = [
       justify-content: flex-end;
     }
     .bar .buttons .grow {
-      margin-inline-end: auto;
+      margin-right: auto;
+      margin-inline: 0 auto;
     }
     @media (max-width: 599px) {
       .bar .buttons .btn {

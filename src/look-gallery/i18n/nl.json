@@ -132,16 +132,8 @@
     "hash": "5e2a0177"
   },
   "look-gallery.tile.label": {
-    "text": "{name}, door {author}, {spdx}, alleen stijl, gecontroleerd",
-    "hash": "3922360f"
-  },
-  "look-gallery.tile.label-anim": {
-    "text": ", geanimeerd",
-    "hash": "2ccc82e6"
-  },
-  "look-gallery.tile.label-font": {
-    "text": ", gebruikt Google Fonts",
-    "hash": "1d479d91"
+    "text": "{name}, door {author}, {spdx}, alleen stijl, gecontroleerd{fonts, select, yes {, gebruikt Google Fonts} other {}}{animated, select, yes {, geanimeerd} other {}}",
+    "hash": "346bfffe"
   },
   "look-gallery.tile.licence": {
     "text": "Licentie: {spdx}",
