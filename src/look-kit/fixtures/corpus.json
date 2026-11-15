@@ -3871,5 +3871,35 @@
    "animated": false,
    "fonts": []
   }
+ },
+ {
+  "name": "animated-css-webkit-prefix",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"-webkit-animation: spin 2s infinite;\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "animated-css-moz-prefix-name",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"-moz-animation-name: spin;\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": true,
+   "fonts": []
+  }
+ },
+ {
+  "name": "not-animated-css-prefixed-other",
+  "text": "{\"grammar\":1,\"card\":{\"css\":\"-webkit-box-shadow: 0 0 4px #000;\"}}",
+  "expect": {
+   "ok": true,
+   "dropped": [],
+   "animated": false,
+   "fonts": []
+  }
  }
 ]
