@@ -13,8 +13,8 @@ export const GALLERY_TAG = 'mc-look-gallery';
 
 /** The gate, read on demand: both Magic Card Utils switches on. */
 export const galleryAllowed = (): boolean => {
-  const s = (window as unknown as { magicCardUtils?: { settings?: { lookGallery?: boolean; googleFonts?: boolean } } }).magicCardUtils?.settings;
-  return s?.lookGallery === true && s?.googleFonts === true;
+  const s = (window as unknown as { magicCardUtils?: { settings?: { lookGallery?: boolean } } }).magicCardUtils?.settings;
+  return s?.lookGallery === true;
 };
 
 const KEYS = ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End'];

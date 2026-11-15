@@ -12,7 +12,7 @@ import { t } from './i18n';
 // The editor's side of the look gallery (contracts look-gallery 1.0.0, mcu-settings 1.0.0): the gate, and the one place the
 // lazy chunk is imported. Nothing is fetched until openGallery runs.
 
-type Settings = { lookGallery?: unknown; googleFonts?: unknown };
+type Settings = { lookGallery?: unknown };
 const settings = (): Settings | undefined => {
   const s = (window as unknown as { magicCardUtils?: { settings?: unknown } }).magicCardUtils?.settings;
   return s && typeof s === 'object' ? (s as Settings) : undefined;
@@ -24,7 +24,7 @@ export const utilsPresent = (): boolean => settings() !== undefined;
 /** The gate: both Magic Card Utils switches are on. Read on every call. */
 export const lookGalleryAllowed = (): boolean => {
   const s = settings();
-  return s?.lookGallery === true && s?.googleFonts === true;
+  return s?.lookGallery === true;
 };
 
 const realImport = (): Promise<LookGalleryModule> => import(/* webpackChunkName: "look-gallery" */ '../look-gallery/index');
