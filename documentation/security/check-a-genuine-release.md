@@ -46,7 +46,7 @@ This check is for people who already know GitHub and the command line. It needs 
 
    Expected result: the same success message, now for the SBOM statement about `magic-card.js`.
 
-6. If you install through HACS, check the zip HACS downloads as well. Download `magic-card.zip` from the release and run:
+6. The release also carries `magic-card.zip` as an extra asset. HACS installs `magic-card.js`, so this check is optional. To check the zip, download it from the release and run:
 
    ```
    gh attestation verify magic-card.zip --repo therealmcsparrow/magic-card --signer-workflow therealmcsparrow/magic-card/.github/workflows/release.yml
