@@ -13,6 +13,15 @@ export type LookKey = (typeof LOOK_KEYS)[number];
 export const FONT_KEYS = ['font_family', 'label_font_family', 'tab_font_family'] as const;
 export type FontKey = (typeof FONT_KEYS)[number];
 
+/**
+ * Characters in look and font names that are printed as one space: C0 and C1 controls, and the bidi controls (ALM U+061C,
+ * LRM U+200E, RLM U+200F, the embeddings and overrides U+202A-U+202E, the isolates U+2066-U+2069). A bidi control would make a
+ * pasted block read differently from its bytes; right-to-left names display correctly without them. Use with replace() only:
+ * the g flag makes test() and exec() stateful.
+ */
+// eslint-disable-next-line no-control-regex
+export const NAME_REPLACED = /[\u{0}-\u{1F}\u{7F}-\u{9F}\u{61C}\u{200E}\u{200F}\u{202A}-\u{202E}\u{2066}-\u{2069}]/gu;
+
 /** Nodes the config walk visits at most (objects and arrays together); the rest of a larger config is not read. */
 export const CONFIG_WALK_BUDGET = 5000;
 
@@ -84,8 +93,8 @@ export interface SnapshotInput {
  * - utils: utils not an object -> installed false. An object whose apiVersion is not UTILS_PROVIDER_API -> version null. Else
  *   settings.version when it passes VERSION_RE, else null.
  * - looks and fonts: walk the config (objects and arrays, at most CONFIG_WALK_BUDGET nodes); for each own LOOK_KEYS or FONT_KEYS
- *   key with a string value, replace every character in U+0000-U+001F and U+007F-U+009F with one space, trim, drop empty
- *   results, then de-duplicate and sort. Names are otherwise kept exactly as written.
+ *   key with a string value, replace every character NAME_REPLACED matches with one space, trim, drop empty results, then
+ *   de-duplicate and sort. Names are otherwise kept exactly as written.
  * - firstPaint: every needs entry whose check returns true; idle maps to pending.
  * - onClick: every onDemand name whose state is not idle.
  * - transport: secure true -> secure, false -> not-secure, else null.
