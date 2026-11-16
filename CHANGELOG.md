@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.11.05-beta.3 (2026-11-16)
 
 ### Changed
 -   **Releases.** Pre-releases are now created as drafts and published once all files are attached, so releases keep working when GitHub's immutable releases are turned on.
