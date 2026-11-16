@@ -11,8 +11,8 @@ export interface McuSettings {
   /** The "Look gallery" switch. Absent on Utils releases before the gallery; absent counts as off. */
   lookGallery?: boolean;
   /**
-   * The installed Utils version, the `version` of its manifest.json. Absent on Utils releases before 1.1.0 and when the read
-   * failed; consumers check it against diagnostics VERSION_RE and treat anything else as unknown.
+   * The installed Utils version, the `version` of its manifest.json. Absent on Utils releases that predate contract 1.1.0 and
+   * when the read failed; consumers check it against diagnostics VERSION_RE and treat anything else as unknown.
    */
   version?: string;
 }
@@ -26,6 +26,12 @@ export interface McuGetSettingsResult {
   google_fonts: boolean;
   look_gallery: boolean;
   theme_fonts: Record<string, { name: string; weights: number[] }[]>;
+  /**
+   * The `version` of the integration's manifest.json, read once in the executor and cached; absent when the read failed. Readable
+   * by every signed-in user, who already sees it in the provider's `?v=` script URL. The provider copies it to McuSettings.version
+   * only when it is a string.
+   */
+  version?: string;
 }
 
 /**

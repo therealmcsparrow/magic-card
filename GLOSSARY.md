@@ -17,3 +17,6 @@ Off hint
 
 Refused tile
 : A gallery tile drawn hatched and not applicable, because its look failed the hash or grammar check. It shows a fixed-code reason in text and a Report link to the gallery repository's issues.
+
+Setup block
+: The plain-text block the Copy my setup button copies, versioned by its first line `setup v1` (src/contracts/setup-block.ts). Its facts come only from the diagnostics snapshot allow-list (src/contracts/diagnostics.ts).
