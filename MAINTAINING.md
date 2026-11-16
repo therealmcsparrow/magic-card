@@ -10,19 +10,19 @@ Which screen you use depends on your Home Assistant version. Each step says whic
 
 **HACS screens (Home Assistant before 2026.11)**
 
-1. (HACS screens) In the sidebar, open **HACS**. (unverified)
-2. (HACS screens) Find **Magic Card** in the list and open it. (unverified)
-3. (HACS screens) Open the three dots at the top right and choose **Redownload**. (unverified)
-4. (HACS screens) In the version list, pick the last version that worked and confirm. (unverified)
-5. (HACS screens) Restart Home Assistant, then hard refresh the browser with Ctrl+Shift+R. (unverified)
+1. (HACS screens) In the sidebar, open **HACS**.
+2. (HACS screens) Find **Magic Card** in the list and open it.
+3. (HACS screens) Open the three dots at the top right and choose **Redownload**.
+4. (HACS screens) In the version list, pick the last version that worked and confirm.
+5. (HACS screens) Restart Home Assistant, then hard refresh the browser with Ctrl+Shift+R.
 
 **Settings > Marketplace (Home Assistant 2026.11 and later)**
 
-1. (Marketplace) Go to **Settings > Marketplace**. (unverified)
-2. (Marketplace) Find **Magic Card** on the **Installed** tab and open it. (unverified)
-3. (Marketplace) Open the three dots at the top right and choose **Install another version**. (unverified)
-4. (Marketplace) In the version list, pick the last version that worked and confirm. (unverified)
-5. (Marketplace) Restart Home Assistant, then hard refresh the browser with Ctrl+Shift+R. (unverified)
+1. (Marketplace) Go to **Settings > Marketplace**.
+2. (Marketplace) Find **Magic Card** on the **Installed** tab and open it.
+3. (Marketplace) Open the three dots at the top right and choose **Install another version**.
+4. (Marketplace) In the version list, pick the last version that worked and confirm.
+5. (Marketplace) Restart Home Assistant, then hard refresh the browser with Ctrl+Shift+R.
 
 The Marketplace lists the newest 30 releases. A pre-release only appears after you choose **Include pre-releases** in the same menu. In HACS, turn on **Show beta versions** instead.
 
@@ -32,8 +32,8 @@ After the restart your cards should work again. If they do not, open an issue an
 
 The installer and the browser each tell you something.
 
-1. (HACS screens) Open **HACS**, then **Magic Card**. The installed version is shown on its page. (unverified)
-2. (Marketplace) Open **Settings > Marketplace**, then **Magic Card**. The installed version is shown on its page. (unverified)
+1. (HACS screens) Open **HACS**, then **Magic Card**. The installed version is shown on its page.
+2. (Marketplace) Open **Settings > Marketplace**, then **Magic Card**. The installed version is shown on its page.
 3. In any browser, open the console and look for the line `MAGIC-CARD v<version>`. This is the version the browser has loaded. It must match the version you installed. If it does not, hard refresh with Ctrl+Shift+R and look again.
 
 ## How to stay on one version
@@ -41,8 +41,8 @@ The installer and the browser each tell you something.
 Install the version you want with the steps under [My card broke, what now?](#my-card-broke-what-now). Then stop Home Assistant from offering the next update.
 
 1. Open **Settings > System > Updates**.
-2. Find the Magic Card update and open it. (unverified)
-3. Choose **Skip**. (unverified)
+2. Find the Magic Card update and open it.
+3. Choose **Skip**.
 
 Home Assistant then hides that update until a newer one comes out. Updating later is the same as any other update: open the update and install it.
 
