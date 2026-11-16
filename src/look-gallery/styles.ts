@@ -114,9 +114,10 @@ export const galleryStyles = [
       grid-template-columns: repeat(auto-fill, minmax(min(168px, 100%), 1fr));
       gap: 8px;
       padding: 4px;
-      scroll-padding-bottom: var(--bar-h, 0px);
     }
     .lg-tile {
+      /* The window body scrolls, not the grid, so the offset sits on the tile: the sticky bar plus the body's 16px bottom padding. */
+      scroll-margin-bottom: calc(var(--bar-h, 0px) + 16px);
       position: relative;
       display: grid;
       align-content: start;
@@ -250,6 +251,8 @@ export const galleryStyles = [
       border: 1px dashed var(--mc-divider);
       border-radius: var(--mc-radius);
       background: var(--mc-surface);
+      /* 16px is the window body's bottom padding that the sticky bar rests above. */
+      scroll-margin-bottom: calc(var(--bar-h, 0px) + 16px);
     }
     .reason {
       display: flex;
@@ -265,6 +268,7 @@ export const galleryStyles = [
       opacity: 0.8;
     }
     a.report {
+      scroll-margin-bottom: calc(var(--bar-h, 0px) + 16px);
       color: var(--mc-accent-ink);
       font-size: 0.8125rem;
       overflow-wrap: anywhere;
