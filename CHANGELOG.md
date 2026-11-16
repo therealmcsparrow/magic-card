@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.11.05-beta.2 (2026-11-16)
 
 ### Fixed
 -   **Looks gallery.** The link on the last not-available look now stays clear of the preview bar when you tab to it.
