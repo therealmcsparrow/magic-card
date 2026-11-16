@@ -128,6 +128,7 @@ jobs:
           sbom-path: sbom.cdx.json
 
       - name: Create Release
+        id: release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           name: ${{ steps.title.outputs.name }}
@@ -147,3 +148,14 @@ jobs:
           # a tag with a hyphen (2026.10.11-beta.1, -rc.1) is a real pre-release and never takes the Latest badge
           prerelease: ${{ contains(github.ref_name, '-') }}
           make_latest: ${{ !contains(github.ref_name, '-') }}
+          # with immutable releases a published release takes no more assets, so a pre-release starts as a draft
+          # and is published below once every file is on it; a stable release is drafted and published by the action itself
+          draft: ${{ contains(github.ref_name, '-') }}
+
+      - name: Publish the pre-release
+        if: contains(github.ref_name, '-')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RELEASE_ID: ${{ steps.release.outputs.id }}
+        run: gh api --method PATCH "repos/$REPO/releases/$RELEASE_ID" -F draft=false -F prerelease=true -f make_latest=false --silent
