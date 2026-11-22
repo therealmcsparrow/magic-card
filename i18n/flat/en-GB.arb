@@ -34445,6 +34445,12 @@
     "x-max-length": 70,
     "x-source-hash": "bd93b912"
   },
+  "mcu-panel.panel.also-remove-file": "Also remove {file} from the themes folder",
+  "@mcu-panel.panel.also-remove-file": {
+    "description": "Checkbox in the delete question of a theme. {file} is the path of the theme file, like /config/themes/ocean.yaml. {file}: The path of the theme file. Max 90 characters.",
+    "x-max-length": 90,
+    "x-source-hash": "775ab119"
+  },
   "mcu-panel.panel.animation": "Animation",
   "@mcu-panel.panel.animation": {
     "description": "Type shown under the name of the selected animation in the details pane. Max 15 characters.",
@@ -34663,6 +34669,12 @@
     "x-max-length": 25,
     "x-source-hash": "8727e2ba"
   },
+  "mcu-panel.panel.delete-file-question": "Delete {file}? Home Assistant no longer applies this theme. This action cannot be undone.",
+  "@mcu-panel.panel.delete-file-question": {
+    "description": "Question when deleting a theme that is only a file in /config/themes. {file} is its path. {file}: The path of the theme file. Max 120 characters.",
+    "x-max-length": 120,
+    "x-source-hash": "f33f0168"
+  },
   "mcu-panel.panel.delete-name": "Delete {name}",
   "@mcu-panel.panel.delete-name": {
     "description": "Screen reader label of the delete button on a template row. {name} is the template name. {name}: The value that replaces name in the text. Max 25 characters.",
@@ -34842,12 +34854,6 @@
     "description": "Error in the template preview when the card could not be drawn and gave no message of its own. Max 45 characters.",
     "x-max-length": 45,
     "x-source-hash": "aeade066"
-  },
-  "mcu-panel.panel.file": "File",
-  "@mcu-panel.panel.file": {
-    "description": "Label of the field that shows where a theme file is stored. Max 15 characters.",
-    "x-max-length": 15,
-    "x-source-hash": "50009ce1"
   },
   "mcu-panel.panel.font-host-contact": "To draw the fonts, your browser asks {hosts} for them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent.",
   "@mcu-panel.panel.font-host-contact": {
@@ -35573,17 +35579,53 @@
     "x-max-length": 15,
     "x-source-hash": "efb52e71"
   },
-  "mcu-panel.panel.theme-files-off": "Saving theme files is off, so every theme is read-only. An administrator can turn on Theme files in Settings > Devices & services > Magic Card Utils > Configure.",
+  "mcu-panel.panel.theme-files-off": "Themes are saved in Magic Card Utils. Home Assistant applies a theme only once it is in the themes folder, and saving there is off. An administrator can turn on Allow themes to be saved in the themes folder in Settings > Devices & services > Magic Card Utils > Configure.",
   "@mcu-panel.panel.theme-files-off": {
-    "description": "Notice in the Themes tab and the theme details while the Theme files option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them. Max 220 characters.",
-    "x-max-length": 220,
-    "x-source-hash": "ad2877f6"
+    "description": "Notice in the Themes tab while the option that lets the theme editor save to /config/themes is off. Use the option's own name and the Settings path as Home Assistant shows them. Max 300 characters.",
+    "x-max-length": 300,
+    "x-source-hash": "44d5449c"
+  },
+  "mcu-panel.panel.theme-folder-current": "In the themes folder",
+  "@mcu-panel.panel.theme-folder-current": {
+    "description": "Status of a theme whose file in /config/themes matches the saved theme. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "c7223d1a"
+  },
+  "mcu-panel.panel.theme-folder-foreign": "Another file in the themes folder uses this name",
+  "@mcu-panel.panel.theme-folder-foreign": {
+    "description": "Status of a saved theme whose name is taken by a theme file Magic Card did not write, so it cannot be saved to the themes folder. Max 60 characters.",
+    "x-max-length": 60,
+    "x-source-hash": "93340bea"
+  },
+  "mcu-panel.panel.theme-folder-none": "Not in the themes folder",
+  "@mcu-panel.panel.theme-folder-none": {
+    "description": "Status of a theme saved in Magic Card Utils that has no file in /config/themes yet, so Home Assistant does not apply it. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "b018f160"
+  },
+  "mcu-panel.panel.theme-folder-only": "Only in the themes folder",
+  "@mcu-panel.panel.theme-folder-only": {
+    "description": "Status of a theme file Magic Card wrote that is not saved in Magic Card Utils yet. Saving it in the editor imports it. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "1301009b"
+  },
+  "mcu-panel.panel.theme-folder-outdated": "Themes folder copy is older",
+  "@mcu-panel.panel.theme-folder-outdated": {
+    "description": "Status of a theme changed since it was last saved to /config/themes. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "75196545"
   },
   "mcu-panel.panel.themes": "Themes",
   "@mcu-panel.panel.themes": {
     "description": "Label of the Themes tab in the panel tab bar. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "43ae3265"
+  },
+  "mcu-panel.panel.themes-folder": "Themes folder",
+  "@mcu-panel.panel.themes-folder": {
+    "description": "Label of the row in the theme details that says whether the theme is in /config/themes. Max 25 characters.",
+    "x-max-length": 25,
+    "x-source-hash": "fbbbad6c"
   },
   "mcu-panel.panel.this-magic-card-utils-version-doesn-t": "This Magic Card Utils version doesn't match the theme editor in Magic Card. Update both to their latest versions.",
   "@mcu-panel.panel.this-magic-card-utils-version-doesn-t": {
@@ -42273,6 +42315,18 @@
     "x-max-length": 105,
     "x-source-hash": "d002c3e8"
   },
+  "theme-editor.editor-view.also-remove-file-from-the-themes-folder": "Also remove {file} from the themes folder",
+  "@theme-editor.editor-view.also-remove-file-from-the-themes-folder": {
+    "description": "Checkbox in the delete confirmation. Screens using the theme switch to the default theme when the file goes. {file}: The file path, such as /config/themes/my_theme.yaml; stays untranslated. Max 100 characters.",
+    "x-max-length": 100,
+    "x-source-hash": "775ab119"
+  },
+  "theme-editor.editor-view.another-file-in-the-themes-folder-uses": "Another file in the themes folder uses this name",
+  "@theme-editor.editor-view.another-file-in-the-themes-folder-uses": {
+    "description": "Where a theme stands: a theme file Magic Card did not write uses the same name, so this theme cannot be saved there. Max 60 characters.",
+    "x-max-length": 60,
+    "x-source-hash": "93340bea"
+  },
   "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).",
   "@theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
     "description": "Help text for trying a theme without saving. {mode} is 'dark' or 'light': the colour mode of the current Home Assistant profile. {mode}: The value that replaces mode in the text. Max 150 characters.",
@@ -42535,6 +42589,12 @@
     "x-max-length": 175,
     "x-source-hash": "5419e14f"
   },
+  "theme-editor.editor-view.in-the-themes-folder": "Also in the themes folder",
+  "@theme-editor.editor-view.in-the-themes-folder": {
+    "description": "Where a theme stands: stored in Magic Card Utils and the same copy is in /config/themes. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "4f266ae6"
+  },
   "theme-editor.editor-view.living-room": "Living room",
   "@theme-editor.editor-view.living-room": {
     "description": "Sample room name in the preview, standing in for the user's own area names. Max 20 characters.",
@@ -42564,6 +42624,12 @@
     "description": "Toast after a variable is moved into the Shared set. {label} is the variable's display label, for example 'Primary colour'. Shared, Light and Dark are tab names. {label}: The value that replaces label in the text. Max 85 characters.",
     "x-max-length": 85,
     "x-source-hash": "4a8e4025"
+  },
+  "theme-editor.editor-view.name-changed-since-you-opened-it": "{name} changed since you opened it",
+  "@theme-editor.editor-view.name-changed-since-you-opened-it": {
+    "description": "Banner title when someone else saved the same theme in the meantime. {name}: The theme name. Max 80 characters.",
+    "x-max-length": 80,
+    "x-source-hash": "eed11c5a"
   },
   "theme-editor.editor-view.name-yaml-changed-on-disk": "{name}.yaml changed on disk",
   "@theme-editor.editor-view.name-yaml-changed-on-disk": {
@@ -42601,6 +42667,12 @@
     "x-max-length": 65,
     "x-source-hash": "ae112c86"
   },
+  "theme-editor.editor-view.not-in-the-themes-folder": "Not in the themes folder",
+  "@theme-editor.editor-view.not-in-the-themes-folder": {
+    "description": "Where a theme stands: stored in Magic Card Utils only, Home Assistant does not load it yet. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "b018f160"
+  },
   "theme-editor.editor-view.now-using-name-for-your-user": "Now using {name} for your user.",
   "@theme-editor.editor-view.now-using-name-for-your-user": {
     "description": "Toast after the theme is set in the user's Home Assistant profile. {name} is the theme name. {name}: The value that replaces name in the text. Max 50 characters.",
@@ -42624,6 +42696,12 @@
     "description": "Filter toggle that lists only variables whose value differs from the default. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "d836aea0"
+  },
+  "theme-editor.editor-view.only-in-the-themes-folder": "Only in the themes folder",
+  "@theme-editor.editor-view.only-in-the-themes-folder": {
+    "description": "Where a theme stands: it is a file in /config/themes that Magic Card Utils has not stored yet. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "1301009b"
   },
   "theme-editor.editor-view.open-preview": "Open preview",
   "@theme-editor.editor-view.open-preview": {
@@ -42709,6 +42787,12 @@
     "x-max-length": 35,
     "x-source-hash": "bd12a457"
   },
+  "theme-editor.editor-view.save-to-themes-folder": "Save to themes folder",
+  "@theme-editor.editor-view.save-to-themes-folder": {
+    "description": "Menu item and button: also write the theme to /config/themes so Home Assistant loads it. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "f871e1e3"
+  },
   "theme-editor.editor-view.save-without-it": "Save without it",
   "@theme-editor.editor-view.save-without-it": {
     "description": "Button in the unadded-variable warning that saves the theme and leaves the typed text out. Max 25 characters.",
@@ -42732,6 +42816,12 @@
     "description": "Success toast after saving and reloading. {name} is the theme name. {name}: The value that replaces name in the text. Max 120 characters.",
     "x-max-length": 120,
     "x-source-hash": "cad4ee18"
+  },
+  "theme-editor.editor-view.saved-name-in-magic-card-utils": "Saved {name} in Magic Card Utils",
+  "@theme-editor.editor-view.saved-name-in-magic-card-utils": {
+    "description": "Status after a save that did not write a file to /config/themes. {name}: The theme name. Max 80 characters.",
+    "x-max-length": 80,
+    "x-source-hash": "88e8ce8a"
   },
   "theme-editor.editor-view.saved-time": "Saved {time}",
   "@theme-editor.editor-view.saved-time": {
@@ -42847,11 +42937,23 @@
     "x-max-length": 220,
     "x-source-hash": "fb2589c1"
   },
+  "theme-editor.editor-view.theme-folder-off-message": "Saving to the themes folder is off. Your theme is still saved in Magic Card Utils. An administrator can turn on Allow themes to be saved in the themes folder in Settings > Devices & services > Magic Card Utils > Configure.",
+  "@theme-editor.editor-view.theme-folder-off-message": {
+    "description": "Help line and failed-publish message while the folder option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them. Max 240 characters.",
+    "x-max-length": 240,
+    "x-source-hash": "3f3849a6"
+  },
   "theme-editor.editor-view.themes": "Themes",
   "@theme-editor.editor-view.themes": {
     "description": "Breadcrumb link in the editor that goes back to the list of themes. Same English as the start view heading. Max 10 characters.",
     "x-max-length": 10,
     "x-source-hash": "43ae3265"
+  },
+  "theme-editor.editor-view.themes-folder-copy-is-older": "Themes folder copy is older",
+  "@theme-editor.editor-view.themes-folder-copy-is-older": {
+    "description": "Where a theme stands: the copy in /config/themes is older than the one stored in Magic Card Utils. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "75196545"
   },
   "theme-editor.editor-view.this-editor-only-changes-its-own-files": "This editor only changes theme files it wrote itself. Save the theme under another name.",
   "@theme-editor.editor-view.this-editor-only-changes-its-own-files": {
@@ -42870,6 +42972,12 @@
     "description": "Body of the delete confirmation in the editor. {file} is the theme file name, such as my_theme.yaml; the path stays untranslated. {file}: The value that replaces file in the text. Max 160 characters.",
     "x-max-length": 160,
     "x-source-hash": "728badac"
+  },
+  "theme-editor.editor-view.this-removes-name-from-magic-card-utils": "This removes {name} from Magic Card Utils.",
+  "@theme-editor.editor-view.this-removes-name-from-magic-card-utils": {
+    "description": "Body of the delete confirmation for a theme stored in Magic Card Utils. {name}: The theme name. Max 100 characters.",
+    "x-max-length": 100,
+    "x-source-hash": "d5fcf1b2"
   },
   "theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": "This theme is read only. Copy it to edit.",
   "@theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": {
@@ -45727,6 +45835,12 @@
     "x-max-length": 20,
     "x-source-hash": "a9734a0f"
   },
+  "theme-editor.start-view.also-remove-file-from-the-themes-folder": "Also remove {file} from the themes folder",
+  "@theme-editor.start-view.also-remove-file-from-the-themes-folder": {
+    "description": "Checkbox in the delete confirmation. Screens using the theme switch to the default theme when the file goes. {file}: The file path, such as /config/themes/my_theme.yaml; stays untranslated. Max 100 characters.",
+    "x-max-length": 100,
+    "x-source-hash": "775ab119"
+  },
   "theme-editor.start-view.an-empty-theme-add-only-the-variables": "An empty theme. Add only the variables you want to change.",
   "@theme-editor.start-view.an-empty-theme-add-only-the-variables": {
     "description": "Description of the blank theme option on the start screen. Says you add only the variables you want to change. Max 95 characters.",
@@ -45738,6 +45852,12 @@
     "description": "Option label on the start screen for copying a theme that is already installed in Home Assistant. Max 30 characters.",
     "x-max-length": 30,
     "x-source-hash": "416ce064"
+  },
+  "theme-editor.start-view.another-file-in-the-themes-folder-uses": "Another file in the themes folder uses this name",
+  "@theme-editor.start-view.another-file-in-the-themes-folder-uses": {
+    "description": "Where a theme stands: a theme file Magic Card did not write uses the same name, so this theme cannot be saved there. Max 60 characters.",
+    "x-max-length": 60,
+    "x-source-hash": "93340bea"
   },
   "theme-editor.start-view.blank": "Blank",
   "@theme-editor.start-view.blank": {
@@ -45891,6 +46011,12 @@
     "x-max-length": 10,
     "x-source-hash": "2cff9baa"
   },
+  "theme-editor.start-view.in-the-themes-folder": "Also in the themes folder",
+  "@theme-editor.start-view.in-the-themes-folder": {
+    "description": "Where a theme stands: stored in Magic Card Utils and the same copy is in /config/themes. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "4f266ae6"
+  },
   "theme-editor.start-view.installed-theme": "Installed theme",
   "@theme-editor.start-view.installed-theme": {
     "description": "Singular option for beginning a new theme from a theme already installed in Home Assistant. Max 25 characters.",
@@ -45990,6 +46116,18 @@
     "description": "Heading of the empty state on the start screen when no themes are installed. Max 25 characters.",
     "x-max-length": 25,
     "x-source-hash": "dc3cdada"
+  },
+  "theme-editor.start-view.not-in-the-themes-folder": "Not in the themes folder",
+  "@theme-editor.start-view.not-in-the-themes-folder": {
+    "description": "Where a theme stands: stored in Magic Card Utils only, Home Assistant does not load it yet. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "b018f160"
+  },
+  "theme-editor.start-view.only-in-the-themes-folder": "Only in the themes folder",
+  "@theme-editor.start-view.only-in-the-themes-folder": {
+    "description": "Where a theme stands: it is a file in /config/themes that Magic Card Utils has not stored yet. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "1301009b"
   },
   "theme-editor.start-view.pick-a-preset-to-start-from": "Pick a preset to start from",
   "@theme-editor.start-view.pick-a-preset-to-start-from": {
@@ -46099,11 +46237,23 @@
     "x-max-length": 240,
     "x-source-hash": "ad39f48e"
   },
+  "theme-editor.start-view.theme-folder-off-notice": "Saving to the themes folder is off. You can still create and edit themes; they are saved in Magic Card Utils. An administrator can turn on Allow themes to be saved in the themes folder in Settings > Devices & services > Magic Card Utils > Configure.",
+  "@theme-editor.start-view.theme-folder-off-notice": {
+    "description": "Notice above the theme list while the folder option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them. Max 260 characters.",
+    "x-max-length": 260,
+    "x-source-hash": "2c1dc7f2"
+  },
   "theme-editor.start-view.themes-could-not-be-read": "Themes could not be read",
   "@theme-editor.start-view.themes-could-not-be-read": {
     "description": "Heading of the error on the start screen when reading the installed themes fails. Max 40 characters.",
     "x-max-length": 40,
     "x-source-hash": "78a126fa"
+  },
+  "theme-editor.start-view.themes-folder-copy-is-older": "Themes folder copy is older",
+  "@theme-editor.start-view.themes-folder-copy-is-older": {
+    "description": "Where a theme stands: the copy in /config/themes is older than the one stored in Magic Card Utils. Max 40 characters.",
+    "x-max-length": 40,
+    "x-source-hash": "75196545"
   },
   "theme-editor.start-view.this-editor-did-not-write-the-file": "This editor did not write the file, so it is left as it is.",
   "@theme-editor.start-view.this-editor-did-not-write-the-file": {
@@ -46127,11 +46277,23 @@
     "x-max-length": 160,
     "x-source-hash": "728badac"
   },
+  "theme-editor.start-view.this-removes-name-from-magic-card-utils": "This removes {name} from Magic Card Utils.",
+  "@theme-editor.start-view.this-removes-name-from-magic-card-utils": {
+    "description": "Body of the delete confirmation for a theme stored in Magic Card Utils. {name}: The theme name. Max 100 characters.",
+    "x-max-length": 100,
+    "x-source-hash": "d5fcf1b2"
+  },
   "theme-editor.start-view.try-again": "Try again",
   "@theme-editor.start-view.try-again": {
     "description": "Button that repeats a failed theme list load. Same English as the editor and preset dialog. Max 20 characters.",
     "x-max-length": 20,
     "x-source-hash": "d8b8392e"
+  },
+  "theme-editor.start-view.your-themes-are-saved-in-magic-card-utils": "Your themes are saved in Magic Card Utils. Save one to the themes folder to use it in Home Assistant.",
+  "@theme-editor.start-view.your-themes-are-saved-in-magic-card-utils": {
+    "description": "Hint on the start screen: themes live in Magic Card Utils storage, /config/themes is optional. Max 160 characters.",
+    "x-max-length": 160,
+    "x-source-hash": "6111005c"
   },
   "theme-editor.start-view.your-themes-live-in-config-themes": "Your themes live in /config/themes.",
   "@theme-editor.start-view.your-themes-live-in-config-themes": {

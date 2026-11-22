@@ -412,6 +412,19 @@
     "note": "Toast after light and dark modes were added; tells the user that values set earlier remain in the Shared set.",
     "max": 105
   },
+  "theme-editor.editor-view.also-remove-file-from-the-themes-folder": {
+    "text": "Also remove {file} from the themes folder",
+    "note": "Checkbox in the delete confirmation. Screens using the theme switch to the default theme when the file goes.",
+    "max": 100,
+    "vars": {
+      "file": "The file path, such as /config/themes/my_theme.yaml; stays untranslated."
+    }
+  },
+  "theme-editor.editor-view.another-file-in-the-themes-folder-uses": {
+    "text": "Another file in the themes folder uses this name",
+    "note": "Where a theme stands: a theme file Magic Card did not write uses the same name, so this theme cannot be saved there.",
+    "max": 60
+  },
   "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
     "text": "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).",
     "note": "Help text for trying a theme without saving. {mode} is 'dark' or 'light': the colour mode of the current Home Assistant profile.",
@@ -673,6 +686,11 @@
     "note": "Banner message after a failed include check; tells the user which setup steps to do. Check again is a button label.",
     "max": 175
   },
+  "theme-editor.editor-view.in-the-themes-folder": {
+    "text": "Also in the themes folder",
+    "note": "Where a theme stands: stored in Magic Card Utils and the same copy is in /config/themes.",
+    "max": 40
+  },
   "theme-editor.editor-view.living-room": {
     "text": "Living room",
     "note": "Sample room name in the preview, standing in for the user's own area names.",
@@ -699,6 +717,14 @@
     "max": 85,
     "vars": {
       "label": "The value that replaces label in the text."
+    }
+  },
+  "theme-editor.editor-view.name-changed-since-you-opened-it": {
+    "text": "{name} changed since you opened it",
+    "note": "Banner title when someone else saved the same theme in the meantime.",
+    "max": 80,
+    "vars": {
+      "name": "The theme name."
     }
   },
   "theme-editor.editor-view.name-yaml-changed-on-disk": {
@@ -740,6 +766,11 @@
       "query": "The value that replaces query in the text."
     }
   },
+  "theme-editor.editor-view.not-in-the-themes-folder": {
+    "text": "Not in the themes folder",
+    "note": "Where a theme stands: stored in Magic Card Utils only, Home Assistant does not load it yet.",
+    "max": 40
+  },
   "theme-editor.editor-view.now-using-name-for-your-user": {
     "text": "Now using {name} for your user.",
     "note": "Toast after the theme is set in the user's Home Assistant profile. {name} is the theme name.",
@@ -762,6 +793,11 @@
     "text": "Only changed",
     "note": "Filter toggle that lists only variables whose value differs from the default.",
     "max": 20
+  },
+  "theme-editor.editor-view.only-in-the-themes-folder": {
+    "text": "Only in the themes folder",
+    "note": "Where a theme stands: it is a file in /config/themes that Magic Card Utils has not stored yet.",
+    "max": 40
   },
   "theme-editor.editor-view.open-preview": {
     "text": "Open preview",
@@ -844,6 +880,11 @@
     "note": "Button in the editor view that stores the open theme as a personal preset. The preset dialog has a key with the same English as its confirm button.",
     "max": 35
   },
+  "theme-editor.editor-view.save-to-themes-folder": {
+    "text": "Save to themes folder",
+    "note": "Menu item and button: also write the theme to /config/themes so Home Assistant loads it.",
+    "max": 40
+  },
   "theme-editor.editor-view.save-without-it": {
     "text": "Save without it",
     "note": "Button in the unadded-variable warning that saves the theme and leaves the typed text out.",
@@ -872,6 +913,14 @@
     "max": 120,
     "vars": {
       "name": "The value that replaces name in the text."
+    }
+  },
+  "theme-editor.editor-view.saved-name-in-magic-card-utils": {
+    "text": "Saved {name} in Magic Card Utils",
+    "note": "Status after a save that did not write a file to /config/themes.",
+    "max": 80,
+    "vars": {
+      "name": "The theme name."
     }
   },
   "theme-editor.editor-view.saved-time": {
@@ -983,10 +1032,20 @@
     "note": "Help line in an open theme, and the message of a failed save, while the Theme files option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them.",
     "max": 220
   },
+  "theme-editor.editor-view.theme-folder-off-message": {
+    "text": "Saving to the themes folder is off. Your theme is still saved in Magic Card Utils. An administrator can turn on Allow themes to be saved in the themes folder in Settings > Devices & services > Magic Card Utils > Configure.",
+    "note": "Help line and failed-publish message while the folder option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them.",
+    "max": 240
+  },
   "theme-editor.editor-view.themes": {
     "text": "Themes",
     "note": "Breadcrumb link in the editor that goes back to the list of themes. Same English as the start view heading.",
     "max": 10
+  },
+  "theme-editor.editor-view.themes-folder-copy-is-older": {
+    "text": "Themes folder copy is older",
+    "note": "Where a theme stands: the copy in /config/themes is older than the one stored in Magic Card Utils.",
+    "max": 40
   },
   "theme-editor.editor-view.this-editor-only-changes-its-own-files": {
     "text": "This editor only changes theme files it wrote itself. Save the theme under another name.",
@@ -1004,6 +1063,14 @@
     "max": 160,
     "vars": {
       "file": "The value that replaces file in the text."
+    }
+  },
+  "theme-editor.editor-view.this-removes-name-from-magic-card-utils": {
+    "text": "This removes {name} from Magic Card Utils.",
+    "note": "Body of the delete confirmation for a theme stored in Magic Card Utils.",
+    "max": 100,
+    "vars": {
+      "name": "The theme name."
     }
   },
   "theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": {
@@ -3528,6 +3595,14 @@
     "note": "Choice in the new theme dialog to begin from a ready-made preset.",
     "max": 20
   },
+  "theme-editor.start-view.also-remove-file-from-the-themes-folder": {
+    "text": "Also remove {file} from the themes folder",
+    "note": "Checkbox in the delete confirmation. Screens using the theme switch to the default theme when the file goes.",
+    "max": 100,
+    "vars": {
+      "file": "The file path, such as /config/themes/my_theme.yaml; stays untranslated."
+    }
+  },
   "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
     "text": "An empty theme. Add only the variables you want to change.",
     "note": "Description of the blank theme option on the start screen. Says you add only the variables you want to change.",
@@ -3537,6 +3612,11 @@
     "text": "An installed theme",
     "note": "Option label on the start screen for copying a theme that is already installed in Home Assistant.",
     "max": 30
+  },
+  "theme-editor.start-view.another-file-in-the-themes-folder-uses": {
+    "text": "Another file in the themes folder uses this name",
+    "note": "Where a theme stands: a theme file Magic Card did not write uses the same name, so this theme cannot be saved there.",
+    "max": 60
   },
   "theme-editor.start-view.blank": {
     "text": "Blank",
@@ -3702,6 +3782,11 @@
     "note": "Button on the start view that opens the import dialog for preset files. Verb.",
     "max": 10
   },
+  "theme-editor.start-view.in-the-themes-folder": {
+    "text": "Also in the themes folder",
+    "note": "Where a theme stands: stored in Magic Card Utils and the same copy is in /config/themes.",
+    "max": 40
+  },
   "theme-editor.start-view.installed-theme": {
     "text": "Installed theme",
     "note": "Singular option for beginning a new theme from a theme already installed in Home Assistant.",
@@ -3787,6 +3872,16 @@
     "text": "No themes yet",
     "note": "Heading of the empty state on the start screen when no themes are installed.",
     "max": 25
+  },
+  "theme-editor.start-view.not-in-the-themes-folder": {
+    "text": "Not in the themes folder",
+    "note": "Where a theme stands: stored in Magic Card Utils only, Home Assistant does not load it yet.",
+    "max": 40
+  },
+  "theme-editor.start-view.only-in-the-themes-folder": {
+    "text": "Only in the themes folder",
+    "note": "Where a theme stands: it is a file in /config/themes that Magic Card Utils has not stored yet.",
+    "max": 40
   },
   "theme-editor.start-view.pick-a-preset-to-start-from": {
     "text": "Pick a preset to start from",
@@ -3881,9 +3976,19 @@
     "note": "Notice above the theme list while the Theme files option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them.",
     "max": 240
   },
+  "theme-editor.start-view.theme-folder-off-notice": {
+    "text": "Saving to the themes folder is off. You can still create and edit themes; they are saved in Magic Card Utils. An administrator can turn on Allow themes to be saved in the themes folder in Settings > Devices & services > Magic Card Utils > Configure.",
+    "note": "Notice above the theme list while the folder option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them.",
+    "max": 260
+  },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Themes could not be read",
     "note": "Heading of the error on the start screen when reading the installed themes fails.",
+    "max": 40
+  },
+  "theme-editor.start-view.themes-folder-copy-is-older": {
+    "text": "Themes folder copy is older",
+    "note": "Where a theme stands: the copy in /config/themes is older than the one stored in Magic Card Utils.",
     "max": 40
   },
   "theme-editor.start-view.this-editor-did-not-write-the-file": {
@@ -3908,10 +4013,23 @@
       "file": "The value that replaces file in the text."
     }
   },
+  "theme-editor.start-view.this-removes-name-from-magic-card-utils": {
+    "text": "This removes {name} from Magic Card Utils.",
+    "note": "Body of the delete confirmation for a theme stored in Magic Card Utils.",
+    "max": 100,
+    "vars": {
+      "name": "The theme name."
+    }
+  },
   "theme-editor.start-view.try-again": {
     "text": "Try again",
     "note": "Button that repeats a failed theme list load. Same English as the editor and preset dialog.",
     "max": 20
+  },
+  "theme-editor.start-view.your-themes-are-saved-in-magic-card-utils": {
+    "text": "Your themes are saved in Magic Card Utils. Save one to the themes folder to use it in Home Assistant.",
+    "note": "Hint on the start screen: themes live in Magic Card Utils storage, /config/themes is optional.",
+    "max": 160
   },
   "theme-editor.start-view.your-themes-live-in-config-themes": {
     "text": "Your themes live in /config/themes.",

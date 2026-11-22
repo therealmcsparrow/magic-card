@@ -2,10 +2,10 @@ import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
 import type { MessageIndex } from './i18n';
 
 /**
- * Contract: theme editor host. Version 1.5.0. The chunk may import `src/i18n/` (runtime message copy and search fold), `src/ui-kit/` and `src/utils/google-fonts` (the Google fonts gate and lazy loader).
+ * Contract: theme editor host. Version 1.6.0. The chunk may import `src/i18n/` (runtime message copy and search fold), `src/ui-kit/` and `src/utils/google-fonts` (the Google fonts gate and lazy loader).
  */
 
-export const THEME_EDITOR_CONTRACT_VERSION = '1.5.0';
+export const THEME_EDITOR_CONTRACT_VERSION = '1.6.0';
 export const THEME_EDITOR_FILE = 'magic-card-theme-editor.js';
 export const THEME_EDITOR_TAG = 'magic-card-theme-editor';
 export const THEME_TRIAL_BAR_TAG = 'mc-theme-trial-bar';
@@ -30,7 +30,7 @@ export interface ThemeModes {
   dark?: Record<string, ThemeValue>;
 }
 
-// ── backend adapter (the panel implements it on top of theme-files 1.0.0) ──
+// ── backend adapter (the panel implements it on top of theme-files; 1.6.0 adds the theme-files 2.0.0 storage fields) ──
 
 export type IncludeState = 'ok' | 'missing' | 'inline' | 'other_layout' | 'unknown';
 
@@ -53,8 +53,16 @@ export type ReadOnlyReason =
   | 'symlink'
   /** (1.5.0, theme-files 1.1.0) The file does not start with the editor's header: the editor did not write it. Copy it under a new name. */
   | 'not_own'
-  /** (1.5.0, theme-files 1.1.0) The Theme files option of Magic Card Utils is off: nothing can be saved or deleted. */
+  /** (1.5.0, theme-files 1.1.0 only) The Theme files option of Magic Card Utils is off. theme-files 2.0.0 no longer sends it. */
   | 'writes_off';
+
+/**
+ * (1.6.0, theme-files 2.0.0) Where a theme stands in /config/themes. For a stored theme: no file yet (`none`), the
+ * file Magic Card wrote matches (`current`) or is older (`outdated`), or a file Magic Card did not write has the name
+ * (`foreign`: it can be saved but never published). For a file-only entry: Magic Card's own file (`current`) or a
+ * read-only one (`foreign`).
+ */
+export type FolderState = 'none' | 'current' | 'outdated' | 'foreign';
 
 export interface ThemeFileEntry {
   /** Theme name (the top-level key). For unreadable files: the file stem. */
@@ -65,8 +73,12 @@ export interface ThemeFileEntry {
   reason?: ReadOnlyReason;
   has_modes: boolean;
   var_count: number;
-  /** File modification time (seconds since epoch), for conflict checks on save. */
+  /** File modification time (seconds since epoch), for conflict checks on save. For a stored theme: the time of its last save. */
   mtime: number;
+  /** (1.6.0, theme-files 2.0.0) True when Magic Card Utils keeps the theme in its storage. */
+  stored?: boolean;
+  /** (1.6.0, theme-files 2.0.0) Where the theme stands in /config/themes. */
+  folder?: FolderState;
 }
 
 export interface ThemeList {
@@ -79,6 +91,12 @@ export interface ThemeList {
    * answer `theme_files_off`. Absent from an older Magic Card Utils, which counts as true.
    */
   writes_enabled?: boolean;
+  /**
+   * (1.6.0, theme-files 2.0.0) True when themes are saved in Magic Card Utils storage: save needs neither the option
+   * nor the include lines, and only `publish` writes /config/themes. Absent from an older Magic Card Utils, where every
+   * save writes the file.
+   */
+  storage?: boolean;
 }
 
 export interface ThemeGetResult {
@@ -87,6 +105,10 @@ export interface ThemeGetResult {
   editable: boolean;
   reason?: ReadOnlyReason;
   mtime: number;
+  /** (1.6.0, theme-files 2.0.0) True for the stored copy; false when only the file was read. */
+  stored?: boolean;
+  /** (1.6.0, theme-files 2.0.0) Where the theme stands in /config/themes. */
+  folder?: FolderState;
   theme: ThemeDoc;
 }
 
@@ -97,6 +119,8 @@ export interface ThemeSaveRequest {
   overwrite?: boolean;
   /** The mtime the editor loaded; a different mtime on disk answers `conflict`. */
   base_mtime?: number;
+  /** (1.6.0, theme-files 2.0.0) Also write /config/themes/<name>.yaml. Needs the folder option and the include lines. */
+  publish?: boolean;
 }
 
 export interface ThemeSaveResult {
@@ -105,6 +129,18 @@ export interface ThemeSaveResult {
   mtime: number;
   /** True when HA's theme list holds `name` after reload_themes. */
   loaded: boolean;
+  /** (1.6.0, theme-files 2.0.0) Always true: the theme is in Magic Card Utils storage. */
+  stored?: boolean;
+  /** (1.6.0, theme-files 2.0.0) True when this save wrote the file. */
+  published?: boolean;
+  /** (1.6.0, theme-files 2.0.0) Where the theme stands in /config/themes after the save. */
+  folder?: FolderState;
+}
+
+/** (1.6.0) Options for ThemeBackend.remove. */
+export interface ThemeRemoveOptions {
+  /** theme-files 2.0.0: also delete /config/themes/<name>.yaml (Magic Card's own file only; needs the folder option). */
+  file?: boolean;
 }
 
 /** Error codes (theme-files 1.0.0; 1.1.0 adds mcu-library's library_full; theme-files 1.1.0 adds theme_files_off). The adapter rejects with an Error carrying `code` and optional `errors`. */
@@ -139,7 +175,8 @@ export interface ThemeBackend {
   list(): Promise<ThemeList>;
   get(name: string): Promise<ThemeGetResult>;
   save(req: ThemeSaveRequest): Promise<ThemeSaveResult>;
-  remove(name: string): Promise<void>;
+  /** theme-files 2.0.0: removes the stored theme, and the file with `opts.file`. Older Utils: removes the file. */
+  remove(name: string, opts?: ThemeRemoveOptions): Promise<void>;
   /** (1.1.0) Present when Magic Card Utils stores theme presets; absent on older versions. */
   presets?: ThemePresetStore;
 }
