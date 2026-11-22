@@ -635,6 +635,10 @@
     "text": "Opslaan herschrijft {name}.yaml. Opmerkingen in het bestand worden verwijderd. Alle variabelen blijven behouden, ook die deze editor niet kent.",
     "hash": "f91fef09"
   },
+  "theme-editor.editor-view.saving-theme-files-is-off": {
+    "text": "Opslaan staat uit: Themabestanden staat uit",
+    "hash": "71c216cc"
+  },
   "theme-editor.editor-view.search-by-name-or-value": {
     "text": "Zoeken op naam of waarde",
     "hash": "d5c7e78d"
@@ -691,9 +695,17 @@
     "text": "Thema-editor",
     "hash": "2c9d9e02"
   },
+  "theme-editor.editor-view.theme-files-off-message": {
+    "text": "Themabestanden opslaan staat uit. Een beheerder kan Themabestanden aanzetten via Instellingen > Apparaten & diensten > Magic Card Utils > Configureren. Je kunt de YAML nog wel kopiëren.",
+    "hash": "fb2589c1"
+  },
   "theme-editor.editor-view.themes": {
     "text": "Thema's",
     "hash": "43ae3265"
+  },
+  "theme-editor.editor-view.this-editor-only-changes-its-own-files": {
+    "text": "Deze editor wijzigt alleen themabestanden die hij zelf schreef. Sla het thema op onder een andere naam.",
+    "hash": "b75ffdb5"
   },
   "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
     "text": "Dit bestand is veranderd sinds je het opende. Laad het opnieuw om de nieuwe versie te zien, of sla toch op om het te vervangen door jouw versie.",
@@ -2787,6 +2799,10 @@
     "text": "Hetzelfde in licht en donker",
     "hash": "c64dc7db"
   },
+  "theme-editor.start-view.saving-theme-files-is-off": {
+    "text": "Themabestanden opslaan staat uit.",
+    "hash": "7eeacff4"
+  },
   "theme-editor.start-view.search-installed-themes": {
     "text": "Geïnstalleerde thema's zoeken",
     "hash": "8f4ed4ba"
@@ -2823,9 +2839,17 @@
     "text": "De themanaam komt niet overeen met de bestandsnaam.",
     "hash": "9106c5da"
   },
+  "theme-editor.start-view.theme-files-off-notice": {
+    "text": "Themabestanden opslaan staat uit, dus elk thema is alleen-lezen. Je kunt de YAML van een thema nog wel kopiëren. Een beheerder kan Themabestanden aanzetten via Instellingen > Apparaten & diensten > Magic Card Utils > Configureren.",
+    "hash": "ad39f48e"
+  },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Thema's konden niet worden gelezen",
     "hash": "78a126fa"
+  },
+  "theme-editor.start-view.this-editor-did-not-write-the-file": {
+    "text": "Dit bestand is niet door deze editor geschreven, dus het blijft zoals het is.",
+    "hash": "71551f1c"
   },
   "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
     "text": "Dit verwijdert /config/{file} en {c, plural, one {het andere thema} other {de andere # thema's}} in dat bestand. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",

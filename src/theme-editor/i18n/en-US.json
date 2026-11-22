@@ -635,6 +635,10 @@
     "text": "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.",
     "hash": "f91fef09"
   },
+  "theme-editor.editor-view.saving-theme-files-is-off": {
+    "text": "Saving is off: Theme files is turned off",
+    "hash": "71c216cc"
+  },
   "theme-editor.editor-view.search-by-name-or-value": {
     "text": "Search by name or value",
     "hash": "d5c7e78d"
@@ -691,9 +695,17 @@
     "text": "Theme editor",
     "hash": "2c9d9e02"
   },
+  "theme-editor.editor-view.theme-files-off-message": {
+    "text": "Saving theme files is off. An administrator can turn on Theme files in Settings > Devices & services > Magic Card Utils > Configure. You can still copy the YAML.",
+    "hash": "fb2589c1"
+  },
   "theme-editor.editor-view.themes": {
     "text": "Themes",
     "hash": "43ae3265"
+  },
+  "theme-editor.editor-view.this-editor-only-changes-its-own-files": {
+    "text": "This editor only changes theme files it wrote itself. Save the theme under another name.",
+    "hash": "b75ffdb5"
   },
   "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
     "text": "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.",
@@ -2787,6 +2799,10 @@
     "text": "Same in light and dark",
     "hash": "c64dc7db"
   },
+  "theme-editor.start-view.saving-theme-files-is-off": {
+    "text": "Saving theme files is off.",
+    "hash": "7eeacff4"
+  },
   "theme-editor.start-view.search-installed-themes": {
     "text": "Search installed themes",
     "hash": "8f4ed4ba"
@@ -2823,9 +2839,17 @@
     "text": "The theme name does not match the file name.",
     "hash": "9106c5da"
   },
+  "theme-editor.start-view.theme-files-off-notice": {
+    "text": "Saving theme files is off, so every theme is read only. You can still copy a theme's YAML. An administrator can turn on Theme files in Settings > Devices & services > Magic Card Utils > Configure.",
+    "hash": "ad39f48e"
+  },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Themes could not be read",
     "hash": "78a126fa"
+  },
+  "theme-editor.start-view.this-editor-did-not-write-the-file": {
+    "text": "This editor did not write the file, so it is left as it is.",
+    "hash": "71551f1c"
   },
   "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
     "text": "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.",

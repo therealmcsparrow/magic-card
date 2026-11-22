@@ -895,6 +895,11 @@
       "name": "The value that replaces name in the text."
     }
   },
+  "theme-editor.editor-view.saving-theme-files-is-off": {
+    "text": "Saving is off: Theme files is turned off",
+    "note": "Tooltip on the disabled Save button while the Theme files option of Magic Card Utils is off.",
+    "max": 60
+  },
   "theme-editor.editor-view.search-by-name-or-value": {
     "text": "Search by name or value",
     "note": "Hint text for the variable search box, saying it matches variable names and their values.",
@@ -973,10 +978,20 @@
     "note": "Title of the theme editor in its top bar.",
     "max": 25
   },
+  "theme-editor.editor-view.theme-files-off-message": {
+    "text": "Saving theme files is off. An administrator can turn on Theme files in Settings > Devices & services > Magic Card Utils > Configure. You can still copy the YAML.",
+    "note": "Help line in an open theme, and the message of a failed save, while the Theme files option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them.",
+    "max": 220
+  },
   "theme-editor.editor-view.themes": {
     "text": "Themes",
     "note": "Breadcrumb link in the editor that goes back to the list of themes. Same English as the start view heading.",
     "max": 10
+  },
+  "theme-editor.editor-view.this-editor-only-changes-its-own-files": {
+    "text": "This editor only changes theme files it wrote itself. Save the theme under another name.",
+    "note": "Message of a failed save when the file on disk was not written by the theme editor (hand-written or from another tool).",
+    "max": 110
   },
   "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
     "text": "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.",
@@ -3808,6 +3823,11 @@
     "note": "Label on the start screen for a theme that uses one set of variables in both light and dark.",
     "max": 40
   },
+  "theme-editor.start-view.saving-theme-files-is-off": {
+    "text": "Saving theme files is off.",
+    "note": "Reason on the start screen why a theme cannot be edited: the Theme files option of Magic Card Utils is off.",
+    "max": 60
+  },
   "theme-editor.start-view.search-installed-themes": {
     "text": "Search installed themes",
     "note": "Label and placeholder of the search box above the installed themes on the start screen.",
@@ -3856,10 +3876,20 @@
     "note": "Reason on the start screen why an installed theme cannot be edited: the theme name inside the file differs from the file name.",
     "max": 75
   },
+  "theme-editor.start-view.theme-files-off-notice": {
+    "text": "Saving theme files is off, so every theme is read only. You can still copy a theme's YAML. An administrator can turn on Theme files in Settings > Devices & services > Magic Card Utils > Configure.",
+    "note": "Notice above the theme list while the Theme files option of Magic Card Utils is off. Use the option's own name and the Settings path as Home Assistant shows them.",
+    "max": 240
+  },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Themes could not be read",
     "note": "Heading of the error on the start screen when reading the installed themes fails.",
     "max": 40
+  },
+  "theme-editor.start-view.this-editor-did-not-write-the-file": {
+    "text": "This editor did not write the file, so it is left as it is.",
+    "note": "Reason on the start screen why an installed theme cannot be edited: the file was written by hand or by another tool, not by this theme editor. The user can copy it under a new name.",
+    "max": 90
   },
   "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
     "text": "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.",

@@ -55,6 +55,10 @@ export const reasonText = (reason: ReadOnlyReason): string => {
       return t('theme-editor.start-view.the-file-is-too-large-to-edit-here');
     case 'symlink':
       return t('theme-editor.start-view.the-file-is-a-link-to-somewhere-else');
+    case 'not_own':
+      return t('theme-editor.start-view.this-editor-did-not-write-the-file');
+    case 'writes_off':
+      return t('theme-editor.start-view.saving-theme-files-is-off');
     default:
       return '';
   }
@@ -71,6 +75,7 @@ export class McteStartView extends LitElement {
     files: { attribute: false },
     loaded: { attribute: false },
     include: { attribute: false },
+    writesEnabled: { attribute: false },
     phase: {},
     error: {},
     hass: { attribute: false },
@@ -104,6 +109,8 @@ export class McteStartView extends LitElement {
   files: ThemeFileEntry[] = [];
   loaded: string[] = [];
   include: IncludeStatus | undefined;
+  /** themes_list writes_enabled; false shows the Theme files notice. */
+  writesEnabled: boolean | undefined;
   phase: 'loading' | 'ready' | 'error' = 'loading';
   error = '';
   hass: unknown;
@@ -584,6 +591,9 @@ export class McteStartView extends LitElement {
       <div class="wrap">
         <p class="help">${t('theme-editor.start-view.your-themes-live-in-config-themes')}</p>
         <mcte-include-notice .status=${this.include} .checking=${this.checking} .result=${this.checkResult}></mcte-include-notice>
+        ${this.writesEnabled === false
+          ? html`<div class="notice info" role="note" data-theme-files-off>${glyph('information')}<div class="body"><p>${t('theme-editor.start-view.theme-files-off-notice')}</p></div></div>`
+          : nothing}
         ${this.files.length
           ? field({
               id: 'q',

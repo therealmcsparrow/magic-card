@@ -7,6 +7,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ## Unreleased
 
 ### Changed
+-   **Theme editor.** Works with the matching Magic Card Utils. The editor now changes and deletes only theme files it wrote itself. A hand-written file is read only with the reason "This editor did not write the file", and **Copy to edit** saves it under a new name. Saving and deleting stay off until an administrator turns on **Theme files** in Magic Card Utils. Until then the theme list and the open theme say so, and the YAML can still be copied. Contract theme-editor 1.5.0.
 -   **Releases.** Pre-releases are now created as drafts and published once all files are attached, so releases keep working when GitHub's immutable releases are turned on.
 
 ## 2026.11.05-beta.2 (2026-11-16)

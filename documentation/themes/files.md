@@ -24,9 +24,19 @@ The names `default` and `backend-selected` are reserved, because Home Assistant 
 
 If a name is already taken by another file, Save refuses to overwrite it and offers to choose another name. If the file changed on disk after you opened it, the editor refuses the save so you do not overwrite a change you have not seen.
 
+## Theme files option
+
+Saving and deleting theme files is off until an administrator turns on **Theme files** in Settings > Devices & services > Magic Card Utils > Configure. Turning it on shows a disclaimer first. While it is off, the theme list says so, every theme is read only and Save stays off, but you can still open a theme and copy its YAML.
+
 ## Read-only themes
 
-Some files in `/config/themes` are listed but cannot be edited. The list marks them **Read only**, and the editor shows the reason when it knows it. A file is read only when it:
+Some files in `/config/themes` are listed but cannot be edited. The list marks them **Read only**, and the editor shows the reason when it knows it.
+
+The editor changes and deletes only files it wrote itself. Every file it saves starts with `# Written by the Magic Card theme editor.`. A file without that first line, such as one you wrote by hand or got from another tool, is read only. To change it, use **Copy to edit** and save the copy under a new name.
+
+A file is read only when it:
+
+-   was not written by the theme editor,
 
 -   sits in a subfolder of `/config/themes`,
 -   holds more than one theme,
@@ -60,6 +70,8 @@ A read-only theme that the editor can read still opens, so you can look at it. I
 The editor refuses a save it cannot complete, and then writes nothing. The usual reasons:
 
 -   The name is used by another file. Choose another name.
+-   **Theme files** is off in Magic Card Utils. An administrator can turn it on under Configure.
+-   The file on disk was not written by the theme editor. Save the theme under another name.
 -   The include lines are missing from `configuration.yaml`. Add them, then check again.
 -   The file changed on disk after you opened it. Open the theme again and make your change once more.
 -   Home Assistant could not write or read the file. The message does not show the file path. The details are in Home Assistant's log.

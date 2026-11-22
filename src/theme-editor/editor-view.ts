@@ -113,6 +113,7 @@ export class McteEditorView extends LitElement {
     hass: { attribute: false },
     backend: { attribute: false },
     include: { attribute: false },
+    writesEnabled: { attribute: false },
     mine: { attribute: false },
     checking: { type: Boolean },
     checkResult: {},
@@ -159,6 +160,8 @@ export class McteEditorView extends LitElement {
   hass: unknown;
   backend: ThemeBackend | undefined;
   include: IncludeStatus | undefined;
+  /** themes_list writes_enabled; false while the Theme files option of Magic Card Utils is off (nothing saves). */
+  writesEnabled: boolean | undefined;
   /** My theme presets, for the ids "Save as my preset" must not reuse. */
   mine: SavedThemePreset[] | undefined;
   checking = false;
@@ -364,6 +367,7 @@ export class McteEditorView extends LitElement {
   }
 
   private get _reason(): SaveReason | null {
+    if (this.writesEnabled === false) return { text: t('theme-editor.editor-view.saving-theme-files-is-off') };
     if (!this.draft?.editable) return { text: t('theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit') };
     if (this.include && this.include.state !== 'ok') return { text: t('theme-editor.editor-view.saving-is-off-until-themes-are-set-up'), action: 'recheck', actionLabel: t('theme-editor.editor-view.check-again') };
     const n = this._errors.length;
@@ -795,6 +799,10 @@ export class McteEditorView extends LitElement {
         };
       case 'unauthorized':
         return { kind: 'error', title: failed, message: t('theme-editor.editor-view.only-administrators-can-edit-themes'), actions: [dismiss] };
+      case 'theme_files_off':
+        return { kind: 'error', title: failed, message: t('theme-editor.editor-view.theme-files-off-message'), actions: [dismiss] };
+      case 'not_editable':
+        return { kind: 'error', title: failed, message: t('theme-editor.editor-view.this-editor-only-changes-its-own-files'), actions: this._isNew ? [{ label: t('theme-editor.editor-view.choose-another-name'), run: () => this._openRename() }, dismiss] : [dismiss] };
       case 'invalid_format': {
         const first = err.errors?.[0];
         const nameErr = err.errors?.find((x) => x.path === 'name');
@@ -1229,7 +1237,9 @@ export class McteEditorView extends LitElement {
       ${this._scope === 'shared' && this._hasModes
         ? html`<p class="help">${t('theme-editor.editor-view.shared-applies-to-light-and-dark-unless')}</p>`
         : nothing}
-      ${!this.draft.editable ? html`<p class="help">${this.draft.reason ? t('theme-editor.editor-view.this-theme-is-read-only-reason-copy-it', { reason: this.draft.reason }) : t('theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit')}</p>` : nothing}
+      ${this.writesEnabled === false
+        ? html`<p class="help" data-theme-files-off>${t('theme-editor.editor-view.theme-files-off-message')}</p>`
+        : !this.draft.editable ? html`<p class="help">${this.draft.reason ? t('theme-editor.editor-view.this-theme-is-read-only-reason-copy-it', { reason: this.draft.reason }) : t('theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit')}</p>` : nothing}
       <div class="groups">${this._groups()}</div>
       ${this.draft.editable
         ? html`<mcte-raw-rows

@@ -2,10 +2,10 @@ import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
 import type { MessageIndex } from './i18n';
 
 /**
- * Contract: theme editor host. Version 1.4.0. The chunk may import `src/i18n/` (runtime message copy and search fold), `src/ui-kit/` and `src/utils/google-fonts` (the Google fonts gate and lazy loader).
+ * Contract: theme editor host. Version 1.5.0. The chunk may import `src/i18n/` (runtime message copy and search fold), `src/ui-kit/` and `src/utils/google-fonts` (the Google fonts gate and lazy loader).
  */
 
-export const THEME_EDITOR_CONTRACT_VERSION = '1.4.0';
+export const THEME_EDITOR_CONTRACT_VERSION = '1.5.0';
 export const THEME_EDITOR_FILE = 'magic-card-theme-editor.js';
 export const THEME_EDITOR_TAG = 'magic-card-theme-editor';
 export const THEME_TRIAL_BAR_TAG = 'mc-theme-trial-bar';
@@ -50,7 +50,11 @@ export type ReadOnlyReason =
   | 'yaml_tags'
   | 'parse_error'
   | 'too_large'
-  | 'symlink';
+  | 'symlink'
+  /** (1.5.0, theme-files 1.1.0) The file does not start with the editor's header: the editor did not write it. Copy it under a new name. */
+  | 'not_own'
+  /** (1.5.0, theme-files 1.1.0) The Theme files option of Magic Card Utils is off: nothing can be saved or deleted. */
+  | 'writes_off';
 
 export interface ThemeFileEntry {
   /** Theme name (the top-level key). For unreadable files: the file stem. */
@@ -70,6 +74,11 @@ export interface ThemeList {
   files: ThemeFileEntry[];
   /** Every theme name HA has loaded right now (any source), sorted. */
   loaded: string[];
+  /**
+   * (1.5.0, theme-files 1.1.0) False while the Theme files option of Magic Card Utils is off: save and remove
+   * answer `theme_files_off`. Absent from an older Magic Card Utils, which counts as true.
+   */
+  writes_enabled?: boolean;
 }
 
 export interface ThemeGetResult {
@@ -98,7 +107,7 @@ export interface ThemeSaveResult {
   loaded: boolean;
 }
 
-/** Error codes (theme-files 1.0.0; 1.1.0 adds mcu-library's library_full). The adapter rejects with an Error carrying `code` and optional `errors`. */
+/** Error codes (theme-files 1.0.0; 1.1.0 adds mcu-library's library_full; theme-files 1.1.0 adds theme_files_off). The adapter rejects with an Error carrying `code` and optional `errors`. */
 export type ThemeErrorCode =
   | 'invalid_format'
   | 'not_found'
@@ -110,6 +119,7 @@ export type ThemeErrorCode =
   | 'save_failed'
   | 'read_failed'
   | 'library_full'
+  | 'theme_files_off'
   | 'unauthorized';
 
 export interface ThemeBackendError extends Error {
