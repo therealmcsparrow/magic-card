@@ -515,6 +515,10 @@
     "text": "Magic Card and integrations",
     "hash": "56151480"
   },
+  "theme-editor.editor-view.magic-card-utils-has-no-room-for-this-theme": {
+    "text": "Magic Card Utils has no room for this theme. Make it smaller or delete themes you no longer need.",
+    "hash": "978cd4bd"
+  },
   "theme-editor.editor-view.more-actions": {
     "text": "More actions",
     "hash": "f8d46c25"
@@ -766,10 +770,6 @@
   "theme-editor.editor-view.this-theme-is-read-only-reason-copy-it": {
     "text": "This theme is read only. {reason} Copy it to edit.",
     "hash": "9b3bbbb7"
-  },
-  "theme-editor.editor-view.this-theme-is-too-large-to-save": {
-    "text": "This theme is too large to save.",
-    "hash": "810d0c70"
   },
   "theme-editor.editor-view.try-again": {
     "text": "Try again",

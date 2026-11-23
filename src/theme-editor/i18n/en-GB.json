@@ -706,6 +706,11 @@
     "note": "Section heading above the variable groups for Magic Card and the supported third-party cards.",
     "max": 45
   },
+  "theme-editor.editor-view.magic-card-utils-has-no-room-for-this-theme": {
+    "text": "Magic Card Utils has no room for this theme. Make it smaller or delete themes you no longer need.",
+    "note": "Error banner in the theme editor when Magic Card Utils refuses a save because it has no room: the theme is over the size limit, the store is full, or there are too many themes.",
+    "max": 120
+  },
   "theme-editor.editor-view.more-actions": {
     "text": "More actions",
     "note": "Accessible label of the three-dot button that opens the editor's overflow menu.",
@@ -1085,11 +1090,6 @@
     "vars": {
       "reason": "The value that replaces reason in the text."
     }
-  },
-  "theme-editor.editor-view.this-theme-is-too-large-to-save": {
-    "text": "This theme is too large to save.",
-    "note": "Error banner in the theme editor when Magic Card Utils refuses to save because the theme is over its size limit.",
-    "max": 50
   },
   "theme-editor.editor-view.try-again": {
     "text": "Try again",

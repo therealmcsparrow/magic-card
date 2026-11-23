@@ -2,5 +2,9 @@
   {
     "from": "card-editor.magic-card-editor.looks-gallery-turn-it-on-in-the-magic",
     "to": "card-editor.magic-card-editor.look-gallery-turn-it-on-in-the-magic"
+  },
+  {
+    "from": "theme-editor.editor-view.this-theme-is-too-large-to-save",
+    "to": "theme-editor.editor-view.magic-card-utils-has-no-room-for-this-theme"
   }
 ]
