@@ -4,7 +4,9 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.11.05 (2026-11-23)
+
+Install Magic Card Utils 2026.11.05 first, then update Magic Card.
 
 ### New
 -   **Copy my setup.** The card editor has a **Copy my setup** button next to the look entry. It copies a short English text block with the card version, the Magic Card Utils version, the look and font names, and what loads at first paint and on use, ready to paste into a bug report. Look and font names are copied as written. Entity ids, web addresses and dashboard names are not copied, and nothing is sent anywhere. When the browser blocks copying, a read-only text box shows the same text. **Copied** is announced to screen readers, and on a touch screen it returns to the button label after 10 seconds. Magic Card Utils reports its version for this line. See [Copy my setup](documentation/support/copy-my-setup.md).
