@@ -900,6 +900,8 @@ export class McteEditorView extends LitElement {
         return { kind: 'error', title: failed, message: this.storage ? t('theme-editor.editor-view.theme-folder-off-message') : t('theme-editor.editor-view.theme-files-off-message'), actions: [dismiss] };
       case 'not_editable':
         return { kind: 'error', title: failed, message: t('theme-editor.editor-view.this-editor-only-changes-its-own-files'), actions: this._isNew ? [{ label: t('theme-editor.editor-view.choose-another-name'), run: () => this._openRename() }, dismiss] : [dismiss] };
+      case 'too_large':
+        return { kind: 'error', title: failed, message: t('theme-editor.editor-view.this-theme-is-too-large-to-save'), actions: [dismiss] };
       case 'invalid_format': {
         const first = err.errors?.[0];
         const nameErr = err.errors?.find((x) => x.path === 'name');

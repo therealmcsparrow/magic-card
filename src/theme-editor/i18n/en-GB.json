@@ -1086,6 +1086,11 @@
       "reason": "The value that replaces reason in the text."
     }
   },
+  "theme-editor.editor-view.this-theme-is-too-large-to-save": {
+    "text": "This theme is too large to save.",
+    "note": "Error banner in the theme editor when Magic Card Utils refuses to save because the theme is over its size limit.",
+    "max": 50
+  },
   "theme-editor.editor-view.try-again": {
     "text": "Try again",
     "note": "Button that repeats a failed save or load in the editor. Same English as the start view and preset dialog.",

@@ -82,5 +82,5 @@ export interface SnapshotInput {
   readonly secure: boolean | undefined;
 }
 
-/** Never throws: a value that cannot be read is missing, nothing else. The provider rules are in .company/contracts/diagnostics.md. */
+/** Never throws: a value that cannot be read is missing, nothing else. */
 export type BuildSnapshot = (input: SnapshotInput) => SetupSnapshot;

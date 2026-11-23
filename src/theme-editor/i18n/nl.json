@@ -767,6 +767,10 @@
     "text": "Dit thema is alleen-lezen. {reason} Kopieer het om te bewerken.",
     "hash": "9b3bbbb7"
   },
+  "theme-editor.editor-view.this-theme-is-too-large-to-save": {
+    "text": "Dit thema is te groot om op te slaan.",
+    "hash": "810d0c70"
+  },
   "theme-editor.editor-view.try-again": {
     "text": "Opnieuw proberen",
     "hash": "d8b8392e"

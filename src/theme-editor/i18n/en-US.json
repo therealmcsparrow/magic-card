@@ -767,6 +767,10 @@
     "text": "This theme is read only. {reason} Copy it to edit.",
     "hash": "9b3bbbb7"
   },
+  "theme-editor.editor-view.this-theme-is-too-large-to-save": {
+    "text": "This theme is too large to save.",
+    "hash": "810d0c70"
+  },
   "theme-editor.editor-view.try-again": {
     "text": "Try again",
     "hash": "d8b8392e"
