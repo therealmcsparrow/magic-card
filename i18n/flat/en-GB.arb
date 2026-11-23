@@ -42655,6 +42655,15 @@
     "x-max-length": 45,
     "x-source-hash": "56151480"
   },
+  "theme-editor.editor-view.magic-card-utils-has-no-room-for-this-theme": "Magic Card Utils has no room for this theme. Make it smaller or delete themes you no longer need.",
+  "@theme-editor.editor-view.magic-card-utils-has-no-room-for-this-theme": {
+    "description": "Error banner in the theme editor when Magic Card Utils refuses a save because it has no room: the theme is over the size limit, the store is full, or there are too many themes. Max 120 characters.",
+    "x-max-length": 120,
+    "x-source-hash": "978cd4bd",
+    "x-aliases": [
+      "theme-editor.editor-view.this-theme-is-too-large-to-save"
+    ]
+  },
   "theme-editor.editor-view.more-actions": "More actions",
   "@theme-editor.editor-view.more-actions": {
     "description": "Accessible label of the three-dot button that opens the editor's overflow menu. Max 20 characters.",

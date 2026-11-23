@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## 2026.11.05
+## Unreleased
 
 ### New
 -   **Copy my setup.** The card editor has a **Copy my setup** button next to the look entry. It copies a short English text block with the card version, the Magic Card Utils version, the look and font names, and what loads at first paint and on use, ready to paste into a bug report. Look and font names are copied as written. Entity ids, web addresses and dashboard names are not copied, and nothing is sent anywhere. When the browser blocks copying, a read-only text box shows the same text. **Copied** is announced to screen readers, and on a touch screen it returns to the button label after 10 seconds. Magic Card Utils reports its version for this line. See [Copy my setup](documentation/support/copy-my-setup.md).
@@ -12,6 +12,9 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ### Changed
 -   **Theme editor.** Works with the matching Magic Card Utils. Themes are now saved in Magic Card Utils, and **Save to themes folder** also writes one to `/config/themes` so Home Assistant loads it. Saving to the folder stays off until an administrator turns on **Allow themes to be saved in the themes folder** in Magic Card Utils, which shows a disclaimer first. The editor never changes, replaces or deletes a theme file it did not write: such a theme is read only, and **Copy to edit** saves it under a new name. The theme list and the open theme show whether a theme is in the themes folder and whether that copy is older. Deleting a theme asks each time whether to remove its file from the themes folder too. Contract theme-editor 1.6.0.
 -   **Releases.** Pre-releases are now created as drafts and published once all files are attached, so releases keep working when GitHub's immutable releases are turned on.
+
+### Fixed
+-   **Theme editor on narrow screens.** When a theme can't be saved, the error now shows and takes focus, and **Dismiss** returns focus to **Save**.
 
 ## 2026.11.05-beta.2 (2026-11-16)
 
