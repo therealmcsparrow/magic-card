@@ -4,6 +4,7 @@ import {
   CONFIG_WALK_BUDGET,
   FONT_KEYS,
   LOOK_KEYS,
+  NAME_MAX_CODE_POINTS,
   NAME_REPLACED,
   UTILS_PROVIDER_API,
   VERSION_RE,
@@ -37,7 +38,11 @@ const ownKeys = (target: object): string[] => {
   }
 };
 
-const cleanName = (raw: string): string => raw.replace(NAME_REPLACED, ' ').trim();
+const cleanName = (raw: string): string => {
+  const spaced = raw.replace(NAME_REPLACED, ' ').trim();
+  const codePoints = Array.from(spaced);
+  return codePoints.length > NAME_MAX_CODE_POINTS ? codePoints.slice(0, NAME_MAX_CODE_POINTS).join('').trim() : spaced;
+};
 
 const readVersion = (v: unknown): string | null => (typeof v === 'string' && VERSION_RE.test(v) ? v : null);
 

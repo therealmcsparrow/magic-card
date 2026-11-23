@@ -1,7 +1,5 @@
-// Contract: diagnostics. Version 1.0.0 (DIAGNOSTICS_CONTRACT). A read-only snapshot of the facts the setup block prints
-// (setup-block 1.0.0). The field list below is the schema and the privacy allow-list in one: a fact with no field here never
-// reaches the block. It has no write operation. Provider: src/diagnostics/snapshot.ts, a pure function (no DOM, no i18n, no
-// timers). Consumer: the card editor's Copy my setup button (src/editor/setup-copy/), which builds the SnapshotInput from the page.
+// Contract: diagnostics. Version 1.0.0 (DIAGNOSTICS_CONTRACT). A read-only snapshot of the facts the setup block prints; the
+// field list is the schema and the privacy allow-list. Provider: src/diagnostics/snapshot.ts. Consumer: src/editor/setup-copy/.
 
 export const DIAGNOSTICS_CONTRACT = '1.0.0';
 
@@ -13,14 +11,11 @@ export type LookKey = (typeof LOOK_KEYS)[number];
 export const FONT_KEYS = ['font_family', 'label_font_family', 'tab_font_family'] as const;
 export type FontKey = (typeof FONT_KEYS)[number];
 
-/**
- * Characters in look and font names that are printed as one space: C0 and C1 controls, and the bidi controls (ALM U+061C,
- * LRM U+200E, RLM U+200F, the embeddings and overrides U+202A-U+202E, the isolates U+2066-U+2069). A bidi control would make a
- * pasted block read differently from its bytes; right-to-left names display correctly without them. Use with replace() only:
- * the g flag makes test() and exec() stateful.
- */
-// eslint-disable-next-line no-control-regex
-export const NAME_REPLACED = /[\u{0}-\u{1F}\u{7F}-\u{9F}\u{61C}\u{200E}\u{200F}\u{202A}-\u{202E}\u{2066}-\u{2069}]/gu;
+/** In look and font names every code point outside letters, marks, numbers, punctuation, symbols and space separators, and every variation selector, is printed as one space. Use with replace() only (g flag). */
+export const NAME_REPLACED = /[^\p{L}\p{M}\p{N}\p{P}\p{S}\p{Zs}]|[\uFE00-\uFE0F\u{E0100}-\u{E01EF}]/gu;
+
+/** Each look or font name is cut at this many code points after the replacement. */
+export const NAME_MAX_CODE_POINTS = 64;
 
 /** Nodes the config walk visits at most (objects and arrays together); the rest of a larger config is not read. */
 export const CONFIG_WALK_BUDGET = 5000;
@@ -60,7 +55,7 @@ export interface SetupSnapshot {
   readonly fonts: readonly string[];
   /** Card chunks this config needs at first paint, sorted by name. */
   readonly firstPaint: readonly ChunkEntry[];
-  /** On-demand chunks this page has installed or failed (never pending ones), sorted by name. */
+  /** On-demand chunks this page has installed or failed (never pending ones), without those already in firstPaint, sorted by name. */
   readonly onClick: readonly ChunkEntry[];
   /** window.isSecureContext: secure or not-secure; null when the page did not say. */
   readonly transport: 'secure' | 'not-secure' | null;
@@ -87,18 +82,5 @@ export interface SnapshotInput {
   readonly secure: boolean | undefined;
 }
 
-/**
- * Rules of the provider. It never throws: a getter or check that throws counts as missing for that value only.
- * - card: cardVersion when it is a string that passes VERSION_RE, else null.
- * - utils: utils not an object -> installed false. An object whose apiVersion is not UTILS_PROVIDER_API -> version null. Else
- *   settings.version when it passes VERSION_RE, else null.
- * - looks and fonts: walk the config (objects and arrays, at most CONFIG_WALK_BUDGET nodes); for each own LOOK_KEYS or FONT_KEYS
- *   key with a string value, replace every character NAME_REPLACED matches with one space, trim, drop empty results, then
- *   de-duplicate and sort. Names are otherwise kept exactly as written.
- * - firstPaint: every needs entry whose check returns true; idle maps to pending.
- * - onClick: every onDemand name whose state is not idle.
- * - transport: secure true -> secure, false -> not-secure, else null.
- * No other value of the config, the page, hass or Utils is read: entity ids, URLs, host names, dashboard, user and area names
- * have no field.
- */
+/** Never throws: a value that cannot be read is missing, nothing else. The provider rules are in .company/contracts/diagnostics.md. */
 export type BuildSnapshot = (input: SnapshotInput) => SetupSnapshot;

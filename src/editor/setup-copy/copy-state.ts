@@ -49,7 +49,8 @@ export function createCopyFeedback(timers: CopyFeedbackTimers): CopyFeedback {
       if (disposed || ticket !== latest) return;
       cancelTimer();
       if (outcome === 'blocked') {
-        set('blocked');
+        state = 'blocked';
+        for (const cb of [...subscribers]) cb(state);
         return;
       }
       set('copied');

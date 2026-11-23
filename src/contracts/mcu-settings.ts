@@ -4,7 +4,7 @@
 
 export const MCU_SETTINGS_CONTRACT = '1.1.0';
 
-/** Published on `window.magicCardUtils.settings` once the switches are known, and as the detail of the MCU_SETTINGS_EVENT. */
+/** Published on `window.magicCardUtils.settings` once the switches are known. The MCU_SETTINGS_EVENT detail carries the two switches and no `version`. */
 export interface McuSettings {
   /** The "Load Google Fonts" switch. */
   googleFonts: boolean;
@@ -12,7 +12,7 @@ export interface McuSettings {
   lookGallery?: boolean;
   /**
    * The installed Utils version, the `version` of its manifest.json. Absent on Utils releases that predate contract 1.1.0 and
-   * when the read failed; consumers check it against diagnostics VERSION_RE and treat anything else as unknown.
+   * when it cannot be read; consumers check it against diagnostics VERSION_RE and treat anything else as unknown.
    */
   version?: string;
 }
@@ -27,9 +27,9 @@ export interface McuGetSettingsResult {
   look_gallery: boolean;
   theme_fonts: Record<string, { name: string; weights: number[] }[]>;
   /**
-   * The `version` of the integration's manifest.json, read once in the executor and cached; absent when the read failed. Readable
-   * by every signed-in user, who already sees it in the provider's `?v=` script URL. The provider copies it to McuSettings.version
-   * only when it is a string.
+   * The integration's manifest version as Home Assistant's loader reports it; absent when it cannot report one. Readable by every
+   * signed-in user, who already sees it in the provider's `?v=` script URL. The provider copies it to McuSettings.version only
+   * when it is a string.
    */
   version?: string;
 }

@@ -1,7 +1,5 @@
 // Contract: clipboard port. Version 1.0.0 (CLIPBOARD_PORT_CONTRACT). How the card editor writes text to the clipboard and how
-// the Copy my setup button shows the result. The port is swappable (tests use a fake); the feedback machine owns the Copied
-// state and its exits, so they are testable without a DOM. Provider: src/editor/setup-copy/clipboard.ts (the port) and
-// src/editor/setup-copy/copy-state.ts (the feedback). Consumer: src/editor/setup-copy/mc-setup-copy.ts.
+// the Copy my setup button shows the result. Provider: src/editor/setup-copy/clipboard.ts and copy-state.ts.
 
 export const CLIPBOARD_PORT_CONTRACT = '1.0.0';
 
@@ -40,7 +38,7 @@ export interface CopyFeedback {
   click(): number;
   /**
    * The port's outcome for a ticket; a stale ticket does nothing. copied: state copied and, when coarse, one TOUCH_RESET_MS
-   * timer. blocked: state blocked; the fallback stays until a later click settles copied or the machine is disposed.
+   * timer. blocked: state blocked and every subscriber is told, also on a repeat; the fallback stays until a later click copies.
    */
   settle(ticket: number, outcome: CopyOutcome, coarse: boolean): void;
   /**
@@ -48,7 +46,7 @@ export interface CopyFeedback {
    * blur or Escape never hides the fallback. The element handles Escape (and stops its propagation) only while copied.
    */
   reset(cause: CopyResetCause): void;
-  /** Called on every state change. Returns the unsubscribe. */
+  /** Called on every state change and on every blocked settle. Returns the unsubscribe. */
   subscribe(cb: (state: CopyFeedbackState) => void): () => void;
   /** The element left the page: clears the timer and the subscribers. */
   dispose(): void;

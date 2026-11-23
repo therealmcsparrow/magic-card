@@ -1,10 +1,7 @@
 import type { ChunkState, SetupSnapshot } from './diagnostics';
 
-// Contract: setup block. Version 1.0.0 (SETUP_BLOCK_CONTRACT). The plain-text block the Copy my setup button copies, block format
-// version 1 (SETUP_BLOCK_VERSION, the `setup v1` first line). The two numbers move apart: a new optional snapshot field is a
-// diagnostics minor and changes no line here; a new, removed or reordered line, or a changed word, is a new block version
-// (`setup v2`) and a new major of this Contract. Provider: src/diagnostics/format.ts, a pure function. The text is English
-// constants only, whatever the UI language; nothing in it goes through i18n.
+// Contract: setup block. Version 1.0.0 (SETUP_BLOCK_CONTRACT). The plain-text block the Copy my setup button copies, block
+// format version 1 (the `setup v1` first line). Provider: src/diagnostics/format.ts. English constants only, never through i18n.
 
 export const SETUP_BLOCK_CONTRACT = '1.0.0';
 export const SETUP_BLOCK_VERSION = 1;
