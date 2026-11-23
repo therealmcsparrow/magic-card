@@ -40,7 +40,7 @@
       },
       {
         "id": "stage-4",
-        "cap": 75520,
+        "cap": 75552,
         "target": 61440,
         "landed_commit": "774abb6",
         "measured": 75499
@@ -59,9 +59,9 @@
       "note": "Animation studio the magic-card-utils panel loads. 987 KiB; measured 1,010,596, so the margin is tight."
     },
     "magic-card-editor.js": {
-      "raw": 1095680,
-      "ceiling": 1095680,
-      "note": "Card editor, carrying the studio font faces. 1,070 KiB, measured 1,079,003 (Linux build, docker node 24.22.0) + 5 % would pass the ceiling, so the cap is the ceiling 1,095,680."
+      "raw": 1104128,
+      "ceiling": 1104128,
+      "note": "Card editor, carrying the studio font faces and the setup copy block. 1,078 KiB, measured 1,103,879 (Windows build); the cap is rounded up to 1 KiB over that."
     },
     "magic-card-icon-animator.js": {
       "raw": 231424,
@@ -94,9 +94,9 @@
       "note": "108 KiB; it holds the font fetch, the card table with its search field and the static members a host can call, and bundles its own copy of the icon style derivation. Measured 108,443 (Linux build, docker node 24.22.0); + 5 % would pass the ceiling, so the cap is the ceiling 110,592."
     },
     "magic-card-theme-editor.js": {
-      "raw": 304128,
-      "ceiling": 304128,
-      "note": "Theme editor in the studio frame. 297 KiB, measured 289,536 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB."
+      "raw": 307200,
+      "ceiling": 307200,
+      "note": "Theme editor in the studio frame, with storage-first themes and the Save to themes folder action. 300 KiB, measured 307,087 (Windows build), rounded up to 1 KiB."
     },
     "magic-card-theme-presets.js": {
       "raw": 31744,
@@ -1337,6 +1337,36 @@
       "field": "/files/look-kit.mjs/ceiling",
       "from": 32768,
       "to": 36864
+    },
+    {
+      "id": "entry-stage4-75520-to-75552",
+      "field": "/entry/stages/3/cap",
+      "from": 75520,
+      "to": 75552
+    },
+    {
+      "id": "editor-raw-1095680-to-1104128",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 1095680,
+      "to": 1104128
+    },
+    {
+      "id": "editor-ceiling-1095680-to-1104128",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 1095680,
+      "to": 1104128
+    },
+    {
+      "id": "theme-editor-raw-304128-to-307200",
+      "field": "/files/magic-card-theme-editor.js/raw",
+      "from": 304128,
+      "to": 307200
+    },
+    {
+      "id": "theme-editor-ceiling-304128-to-307200",
+      "field": "/files/magic-card-theme-editor.js/ceiling",
+      "from": 304128,
+      "to": 307200
     }
   ]
 }

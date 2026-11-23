@@ -5243,6 +5243,34 @@
     "text": "Services",
     "hash": "604dce44"
   },
+  "card-editor.setup-copy.blocked": {
+    "text": "Je browser blokkeerde het kopiëren. Selecteer de tekst hieronder en kopieer die zelf.",
+    "hash": "c8d72cc5"
+  },
+  "card-editor.setup-copy.blocked-status": {
+    "text": "Kopiëren lukte niet. De tekst staat hieronder zodat je die zelf kunt kopiëren.",
+    "hash": "27424106"
+  },
+  "card-editor.setup-copy.copied": {
+    "text": "Gekopieerd",
+    "hash": "8d525e5f"
+  },
+  "card-editor.setup-copy.copy": {
+    "text": "Mijn setup kopiëren",
+    "hash": "26b88500"
+  },
+  "card-editor.setup-copy.failed": {
+    "text": "Je setup kon niet worden voorbereid. Probeer het opnieuw.",
+    "hash": "1450ba8e"
+  },
+  "card-editor.setup-copy.helper": {
+    "text": "Kopieert je kaart- en Utils-versie, look- en lettertypenamen en lazy loading, klaar om in een bugmelding te plakken. Namen worden gekopieerd zoals je ze schreef. Er wordt niets verstuurd.",
+    "hash": "91817360"
+  },
+  "card-editor.setup-copy.textarea-label": {
+    "text": "Setup-gegevens om te kopiëren",
+    "hash": "8f22cff4"
+  },
   "card-editor.shape-editor.0-is-round-1-is-most-irregular": {
     "text": "0 is rond, 1 is het meest onregelmatig.",
     "hash": "55dd25bf"

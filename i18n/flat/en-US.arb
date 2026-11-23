@@ -19748,6 +19748,55 @@
     "x-max-length": 15,
     "x-source-hash": "604dce44"
   },
+  "card-editor.setup-copy.blocked": "Your browser blocked copying. Select the text below and copy it yourself.",
+  "@card-editor.setup-copy.blocked": {
+    "description": "Line above the text box that appears when the browser refuses clipboard access after Copy my setup was pressed. Max 110 characters.",
+    "source_text": "Your browser blocked copying. Select the text below and copy it yourself.",
+    "x-max-length": 110,
+    "x-source-hash": "c8d72cc5"
+  },
+  "card-editor.setup-copy.blocked-status": "Could not copy. The text is shown below so you can copy it yourself.",
+  "@card-editor.setup-copy.blocked-status": {
+    "description": "Screen reader announcement (not visible) after Copy my setup failed because the browser blocked the clipboard. Max 100 characters.",
+    "source_text": "Could not copy. The text is shown below so you can copy it yourself.",
+    "x-max-length": 100,
+    "x-source-hash": "27424106"
+  },
+  "card-editor.setup-copy.copied": "Copied",
+  "@card-editor.setup-copy.copied": {
+    "description": "Label that replaces the Copy my setup label for a moment after the copy worked. Also announced to screen readers. Max 12 characters.",
+    "source_text": "Copied",
+    "x-max-length": 12,
+    "x-source-hash": "8d525e5f"
+  },
+  "card-editor.setup-copy.copy": "Copy my setup",
+  "@card-editor.setup-copy.copy": {
+    "description": "Label of the button in the card editor that copies a short, plain-text summary of the card setup (versions, look and font names, lazy loading) to the clipboard. Shown with a copy icon. Max 24 characters.",
+    "source_text": "Copy my setup",
+    "x-max-length": 24,
+    "x-source-hash": "26b88500"
+  },
+  "card-editor.setup-copy.failed": "Could not prepare your setup. Try again.",
+  "@card-editor.setup-copy.failed": {
+    "description": "Message shown when the setup summary could not be built after Copy my setup was pressed. Max 60 characters.",
+    "source_text": "Could not prepare your setup. Try again.",
+    "x-max-length": 60,
+    "x-source-hash": "1450ba8e"
+  },
+  "card-editor.setup-copy.helper": "Copies your card and Utils versions, look and font names and lazy loading, ready to paste into a bug report. Names are copied as you wrote them. Nothing is sent anywhere.",
+  "@card-editor.setup-copy.helper": {
+    "description": "Helper text under the Copy my setup button in the card editor. Says what is copied and that nothing leaves the browser. Max 240 characters.",
+    "source_text": "Copies your card and Utils versions, look and font names and lazy loading, ready to paste into a bug report. Names are copied as you wrote them. Nothing is sent anywhere.",
+    "x-max-length": 240,
+    "x-source-hash": "91817360"
+  },
+  "card-editor.setup-copy.textarea-label": "Setup details to copy",
+  "@card-editor.setup-copy.textarea-label": {
+    "description": "Accessible name of the read-only text box that holds the setup summary when the browser blocked copying. Max 32 characters.",
+    "source_text": "Setup details to copy",
+    "x-max-length": 32,
+    "x-source-hash": "8f22cff4"
+  },
   "card-editor.shape-editor.0-is-round-1-is-most-irregular": "0 is round, 1 is most irregular.",
   "@card-editor.shape-editor.0-is-round-1-is-most-irregular": {
     "description": "Helper text under the shape editor blob irregularity slider; explains the scale from round to most irregular. Max 55 characters.",

@@ -7095,6 +7095,41 @@
     "note": "Heading above the list of available Home Assistant services; plural of Service.",
     "max": 15
   },
+  "card-editor.setup-copy.blocked": {
+    "text": "Your browser blocked copying. Select the text below and copy it yourself.",
+    "note": "Line above the text box that appears when the browser refuses clipboard access after Copy my setup was pressed.",
+    "max": 110
+  },
+  "card-editor.setup-copy.blocked-status": {
+    "text": "Could not copy. The text is shown below so you can copy it yourself.",
+    "note": "Screen reader announcement (not visible) after Copy my setup failed because the browser blocked the clipboard.",
+    "max": 100
+  },
+  "card-editor.setup-copy.copied": {
+    "text": "Copied",
+    "note": "Label that replaces the Copy my setup label for a moment after the copy worked. Also announced to screen readers.",
+    "max": 12
+  },
+  "card-editor.setup-copy.copy": {
+    "text": "Copy my setup",
+    "note": "Label of the button in the card editor that copies a short, plain-text summary of the card setup (versions, look and font names, lazy loading) to the clipboard. Shown with a copy icon.",
+    "max": 24
+  },
+  "card-editor.setup-copy.failed": {
+    "text": "Could not prepare your setup. Try again.",
+    "note": "Message shown when the setup summary could not be built after Copy my setup was pressed.",
+    "max": 60
+  },
+  "card-editor.setup-copy.helper": {
+    "text": "Copies your card and Utils versions, look and font names and lazy loading, ready to paste into a bug report. Names are copied as you wrote them. Nothing is sent anywhere.",
+    "note": "Helper text under the Copy my setup button in the card editor. Says what is copied and that nothing leaves the browser.",
+    "max": 240
+  },
+  "card-editor.setup-copy.textarea-label": {
+    "text": "Setup details to copy",
+    "note": "Accessible name of the read-only text box that holds the setup summary when the browser blocked copying.",
+    "max": 32
+  },
   "card-editor.shape-editor.0-is-round-1-is-most-irregular": {
     "text": "0 is round, 1 is most irregular.",
     "note": "Helper text under the shape editor blob irregularity slider; explains the scale from round to most irregular.",
