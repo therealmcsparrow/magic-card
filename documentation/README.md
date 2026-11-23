@@ -41,7 +41,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 
 | Folder | Covers |
 | --- | --- |
-| [Support](support/README.md) | Ready replies for a card that stands still after a pause and for the "Magic Card was updated" message |
+| [Support](support/README.md) | [Copy my setup](support/copy-my-setup.md), the editor button that copies your versions, looks and fonts for a bug report, and ready replies for a card that stands still after a pause and for the "Magic Card was updated" message |
 
 ## Older tablets
 

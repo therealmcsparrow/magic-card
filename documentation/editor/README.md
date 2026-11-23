@@ -36,6 +36,7 @@ If the file is missing or cannot be loaded, Home Assistant falls back to its YAM
 -   [Templates](templates.md): create, load, overrides, template animations, re-sync, save and unlink.
 -   [Copy and paste design](copy-paste-design.md): moving a design between rows, columns and modules.
 -   [Picker windows](picker-windows.md): moving, resizing and closing the editor's picker windows.
+-   [Copy my setup](../support/copy-my-setup.md): the button next to the look entry that copies your versions, looks, fonts and lazy loading for a bug report.
 
 ## Pane editor and Studio
 

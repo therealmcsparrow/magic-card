@@ -267,6 +267,16 @@ The look gallery lets you try looks that other people shared on your own card. A
 
 The preview does not show hover or tap styles. A tile without a picture is still a usable look. See [Look gallery](documentation/look-gallery/README.md) for the details, and for what to do when a look is listed as not available.
 
+### Copy my setup
+
+When you report a problem, add your setup to the report.
+
+1. Open the card in the editor.
+2. Select **Copy my setup**, next to the look entry. The label changes to **Copied**.
+3. Paste into your bug report or forum post.
+
+The block lists your card and Magic Card Utils versions, the look and font names, and what loads when. Names are copied as you wrote them. Entity ids, web addresses and dashboard names are not copied, and nothing is sent anywhere. If your browser blocks copying, a text box shows the same text so you can copy it yourself. See [Copy my setup](documentation/support/copy-my-setup.md).
+
 ## Card structure
 
 ```
