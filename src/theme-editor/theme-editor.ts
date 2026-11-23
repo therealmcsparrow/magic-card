@@ -41,6 +41,8 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
     _files: { state: true },
     _loaded: { state: true },
     _include: { state: true },
+    _writes: { state: true },
+    _storage: { state: true },
     _draft: { state: true },
     _dirty: { state: true },
     _checking: { state: true },
@@ -59,6 +61,10 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   private _files: ThemeFileEntry[] = [];
   private _loaded: string[] = [];
   private _include: IncludeStatus | undefined;
+  /** themes_list writes_enabled (theme-files 1.1.0); absent from an older Magic Card Utils, which counts as on. */
+  private _writes = true;
+  /** themes_list storage (theme-files 2.0.0): themes are saved in Magic Card Utils and only published to /config/themes. */
+  private _storage = false;
   private _draft: Draft | undefined;
   private _dirty = false;
   private _checking = false;
@@ -137,6 +143,8 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       this._files = r.files ?? [];
       this._loaded = r.loaded ?? [];
       this._include = r.include;
+      this._writes = r.writes_enabled !== false;
+      this._storage = r.storage === true;
       this._listPhase = 'ready';
       this._listError = '';
       void this._openSelected();
@@ -171,6 +179,8 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       this._files = r.files ?? this._files;
       this._loaded = r.loaded ?? this._loaded;
       this._include = r.include;
+      this._writes = r.writes_enabled !== false;
+      this._storage = r.storage === true;
       this._checkResult = r.include?.state === 'ok' ? t('theme-editor.theme-editor.found-it-you-can-save-themes-now') : t('theme-editor.theme-editor.still-not-found-restart-home-assistant');
     } catch (e) {
       this._checkResult = t('theme-editor.theme-editor.the-check-failed-reason', { reason: (e as Error).message ?? '' }).trim();
@@ -197,6 +207,8 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
         mtime: r.mtime,
         editable: r.editable,
         reason: r.reason ? reasonText(r.reason) : undefined,
+        stored: r.stored,
+        folder: r.folder,
       };
       fire(this, 'mc-theme-select', { name: r.name });
     } catch (e) {
@@ -234,6 +246,8 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
         .hass=${this.hass}
         .backend=${this.backend}
         .include=${this._include}
+        .writesEnabled=${this._writes}
+        .storage=${this._storage}
         .mine=${this._mine}
         .checking=${this._checking}
         .checkResult=${this._checkResult}
@@ -263,6 +277,8 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       .files=${this._files}
       .loaded=${this._loaded}
       .include=${this._include}
+      .writesEnabled=${this._writes}
+      .storage=${this._storage}
       .mine=${this._mine}
       .phase=${this._listPhase}
       .error=${this._listError}

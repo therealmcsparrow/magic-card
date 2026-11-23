@@ -1,15 +1,20 @@
-// Contract: Magic Card Utils settings. Version 1.0.0 (MCU_SETTINGS_CONTRACT). The install-wide switches Utils publishes to every
+// Contract: Magic Card Utils settings. Version 1.1.0 (MCU_SETTINGS_CONTRACT). The install-wide switches Utils publishes to every
 // page and how the card reads them. Provider: magic_card_utils_library.js, fed by `magic_card_utils/get_settings`, which reads the
-// integration's options flow. Consumers: the card's font loader and the card editor's look gallery.
+// integration's options flow. Consumers: the card's font loader, the card editor's look gallery and its Copy my setup button.
 
-export const MCU_SETTINGS_CONTRACT = '1.0.0';
+export const MCU_SETTINGS_CONTRACT = '1.1.0';
 
-/** Published on `window.magicCardUtils.settings` once the switches are known, and as the detail of the MCU_SETTINGS_EVENT. */
+/** Published on `window.magicCardUtils.settings` once the switches are known. The MCU_SETTINGS_EVENT detail carries the two switches and no `version`. */
 export interface McuSettings {
   /** The "Load Google Fonts" switch. */
   googleFonts: boolean;
   /** The "Look gallery" switch. Absent on Utils releases before the gallery; absent counts as off. */
   lookGallery?: boolean;
+  /**
+   * The installed Utils version, the `version` of its manifest.json. Absent on Utils releases that predate contract 1.1.0 and
+   * when it cannot be read; consumers check it against diagnostics VERSION_RE and treat anything else as unknown.
+   */
+  version?: string;
 }
 
 /** Window event fired once after the provider has read the switches (also when the read failed, with every switch off). */
@@ -21,6 +26,12 @@ export interface McuGetSettingsResult {
   google_fonts: boolean;
   look_gallery: boolean;
   theme_fonts: Record<string, { name: string; weights: number[] }[]>;
+  /**
+   * The integration's manifest version as Home Assistant's loader reports it; absent when it cannot report one. Readable by every
+   * signed-in user, who already sees it in the provider's `?v=` script URL. The provider copies it to McuSettings.version only
+   * when it is a string.
+   */
+  version?: string;
 }
 
 /**

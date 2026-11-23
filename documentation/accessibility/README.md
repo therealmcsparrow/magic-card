@@ -12,6 +12,7 @@ Magic Card is built to WCAG 2.2 AA. This is the standard we build to. We have no
 -   **Changes are announced.** When a layer moves, the new position is announced. An import summary is announced when it appears.
 -   **Colour is not the only signal.** The tone of a layer in the SVG editor is shown as text.
 -   **Reduced motion.** Cards turn off most movement when the system asks for reduced motion, and the animation studio has a reduced-motion preview. A flow line becomes a static line with an arrow. Particle layers fade in over 200 ms. With reduced motion, particle simulations appear at once and other particle layers stay hidden.
+-   **Copy my setup works without a pointer.** The button is a native button. Copying does not move focus. **Copied** is announced through a status message that is cleared and set again, so a repeat copy is announced again. When the browser blocks copying, the failure is announced and a read-only text box with a name appears. See [Copy my setup](../support/copy-my-setup.md).
 -   **Your language.** The editors follow the language of your Home Assistant profile. See [Languages](../languages/README.md).
 
 ## Right to left
@@ -36,6 +37,8 @@ Some things we have not tested with real hardware:
 
 -   Long press and drag on an iPad, in the layers list.
 -   Screen reader output for the particle layers list. It works in tests, but a screen reader check is still due.
+-   Whether a repeat **Copied** is announced by NVDA with Chrome, VoiceOver with Safari and TalkBack. The status message is cleared and set on the next frame to make this work, but no screen reader has been run on it yet, and the result is not recorded.
+-   Whether Safari lets the copy through on an iPad and iPhone, and how the 10 second return of **Copied** feels on a touch screen.
 -   Older Android WebViews, for custom shapes and markdown. See [Custom shapes in cards](../shape-editor/custom-shapes-in-cards.md#older-browsers-and-older-tablets).
 
 ## Known limitation

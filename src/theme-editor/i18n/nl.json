@@ -327,6 +327,14 @@
     "text": "Lichte en donkere modus toegevoegd. Variabelen die je eerder instelde, blijven gedeeld.",
     "hash": "d002c3e8"
   },
+  "theme-editor.editor-view.also-remove-file-from-the-themes-folder": {
+    "text": "Verwijder {file} ook uit de themamap",
+    "hash": "775ab119"
+  },
+  "theme-editor.editor-view.another-file-in-the-themes-folder-uses": {
+    "text": "Een ander bestand in de themamap gebruikt deze naam",
+    "hash": "93340bea"
+  },
   "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
     "text": "Geldt alleen voor dit browsertabblad. Open een dashboard om het te zien. Gebruikt je huidige modus ({mode, select, dark {donker} other {licht}}).",
     "hash": "1444813f"
@@ -491,6 +499,10 @@
     "text": "Home Assistant laadt /config/themes nog niet. Voeg de regels hierboven toe, start opnieuw op en kies dan Opnieuw controleren.",
     "hash": "5419e14f"
   },
+  "theme-editor.editor-view.in-the-themes-folder": {
+    "text": "Ook in de themamap",
+    "hash": "4f266ae6"
+  },
   "theme-editor.editor-view.living-room": {
     "text": "Woonkamer",
     "hash": "268d40ee"
@@ -503,6 +515,10 @@
     "text": "Magic Card en integraties",
     "hash": "56151480"
   },
+  "theme-editor.editor-view.magic-card-utils-has-no-room-for-this-theme": {
+    "text": "Magic Card Utils heeft geen ruimte voor dit thema. Maak het kleiner of verwijder thema's die je niet meer nodig hebt.",
+    "hash": "978cd4bd"
+  },
   "theme-editor.editor-view.more-actions": {
     "text": "Meer acties",
     "hash": "f8d46c25"
@@ -510,6 +526,10 @@
   "theme-editor.editor-view.moved-label-to-shared-light-and-dark": {
     "text": "{label} verplaatst naar Gedeeld. Licht en Donker gebruiken het allebei.",
     "hash": "4a8e4025"
+  },
+  "theme-editor.editor-view.name-changed-since-you-opened-it": {
+    "text": "{name} is gewijzigd sinds je het opende",
+    "hash": "eed11c5a"
   },
   "theme-editor.editor-view.name-yaml-changed-on-disk": {
     "text": "{name}.yaml is gewijzigd op schijf",
@@ -535,6 +555,10 @@
     "text": "Geen variabele met de naam {query} in de lijsten.",
     "hash": "ae112c86"
   },
+  "theme-editor.editor-view.not-in-the-themes-folder": {
+    "text": "Niet in de themamap",
+    "hash": "b018f160"
+  },
   "theme-editor.editor-view.now-using-name-for-your-user": {
     "text": "Je gebruiker gebruikt nu {name}.",
     "hash": "601a10e9"
@@ -550,6 +574,10 @@
   "theme-editor.editor-view.only-changed": {
     "text": "Alleen gewijzigd",
     "hash": "d836aea0"
+  },
+  "theme-editor.editor-view.only-in-the-themes-folder": {
+    "text": "Alleen in de themamap",
+    "hash": "1301009b"
   },
   "theme-editor.editor-view.open-preview": {
     "text": "Voorbeeld openen",
@@ -607,6 +635,10 @@
     "text": "Opslaan als mijn voorinstelling",
     "hash": "bd12a457"
   },
+  "theme-editor.editor-view.save-to-themes-folder": {
+    "text": "Opslaan in themamap",
+    "hash": "f871e1e3"
+  },
   "theme-editor.editor-view.save-without-it": {
     "text": "Opslaan zonder",
     "hash": "2f45b142"
@@ -623,6 +655,10 @@
     "text": "{name} opgeslagen en thema's opnieuw geladen. Schermen die dit thema gebruiken, worden nu bijgewerkt.",
     "hash": "cad4ee18"
   },
+  "theme-editor.editor-view.saved-name-in-magic-card-utils": {
+    "text": "{name} opgeslagen in Magic Card Utils",
+    "hash": "88e8ce8a"
+  },
   "theme-editor.editor-view.saved-time": {
     "text": "Opgeslagen om {time}",
     "hash": "430aca4f"
@@ -634,6 +670,10 @@
   "theme-editor.editor-view.saving-rewrites-name-yaml-comments-in": {
     "text": "Opslaan herschrijft {name}.yaml. Opmerkingen in het bestand worden verwijderd. Alle variabelen blijven behouden, ook die deze editor niet kent.",
     "hash": "f91fef09"
+  },
+  "theme-editor.editor-view.saving-theme-files-is-off": {
+    "text": "Opslaan staat uit: Themabestanden staat uit",
+    "hash": "71c216cc"
   },
   "theme-editor.editor-view.search-by-name-or-value": {
     "text": "Zoeken op naam of waarde",
@@ -691,9 +731,25 @@
     "text": "Thema-editor",
     "hash": "2c9d9e02"
   },
+  "theme-editor.editor-view.theme-files-off-message": {
+    "text": "Themabestanden opslaan staat uit. Een beheerder kan Themabestanden aanzetten via Instellingen > Apparaten & diensten > Magic Card Utils > Configureren. Je kunt de YAML nog wel kopiëren.",
+    "hash": "fb2589c1"
+  },
+  "theme-editor.editor-view.theme-folder-off-message": {
+    "text": "Opslaan in de themamap staat uit. Je thema wordt nog wel opgeslagen in Magic Card Utils. Een beheerder kan Thema's in de themamap laten opslaan aanzetten via Instellingen > Apparaten & diensten > Magic Card Utils > Configureren.",
+    "hash": "3f3849a6"
+  },
   "theme-editor.editor-view.themes": {
     "text": "Thema's",
     "hash": "43ae3265"
+  },
+  "theme-editor.editor-view.themes-folder-copy-is-older": {
+    "text": "Kopie in de themamap is ouder",
+    "hash": "75196545"
+  },
+  "theme-editor.editor-view.this-editor-only-changes-its-own-files": {
+    "text": "Deze editor wijzigt alleen themabestanden die hij zelf schreef. Sla het thema op onder een andere naam.",
+    "hash": "b75ffdb5"
   },
   "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
     "text": "Dit bestand is veranderd sinds je het opende. Laad het opnieuw om de nieuwe versie te zien, of sla toch op om het te vervangen door jouw versie.",
@@ -702,6 +758,10 @@
   "theme-editor.editor-view.this-removes-config-file-screens-that": {
     "text": "Dit verwijdert /config/{file}. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",
     "hash": "728badac"
+  },
+  "theme-editor.editor-view.this-removes-name-from-magic-card-utils": {
+    "text": "Dit verwijdert {name} uit Magic Card Utils.",
+    "hash": "d5fcf1b2"
   },
   "theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": {
     "text": "Dit thema is alleen-lezen. Kopieer het om te bewerken.",
@@ -2591,6 +2651,10 @@
     "text": "Een voorinstelling",
     "hash": "a9734a0f"
   },
+  "theme-editor.start-view.also-remove-file-from-the-themes-folder": {
+    "text": "Verwijder {file} ook uit de themamap",
+    "hash": "775ab119"
+  },
   "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
     "text": "Een leeg thema. Voeg alleen de variabelen toe die je wilt wijzigen.",
     "hash": "37300aad"
@@ -2598,6 +2662,10 @@
   "theme-editor.start-view.an-installed-theme": {
     "text": "Een geïnstalleerd thema",
     "hash": "416ce064"
+  },
+  "theme-editor.start-view.another-file-in-the-themes-folder-uses": {
+    "text": "Een ander bestand in de themamap gebruikt deze naam",
+    "hash": "93340bea"
   },
   "theme-editor.start-view.blank": {
     "text": "Leeg",
@@ -2695,6 +2763,10 @@
     "text": "Importeren",
     "hash": "2cff9baa"
   },
+  "theme-editor.start-view.in-the-themes-folder": {
+    "text": "Ook in de themamap",
+    "hash": "4f266ae6"
+  },
   "theme-editor.start-view.installed-theme": {
     "text": "Geïnstalleerd thema",
     "hash": "caa84d09"
@@ -2759,6 +2831,14 @@
     "text": "Nog geen thema's",
     "hash": "dc3cdada"
   },
+  "theme-editor.start-view.not-in-the-themes-folder": {
+    "text": "Niet in de themamap",
+    "hash": "b018f160"
+  },
+  "theme-editor.start-view.only-in-the-themes-folder": {
+    "text": "Alleen in de themamap",
+    "hash": "1301009b"
+  },
   "theme-editor.start-view.pick-a-preset-to-start-from": {
     "text": "Kies een voorinstelling om mee te beginnen",
     "hash": "40d39ea0"
@@ -2786,6 +2866,10 @@
   "theme-editor.start-view.same-in-light-and-dark": {
     "text": "Hetzelfde in licht en donker",
     "hash": "c64dc7db"
+  },
+  "theme-editor.start-view.saving-theme-files-is-off": {
+    "text": "Themabestanden opslaan staat uit.",
+    "hash": "7eeacff4"
   },
   "theme-editor.start-view.search-installed-themes": {
     "text": "Geïnstalleerde thema's zoeken",
@@ -2823,9 +2907,25 @@
     "text": "De themanaam komt niet overeen met de bestandsnaam.",
     "hash": "9106c5da"
   },
+  "theme-editor.start-view.theme-files-off-notice": {
+    "text": "Themabestanden opslaan staat uit, dus elk thema is alleen-lezen. Je kunt de YAML van een thema nog wel kopiëren. Een beheerder kan Themabestanden aanzetten via Instellingen > Apparaten & diensten > Magic Card Utils > Configureren.",
+    "hash": "ad39f48e"
+  },
+  "theme-editor.start-view.theme-folder-off-notice": {
+    "text": "Opslaan in de themamap staat uit. Je kunt thema's nog wel maken en bewerken; ze worden opgeslagen in Magic Card Utils. Een beheerder kan Thema's in de themamap laten opslaan aanzetten via Instellingen > Apparaten & diensten > Magic Card Utils > Configureren.",
+    "hash": "2c1dc7f2"
+  },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Thema's konden niet worden gelezen",
     "hash": "78a126fa"
+  },
+  "theme-editor.start-view.themes-folder-copy-is-older": {
+    "text": "Kopie in de themamap is ouder",
+    "hash": "75196545"
+  },
+  "theme-editor.start-view.this-editor-did-not-write-the-file": {
+    "text": "Dit bestand is niet door deze editor geschreven, dus het blijft zoals het is.",
+    "hash": "71551f1c"
   },
   "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
     "text": "Dit verwijdert /config/{file} en {c, plural, one {het andere thema} other {de andere # thema's}} in dat bestand. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",
@@ -2835,9 +2935,17 @@
     "text": "Dit verwijdert /config/{file}. Schermen die het gebruiken, zoals wandtablets, schakelen over naar het standaardthema.",
     "hash": "728badac"
   },
+  "theme-editor.start-view.this-removes-name-from-magic-card-utils": {
+    "text": "Dit verwijdert {name} uit Magic Card Utils.",
+    "hash": "d5fcf1b2"
+  },
   "theme-editor.start-view.try-again": {
     "text": "Opnieuw proberen",
     "hash": "d8b8392e"
+  },
+  "theme-editor.start-view.your-themes-are-saved-in-magic-card-utils": {
+    "text": "Je thema's worden opgeslagen in Magic Card Utils. Sla er een op in de themamap om het in Home Assistant te gebruiken.",
+    "hash": "6111005c"
   },
   "theme-editor.start-view.your-themes-live-in-config-themes": {
     "text": "Je thema's staan in /config/themes.",

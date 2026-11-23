@@ -3,7 +3,7 @@ import type { PropertyDeclarations } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import type { CatalogueGroupId } from '../contracts/theme-catalogue';
 import type { SavedThemePreset } from '../contracts/mcu-library';
-import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
+import type { FolderState, IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode, ThemeSaveRequest } from '../contracts/theme-editor';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { glyph } from '../ui-kit/glyphs';
 import { kitBlueprint } from '../ui-kit/css/blueprint';
@@ -41,7 +41,7 @@ import {
 import type { Scope } from './util';
 import type { FieldCtx, FieldHint, FieldRow } from './field-group';
 import type { McteRawRows } from './raw-rows';
-import type { SaveReason } from './save-bar';
+import type { McteSaveBar, SaveReason } from './save-bar';
 import './field-group';
 import './preview';
 import './preview-cards';
@@ -64,6 +64,10 @@ export interface Draft {
   reason?: string;
   /** Where a new draft came from ("Paper", "a blank theme"), for the first status line. */
   from?: string;
+  /** (theme-files 2.0.0) The theme is saved in Magic Card Utils; false for a file-only theme. */
+  stored?: boolean;
+  /** (theme-files 2.0.0) Where the theme stands in /config/themes. */
+  folder?: FolderState;
 }
 
 type Dlg = 'discard' | 'first-save' | 'delete' | 'add-modes' | 'yaml' | 'rename' | null;
@@ -113,6 +117,8 @@ export class McteEditorView extends LitElement {
     hass: { attribute: false },
     backend: { attribute: false },
     include: { attribute: false },
+    writesEnabled: { attribute: false },
+    storage: { attribute: false },
     mine: { attribute: false },
     checking: { type: Boolean },
     checkResult: {},
@@ -121,6 +127,10 @@ export class McteEditorView extends LitElement {
     _name: { state: true },
     _file: { state: true },
     _mtime: { state: true },
+    _stored: { state: true },
+    _folder: { state: true },
+    _publishing: { state: true },
+    _deleteFile: { state: true },
     _scope: { state: true },
     _mode: { state: true },
     _open: { state: true },
@@ -159,6 +169,13 @@ export class McteEditorView extends LitElement {
   hass: unknown;
   backend: ThemeBackend | undefined;
   include: IncludeStatus | undefined;
+  /**
+   * themes_list writes_enabled. With `storage` it only gates Save to themes folder; on an older Magic Card Utils
+   * (no `storage`) it is false while the Theme files option is off and nothing saves.
+   */
+  writesEnabled: boolean | undefined;
+  /** themes_list storage (theme-files 2.0.0): Save keeps the theme in Magic Card Utils; publishing writes the file. */
+  storage = false;
   /** My theme presets, for the ids "Save as my preset" must not reuse. */
   mine: SavedThemePreset[] | undefined;
   checking = false;
@@ -169,6 +186,14 @@ export class McteEditorView extends LitElement {
   private _name = '';
   private _file: string | undefined;
   private _mtime: number | undefined;
+  private _stored = false;
+  private _folder: FolderState | undefined;
+  /** The save in flight writes /config/themes too. */
+  private _publishing = false;
+  /** Delete dialog: also remove the themes folder file. Off each time the dialog opens. */
+  private _deleteFile = false;
+  /** The rewrite dialog was opened by Save to themes folder. */
+  private _publishAfterAck = false;
   private _scope: Scope = 'shared';
   private _mode: ThemeMode = 'light';
   private _open = new Set<string>(['primary']);
@@ -286,6 +311,8 @@ export class McteEditorView extends LitElement {
     this._baseline = cloneDoc(d.saved ?? d.doc);
     this._file = d.file;
     this._mtime = d.mtime;
+    this._stored = !!d.stored;
+    this._folder = d.folder;
     this._mode = browserMode(this.hass);
     this._scope = openingScope(this._doc, this._mode);
     if (this._scope !== 'shared') this._mode = this._scope;
@@ -311,12 +338,12 @@ export class McteEditorView extends LitElement {
     if (changed.has('draft') && this.draft) {
       // A theme just opened (Create, a deep link): focus would otherwise be lost with the view that held it.
       void this.updateComplete.then(() => {
-        if (!document.activeElement || document.activeElement === document.body) this.renderRoot.querySelector<HTMLElement>('.tname')?.focus();
+        if (!document.activeElement || document.activeElement === document.body) this._focus('.tname');
       });
     }
     if (changed.has('_dlg') && this._dlg) {
       openDialog(this.renderRoot);
-      if (this._dlg === 'rename') this.renderRoot.querySelector<HTMLInputElement>('#rename')?.focus();
+      if (this._dlg === 'rename') this._focus('#rename');
     }
     this._syncStrip();
     if (changed.has('_doc') || changed.has('_mode')) this._queueHints();
@@ -363,13 +390,48 @@ export class McteEditorView extends LitElement {
     return docErrors(this._doc, kindOf);
   }
 
+  /** Why Save is off. With `storage` (theme-files 2.0.0) a save stays in Magic Card Utils, so neither the folder option nor the include lines matter. */
   private get _reason(): SaveReason | null {
+    if (!this.storage && this.writesEnabled === false) return { text: t('theme-editor.editor-view.saving-theme-files-is-off') };
     if (!this.draft?.editable) return { text: t('theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit') };
-    if (this.include && this.include.state !== 'ok') return { text: t('theme-editor.editor-view.saving-is-off-until-themes-are-set-up'), action: 'recheck', actionLabel: t('theme-editor.editor-view.check-again') };
+    if (!this.storage && this.include && this.include.state !== 'ok') return { text: t('theme-editor.editor-view.saving-is-off-until-themes-are-set-up'), action: 'recheck', actionLabel: t('theme-editor.editor-view.check-again') };
     const n = this._errors.length;
     if (n) return { text: t('theme-editor.editor-view.fix-c-to-save', { c: n }), action: 'fix', actionLabel: t('theme-editor.editor-view.show-the-first') };
     if (!this._isNew && !this._dirty) return { text: t('theme-editor.editor-view.no-changes-to-save'), quiet: true };
     return null;
+  }
+
+  /** Save to themes folder is offered: theme-files 2.0.0, the folder option on and a theme that may be published. */
+  private get _canPublish(): boolean {
+    return this.storage && this.writesEnabled !== false && !!this.draft?.editable && this._folder !== 'foreign';
+  }
+
+  /** Why Save to themes folder cannot run now, or null. Errors and the include lines block it; unchanged themes can still be published. */
+  private get _publishReason(): SaveReason | null {
+    const n = this._errors.length;
+    if (n) return { text: t('theme-editor.editor-view.fix-c-to-save', { c: n }), action: 'fix', actionLabel: t('theme-editor.editor-view.show-the-first') };
+    if (this.include && this.include.state !== 'ok') return { text: t('theme-editor.editor-view.saving-is-off-until-themes-are-set-up'), action: 'recheck', actionLabel: t('theme-editor.editor-view.check-again') };
+    return null;
+  }
+
+  /** The delete dialog offers "Also remove the file": a stored theme with Magic Card's own file, folder option on. */
+  private get _deleteFileOffered(): boolean {
+    return this.storage && this._stored && this.writesEnabled !== false && (this._folder === 'current' || this._folder === 'outdated');
+  }
+
+  /** The folder state in words, for the chip and the status line. */
+  private _folderText(): string {
+    if (!this._stored) return t('theme-editor.editor-view.only-in-the-themes-folder');
+    switch (this._folder) {
+      case 'current':
+        return t('theme-editor.editor-view.in-the-themes-folder');
+      case 'outdated':
+        return t('theme-editor.editor-view.themes-folder-copy-is-older');
+      case 'foreign':
+        return t('theme-editor.editor-view.another-file-in-the-themes-folder-uses');
+      default:
+        return t('theme-editor.editor-view.not-in-the-themes-folder');
+    }
   }
 
   /** Narrower than the frame's wide width: the drawer is a sheet opened from the bar. */
@@ -660,9 +722,8 @@ export class McteEditorView extends LitElement {
   // ── save ──
 
   /** Save pressed while it is off: say why and take the user to the cause (a tap has no hover). */
-  private _explainBlocked(): void {
+  private _explainBlocked(r: SaveReason | null = this._reason): void {
     this._afterSave = null;
-    const r = this._reason;
     if (!r) return;
     if (r.action === 'fix') {
       this._jumpToFirstError();
@@ -680,28 +741,53 @@ export class McteEditorView extends LitElement {
   }
 
   /** A half-filled "Add any variable" row would be lost by a save: warn first instead. */
-  private _warnRawPending(): void {
+  private _warnRawPending(publish = false): void {
     this._afterSave = null;
-    const dismiss = { label: t('theme-editor.editor-view.cancel'), run: () => (this._banner = null) };
-    this._banner = {
+    const dismiss = { label: t('theme-editor.editor-view.cancel'), run: () => this._dismiss() };
+    this._showBanner({
       kind: 'warn',
       title: t('theme-editor.editor-view.a-variable-is-typed-but-not-added'),
       message: t('theme-editor.editor-view.the-add-any-variable-row-still-holds'),
       actions: [
-        { label: t('theme-editor.editor-view.add-it-and-save'), run: () => void this._addPendingAndSave() },
-        { label: t('theme-editor.editor-view.save-without-it'), run: () => ((this._banner = null), void this._saveClick(true)) },
+        { label: t('theme-editor.editor-view.add-it-and-save'), run: () => void this._addPendingAndSave(publish) },
+        { label: t('theme-editor.editor-view.save-without-it'), run: () => ((this._banner = null), void (publish ? this._publishClick(true) : this._saveClick(true))) },
         dismiss,
       ],
-    };
-    this._frame()?.openDrawer(null, 'user');
-    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.banner .title')?.focus());
+    });
   }
 
-  private async _addPendingAndSave(): Promise<void> {
+  private _focus(sel: string): void {
+    this.renderRoot.querySelector<HTMLElement>(sel)?.focus();
+  }
+
+  /** The banner lives in the Variables panel, a closed sheet on a narrow screen: open it, then focus the banner title. */
+  private _showBanner(b: Banner): void {
+    const f = this._frame();
+    this._banner = b;
+    f?.openDrawer();
+    // after the frame's own render, which focuses the sheet's close button
+    void this.updateComplete
+      .then(() => (f as Partial<LitElement> | null)?.updateComplete)
+      .then(() => this._focus('.banner .title'));
+  }
+
+  /** Dismiss removes the focused button, so focus goes back to Save; closing a sheet hands focus back to what opened it. */
+  private _dismiss(): void {
+    const f = this._frame();
+    this._banner = null;
+    if (f?.narrow && f.drawerOpen) f.closeDrawer();
+    else void this.updateComplete.then(() => this.renderRoot.querySelector<McteSaveBar>('mcte-save-bar')?.focusSave());
+  }
+
+  private get _dismissAct(): Banner['actions'][number] {
+    return { label: t('theme-editor.editor-view.dismiss'), run: () => this._dismiss() };
+  }
+
+  private async _addPendingAndSave(publish = false): Promise<void> {
     this._banner = null;
     if (!this._rawRows()?.addPending()) return;
     await this.updateComplete;
-    await this._saveClick();
+    await (publish ? this._publishClick() : this._saveClick());
   }
 
   private async _saveClick(skipRaw = false): Promise<void> {
@@ -714,40 +800,79 @@ export class McteEditorView extends LitElement {
       this._warnRawPending();
       return;
     }
-    if (!this._isNew && this._file && !this._rewriteAck) {
+    // Before theme-files 2.0.0 every save rewrites the file; with storage only Save to themes folder does.
+    if (!this.storage && !this._isNew && this._file && !this._rewriteAck) {
+      this._publishAfterAck = false;
       this._openDlg('first-save');
       return;
     }
     await this._doSave();
   }
 
-  private async _doSave(anyway = false): Promise<boolean> {
+  /** Save to themes folder (theme-files 2.0.0): saves the theme in Magic Card Utils and writes /config/themes/<name>.yaml. */
+  private async _publishClick(skipRaw = false): Promise<void> {
+    this._menu = false;
+    if (this._saving || !this._canPublish) return;
+    const r = this._publishReason;
+    if (r) {
+      this._explainBlocked(r);
+      return;
+    }
+    if (!skipRaw && this._rawRows()?.hasPending) {
+      this._warnRawPending(true);
+      return;
+    }
+    if ((this._folder === 'current' || this._folder === 'outdated') && !this._rewriteAck) {
+      this._publishAfterAck = true;
+      this._openDlg('first-save');
+      return;
+    }
+    await this._doSave(false, true);
+  }
+
+  private async _doSave(anyway = false, publish = false): Promise<boolean> {
     if (!this.backend || this._saving) return false;
     const snap = cloneDoc(this._doc);
     this._saving = true;
+    this._publishing = publish;
     this._banner = null;
     try {
-      const res = await this.backend.save({ name: this._name, theme: snap, overwrite: !this._isNew, base_mtime: anyway ? undefined : this._mtime });
+      const req: ThemeSaveRequest = { name: this._name, theme: snap, overwrite: !this._isNew, base_mtime: anyway ? undefined : this._mtime };
+      if (publish) req.publish = true;
+      const res = await this.backend.save(req);
       this._saved = snap;
       this._baseline = snap;
       this._mtime = res.mtime;
       this._file = res.file;
       this._savedAt = clock();
       this._usedMsg = '';
-      this._rewriteAck = true;
+      if (this.storage) {
+        this._stored = true;
+        this._folder = res.folder ?? this._folder;
+      }
+      // the file was rewritten (or every save rewrites it): no need to ask again
+      const wroteFile = !this.storage || !!res.published;
+      if (wroteFile) this._rewriteAck = true;
       if (isTrialActive()) stopTrial('saved');
       // The header's status row shows "Saved hh:mm" and "Use this theme"; this is for screen readers.
-      this._say(res.loaded ? t('theme-editor.editor-view.saved-name-and-reloaded-themes-screens', { name: this._name }) : t('theme-editor.editor-view.saved-name', { name: this._name }));
-      if (!res.loaded) {
+      this._say(
+        !wroteFile
+          ? t('theme-editor.editor-view.saved-name-in-magic-card-utils', { name: this._name })
+          : res.loaded
+            ? t('theme-editor.editor-view.saved-name-and-reloaded-themes-screens', { name: this._name })
+            : t('theme-editor.editor-view.saved-name', { name: this._name }),
+      );
+      if (wroteFile && !res.loaded) {
         this._banner = {
           kind: 'warn',
           title: t('theme-editor.editor-view.saved-file-but-home-assistant-does-not', { file: res.file, name: this._name }),
           message: t('theme-editor.editor-view.reload-themes-in-developer-tools-yaml-or'),
-          actions: [{ label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) }],
+          actions: [this._dismissAct],
         };
       }
       fire(this, 'mcte-saved', { name: this._name });
       this._saving = false;
+      this._publishing = false;
       if (this._afterSave === 'back') {
         this._afterSave = null;
         this._leave();
@@ -755,27 +880,27 @@ export class McteEditorView extends LitElement {
       return true;
     } catch (e) {
       this._saving = false;
+      this._publishing = false;
       this._afterSave = null;
-      this._banner = this._saveBanner(e as ThemeBackendError);
-      void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.banner .title')?.focus());
+      this._showBanner(this._saveBanner(e as ThemeBackendError, publish));
       return false;
     }
   }
 
-  private _saveBanner(err: ThemeBackendError): Banner {
+  private _saveBanner(err: ThemeBackendError, publish = false): Banner {
     const name = this._name;
-    const dismiss = { label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) };
-    const retry = { label: t('theme-editor.editor-view.try-again'), run: () => void this._saveClick() };
+    const dismiss = this._dismissAct;
+    const retry = { label: t('theme-editor.editor-view.try-again'), run: () => void (publish ? this._publishClick() : this._saveClick()) };
     const failed = t('theme-editor.editor-view.could-not-save-name', { name });
     switch (err.code) {
       case 'conflict':
         return {
           kind: 'warn',
-          title: t('theme-editor.editor-view.name-yaml-changed-on-disk', { name }),
+          title: this.storage ? t('theme-editor.editor-view.name-changed-since-you-opened-it', { name }) : t('theme-editor.editor-view.name-yaml-changed-on-disk', { name }),
           message: t('theme-editor.editor-view.this-file-changed-since-you-opened-it'),
           actions: [
             { label: t('theme-editor.editor-view.reload'), run: () => void this._reload() },
-            { label: t('theme-editor.editor-view.save-anyway'), run: () => void this._doSave(true) },
+            { label: t('theme-editor.editor-view.save-anyway'), run: () => void this._doSave(true, publish) },
           ],
         };
       case 'name_taken':
@@ -795,6 +920,12 @@ export class McteEditorView extends LitElement {
         };
       case 'unauthorized':
         return { kind: 'error', title: failed, message: t('theme-editor.editor-view.only-administrators-can-edit-themes'), actions: [dismiss] };
+      case 'theme_files_off':
+        return { kind: 'error', title: failed, message: this.storage ? t('theme-editor.editor-view.theme-folder-off-message') : t('theme-editor.editor-view.theme-files-off-message'), actions: [dismiss] };
+      case 'not_editable':
+        return { kind: 'error', title: failed, message: t('theme-editor.editor-view.this-editor-only-changes-its-own-files'), actions: this._isNew ? [{ label: t('theme-editor.editor-view.choose-another-name'), run: () => this._openRename() }, dismiss] : [dismiss] };
+      case 'too_large':
+        return { kind: 'error', title: failed, message: t('theme-editor.editor-view.magic-card-utils-has-no-room-for-this-theme'), actions: [dismiss] };
       case 'invalid_format': {
         const first = err.errors?.[0];
         const nameErr = err.errors?.find((x) => x.path === 'name');
@@ -824,10 +955,14 @@ export class McteEditorView extends LitElement {
       this._baseline = cloneDoc(r.theme);
       this._previewDoc = cloneDoc(r.theme);
       this._mtime = r.mtime;
+      if (this.storage) {
+        this._stored = !!r.stored;
+        this._folder = r.folder;
+      }
       this._banner = null;
       this._say(t('theme-editor.editor-view.reloaded-the-file-from-disk'));
     } catch (e) {
-      this._banner = { kind: 'error', title: t('theme-editor.editor-view.could-not-read-name', { name: this._name }), message: (e as Error).message, actions: [{ label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) }] };
+      this._banner = { kind: 'error', title: t('theme-editor.editor-view.could-not-read-name', { name: this._name }), message: (e as Error).message, actions: [this._dismissAct] };
     }
   }
 
@@ -860,7 +995,9 @@ export class McteEditorView extends LitElement {
   private async _delete(): Promise<void> {
     if (!this.backend) return;
     try {
-      await this.backend.remove(this._name);
+      // theme-files 2.0.0: a stored theme keeps its file unless the box is ticked; a file-only theme is a file
+      const file = this.storage && (!this._stored || (this._deleteFileOffered && this._deleteFile));
+      await this.backend.remove(this._name, file ? { file: true } : undefined);
     } catch (e) {
       this._dlgError = t('theme-editor.editor-view.could-not-delete-name-reason', { name: this._name, reason: (e as Error).message ?? '' }).trim();
       return;
@@ -902,12 +1039,12 @@ export class McteEditorView extends LitElement {
       const editing = t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable);
       if (editing) return;
       e.preventDefault();
-      this.renderRoot.querySelector<HTMLInputElement>('#vsearch')?.focus();
+      this._focus('#vsearch');
       return;
     }
     if (e.key === 'Escape' && this._menu) {
       this._menu = false;
-      this.renderRoot.querySelector<HTMLElement>('.more')?.focus();
+      this._focus('.more');
     }
   };
 
@@ -923,7 +1060,7 @@ export class McteEditorView extends LitElement {
   private _presetDlg(mode: 'save' | 'export'): void {
     this._menu = false;
     const el = this.renderRoot.querySelector<MctePresetDialog>('mcte-preset-dialog');
-    this.renderRoot.querySelector<HTMLElement>(mode === 'save' && this._w >= 900 ? '.savepreset' : '.more')?.focus();
+    this._focus(mode === 'save' && this._w >= 900 ? '.savepreset' : '.more');
     el?.open(mode, { name: this._name, doc: this._doc, id: slugName(this._name) || 'theme' });
   }
 
@@ -943,6 +1080,7 @@ export class McteEditorView extends LitElement {
     return html`${dirtyChip}
     ${this._trial ? html`<span class="chip is-accent">${t('theme-editor.editor-view.trying-on-this-tab')}</span>` : nothing}
     ${!this.draft.editable ? html`<span class="chip is-warn">${t('theme-editor.editor-view.read-only')}</span>` : nothing}
+    ${this.storage && this.draft.editable && !this._isNew ? html`<span class="chip folder" data-folder=${this._stored ? (this._folder ?? 'none') : 'only'}>${this._folderText()}</span>` : nothing}
     ${n ? html`<button type="button" class="chip is-warn" @click=${() => this._jumpToFirstError()}>${t('theme-editor.editor-view.c-a-fix', { c: n })}</button>` : nothing}`;
   }
 
@@ -981,8 +1119,11 @@ export class McteEditorView extends LitElement {
   }
 
   private _menuEl(): TemplateResult {
-    const compact = this._w < 640;
-    const canDelete = !this._isNew && !!this._file && this.draft.editable;
+    const compact = this._w < 768;
+    // theme-files 2.0.0: a stored theme can always be deleted; a file-only one only while the folder option is on
+    const canDelete = this.storage
+      ? !this._isNew && this.draft.editable && (this._stored || this.writesEnabled !== false)
+      : !this._isNew && !!this._file && this.draft.editable;
     return html`<div class="menuwrap" @focusout=${(e: FocusEvent) => {
       if (this._menu && !(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node | null)) this._menu = false;
     }}>
@@ -1000,7 +1141,8 @@ export class McteEditorView extends LitElement {
               ? html`<button type="button" role="menuitem" @click=${() => this._copyMode('light', 'dark')}>${t('theme-editor.editor-view.copy-light-to-dark')}</button>
                   <button type="button" role="menuitem" @click=${() => this._copyMode('dark', 'light')}>${t('theme-editor.editor-view.copy-dark-to-light')}</button>`
               : nothing}
-            ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => this._openDlg('delete')}>${t('theme-editor.editor-view.delete-theme')}</button>` : nothing}
+            ${this._canPublish ? html`<button type="button" role="menuitem" data-publish @click=${() => void this._publishClick()}>${t('theme-editor.editor-view.save-to-themes-folder')}</button>` : nothing}
+            ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => ((this._deleteFile = false), this._openDlg('delete'))}>${t('theme-editor.editor-view.delete-theme')}</button>` : nothing}
           </div>`
         : nothing}
     </div>`;
@@ -1019,7 +1161,11 @@ export class McteEditorView extends LitElement {
         : nothing}
       ${showSaved
         ? html`<span class="help saved" role="status">${t('theme-editor.editor-view.saved-time', { time: this._savedAt })}</span>
-            <button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>${t('theme-editor.editor-view.use-this-theme')}</button>`
+            ${!this.storage || this._folder === 'current'
+              ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>${t('theme-editor.editor-view.use-this-theme')}</button>`
+              : this._canPublish
+                ? html`<button type="button" class="btn btn-text btn-sm" data-publish @click=${() => void this._publishClick()}>${t('theme-editor.editor-view.save-to-themes-folder')}</button>`
+                : nothing}`
         : nothing}
       ${this._usedMsg
         ? html`<span class="help" role="status">${this._usedMsg}</span>${this._usedLink ? html`<a class="btn btn-text btn-sm" href="/profile">${t('theme-editor.editor-view.open-your-profile')}</a>` : nothing}`
@@ -1029,7 +1175,7 @@ export class McteEditorView extends LitElement {
 
   /** The bar of the frame: Back, the theme and its state, the trial and preset buttons, the drawer toggle, Save and the more menu. */
   private _bar(): TemplateResult {
-    const compact = this._w < 640;
+    const compact = this._w < 768;
     const label = t('theme-editor.lips.variables-panel');
     const keys = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘\\' : 'Ctrl+\\';
     const noun = t('theme-editor.lips.variables');
@@ -1229,7 +1375,9 @@ export class McteEditorView extends LitElement {
       ${this._scope === 'shared' && this._hasModes
         ? html`<p class="help">${t('theme-editor.editor-view.shared-applies-to-light-and-dark-unless')}</p>`
         : nothing}
-      ${!this.draft.editable ? html`<p class="help">${this.draft.reason ? t('theme-editor.editor-view.this-theme-is-read-only-reason-copy-it', { reason: this.draft.reason }) : t('theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit')}</p>` : nothing}
+      ${this.writesEnabled === false
+        ? html`<p class="help" data-theme-files-off>${this.storage ? t('theme-editor.editor-view.theme-folder-off-message') : t('theme-editor.editor-view.theme-files-off-message')}</p>`
+        : !this.draft.editable ? html`<p class="help">${this.draft.reason ? t('theme-editor.editor-view.this-theme-is-read-only-reason-copy-it', { reason: this.draft.reason }) : t('theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit')}</p>` : nothing}
       <div class="groups">${this._groups()}</div>
       ${this.draft.editable
         ? html`<mcte-raw-rows
@@ -1353,10 +1501,26 @@ export class McteEditorView extends LitElement {
           ${this._reason ? nothing : html`<button type="button" class="btn btn-primary" @click=${() => ((this._afterSave = 'back'), this._closeDlg(), void this._saveClick())}>${t('theme-editor.editor-view.save')}</button>`}`, close);
       case 'first-save':
         return dialog(t('theme-editor.editor-view.save-and-rewrite-this-file'), html`<p>${t('theme-editor.editor-view.saving-rewrites-name-yaml-comments-in', { name })}</p>`, html`${cancel}
-          <button type="button" class="btn btn-primary" @click=${() => ((this._rewriteAck = true), this._closeDlg(), void this._doSave())}>${t('theme-editor.editor-view.save')}</button>`, close);
-      case 'delete':
-        return dialog(t('theme-editor.editor-view.delete-name', { name }), html`<p>${t('theme-editor.editor-view.this-removes-config-file-screens-that', { file: this._file ?? `themes/${name}.yaml` })}</p>${this._dlgError ? err(this._dlgError) : nothing}`, html`${cancel}
+          <button type="button" class="btn btn-primary" @click=${() => {
+            const publish = this._publishAfterAck;
+            this._publishAfterAck = false;
+            this._rewriteAck = true;
+            this._closeDlg();
+            void this._doSave(false, publish);
+          }}>${t('theme-editor.editor-view.save')}</button>`, close);
+      case 'delete': {
+        const file = this._file ?? `themes/${name}.yaml`;
+        // theme-files 2.0.0: a stored theme is removed from Magic Card Utils, with its file only when ticked
+        const body = this.storage && this._stored
+          ? html`<p>${t('theme-editor.editor-view.this-removes-name-from-magic-card-utils', { name })}</p>
+              ${this._deleteFileOffered
+                ? html`<label class="check-row"><input type="checkbox" data-delete-file .checked=${this._deleteFile} @change=${(e: Event) => (this._deleteFile = (e.target as HTMLInputElement).checked)} />
+                    <span>${t('theme-editor.editor-view.also-remove-file-from-the-themes-folder', { file: `/config/${file}` })}</span></label>`
+                : nothing}`
+          : html`<p>${t('theme-editor.editor-view.this-removes-config-file-screens-that', { file })}</p>`;
+        return dialog(t('theme-editor.editor-view.delete-name', { name }), html`${body}${this._dlgError ? err(this._dlgError) : nothing}`, html`${cancel}
           <button type="button" class="btn btn-danger" @click=${() => void this._delete()}>${t('theme-editor.editor-view.delete')}</button>`, close);
+      }
       case 'add-modes':
         return dialog(t('theme-editor.editor-view.add-light-and-dark-modes-2'), html`<p>${t('theme-editor.editor-view.variables-you-set-now-stay-shared-you')}</p>`, html`${cancel}
           <button type="button" class="btn btn-primary" @click=${() => this._addModes()}>${t('theme-editor.editor-view.add-modes')}</button>`, close);
@@ -1378,7 +1542,7 @@ export class McteEditorView extends LitElement {
 
   protected render(): TemplateResult {
     if (!this.draft) return html``;
-    const compact = this._w < 640;
+    const compact = this._w < 768;
     return html`
       <mc-ui-studio-frame
         studio="theme-editor"
@@ -1418,6 +1582,21 @@ export class McteEditorView extends LitElement {
         height: 100%;
         position: relative;
         overflow: hidden;
+      }
+      .check-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-block-start: 12px;
+        min-block-size: 24px;
+        cursor: pointer;
+      }
+      .check-row input {
+        inline-size: 18px;
+        block-size: 18px;
+        margin: 2px 0 0;
+        flex: none;
+        accent-color: var(--bp-acc, var(--primary-color));
       }
       mc-ui-studio-frame {
         flex: 1 1 auto;

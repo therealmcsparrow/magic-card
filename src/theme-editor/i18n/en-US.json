@@ -327,6 +327,14 @@
     "text": "Added light and dark modes. Variables you set before stay shared.",
     "hash": "d002c3e8"
   },
+  "theme-editor.editor-view.also-remove-file-from-the-themes-folder": {
+    "text": "Also remove {file} from the themes folder",
+    "hash": "775ab119"
+  },
+  "theme-editor.editor-view.another-file-in-the-themes-folder-uses": {
+    "text": "Another file in the themes folder uses this name",
+    "hash": "93340bea"
+  },
   "theme-editor.editor-view.applies-to-this-browser-tab-only-open-a": {
     "text": "Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).",
     "hash": "1444813f"
@@ -491,6 +499,10 @@
     "text": "Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.",
     "hash": "5419e14f"
   },
+  "theme-editor.editor-view.in-the-themes-folder": {
+    "text": "Also in the themes folder",
+    "hash": "4f266ae6"
+  },
   "theme-editor.editor-view.living-room": {
     "text": "Living room",
     "hash": "268d40ee"
@@ -503,6 +515,10 @@
     "text": "Magic Card and integrations",
     "hash": "56151480"
   },
+  "theme-editor.editor-view.magic-card-utils-has-no-room-for-this-theme": {
+    "text": "Magic Card Utils has no room for this theme. Make it smaller or delete themes you no longer need.",
+    "hash": "978cd4bd"
+  },
   "theme-editor.editor-view.more-actions": {
     "text": "More actions",
     "hash": "f8d46c25"
@@ -510,6 +526,10 @@
   "theme-editor.editor-view.moved-label-to-shared-light-and-dark": {
     "text": "Moved {label} to Shared. Light and Dark both use it.",
     "hash": "4a8e4025"
+  },
+  "theme-editor.editor-view.name-changed-since-you-opened-it": {
+    "text": "{name} changed since you opened it",
+    "hash": "eed11c5a"
   },
   "theme-editor.editor-view.name-yaml-changed-on-disk": {
     "text": "{name}.yaml changed on disk",
@@ -535,6 +555,10 @@
     "text": "No variable called {query} in the lists.",
     "hash": "ae112c86"
   },
+  "theme-editor.editor-view.not-in-the-themes-folder": {
+    "text": "Not in the themes folder",
+    "hash": "b018f160"
+  },
   "theme-editor.editor-view.now-using-name-for-your-user": {
     "text": "Now using {name} for your user.",
     "hash": "601a10e9"
@@ -550,6 +574,10 @@
   "theme-editor.editor-view.only-changed": {
     "text": "Only changed",
     "hash": "d836aea0"
+  },
+  "theme-editor.editor-view.only-in-the-themes-folder": {
+    "text": "Only in the themes folder",
+    "hash": "1301009b"
   },
   "theme-editor.editor-view.open-preview": {
     "text": "Open preview",
@@ -607,6 +635,10 @@
     "text": "Save as my preset",
     "hash": "bd12a457"
   },
+  "theme-editor.editor-view.save-to-themes-folder": {
+    "text": "Save to themes folder",
+    "hash": "f871e1e3"
+  },
   "theme-editor.editor-view.save-without-it": {
     "text": "Save without it",
     "hash": "2f45b142"
@@ -623,6 +655,10 @@
     "text": "Saved {name} and reloaded themes. Screens that use this theme update now.",
     "hash": "cad4ee18"
   },
+  "theme-editor.editor-view.saved-name-in-magic-card-utils": {
+    "text": "Saved {name} in Magic Card Utils",
+    "hash": "88e8ce8a"
+  },
   "theme-editor.editor-view.saved-time": {
     "text": "Saved {time}",
     "hash": "430aca4f"
@@ -634,6 +670,10 @@
   "theme-editor.editor-view.saving-rewrites-name-yaml-comments-in": {
     "text": "Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.",
     "hash": "f91fef09"
+  },
+  "theme-editor.editor-view.saving-theme-files-is-off": {
+    "text": "Saving is off: Theme files is turned off",
+    "hash": "71c216cc"
   },
   "theme-editor.editor-view.search-by-name-or-value": {
     "text": "Search by name or value",
@@ -691,9 +731,25 @@
     "text": "Theme editor",
     "hash": "2c9d9e02"
   },
+  "theme-editor.editor-view.theme-files-off-message": {
+    "text": "Saving theme files is off. An administrator can turn on Theme files in Settings > Devices & services > Magic Card Utils > Configure. You can still copy the YAML.",
+    "hash": "fb2589c1"
+  },
+  "theme-editor.editor-view.theme-folder-off-message": {
+    "text": "Saving to the themes folder is off. Your theme is still saved in Magic Card Utils. An administrator can turn on Allow themes to be saved in the themes folder in Settings > Devices & services > Magic Card Utils > Configure.",
+    "hash": "3f3849a6"
+  },
   "theme-editor.editor-view.themes": {
     "text": "Themes",
     "hash": "43ae3265"
+  },
+  "theme-editor.editor-view.themes-folder-copy-is-older": {
+    "text": "Themes folder copy is older",
+    "hash": "75196545"
+  },
+  "theme-editor.editor-view.this-editor-only-changes-its-own-files": {
+    "text": "This editor only changes theme files it wrote itself. Save the theme under another name.",
+    "hash": "b75ffdb5"
   },
   "theme-editor.editor-view.this-file-changed-since-you-opened-it": {
     "text": "This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.",
@@ -702,6 +758,10 @@
   "theme-editor.editor-view.this-removes-config-file-screens-that": {
     "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
     "hash": "728badac"
+  },
+  "theme-editor.editor-view.this-removes-name-from-magic-card-utils": {
+    "text": "This removes {name} from Magic Card Utils.",
+    "hash": "d5fcf1b2"
   },
   "theme-editor.editor-view.this-theme-is-read-only-copy-it-to-edit": {
     "text": "This theme is read only. Copy it to edit.",
@@ -2591,6 +2651,10 @@
     "text": "A preset",
     "hash": "a9734a0f"
   },
+  "theme-editor.start-view.also-remove-file-from-the-themes-folder": {
+    "text": "Also remove {file} from the themes folder",
+    "hash": "775ab119"
+  },
   "theme-editor.start-view.an-empty-theme-add-only-the-variables": {
     "text": "An empty theme. Add only the variables you want to change.",
     "hash": "37300aad"
@@ -2598,6 +2662,10 @@
   "theme-editor.start-view.an-installed-theme": {
     "text": "An installed theme",
     "hash": "416ce064"
+  },
+  "theme-editor.start-view.another-file-in-the-themes-folder-uses": {
+    "text": "Another file in the themes folder uses this name",
+    "hash": "93340bea"
   },
   "theme-editor.start-view.blank": {
     "text": "Blank",
@@ -2695,6 +2763,10 @@
     "text": "Import",
     "hash": "2cff9baa"
   },
+  "theme-editor.start-view.in-the-themes-folder": {
+    "text": "Also in the themes folder",
+    "hash": "4f266ae6"
+  },
   "theme-editor.start-view.installed-theme": {
     "text": "Installed theme",
     "hash": "caa84d09"
@@ -2759,6 +2831,14 @@
     "text": "No themes yet",
     "hash": "dc3cdada"
   },
+  "theme-editor.start-view.not-in-the-themes-folder": {
+    "text": "Not in the themes folder",
+    "hash": "b018f160"
+  },
+  "theme-editor.start-view.only-in-the-themes-folder": {
+    "text": "Only in the themes folder",
+    "hash": "1301009b"
+  },
   "theme-editor.start-view.pick-a-preset-to-start-from": {
     "text": "Pick a preset to start from",
     "hash": "40d39ea0"
@@ -2786,6 +2866,10 @@
   "theme-editor.start-view.same-in-light-and-dark": {
     "text": "Same in light and dark",
     "hash": "c64dc7db"
+  },
+  "theme-editor.start-view.saving-theme-files-is-off": {
+    "text": "Saving theme files is off.",
+    "hash": "7eeacff4"
   },
   "theme-editor.start-view.search-installed-themes": {
     "text": "Search installed themes",
@@ -2823,9 +2907,25 @@
     "text": "The theme name does not match the file name.",
     "hash": "9106c5da"
   },
+  "theme-editor.start-view.theme-files-off-notice": {
+    "text": "Saving theme files is off, so every theme is read only. You can still copy a theme's YAML. An administrator can turn on Theme files in Settings > Devices & services > Magic Card Utils > Configure.",
+    "hash": "ad39f48e"
+  },
+  "theme-editor.start-view.theme-folder-off-notice": {
+    "text": "Saving to the themes folder is off. You can still create and edit themes; they are saved in Magic Card Utils. An administrator can turn on Allow themes to be saved in the themes folder in Settings > Devices & services > Magic Card Utils > Configure.",
+    "hash": "2c1dc7f2"
+  },
   "theme-editor.start-view.themes-could-not-be-read": {
     "text": "Themes could not be read",
     "hash": "78a126fa"
+  },
+  "theme-editor.start-view.themes-folder-copy-is-older": {
+    "text": "Themes folder copy is older",
+    "hash": "75196545"
+  },
+  "theme-editor.start-view.this-editor-did-not-write-the-file": {
+    "text": "This editor did not write the file, so it is left as it is.",
+    "hash": "71551f1c"
   },
   "theme-editor.start-view.this-removes-config-file-and-the-other-c": {
     "text": "This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.",
@@ -2835,9 +2935,17 @@
     "text": "This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.",
     "hash": "728badac"
   },
+  "theme-editor.start-view.this-removes-name-from-magic-card-utils": {
+    "text": "This removes {name} from Magic Card Utils.",
+    "hash": "d5fcf1b2"
+  },
   "theme-editor.start-view.try-again": {
     "text": "Try again",
     "hash": "d8b8392e"
+  },
+  "theme-editor.start-view.your-themes-are-saved-in-magic-card-utils": {
+    "text": "Your themes are saved in Magic Card Utils. Save one to the themes folder to use it in Home Assistant.",
+    "hash": "6111005c"
   },
   "theme-editor.start-view.your-themes-live-in-config-themes": {
     "text": "Your themes live in /config/themes.",

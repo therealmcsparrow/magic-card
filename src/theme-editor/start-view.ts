@@ -55,6 +55,10 @@ export const reasonText = (reason: ReadOnlyReason): string => {
       return t('theme-editor.start-view.the-file-is-too-large-to-edit-here');
     case 'symlink':
       return t('theme-editor.start-view.the-file-is-a-link-to-somewhere-else');
+    case 'not_own':
+      return t('theme-editor.start-view.this-editor-did-not-write-the-file');
+    case 'writes_off':
+      return t('theme-editor.start-view.saving-theme-files-is-off');
     default:
       return '';
   }
@@ -71,6 +75,8 @@ export class McteStartView extends LitElement {
     files: { attribute: false },
     loaded: { attribute: false },
     include: { attribute: false },
+    writesEnabled: { attribute: false },
+    storage: { attribute: false },
     phase: {},
     error: {},
     hass: { attribute: false },
@@ -99,11 +105,16 @@ export class McteStartView extends LitElement {
     _createError: { state: true },
     _target: { state: true },
     _deleteError: { state: true },
+    _deleteFile: { state: true },
   };
 
   files: ThemeFileEntry[] = [];
   loaded: string[] = [];
   include: IncludeStatus | undefined;
+  /** themes_list writes_enabled; false shows the folder option notice. */
+  writesEnabled: boolean | undefined;
+  /** themes_list storage (theme-files 2.0.0): themes are saved in Magic Card Utils, the folder is optional. */
+  storage = false;
   phase: 'loading' | 'ready' | 'error' = 'loading';
   error = '';
   hass: unknown;
@@ -136,6 +147,8 @@ export class McteStartView extends LitElement {
   // delete dialog
   private _target: ThemeFileEntry | null = null;
   private _deleteError = '';
+  /** Delete dialog: also remove the themes folder file. Off each time the dialog opens. */
+  private _deleteFile = false;
   private _opener: HTMLElement | null = null;
 
   private get _taken(): Set<string> {
@@ -471,6 +484,7 @@ export class McteStartView extends LitElement {
     this._opener = ev.currentTarget as HTMLElement;
     this._target = f;
     this._deleteError = '';
+    this._deleteFile = false;
     this._dlg = 'delete';
   }
 
@@ -478,7 +492,9 @@ export class McteStartView extends LitElement {
     const f = this._target;
     if (!f || !this.backend) return;
     try {
-      await this.backend.remove(f.name);
+      // theme-files 2.0.0: a stored theme keeps its file unless the box is ticked; a file-only theme is a file
+      const file = this.storage && (!f.stored || (this._fileOffered(f) && this._deleteFile));
+      await this.backend.remove(f.name, file ? { file: true } : undefined);
     } catch (e) {
       this._deleteError = t('theme-editor.start-view.could-not-delete-name-reason', { name: f.name, reason: (e as Error).message ?? '' }).trim();
       return;
@@ -488,13 +504,45 @@ export class McteStartView extends LitElement {
     fire(this, 'mcte-deleted', { name });
   }
 
+  /** The delete dialog offers "Also remove the file": a stored theme with Magic Card's own file, folder option on. */
+  private _fileOffered(f: ThemeFileEntry): boolean {
+    return this.storage && !!f.stored && this.writesEnabled !== false && (f.folder === 'current' || f.folder === 'outdated');
+  }
+
+  /** theme-files 2.0.0: where a theme stands in /config/themes, in words. */
+  private _folderText(f: ThemeFileEntry): string {
+    if (!f.stored) return t('theme-editor.start-view.only-in-the-themes-folder');
+    switch (f.folder) {
+      case 'current':
+        return t('theme-editor.start-view.in-the-themes-folder');
+      case 'outdated':
+        return t('theme-editor.start-view.themes-folder-copy-is-older');
+      case 'foreign':
+        return t('theme-editor.start-view.another-file-in-the-themes-folder-uses');
+      default:
+        return t('theme-editor.start-view.not-in-the-themes-folder');
+    }
+  }
+
+  private _canDelete(f: ThemeFileEntry): boolean {
+    if (!f.editable) return false;
+    return this.storage ? !!f.stored || this.writesEnabled !== false : true;
+  }
+
   private _deleteDialog(): TemplateResult {
     const f = this._target;
     if (!f) return html``;
     const others = this.files.filter((x) => x.file === f.file && x !== f).length;
+    const body =
+      this.storage && f.stored
+        ? html`<p>${t('theme-editor.start-view.this-removes-name-from-magic-card-utils', { name: f.name })}</p>
+            ${this._fileOffered(f)
+              ? html`<label class="switch-row"><input type="checkbox" data-delete-file .checked=${this._deleteFile} @change=${(e: Event) => (this._deleteFile = (e.target as HTMLInputElement).checked)} /> ${t('theme-editor.start-view.also-remove-file-from-the-themes-folder', { file: `/config/${f.file}` })}</label>`
+              : nothing}`
+        : html`<p>${others ? t('theme-editor.start-view.this-removes-config-file-and-the-other-c', { file: f.file, c: others }) : t('theme-editor.start-view.this-removes-config-file-screens-that', { file: f.file })}</p>`;
     return dialog(
       t('theme-editor.start-view.delete-name', { name: f.name }),
-      html`<p>${others ? t('theme-editor.start-view.this-removes-config-file-and-the-other-c', { file: f.file, c: others }) : t('theme-editor.start-view.this-removes-config-file-screens-that', { file: f.file })}</p>
+      html`${body}
         ${this._deleteError ? note(this._deleteError) : nothing}`,
       html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>${t('theme-editor.start-view.cancel')}</button>
         <button type="button" class="btn btn-danger" @click=${() => void this._doDelete()}>${t('theme-editor.start-view.delete')}</button>`,
@@ -535,8 +583,9 @@ export class McteStartView extends LitElement {
       ...(f.editable ? [] : [t('theme-editor.start-view.read-only')]),
       f.has_modes ? t('theme-editor.start-view.light-dark') : t('theme-editor.start-view.same-in-light-and-dark'),
       t('theme-editor.start-view.c', { c: f.var_count }),
-      ...(multi || !f.editable ? [t('theme-editor.start-view.file-file', { file: f.file })] : []),
+      ...((multi || !f.editable) && !(this.storage && f.stored) ? [t('theme-editor.start-view.file-file', { file: f.file })] : []),
       ...(!f.editable && f.reason ? [reasonText(f.reason)] : []),
+      ...(this.storage && f.editable ? [this._folderText(f)] : []),
     ].join(' · ');
     const copy = () => this.openCreate({ kind: 'installed', installed: name });
     return row({
@@ -550,7 +599,7 @@ export class McteStartView extends LitElement {
           ? { label: t('theme-editor.start-view.duplicate-name', { name }), icon: 'mdi:content-copy', onClick: copy }
           : { label: t('theme-editor.start-view.copy-to-edit-name', { name }), icon: 'mdi:content-copy', onClick: copy },
         { label: t('theme-editor.start-view.export-name', { name }), icon: 'mdi:export-variant', onClick: () => void this._exportThemes([f]) },
-        ...(f.editable ? [{ label: t('theme-editor.start-view.delete-row-name', { name }), icon: 'mdi:delete-outline', variant: 'danger' as const, onClick: (e: MouseEvent) => this._askDelete(f, e) }] : []),
+        ...(this._canDelete(f) ? [{ label: t('theme-editor.start-view.delete-row-name', { name }), icon: 'mdi:delete-outline', variant: 'danger' as const, onClick: (e: MouseEvent) => this._askDelete(f, e) }] : []),
       ],
     });
   }
@@ -582,8 +631,11 @@ export class McteStartView extends LitElement {
     const picked = this.files.filter((f) => this._ticked.has(f.name));
     return html`
       <div class="wrap">
-        <p class="help">${t('theme-editor.start-view.your-themes-live-in-config-themes')}</p>
+        <p class="help">${this.storage ? t('theme-editor.start-view.your-themes-are-saved-in-magic-card-utils') : t('theme-editor.start-view.your-themes-live-in-config-themes')}</p>
         <mcte-include-notice .status=${this.include} .checking=${this.checking} .result=${this.checkResult}></mcte-include-notice>
+        ${this.writesEnabled === false
+          ? html`<div class="notice info" role="note" data-theme-files-off>${glyph('information')}<div class="body"><p>${this.storage ? t('theme-editor.start-view.theme-folder-off-notice') : t('theme-editor.start-view.theme-files-off-notice')}</p></div></div>`
+          : nothing}
         ${this.files.length
           ? field({
               id: 'q',

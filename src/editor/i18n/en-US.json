@@ -5243,6 +5243,34 @@
     "text": "Services",
     "hash": "604dce44"
   },
+  "card-editor.setup-copy.blocked": {
+    "text": "Your browser blocked copying. Select the text below and copy it yourself.",
+    "hash": "c8d72cc5"
+  },
+  "card-editor.setup-copy.blocked-status": {
+    "text": "Could not copy. The text is shown below so you can copy it yourself.",
+    "hash": "27424106"
+  },
+  "card-editor.setup-copy.copied": {
+    "text": "Copied",
+    "hash": "8d525e5f"
+  },
+  "card-editor.setup-copy.copy": {
+    "text": "Copy my setup",
+    "hash": "26b88500"
+  },
+  "card-editor.setup-copy.failed": {
+    "text": "Could not prepare your setup. Try again.",
+    "hash": "1450ba8e"
+  },
+  "card-editor.setup-copy.helper": {
+    "text": "Copies your card and Utils versions, look and font names and lazy loading, ready to paste into a bug report. Names are copied as you wrote them. Nothing is sent anywhere.",
+    "hash": "91817360"
+  },
+  "card-editor.setup-copy.textarea-label": {
+    "text": "Setup details to copy",
+    "hash": "8f22cff4"
+  },
   "card-editor.shape-editor.0-is-round-1-is-most-irregular": {
     "text": "0 is round, 1 is most irregular.",
     "hash": "55dd25bf"

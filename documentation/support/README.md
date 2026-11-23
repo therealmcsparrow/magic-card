@@ -1,4 +1,8 @@
-# Support replies
+# Support
+
+-   [Copy my setup](copy-my-setup.md): the editor button that copies your versions, looks, fonts and lazy loading for a bug report.
+
+## Support replies
 
 Ready-made replies for the two questions that come up most. Copy the text under each heading.
 
