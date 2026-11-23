@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Changed
+-   **Size check.** A size raise compared with an older release now passes when each step since then was approved, one release at a time. A raise that was never approved still fails.
+
 ## 2026.11.05 (2026-11-23)
 
 Install Magic Card Utils 2026.11.05 first, then update Magic Card.
