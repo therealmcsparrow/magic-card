@@ -135,7 +135,7 @@ ${this._prepareFailed ? nothing : html`<textarea readonly rows="6" lang="en" spe
 .helper, .reason { margin: 0; font-size: 0.8125rem; color: var(--mc-text-2); overflow-wrap: anywhere; }
 .helper[data-off] { visibility: hidden; }
 .fallback { display: grid; gap: 8px; align-content: start; }
-textarea { width: 100%; box-sizing: border-box; font-family: var(--code-font-family, monospace); font-size: 0.75rem; resize: none; padding: 8px; color: var(--primary-text-color); background: var(--mc-surface-2, var(--secondary-background-color)); border: 1px solid var(--divider-color); border-radius: var(--mc-radius, 8px); }
+textarea { width: 100%; box-sizing: border-box; font-family: var(--code-font-family, monospace); font-size: 0.75rem; resize: none; padding: 8px; color: var(--primary-text-color); background: var(--mc-surface-2, var(--secondary-background-color)); border: 1px solid var(--secondary-text-color); border-radius: var(--mc-radius, 8px); }
 .sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; white-space: nowrap; clip-path: inset(50%); }
 `,
   ];
