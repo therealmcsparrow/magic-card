@@ -41,7 +41,7 @@ import {
 import type { Scope } from './util';
 import type { FieldCtx, FieldHint, FieldRow } from './field-group';
 import type { McteRawRows } from './raw-rows';
-import type { SaveReason } from './save-bar';
+import type { McteSaveBar, SaveReason } from './save-bar';
 import './field-group';
 import './preview';
 import './preview-cards';
@@ -338,12 +338,12 @@ export class McteEditorView extends LitElement {
     if (changed.has('draft') && this.draft) {
       // A theme just opened (Create, a deep link): focus would otherwise be lost with the view that held it.
       void this.updateComplete.then(() => {
-        if (!document.activeElement || document.activeElement === document.body) this.renderRoot.querySelector<HTMLElement>('.tname')?.focus();
+        if (!document.activeElement || document.activeElement === document.body) this._focus('.tname');
       });
     }
     if (changed.has('_dlg') && this._dlg) {
       openDialog(this.renderRoot);
-      if (this._dlg === 'rename') this.renderRoot.querySelector<HTMLInputElement>('#rename')?.focus();
+      if (this._dlg === 'rename') this._focus('#rename');
     }
     this._syncStrip();
     if (changed.has('_doc') || changed.has('_mode')) this._queueHints();
@@ -743,8 +743,8 @@ export class McteEditorView extends LitElement {
   /** A half-filled "Add any variable" row would be lost by a save: warn first instead. */
   private _warnRawPending(publish = false): void {
     this._afterSave = null;
-    const dismiss = { label: t('theme-editor.editor-view.cancel'), run: () => (this._banner = null) };
-    this._banner = {
+    const dismiss = { label: t('theme-editor.editor-view.cancel'), run: () => this._dismiss() };
+    this._showBanner({
       kind: 'warn',
       title: t('theme-editor.editor-view.a-variable-is-typed-but-not-added'),
       message: t('theme-editor.editor-view.the-add-any-variable-row-still-holds'),
@@ -753,9 +753,34 @@ export class McteEditorView extends LitElement {
         { label: t('theme-editor.editor-view.save-without-it'), run: () => ((this._banner = null), void (publish ? this._publishClick(true) : this._saveClick(true))) },
         dismiss,
       ],
-    };
-    this._frame()?.openDrawer(null, 'user');
-    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.banner .title')?.focus());
+    });
+  }
+
+  private _focus(sel: string): void {
+    this.renderRoot.querySelector<HTMLElement>(sel)?.focus();
+  }
+
+  /** The banner lives in the Variables panel, a closed sheet on a narrow screen: open it, then focus the banner title. */
+  private _showBanner(b: Banner): void {
+    const f = this._frame();
+    this._banner = b;
+    f?.openDrawer();
+    // after the frame's own render, which focuses the sheet's close button
+    void this.updateComplete
+      .then(() => (f as Partial<LitElement> | null)?.updateComplete)
+      .then(() => this._focus('.banner .title'));
+  }
+
+  /** Dismiss removes the focused button, so focus goes back to Save; closing a sheet hands focus back to what opened it. */
+  private _dismiss(): void {
+    const f = this._frame();
+    this._banner = null;
+    if (f?.narrow && f.drawerOpen) f.closeDrawer();
+    else void this.updateComplete.then(() => this.renderRoot.querySelector<McteSaveBar>('mcte-save-bar')?.focusSave());
+  }
+
+  private get _dismissAct(): Banner['actions'][number] {
+    return { label: t('theme-editor.editor-view.dismiss'), run: () => this._dismiss() };
   }
 
   private async _addPendingAndSave(publish = false): Promise<void> {
@@ -842,7 +867,7 @@ export class McteEditorView extends LitElement {
           kind: 'warn',
           title: t('theme-editor.editor-view.saved-file-but-home-assistant-does-not', { file: res.file, name: this._name }),
           message: t('theme-editor.editor-view.reload-themes-in-developer-tools-yaml-or'),
-          actions: [{ label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) }],
+          actions: [this._dismissAct],
         };
       }
       fire(this, 'mcte-saved', { name: this._name });
@@ -857,15 +882,14 @@ export class McteEditorView extends LitElement {
       this._saving = false;
       this._publishing = false;
       this._afterSave = null;
-      this._banner = this._saveBanner(e as ThemeBackendError, publish);
-      void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.banner .title')?.focus());
+      this._showBanner(this._saveBanner(e as ThemeBackendError, publish));
       return false;
     }
   }
 
   private _saveBanner(err: ThemeBackendError, publish = false): Banner {
     const name = this._name;
-    const dismiss = { label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) };
+    const dismiss = this._dismissAct;
     const retry = { label: t('theme-editor.editor-view.try-again'), run: () => void (publish ? this._publishClick() : this._saveClick()) };
     const failed = t('theme-editor.editor-view.could-not-save-name', { name });
     switch (err.code) {
@@ -938,7 +962,7 @@ export class McteEditorView extends LitElement {
       this._banner = null;
       this._say(t('theme-editor.editor-view.reloaded-the-file-from-disk'));
     } catch (e) {
-      this._banner = { kind: 'error', title: t('theme-editor.editor-view.could-not-read-name', { name: this._name }), message: (e as Error).message, actions: [{ label: t('theme-editor.editor-view.dismiss'), run: () => (this._banner = null) }] };
+      this._banner = { kind: 'error', title: t('theme-editor.editor-view.could-not-read-name', { name: this._name }), message: (e as Error).message, actions: [this._dismissAct] };
     }
   }
 
@@ -1015,12 +1039,12 @@ export class McteEditorView extends LitElement {
       const editing = t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable);
       if (editing) return;
       e.preventDefault();
-      this.renderRoot.querySelector<HTMLInputElement>('#vsearch')?.focus();
+      this._focus('#vsearch');
       return;
     }
     if (e.key === 'Escape' && this._menu) {
       this._menu = false;
-      this.renderRoot.querySelector<HTMLElement>('.more')?.focus();
+      this._focus('.more');
     }
   };
 
@@ -1036,7 +1060,7 @@ export class McteEditorView extends LitElement {
   private _presetDlg(mode: 'save' | 'export'): void {
     this._menu = false;
     const el = this.renderRoot.querySelector<MctePresetDialog>('mcte-preset-dialog');
-    this.renderRoot.querySelector<HTMLElement>(mode === 'save' && this._w >= 900 ? '.savepreset' : '.more')?.focus();
+    this._focus(mode === 'save' && this._w >= 900 ? '.savepreset' : '.more');
     el?.open(mode, { name: this._name, doc: this._doc, id: slugName(this._name) || 'theme' });
   }
 
@@ -1095,7 +1119,7 @@ export class McteEditorView extends LitElement {
   }
 
   private _menuEl(): TemplateResult {
-    const compact = this._w < 640;
+    const compact = this._w < 768;
     // theme-files 2.0.0: a stored theme can always be deleted; a file-only one only while the folder option is on
     const canDelete = this.storage
       ? !this._isNew && this.draft.editable && (this._stored || this.writesEnabled !== false)
@@ -1151,7 +1175,7 @@ export class McteEditorView extends LitElement {
 
   /** The bar of the frame: Back, the theme and its state, the trial and preset buttons, the drawer toggle, Save and the more menu. */
   private _bar(): TemplateResult {
-    const compact = this._w < 640;
+    const compact = this._w < 768;
     const label = t('theme-editor.lips.variables-panel');
     const keys = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘\\' : 'Ctrl+\\';
     const noun = t('theme-editor.lips.variables');
@@ -1518,7 +1542,7 @@ export class McteEditorView extends LitElement {
 
   protected render(): TemplateResult {
     if (!this.draft) return html``;
-    const compact = this._w < 640;
+    const compact = this._w < 768;
     return html`
       <mc-ui-studio-frame
         studio="theme-editor"
