@@ -36,10 +36,12 @@ export class McSetupCopy extends LitElement {
     this._state = feedback.state;
     this._unsubscribe = feedback.subscribe((s) => this._onState(s));
     document.addEventListener('pointerdown', this._onOutside, true);
+    document.addEventListener('keydown', this._onKeydown, true);
   }
 
   disconnectedCallback(): void {
     document.removeEventListener('pointerdown', this._onOutside, true);
+    document.removeEventListener('keydown', this._onKeydown, true);
     this._frame++;
     this._unsubscribe?.();
     this._feedback?.dispose();
@@ -86,9 +88,11 @@ export class McSetupCopy extends LitElement {
     void this._port.writeText(text).then((outcome) => feedback.settle(ticket, outcome, coarse()));
   };
 
-  private _onKeydown = (e: KeyboardEvent): void => {
-    if (e.key !== 'Escape' || this._feedback?.state !== 'copied') return;
-    e.stopPropagation();
+  /** Capture on the document so the dialog around the editor never sees this Escape; preventDefault stops its native cancel. */
+  private readonly _onKeydown = (e: KeyboardEvent): void => {
+    if (e.key !== 'Escape' || this._feedback?.state !== 'copied' || !e.composedPath().includes(this)) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
     this._feedback.reset('escape');
   };
 
@@ -97,7 +101,7 @@ export class McSetupCopy extends LitElement {
   protected render(): TemplateResult {
     const copied = this._state === 'copied';
     const blocked = this._state === 'blocked';
-    return html`<div class="box" @keydown=${this._onKeydown}>
+    return html`<div class="box">
 <button type="button" class="copy ${copied ? 'done' : ''}" @click=${this._onClick} @blur=${() => this._feedback?.reset('blur')}>
 <ha-icon icon=${copied ? 'mdi:check' : 'mdi:content-copy'} aria-hidden="true"></ha-icon>
 <span class="labels"><span class="label" aria-hidden=${copied ? 'true' : 'false'} ?data-off=${copied}>${t('card-editor.setup-copy.copy')}</span><span class="label" aria-hidden=${copied ? 'false' : 'true'} ?data-off=${!copied}>${t('card-editor.setup-copy.copied')}</span></span>
