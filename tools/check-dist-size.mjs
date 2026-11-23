@@ -8,7 +8,8 @@
 //   stripped (magic-card-<name>.<hash8>.js -> magic-card-<name>.js; a .mjs keeps its extension). A dist file with no entry fails.
 //   Only .js files carry .br/.gz siblings; a .mjs is gated on size alone.
 // - raises: with --base-ref the caps file is compared with the same file at that git ref. Any entry cap, stage cap, br cap, ceiling or
-//   base figure that went up (or a number that was removed) fails unless approved_raises carries a matching entry (field, from, to).
+//   base figure that went up (or a number that was removed) fails unless approved_raises carries a matching entry (field, from, to),
+//   or a chain of entries for that field that steps from the base figure to the new one.
 //   Entries already in the base file must keep their field, from and to, in place.
 // - final cap: the last stage cap may sit above 61,440 B (a warning, 61,440 B stays the target) only when the latest approved_raises
 //   entry with field /entry/stages/3/cap has a "to" at or above that cap (a cap stepped down below the approved figure stays
@@ -36,6 +37,34 @@ const STAGES = ['stage-1', 'stage-2', 'stage-3', 'stage-4'];
 /** The approved_raises field that lets the last stage cap sit above FINAL_CAP: the latest entry naming it must have to equal the cap. */
 const FINAL_CAP_EXEMPTION = { field: '/entry/stages/3/cap' };
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
+
+/**
+ * The approved_raises entries that take `field` from `was` to `now`, one entry per step, or null.
+ * A base several releases back is reached through the raises approved one release at a time; each step must still be an entry.
+ * A removed cap (`now` null) needs one direct entry.
+ */
+function raiseChain(decisions, field, was, now) {
+  const steps = decisions.filter((d) => d.field === field);
+  if (now === null) {
+    const hit = steps.find((d) => d.from === was && d.to === null);
+    return hit ? [hit] : null;
+  }
+  const seen = new Set([was]);
+  let paths = [[was, []]];
+  while (paths.length) {
+    const next = [];
+    for (const [at, path] of paths) {
+      for (const d of steps) {
+        if (d.from !== at || typeof d.to !== 'number' || d.to <= at || d.to > now || seen.has(d.to)) continue;
+        if (d.to === now) return [...path, d];
+        seen.add(d.to);
+        next.push([d.to, [...path, d]]);
+      }
+    }
+    paths = next;
+  }
+  return null;
+}
 
 const args = process.argv.slice(2);
 const opt = (name) => {
@@ -228,8 +257,8 @@ function checkRaises(c, ref) {
     const raised = was !== null && (now === null || now > was);
     if (!raised) continue;
     raises++;
-    const hit = decisions.find((d) => d.field === ptr && d.from === was && d.to === now);
-    if (hit) ok(`${ptr} ${was} -> ${now} (${hit.id})`);
+    const chain = raiseChain(decisions, ptr, was, now);
+    if (chain) ok(`${ptr} ${was} -> ${now} (${chain.map((d) => d.id).join(', ')})`);
     else fail(`${ptr} was raised from ${was} to ${now} with no approved_raises entry (field "${ptr}", from ${was}, to ${now})`);
   }
   for (const [name, f] of Object.entries(c.files)) {
