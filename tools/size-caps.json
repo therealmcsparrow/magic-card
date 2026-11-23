@@ -40,7 +40,7 @@
       },
       {
         "id": "stage-4",
-        "cap": 75545,
+        "cap": 75577,
         "target": 61440,
         "landed_commit": "774abb6",
         "measured": 75499
@@ -1339,10 +1339,10 @@
       "to": 36864
     },
     {
-      "id": "entry-stage4-75520-to-75545",
+      "id": "entry-stage4-75520-to-75577",
       "field": "/entry/stages/3/cap",
       "from": 75520,
-      "to": 75545
+      "to": 75577
     },
     {
       "id": "editor-raw-1095680-to-1104128",
