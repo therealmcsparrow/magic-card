@@ -7,7 +7,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ## 2026.11.06 (2026-11-24)
 
 ### Fixed
--   **Installing and updating.** The Marketplace and HACS now install Magic Card from one `magic-card.zip` instead of downloading every file on its own. An update no longer fails with "was not downloaded" for one of the files.
+-   **Installing and updating.** The first upload of this release told the Marketplace to install from `magic-card.zip`, and the Marketplace then refused it with "The installed content has no magic-card.zip". The release was published again with the same install settings as 2026.11.05. If an update logs "was not downloaded" for one of the files, start the update again.
 
 ### Changed
 -   **Size check.** A size raise compared with an older release now passes when each step since then was approved, one release at a time. A raise that was never approved still fails.
