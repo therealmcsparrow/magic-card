@@ -91,17 +91,6 @@ jobs:
           jq '.components += [{"type":"library","name":"tweetnacl","version":"1.0.3","description":"Trimmed copy (Ed25519 verify, SHA-512) vendored in src/look-kit/nacl-verify.ts","licenses":[{"license":{"id":"Unlicense"}}],"purl":"pkg:npm/tweetnacl@1.0.3","externalReferences":[{"type":"vcs","url":"https://github.com/dchest/tweetnacl-js"}]}]' sbom.cdx.json > sbom.vendored.json
           mv sbom.vendored.json sbom.cdx.json
 
-      - name: Build the HACS zip (the dist files at the zip root)
-        # hacs.json sets zip_release with filename magic-card.zip: HACS unpacks the zip into the card folder, so the files sit at its root, not under dist/
-        run: |
-          (cd dist && zip -X -q ../magic-card.zip -- *.js *.js.br *.js.gz)
-          unzip -Z1 magic-card.zip | sort > zip-names.txt
-          (cd dist && ls -1 -- *.js *.js.br *.js.gz | sort) > dist-names.txt
-          diff zip-names.txt dist-names.txt
-          grep -qx 'magic-card.js' zip-names.txt
-          if grep -q '/' zip-names.txt; then echo '::error::magic-card.zip holds a path, the files must sit at the zip root'; exit 1; fi
-          rm zip-names.txt dist-names.txt
-
       - name: Release title (the tag without the v)
         id: title
         env:
@@ -117,7 +106,6 @@ jobs:
             dist/*.js.gz
             dist/look-kit.mjs
             dist/look-fixtures.json
-            magic-card.zip
             sbom.cdx.json
             THIRD-PARTY-NOTICES.md
 
@@ -132,15 +120,15 @@ jobs:
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           name: ${{ steps.title.outputs.name }}
-          # the card (HACS installs every .js asset), its lazy chunks (magic-card-anim-runtime.js) and
-          # the animation studio the magic-card-utils panel loads; the .br and .gz copy of each (HA serves them); plus the SBOM and licence notices
+          # the card (HACS installs every .js asset), its lazy chunks (magic-card-anim-runtime.js) and the animation studio the
+          # magic-card-utils panel loads; the .br and .gz copy of each (HA serves them); plus the SBOM and licence notices. The Marketplace
+          # downloads every file here one by one, so keep the list short
           files: |
             dist/*.js
             dist/*.js.br
             dist/*.js.gz
             dist/look-kit.mjs
             dist/look-fixtures.json
-            magic-card.zip
             sbom.cdx.json
             THIRD-PARTY-NOTICES.md
           fail_on_unmatched_files: true

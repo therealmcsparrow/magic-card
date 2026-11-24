@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Changed
+-   **Fewer release files.** Releases no longer carry `magic-card.zip`. Nothing installed it, and the Marketplace downloads every file of a release one by one, so one file fewer is one fewer that can fail to download.
+
 ## 2026.11.06 (2026-11-24)
 
 ### Fixed
