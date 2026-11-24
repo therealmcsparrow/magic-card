@@ -1,7 +1,8 @@
-// Contract: forum shot (one PNG of a dashboard's Magic Cards for a forum post). Version 1.2.0.
-// Types and constants only; the module is the lazy entry magic-card-forum-shot.js.
+// Contract: forum shot (one PNG of a dashboard's Magic Cards for a forum post). Version 1.4.0.
+// Types and constants only; the module is the lazy entry magic-card-forum-shot.js, shipped with Magic Card Utils on
+// its static path. Its chunks load from next to the entry, never from the card's path.
 
-export const FORUM_SHOT_CONTRACT_VERSION = '1.3.0';
+export const FORUM_SHOT_CONTRACT_VERSION = '1.4.0';
 export const FORUM_SHOT_FILE = 'magic-card-forum-shot.js';
 export const FORUM_SHOT_TAG = 'magic-card-forum-shot';
 /** Width of one frame in CSS px. */

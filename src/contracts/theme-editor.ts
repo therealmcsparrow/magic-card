@@ -1,11 +1,14 @@
 import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
 import type { MessageIndex } from './i18n';
 
-/**
- * Contract: theme editor host. Version 1.6.0. The chunk may import `src/i18n/` (runtime message copy and search fold), `src/ui-kit/` and `src/utils/google-fonts` (the Google fonts gate and lazy loader).
- */
+// Contract: theme editor host. Version 1.7.0. The chunk may import `src/i18n/` (runtime message copy and search fold),
+// `src/ui-kit/` and `src/utils/google-fonts` (the Google fonts gate and lazy loader).
 
-export const THEME_EDITOR_CONTRACT_VERSION = '1.6.0';
+export const THEME_EDITOR_CONTRACT_VERSION = '1.7.0';
+/**
+ * (1.7.0) The entry ships with Magic Card Utils and loads from its static path; its chunks load from next to it, never
+ * from the card's path. It feature-detects loadEditor and loadTransfer on window.MagicCard and fails cleanly without them.
+ */
 export const THEME_EDITOR_FILE = 'magic-card-theme-editor.js';
 export const THEME_EDITOR_TAG = 'magic-card-theme-editor';
 export const THEME_TRIAL_BAR_TAG = 'mc-theme-trial-bar';
