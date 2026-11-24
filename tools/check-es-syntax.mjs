@@ -18,11 +18,14 @@
 //    chunk defines both when missing (polyfillForMarked in src/modules/content/markdown-view.ts). The scan
 //    accepts those two tokens there only while the chunk still holds the polyfill's property names as string literals.
 //
-// Usage: node tools/check-es-syntax.mjs [--dist <dir>] [--debt <file>] [--print-debt] [--no-base | --require-base]
+// Usage: node tools/check-es-syntax.mjs [--dist <dir>] [--debt <file>] [--set card|utils] [--print-debt] [--no-base | --require-base]
+//        --set card (default, dist/) leaves a debt entry for a file only the Utils build ships (set "utils" in tools/size-caps.json) alone;
+//        --set utils (default dist-utils/) leaves every debt entry whose file is not in the scanned dist alone.
 //        node tools/check-es-syntax.mjs --self-test      run the rules against synthetic files
 // Env:   ES_SYNTAX_BASE  git ref whose tools/es-syntax-debt.json the debt may not grow against.
 //        Default run (local): ES_SYNTAX_BASE or origin/main, skipped with a note when missing.
 //        --require-base (CI): ES_SYNTAX_BASE must be set and must resolve to a commit that holds the file, or the check fails.
+//        ES_SYNTAX_BASE must be a plain ref or commit id (letters, digits, . _ / -; no leading -, no ..), or the check fails.
 //        --no-base: no growth check (the release workflow; the validate workflow does it).
 import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -103,7 +106,7 @@ export const scanTokens = (tokens) => {
  * Pure rule. files: Map<name, source>. debt: [{file, token, count}]. baseDebt: the same from the base ref, or null.
  * Returns { errors, notes }.
  */
-export const evaluate = ({ files, debt, baseDebt = null }) => {
+export const evaluate = ({ files, debt, baseDebt = null, set = 'card', utilsFiles = new Set() }) => {
   const errors = [];
   const notes = [];
   const recorded = new Map(debt.map((d) => [`${d.file}\u0000${d.token}`, d.count]));
@@ -164,8 +167,10 @@ export const evaluate = ({ files, debt, baseDebt = null }) => {
   for (const d of debt) {
     if (!isEditorSide(d.file)) continue;
     const m = measured.find((x) => x.file === d.file && x.token === d.token);
-    if (!seen.has(d.file)) errors.push(`${DEBT_REL}: ${d.file} is not in the dist any more, delete its entries`);
-    else if ((m?.count ?? 0) < d.count) errors.push(`${DEBT_REL}: ${d.file} ${d.token} is down to ${m?.count ?? 0} from ${d.count}, lower the number (delete the entry at 0)`);
+    if (!seen.has(d.file)) {
+      const otherBuild = set === 'utils' || utilsFiles.has(d.file);
+      if (!otherBuild) errors.push(`${DEBT_REL}: ${d.file} is not in the dist any more, delete its entries`);
+    } else if ((m?.count ?? 0) < d.count) errors.push(`${DEBT_REL}: ${d.file} ${d.token} is down to ${m?.count ?? 0} from ${d.count}, lower the number (delete the entry at 0)`);
   }
   if (files.size === 0) errors.push('no .js files to check');
   return { errors, notes, measured };
@@ -179,14 +184,31 @@ const readDebt = (file) => {
   return j.entries;
 };
 
+/** A branch, tag or commit id: letters, digits, `.`, `_`, `/`, `-`; not starting with `-`, no `..`, at most 200 characters. */
+export const isSafeRef = (ref) => typeof ref === 'string' && /^[A-Za-z0-9._/][A-Za-z0-9._/-]{0,199}$/.test(ref) && !ref.includes('..');
+
+/** The debt file names that only the Utils build ships (set "utils" in tools/size-caps.json). */
+const utilsOnlyFiles = () => {
+  try {
+    const caps = JSON.parse(readFileSync(join(ROOT, 'tools', 'size-caps.json'), 'utf8'));
+    return new Set(Object.entries(caps.files ?? {}).filter(([, f]) => f.set === 'utils').map(([name]) => name));
+  } catch {
+    return new Set();
+  }
+};
+
 const baseDebtFromGit = (required) => {
   const ref = process.env.ES_SYNTAX_BASE || (required ? '' : 'origin/main');
   if (!ref) {
     console.error('FAIL --require-base needs ES_SYNTAX_BASE (the PR base branch or the commit before the push)');
     process.exit(1);
   }
+  if (!isSafeRef(ref)) {
+    console.error('FAIL ES_SYNTAX_BASE must be a branch, tag or commit id (letters, digits, . _ / -; no leading -, no ..; at most 200 characters)');
+    process.exit(1);
+  }
   try {
-    return JSON.parse(execFileSync('git', ['show', `${ref}:${DEBT_REL}`], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })).entries ?? null;
+    return JSON.parse(execFileSync('git', ['show', '--end-of-options', `${ref}:${DEBT_REL}`], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })).entries ?? null;
   } catch {
     if (required) {
       console.error(`FAIL base ${ref} does not resolve to a commit with ${DEBT_REL}`);
@@ -240,6 +262,31 @@ const selfTest = () => {
   run('debt same as base', { [editor]: 'structuredClone({})' }, [{ file: editor, token: 'structuredClone', count: 1 }], 'pass', [{ file: editor, token: 'structuredClone', count: 1 }]);
   run('hashed chunk name is keyed without the hash', { 'magic-card-editor.1a2b3c4d.js': 'structuredClone({})' }, [{ file: editor, token: 'structuredClone', count: 1 }], 'pass');
   run('no files', {}, [], 'no .js files');
+  const themeEditor = 'magic-card-theme-editor.js';
+  const stale = (label, set, utilsFiles, files, debt, expect) => {
+    const { errors } = evaluate({ files: new Map(Object.entries(files)), debt, set, utilsFiles });
+    const ok = expect === 'pass' ? errors.length === 0 : errors.some((e) => e.includes(expect));
+    if (!ok) {
+      failed++;
+      console.error(`self-test FAILED: ${label}: expected ${expect === 'pass' ? 'no errors' : `an error with "${expect}"`}, got ${JSON.stringify(errors)}`);
+    }
+  };
+  const studioDebt = { file: 'magic-card-animation-studio.js', token: 'structuredClone', count: 1 };
+  stale('set utils: a debt file that is not in the utils dist is not stale', 'utils', new Set(), { [themeEditor]: ok }, [studioDebt], 'pass');
+  stale('set card: a debt file only the utils build ships is not stale', 'card', new Set([themeEditor]), { 'magic-card.js': ok }, [{ file: themeEditor, token: 'structuredClone', count: 1 }], 'pass');
+  stale('set card: any other missing debt file is still stale', 'card', new Set([themeEditor]), { 'magic-card.js': ok }, [studioDebt], 'not in the dist any more');
+  for (const bad of ['--output=x', '-x', 'a..b', '', 'a b', 'a'.repeat(201), 'x;y']) {
+    if (isSafeRef(bad)) {
+      failed++;
+      console.error(`self-test FAILED: ES_SYNTAX_BASE "${bad}" was accepted`);
+    }
+  }
+  for (const good of ['origin/main', 'main', 'fdf4cd502fbdd15b861a848fafe61934f3717ba4', 'release/2026.11']) {
+    if (!isSafeRef(good)) {
+      failed++;
+      console.error(`self-test FAILED: ES_SYNTAX_BASE "${good}" was rejected`);
+    }
+  }
   if (failed) {
     console.error(`${failed} self-test case(s) failed`);
     process.exit(1);
@@ -254,7 +301,12 @@ const main = () => {
     return i === -1 ? undefined : args[i + 1];
   };
   if (args.includes('--self-test')) return selfTest();
-  const dist = opt('--dist') ?? join(ROOT, 'dist');
+  const set = opt('--set') ?? 'card';
+  if (set !== 'card' && set !== 'utils') {
+    console.error(`FAIL --set must be card or utils, got "${set}"`);
+    process.exit(1);
+  }
+  const dist = opt('--dist') ?? join(ROOT, set === 'utils' ? 'dist-utils' : 'dist');
   const debtFile = opt('--debt') ?? join(ROOT, DEBT_REL);
   const files = readJs(dist);
   if (args.includes('--print-debt')) {
@@ -264,7 +316,7 @@ const main = () => {
   }
   const debt = readDebt(debtFile);
   const baseDebt = opt('--debt') || args.includes('--no-base') ? null : baseDebtFromGit(args.includes('--require-base'));
-  const { errors, notes } = evaluate({ files, debt, baseDebt });
+  const { errors, notes } = evaluate({ files, debt, baseDebt, set, utilsFiles: set === 'card' ? utilsOnlyFiles() : new Set() });
   for (const n of notes) console.log(`note: ${n}`);
   if (errors.length) {
     for (const e of errors) console.error(`FAIL ${e}`);
