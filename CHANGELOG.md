@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.11.06 (2026-11-24)
 
 ### Fixed
 -   **Installing and updating.** The Marketplace and HACS now install Magic Card from one `magic-card.zip` instead of downloading every file on its own. An update no longer fails with "was not downloaded" for one of the files.
