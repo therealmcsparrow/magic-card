@@ -4092,8 +4092,8 @@
     }
   },
   "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": {
-    "text": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.",
-    "note": "Error in the theme editor when its script cannot be loaded. Names the file and says to update Magic Card to 2026.10.06 or newer if it persists.",
+    "text": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card and Magic Card Utils together if it keeps happening.",
+    "note": "Error in the theme editor when its script cannot be loaded. Names the file and says to update Magic Card and Magic Card Utils together if it persists. Names no version.",
     "max": 290
   },
   "theme-editor.theme-editor.the-theme-editor-could-not-load-reload": {
