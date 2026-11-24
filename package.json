@@ -9,7 +9,7 @@
   "scripts": {
     "prebuild": "node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts && npm run i18n",
     "i18n": "node tools/i18n-build.mjs",
-    "build": "webpack --mode production && node tools/build-look-kit.mjs && node tools/compress-dist.mjs",
+    "build": "webpack --mode production --config-name card && node tools/build-look-kit.mjs && node tools/compress-dist.mjs",
     "predev": "npm run i18n",
     "prewatch": "npm run i18n",
     "prelint": "npm run i18n",
@@ -36,7 +36,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "build:harness": "webpack --mode development --output-path .harness-build",
+    "build:utils": "webpack --mode production --config-name utils",
+    "build:harness": "webpack --mode development --config-name card --output-path .harness-build && webpack --mode development --config-name utils --output-path .harness-build/utils",
     "shoot": "node scripts/shoot.mjs"
   },
   "keywords": [
