@@ -1,6 +1,6 @@
-// Contract: i18n. Version 2.1.0.
+// Contract: i18n. Version 2.2.0.
 
-export const I18N_CONTRACT_VERSION = '2.1.0';
+export const I18N_CONTRACT_VERSION = '2.2.0';
 export const I18N_CONTRACT_REVISION = 10;
 
 /** Pseudo-localisation hook: wraps one message or one formatted number; the result is used as text only. */
@@ -105,7 +105,7 @@ export const I18N_MODULES = {
   'image-transfer': { bundle: 'magic-card-image-transfer.js', folders: ['src/image-transfer'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'anim-studio': { bundle: 'magic-card-animation-studio.js', folders: ['src/anim-studio'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
   'icon-animator': { bundle: 'magic-card-icon-animator.js, magic-card-forum-shot.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
-  'theme-editor': { bundle: 'magic-card-theme-editor.js', folders: ['src/theme-editor (minus presets)'], tables: 'inline', status: 'complete', slice: 'I8', dashboard: false },
+  'theme-editor': { bundle: 'magic-card-theme-editor.js (utils set)', folders: ['src/theme-editor (minus presets)'], tables: 'inline', status: 'complete', slice: 'I8', dashboard: false },
   'mcu-panel': { bundle: 'magic-card-utils www/magic_card_utils_panel.js', folders: ['magic-card-utils/custom_components/magic_card_utils/www'], tables: 'inline', status: 'complete', slice: 'I9', dashboard: false },
   'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js, magic-card-forum-shot.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'complete', slice: 'I10', dashboard: false },
   'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
@@ -114,8 +114,8 @@ export const I18N_MODULES = {
   'card-pause': { bundle: 'magic-card-pause.js', folders: ['src/card/card-pause.ts'], tables: 'inline', status: 'complete', slice: 'pause-label', dashboard: true },
   'image-tools': { bundle: 'magic-card-image-tools.js', folders: ['src/image-tools'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'look-editor': { bundle: 'magic-card-look-editor.js', folders: ['src/look-editor'], tables: 'inline', status: 'complete', slice: 'flow-slider-styles', dashboard: false },
-  'forum-shot': { bundle: 'magic-card-forum-shot.js', folders: ['src/forum-shot'], tables: 'inline', status: 'complete', slice: 'forum-shot', dashboard: false },
-  'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
+  'forum-shot': { bundle: 'magic-card-forum-shot.js (utils set)', folders: ['src/forum-shot'], tables: 'inline', status: 'complete', slice: 'forum-shot', dashboard: false },
+  'theme-presets': { bundle: 'magic-card-theme-presets.js (utils set)', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
   'share-kit': { bundle: 'magic-card-share-kit.js', folders: ['src/share-kit'], tables: 'inline', status: 'complete', slice: 'sharing-safety', dashboard: false },
   'look-gallery': { bundle: 'magic-card-look-gallery.js', folders: ['src/look-gallery'], tables: 'inline', status: 'complete', slice: 'looks-gallery', dashboard: false },
   'image-animator': { bundle: 'magic-card-image-animator.js', folders: ['src/image-animator'], tables: 'inline', status: 'complete', slice: 'image-animator', dashboard: false },

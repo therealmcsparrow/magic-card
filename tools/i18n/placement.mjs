@@ -1,20 +1,32 @@
-// D7 placement (contract src/contracts/i18n.ts 1.0.0, "Where tables live"): which built file holds the
-// runtime, the tables and the call sites. Input: the module list of the production build that
-// webpack.config.js writes (STATS_FILE). Pure; returns { errors, notes }.
+// D7 placement (contract src/contracts/i18n.ts, "Where tables live"): which built file holds the runtime, the
+// tables and the call sites. Input: the module lists of the card build (STATS_FILE) and the utils build
+// (UTILS_STATS_FILE) that webpack.config.js writes. Returns { errors, notes }.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 const lib = createRequire(import.meta.url)('./lib.cjs');
 
 export const STATS_FILE = path.join(lib.ROOT, 'node_modules/.cache/magic-card/i18n-stats.json');
+export const UTILS_STATS_FILE = path.join(lib.ROOT, 'node_modules/.cache/magic-card/i18n-stats.utils.json');
 
-/** Files that carry their own copy of src/i18n/runtime.ts (three entries; chunks below reuse a copy). */
-const RUNTIME_FILES = ['magic-card.js', 'magic-card-animation-studio.js', 'magic-card-theme-editor.js', 'magic-card-forum-shot.js'];
+/** Files that carry their own copy of src/i18n/runtime.ts, per build (chunks below reuse a copy). */
+const RUNTIME_FILES = {
+  card: ['magic-card.js', 'magic-card-animation-studio.js'],
+  utils: ['magic-card-theme-editor.js', 'magic-card-forum-shot.js'],
+};
 
 const fileOf = (name) => name.replace(/\?.*$/, '').replace(/\.[0-9a-f]{8}\.js$/, '.js');
 
 /** dist file names an I18N_MODULES `bundle` / `chunk` text names; text in parentheses is a remark. */
 const filesIn = (text) => [...(text ?? '').replace(/\((?:[^()]|\([^()]*\))*\)/g, ' ').matchAll(/magic-card[\w-]*\.js/g)].map((m) => m[0]);
+
+/** Parses a module list file into objects without a prototype, so a module or file name never reaches Object.prototype. */
+export function parseStats(text) {
+  return JSON.parse(text, (_key, value) => {
+    if (value === null || typeof value !== 'object' || Array.isArray(value)) return value;
+    return Object.assign(Object.create(null), value);
+  });
+}
 
 /**
  * stats: { chunks: [{ files: string[], modules: string[] }] } (module names like './src/i18n/runtime.ts').
@@ -77,37 +89,54 @@ export function reaches(stats, by, file, mod, seen = new Set()) {
  * - every bundle that holds a t / tc / tx / m call site of a namespace also holds that namespace's index
  *   (lm() marks are numbers and need nothing).
  */
-export function placement(contract, nsList, { required, stats: given }) {
+export function placement(contract, nsList, { required, stats: given, utilsStats: utilsGiven }) {
   const errors = [];
   const notes = [];
+  const report = (message, hint) => {
+    if (required) errors.push(`D7 ${message}`);
+    else notes.push(`i18n: D7 placement skipped (${hint ?? message})`);
+  };
+  const buildHint = (script, file) => `no module list at ${path.relative(lib.ROOT, file)}: run npm run ${script} first`;
   if (!given && !fs.existsSync(STATS_FILE)) {
-    if (required) errors.push(`D7 no module list at ${path.relative(lib.ROOT, STATS_FILE)}: run npm run build first`);
-    else notes.push('i18n: D7 placement skipped (no production build module list; `npm run build`, then `node tools/check-i18n.mjs --placement`)');
+    report(buildHint('build', STATS_FILE), 'no production build module list; `npm run build`, then `node tools/check-i18n.mjs --placement`');
     return { errors, notes };
   }
+  let utils = utilsGiven;
   if (!given) {
+    utils = fs.existsSync(UTILS_STATS_FILE) ? undefined : null;
     // a module list older than the sources (or from a build before the module names were written) says nothing
     const newest = Math.max(...lib.listSourceFiles().map((p) => fs.statSync(p).mtimeMs));
-    if (fs.statSync(STATS_FILE).mtimeMs < newest) {
-      const why = `the module list is older than the sources: run npm run build, then node tools/check-i18n.mjs --placement`;
-      if (required) errors.push(`D7 ${why}`);
-      else notes.push(`i18n: D7 placement skipped (${why})`);
+    const files = [STATS_FILE, ...(utils === null ? [] : [UTILS_STATS_FILE])];
+    const stale = files.find((f) => fs.statSync(f).mtimeMs < newest);
+    if (stale) {
+      const script = stale === STATS_FILE ? 'build' : 'build:utils';
+      report(`the module list is older than the sources: run npm run ${script}, then node tools/check-i18n.mjs --placement`);
       return { errors, notes };
     }
   }
-  const stats = given ?? JSON.parse(fs.readFileSync(STATS_FILE, 'utf8'));
-  const by = bundlesOf(stats);
-  const where = (mod) => [...by.entries()].filter(([, set]) => set.has(mod)).map(([f]) => f).sort();
+  const stats = given ?? parseStats(fs.readFileSync(STATS_FILE, 'utf8'));
+  if (!given && utils !== null) utils = parseStats(fs.readFileSync(UTILS_STATS_FILE, 'utf8'));
+  if (utils === null) report(buildHint('build:utils', UTILS_STATS_FILE));
+  const builds = [{ name: 'card', stats, by: bundlesOf(stats) }];
+  if (utils) builds.push({ name: 'utils', stats: utils, by: bundlesOf(utils) });
+  const where = (mod) => [...new Set(builds.flatMap((b) => [...b.by.entries()].filter(([, set]) => set.has(mod)).map(([f]) => f)))].sort();
   const cfg = lib.readJson(path.join(lib.ROOT, 'tools/i18n/config.json'), { namespaces: {} }).namespaces;
   const mods = contract.I18N_MODULES;
 
   // runtime
-  const rt = where('src/i18n/runtime.ts');
-  for (const f of rt) if (!RUNTIME_FILES.includes(f)) errors.push(`D7 src/i18n/runtime.ts is in ${f}; only ${RUNTIME_FILES.join(', ')} carry a copy`);
+  const rt = [];
+  for (const b of builds) {
+    for (const [f, set] of b.by) {
+      if (!set.has('src/i18n/runtime.ts')) continue;
+      rt.push(f);
+      if (!RUNTIME_FILES[b.name].includes(f)) errors.push(`D7 src/i18n/runtime.ts is in ${f}; only ${RUNTIME_FILES[b.name].join(', ')} carry a copy in the ${b.name} build`);
+    }
+  }
 
   // lm() marker module: identity, no tables
   const mark = where('src/i18n/labels/mark.ts');
-  notes.push(`i18n: D7 placement checked on ${by.size} files (runtime in ${rt.join(', ')}; lm() marks in ${mark.join(', ') || 'no file'})`);
+  const fileCount = builds.reduce((n, b) => n + b.by.size, 0);
+  notes.push(`i18n: D7 placement checked on ${fileCount} files (runtime in ${rt.sort().join(', ')}; lm() marks in ${mark.join(', ') || 'no file'})`);
 
   const indexOf = (ns) => cfg[ns] && `${cfg[ns].dir}/index.ts`;
   const genOf = (ns) => cfg[ns] && `${cfg[ns].dir}/messages.gen.ts`;
@@ -144,8 +173,10 @@ export function placement(contract, nsList, { required, stats: given }) {
   for (const [ns, files] of callSites) {
     const index = indexOf(ns);
     for (const file of files) {
-      for (const f of where(file)) {
-        if (!reaches(stats, by, f, index)) errors.push(`D7 ${ns}: ${file} is in ${f}, which does not hold ${index} (nor do all its parent chunks)`);
+      for (const b of builds) {
+        for (const [f, set] of b.by) {
+          if (set.has(file) && !reaches(b.stats, b.by, f, index)) errors.push(`D7 ${ns}: ${file} is in ${f}, which does not hold ${index} (nor do all its parent chunks)`);
+        }
       }
     }
   }

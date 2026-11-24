@@ -6,7 +6,7 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  * and the rarely used modules leave magic-card.js. A quiet chunk (lazyChunk option `silent`) shows no failure notice. */
 
 export const LAZY_MODULE_CONTRACT = '1.14.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 29;
+export const LAZY_MODULE_CONTRACT_REVISION = 30;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -138,7 +138,7 @@ export interface LazyChunkModule {
   readonly styles?: CSSResultGroup;
 }
 
-/** The older chunks guarded by sameBuild() instead of lazyChunk() (dist file names). */
+/** The older chunks guarded by sameBuild() instead of lazyChunk() (file names in dist or dist-utils; theme-presets is in the utils set only). */
 export const SAME_BUILD_CHUNK_FILES = [
   'magic-card-shape-custom.js',
   'magic-card-anim-runtime.js',
