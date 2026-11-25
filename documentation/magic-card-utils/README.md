@@ -17,7 +17,7 @@ The panel has six tabs:
 
 The panel also has a Forum shot tab. It turns one of your Magic Cards into a picture to post in a forum, in light, dark or both. Check the picture before you post it. A card can show names, places, camera images and the state of your devices, and everyone who sees your post can see them too. The picture is made in your browser, and Magic Card does not keep a copy. Your cards and settings stay in Home Assistant. For a card with web fonts, your browser asks the sites named on the tab for the fonts so it can draw them. Each request shows those sites your IP address, the time, the fonts you ask for and the address of your Home Assistant (a DuckDNS name, a Nabu Casa address or a local network address), plus your browser's type and language. Your cards and settings are not sent. Cards are listed in a table you can sort by clicking a header. See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/forum-shot.md) in the Magic Card Utils repository.
 
-The editors need Magic Card 2026.10.11-beta.1 or newer. When the card is older, the panel says which version you need, and it does not open the editor.
+The icon, shape and image editors need Magic Card 2026.10.11-beta.1 or newer. When the card is older, the panel says which version you need, and it does not open the editor. The theme editor and the forum shot come with Magic Card Utils and need no particular Magic Card version.
 
 ## Library
 
@@ -53,7 +53,7 @@ Magic Card's own cards show the full colours.
 
 ## Install and update
 
-Magic Card and Magic Card Utils are two separate downloads. Update both. HACS shows the Magic Card logo, from the top of this repository's README, on the card's page.
+Magic Card and Magic Card Utils are two separate downloads. Update both together: the theme editor and the forum shot are files of Magic Card Utils, in `custom_components/magic_card_utils/www/`. A manual install gets them by unpacking the whole Magic Card Utils zip. HACS shows the Magic Card logo, from the top of this repository's README, on the card's page.
 
 After an update, hard refresh the browser so the new files load. See [Updating](../../README.md#updating).
 

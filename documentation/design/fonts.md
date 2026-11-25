@@ -20,7 +20,7 @@ With the switch on, every font picker shows a Google tab next to the local fonts
 The same picker is used in:
 
 -   The card editor and the Studio, for `font_family`, `label_font_family` and `tab_font_family`.
--   The theme editor, in the font fields of a theme.
+-   The theme editor, in the font fields of a theme. The editor comes with Magic Card Utils.
 -   The image editor, for image text.
 
 Save writes a CSS font stack, for example `"Open Sans", sans-serif`. If you type a catalogue name such as `lato` into a font field, Magic Card stores it as `"Lato", sans-serif`. The typing and the tidied name are one undo step.

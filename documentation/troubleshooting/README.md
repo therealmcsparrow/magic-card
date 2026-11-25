@@ -22,6 +22,12 @@ See the [pause reply](../support/README.md#pause-reply) and the [Pause motion bu
 
 See [Loading and size](../loading-and-size/README.md) for which file loads when and how to clear the browser cache.
 
+## The theme editor or the forum shot cannot be loaded
+
+Both come with Magic Card Utils. The messages are "The theme editor (*file*) could not be loaded from Magic Card Utils", "The forum shot (*file*) could not be loaded from Magic Card Utils" and "The forum shot doesn't match this Magic Card Utils panel". Reload the page. If it stays, update Magic Card Utils, restart Home Assistant and hard refresh the browser. A manual install needs the whole Magic Card Utils zip unpacked into `custom_components/magic_card_utils`, so the files are in `custom_components/magic_card_utils/www/`.
+
+The theme editor can also say "The editor parts of Magic Card could not be loaded", with the file name `magic-card-theme-editor.js`. Update Magic Card and Magic Card Utils together, then hard refresh. No version number is needed.
+
 ## A forum shot does not work
 
 See [Forum shot](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/forum-shot.md#if-something-goes-wrong) in the Magic Card Utils repository.
