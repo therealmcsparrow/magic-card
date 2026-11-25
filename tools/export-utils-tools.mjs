@@ -243,31 +243,32 @@ function buildSet() {
   }
 }
 
-function buildIn(BUILD_DIR) {  const tar = execFileSync('git', ['archive', '--format=tar', 'HEAD'], { cwd: root, maxBuffer: MAX_TAR_BYTES });
-  extractTar(tar, BUILD_DIR);
+function buildIn(buildDir) {
+  const tar = execFileSync('git', ['archive', '--format=tar', 'HEAD'], { cwd: root, maxBuffer: MAX_TAR_BYTES });
+  extractTar(tar, buildDir);
   const env = {
     ...process.env,
-    GIT_CEILING_DIRECTORIES: path.dirname(BUILD_DIR),
+    GIT_CEILING_DIRECTORIES: path.dirname(buildDir),
     NODE_OPTIONS: '--max-old-space-size=6144',
     CI: 'true',
     npm_config_fetch_retries: '6',
   };
   const npm = npmCli();
-  runChild(process.execPath, [npm, 'ci', '--ignore-scripts'], { cwd: BUILD_DIR, env });
+  runChild(process.execPath, [npm, 'ci', '--ignore-scripts'], { cwd: buildDir, env });
   // keys.gen.ts and messages.gen.ts are git-ignored, so the archived tree lacks them until i18n generates them.
-  runChild(process.execPath, [npm, 'run', 'i18n'], { cwd: BUILD_DIR, env });
-  runChild(process.execPath, [npm, 'run', 'build:utils'], { cwd: BUILD_DIR, env });
-  const dist = path.join(BUILD_DIR, 'dist-utils');
-  runChild(process.execPath, [path.join(BUILD_DIR, 'tools', 'check-dist-size.mjs'), '--set', 'utils', '--dist', dist], { cwd: BUILD_DIR, env });
-  runChild(process.execPath, [path.join(BUILD_DIR, 'tools', 'check-svg-sinks.mjs'), '--utils'], { cwd: BUILD_DIR, env });
-  runChild(process.execPath, [path.join(BUILD_DIR, 'tools', 'check-es-syntax.mjs'), '--set', 'utils', '--dist', dist, '--no-base'], { cwd: BUILD_DIR, env });
+  runChild(process.execPath, [npm, 'run', 'i18n'], { cwd: buildDir, env });
+  runChild(process.execPath, [npm, 'run', 'build:utils'], { cwd: buildDir, env });
+  const dist = path.join(buildDir, 'dist-utils');
+  runChild(process.execPath, [path.join(buildDir, 'tools', 'check-dist-size.mjs'), '--set', 'utils', '--dist', dist], { cwd: buildDir, env });
+  runChild(process.execPath, [path.join(buildDir, 'tools', 'check-svg-sinks.mjs'), '--utils'], { cwd: buildDir, env });
+  runChild(process.execPath, [path.join(buildDir, 'tools', 'check-es-syntax.mjs'), '--set', 'utils', '--dist', dist, '--no-base'], { cwd: buildDir, env });
   const names = ownedFiles(fs.readdirSync(dist, { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name)).filter((n) => n !== TOOLS_JSON);
   if (names.length === 0) throw new ToolError('the utils build produced no files');
   const files = Object.create(null);
   for (const name of names.sort()) files[name] = fs.readFileSync(path.join(dist, name));
-  const version = parseJsonFile(path.join(BUILD_DIR, 'package.json'), 'package.json').version;
+  const version = parseJsonFile(path.join(buildDir, 'package.json'), 'package.json').version;
   if (typeof version !== 'string') throw new ToolError('package.json has no version');
-  const manifest = toolsManifest({ version, files, packages: bundledPackages(BUILD_DIR), fonts: bundledFonts(BUILD_DIR, names) });
+  const manifest = toolsManifest({ version, files, packages: bundledPackages(buildDir), fonts: bundledFonts(buildDir, names) });
   files[TOOLS_JSON] = Buffer.from(manifest, 'utf8');
   return files;
 }
