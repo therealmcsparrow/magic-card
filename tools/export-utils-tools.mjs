@@ -258,6 +258,8 @@ function buildSet() {
   };
   const npm = npmCli();
   runChild(process.execPath, [npm, 'ci', '--ignore-scripts'], { cwd: BUILD_DIR, env });
+  // keys.gen.ts and messages.gen.ts are git-ignored, so the archived tree lacks them until i18n generates them.
+  runChild(process.execPath, [npm, 'run', 'i18n'], { cwd: BUILD_DIR, env });
   runChild(process.execPath, [npm, 'run', 'build:utils'], { cwd: BUILD_DIR, env });
   const dist = path.join(BUILD_DIR, 'dist-utils');
   runChild(process.execPath, [path.join(BUILD_DIR, 'tools', 'check-dist-size.mjs'), '--set', 'utils', '--dist', dist], { cwd: BUILD_DIR, env });
