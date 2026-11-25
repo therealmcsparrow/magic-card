@@ -135,6 +135,8 @@ jobs:
           fi
       - name: Build the Utils set
         run: npm run build:utils
+      - name: SVG sanitiser sits in the chunk of every SVG sink (utils graph)
+        run: node tools/check-svg-sinks.mjs --utils
       - name: Utils dist size budget
         run: node tools/check-dist-size.mjs --set utils --dist dist-utils
       - name: Utils emitted syntax is ES2021 and needs no post-Chromium-85 built-in

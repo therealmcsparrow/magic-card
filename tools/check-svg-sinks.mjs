@@ -29,7 +29,9 @@
 // css-loader.ts; nothing outside src/svg-safety/ value-imports its index.ts; src/svg-safety value-imports only itself and
 // src/contracts/** and is never an SVG sink; a cast to a Sanitised…Markup brand is made in the two sanitisers only.
 //
-// Usage: node tools/check-svg-sinks.mjs [--strict] [stats.json]    check the last production build
+// Usage: node tools/check-svg-sinks.mjs [--strict] [--utils] [stats.json]    check the last production build
+//        --utils checks the utils graph (node_modules/.cache/magic-card/entry-graph.utils.json by default) and skips rules 3 and 4,
+//        which name the card entry and the svg-icon chunk
 //        node tools/check-svg-sinks.mjs --self-test                the rule against synthetic graphs
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -38,6 +40,7 @@ import process from 'node:process';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STATS_DEFAULT = path.join(root, 'node_modules/.cache/magic-card/entry-graph.json');
+const STATS_UTILS_DEFAULT = path.join(root, 'node_modules/.cache/magic-card/entry-graph.utils.json');
 const RULES_REL = 'tools/svg-sinks.json';
 export const SANITIZER = './src/icons/svg-sanitize.ts';
 export const IMAGE_SANITIZER = './src/svg-image/sanitize.ts';
@@ -356,7 +359,7 @@ export const cssChunkProblems = (chunks, pairs) => {
 };
 
 /** Returns { problems, notes }. `sinks`: module names or { module, sanitiser }; `strict`: the sanitiser must sit in the sink's own chunk. */
-export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFiles(), modules, read }) => {
+export const evaluate = ({ chunks, sinks, strict = false, utils = false, shared = sharedChunkFiles(), modules, read }) => {
   const problems = sharedChunkProblems({ chunks, shared, ...(modules ? { modules } : {}), ...(read ? { read } : {}) });
   const notes = [];
   const byId = new Map(chunks.map((c) => [c.id, c]));
@@ -377,16 +380,19 @@ export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFi
       else problems.push(`${label(c)} holds ${mine[0].module}${mine.length > 1 ? ` and ${mine.length - 1} more` : ''} without ${san}${from ? (strict ? ' in the same chunk (only in ' + label(from) + ')' : ' on every path (only in ' + label(from) + ', not in each parent)') : ' in the chunk or an ancestor'}`);
     }
   }
-  const icon = chunks.find((c) => (c.names ?? []).includes('svg-icon'));
-  if (!icon) problems.push('no svg-icon chunk in the build');
-  else
-    for (const m of ['./src/icons/mc-svg-icon.ts', './src/icons/icon-source.ts']) {
-      if (!(icon.modules ?? []).includes(m)) problems.push(`the svg-icon chunk does not hold ${m}`);
-    }
-  const entry = chunks.find((c) => c.entry && (c.files ?? []).includes(ENTRY));
-  if (entry) for (const m of ['./src/icons/mc-svg-icon.ts', './src/icons/icon-source.ts']) if ((entry.modules ?? []).includes(m)) problems.push(`${ENTRY} holds ${m} (it belongs in the svg-icon chunk; a plain icon needs only <ha-icon>)`);
-  const inEntry = (entry?.modules ?? []).filter((m) => m.startsWith(IMAGE_DIR));
-  if (inEntry.length) problems.push(`${ENTRY} holds ${inEntry[0]}${inEntry.length > 1 ? ` and ${inEntry.length - 1} more` : ''} (library images belong in the svg-image chunk)`);
+  // The utils graph has no magic-card.js entry and no svg-icon chunk (the card ships them), so rules 3 and 4 are card-only.
+  if (!utils) {
+    const icon = chunks.find((c) => (c.names ?? []).includes('svg-icon'));
+    if (!icon) problems.push('no svg-icon chunk in the build');
+    else
+      for (const m of ['./src/icons/mc-svg-icon.ts', './src/icons/icon-source.ts']) {
+        if (!(icon.modules ?? []).includes(m)) problems.push(`the svg-icon chunk does not hold ${m}`);
+      }
+    const entry = chunks.find((c) => c.entry && (c.files ?? []).includes(ENTRY));
+    if (entry) for (const m of ['./src/icons/mc-svg-icon.ts', './src/icons/icon-source.ts']) if ((entry.modules ?? []).includes(m)) problems.push(`${ENTRY} holds ${m} (it belongs in the svg-icon chunk; a plain icon needs only <ha-icon>)`);
+    const inEntry = (entry?.modules ?? []).filter((m) => m.startsWith(IMAGE_DIR));
+    if (inEntry.length) problems.push(`${ENTRY} holds ${inEntry[0]}${inEntry.length > 1 ? ` and ${inEntry.length - 1} more` : ''} (library images belong in the svg-image chunk)`);
+  }
   for (const c of chunks) {
     const safety = (c.modules ?? []).filter(inSafety);
     if (isCssChunk(c) || (safety.length && safety.every((m) => m === SVG_CSS_LOADER))) continue;
@@ -446,6 +452,8 @@ const selfTest = () => {
     ['a sink with both sanitisers is checked against its own pairing', { chunks: [entry, icon, particles, { id: 9, parents: [0], files: ['magic-card-svg-image.js'], names: ['svg-image'], modules: ['./src/x.ts', S, IS] }], sinks: [...sinks, { module: './src/x.ts', sanitiser: IS }] }, 0],
     ['the entry holding a svg-image module fails', { chunks: [{ ...entry, modules: ['./src/index.ts', './src/svg-image/client.ts'] }, icon, particles], sinks }, 1],
     ['the image sanitiser in a chunk that is not svg-image fails', { chunks: [entry, icon, particles, { id: 9, parents: [0], files: ['magic-card-image-editor.js'], names: ['image-editor'], modules: [IS] }], sinks }, 1],
+    ['utils mode: no svg-icon chunk and no entry passes', { chunks: [particles], sinks: ['./src/particles/svg.ts'], utils: true }, 0],
+    ['utils mode: a sink chunk without the sanitiser still fails', { chunks: [{ ...particles, parents: [], modules: ['./src/particles/svg.ts'] }], sinks: ['./src/particles/svg.ts'], utils: true }, 1],
     ['a missing svg-image chunk is not an error', { chunks: [entry, icon, particles], sinks }, 0],
   ];
   let bad = 0;
@@ -657,9 +665,10 @@ const main = () => {
   const args = process.argv.slice(2);
   if (args.includes('--self-test')) return selfTest();
   const strict = args.includes('--strict');
+  const utils = args.includes('--utils');
   const file = args.find((a) => !a.startsWith('--'));
   const rules = readJson(path.join(root, RULES_REL), RULES_REL);
-  const stats = readJson(file ? path.resolve(file) : STATS_DEFAULT, 'entry-graph stats');
+  const stats = readJson(file ? path.resolve(file) : utils ? STATS_UTILS_DEFAULT : STATS_DEFAULT, 'entry-graph stats');
   if (!stats.chunks?.length || !stats.chunks.some((c) => 'parents' in c)) throw new Error('the stats have no chunk parents (run a production build: npm run build)');
   if (!stats.chunks.some((c) => 'groups' in c)) throw new Error('the stats have no chunk groups (run a production build: npm run build)');
   const listed = (rules.sinks ?? []).map(asSink);
@@ -667,7 +676,7 @@ const main = () => {
   const sources = readSources(path.join(root, 'src'));
   const found = sinksInSources(path.join(root, 'src'), named, sources);
   const sinks = [...new Map([...listed, ...found].map((x) => [x.module, x])).values()].sort((x, y) => (x.module < y.module ? -1 : 1));
-  const { problems, notes } = evaluate({ chunks: stats.chunks, sinks, strict });
+  const { problems, notes } = evaluate({ chunks: stats.chunks, sinks, strict, utils });
   problems.push(...boundaryProblems(sources));
   for (const n of notes) console.log(`svg-sinks: ${n}`);
   if (problems.length) {

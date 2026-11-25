@@ -6,7 +6,8 @@ The editor writes ordinary Home Assistant theme files. A saved theme works witho
 
 ## Requirements
 
--   The [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration. The theme editor comes with it, in `custom_components/magic_card_utils/www/`, so you copy no editor file into the Magic Card folder. Update Magic Card Utils and Magic Card together.-   An admin user. The panel is only in the sidebar of admin users, and saving or deleting a theme needs an admin.
+-   The [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration. The theme editor comes with it, in `custom_components/magic_card_utils/www/`, so you copy no editor file into the Magic Card folder. Update Magic Card Utils and Magic Card together.
+-   An admin user. The panel is only in the sidebar of admin users, and saving or deleting a theme needs an admin.
 -   The include lines in `configuration.yaml`, described in [Getting started](getting-started.md#add-the-include-lines).
 
 ## Pages

@@ -5,8 +5,9 @@
 //
 // The tool owns only the top-level files of <www> named magic-card-<name>[.<8 hex>].js and magic-card-tools.json.
 // Every other file and folder in <www> is never read, written or removed.
-// The build runs in a fixed folder below the OS temp directory, on a tree extracted from the committed HEAD,
-// with `npm ci` there. The extraction refuses absolute names, `..` segments and links.
+// The build runs in a new private folder (mkdtemp) below the OS temp directory, removed afterwards, on a tree
+// extracted from the committed HEAD, with `npm ci` there. The output does not depend on the folder name.
+// Export on Linux: the build host decides line endings and some bytes. The extraction refuses absolute names, `..` segments and links.
 // The same commit gives the same bytes, so two runs give equal SHA-256 hashes.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -16,7 +17,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const BUILD_DIR = path.join(os.tmpdir(), 'mc-utils-export');
 const OWNED_JS = /^magic-card-[a-z0-9-]+(\.[0-9a-f]{8})?\.js$/;
 const TOOLS_JSON = 'magic-card-tools.json';
 const MAX_JSON_BYTES = 64 * 1024 * 1024;
@@ -84,24 +84,13 @@ function parseJsonFile(file, what) {
   }
 }
 
-/** Empties and recreates the fixed build folder. A link at that path is removed as a link, never followed. */
+/** Creates a new, private (mode 0700) build folder below the OS temp directory; mkdtemp never reuses an existing path. */
 function freshBuildDir() {
-  let st = null;
   try {
-    st = fs.lstatSync(BUILD_DIR);
+    return fs.mkdtempSync(path.join(os.tmpdir(), 'mc-utils-export-'));
   } catch (e) {
-    if (e.code !== 'ENOENT') throw new ToolError(`cannot inspect ${BUILD_DIR}: ${e.code}`);
+    throw new ToolError(`cannot create a build folder in ${os.tmpdir()}: ${e.code ?? e.message}`);
   }
-  if (st) {
-    if (st.isSymbolicLink() || !st.isDirectory()) {
-      fs.rmdirSync(BUILD_DIR);
-    } else {
-      fs.rmSync(BUILD_DIR, { recursive: true, force: true });
-    }
-  }
-  fs.mkdirSync(BUILD_DIR, { recursive: true });
-  const after = fs.lstatSync(BUILD_DIR);
-  if (after.isSymbolicLink() || !after.isDirectory()) throw new ToolError(`${BUILD_DIR} is not a plain folder`);
 }
 
 const octal = (buf) => {
@@ -246,8 +235,15 @@ function bundledFonts(buildDir, distFiles) {
 
 /** Builds the utils set from the committed HEAD and returns name -> Buffer, manifest included. */
 function buildSet() {
-  freshBuildDir();
-  const tar = execFileSync('git', ['archive', '--format=tar', 'HEAD'], { cwd: root, maxBuffer: MAX_TAR_BYTES });
+  const BUILD_DIR = freshBuildDir();
+  try {
+    return buildIn(BUILD_DIR);
+  } finally {
+    fs.rmSync(BUILD_DIR, { recursive: true, force: true });
+  }
+}
+
+function buildIn(BUILD_DIR) {  const tar = execFileSync('git', ['archive', '--format=tar', 'HEAD'], { cwd: root, maxBuffer: MAX_TAR_BYTES });
   extractTar(tar, BUILD_DIR);
   const env = {
     ...process.env,
@@ -263,6 +259,7 @@ function buildSet() {
   runChild(process.execPath, [npm, 'run', 'build:utils'], { cwd: BUILD_DIR, env });
   const dist = path.join(BUILD_DIR, 'dist-utils');
   runChild(process.execPath, [path.join(BUILD_DIR, 'tools', 'check-dist-size.mjs'), '--set', 'utils', '--dist', dist], { cwd: BUILD_DIR, env });
+  runChild(process.execPath, [path.join(BUILD_DIR, 'tools', 'check-svg-sinks.mjs'), '--utils'], { cwd: BUILD_DIR, env });
   runChild(process.execPath, [path.join(BUILD_DIR, 'tools', 'check-es-syntax.mjs'), '--set', 'utils', '--dist', dist, '--no-base'], { cwd: BUILD_DIR, env });
   const names = ownedFiles(fs.readdirSync(dist, { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name)).filter((n) => n !== TOOLS_JSON);
   if (names.length === 0) throw new ToolError('the utils build produced no files');
