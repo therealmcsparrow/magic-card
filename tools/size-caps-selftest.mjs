@@ -310,6 +310,14 @@ expect('dist with no .br/.gz fails', r.code === 1 && /.js.br: missing/.test(r.ou
   expect('utils set: over its raw cap fails', r.code === 1 && /> cap 2048/.test(r.out), r.out);
   r = run(fixture(both, { 'magic-card-u.js': 'export {};\n', 'magic-card-a.js': 'export {};\n' }, false).concat(['--set', 'utils']));
   expect('utils set: a card-set file fails', r.code === 1 && /card set/.test(r.out), r.out);
+  const shared = clone(both);
+  shared.files['magic-card-a.js'].set = 'both';
+  r = run(fixture(shared, { 'magic-card-u.js': 'export {};\n', 'magic-card-a.js': 'export {};\n' }, false).concat(['--set', 'utils']));
+  expect('utils set: a "both" chunk is accepted', r.code === 0 && /magic-card-a\.js/.test(r.out), r.out);
+  r = run(fixture(shared, dist));
+  expect('card set: a "both" chunk stays required and gated', r.code === 0, r.out);
+  r = run(fixture(shared, Object.fromEntries(Object.entries(dist).filter(([k]) => !k.startsWith('magic-card-a.')))));
+  expect('card set: a "both" chunk missing from dist fails', r.code === 1 && /magic-card-a\.js.*missing/.test(r.out), r.out);
   const badSet = clone(both);
   badSet.files['magic-card-u.js'].set = 'banana';
   r = run(fixture(badSet, dist).concat(['--caps-only']));

@@ -19,8 +19,9 @@
 //   their own, except magic-card.js.br: <= entry.br.cap when set, and always <= the active stage gzip cap.
 // Usage: node tools/check-dist-size.mjs [--caps <file>] [--dist <dir>] [--base-ref <git ref> | --base-file <file>] [--require-base] [--caps-only] [--committed] [--digest] [--set card|utils]
 //   --set           which files the dist holds. card (default): dist/, with magic-card.js, siblings and every file whose entry has no "set" or
-//                   set "card"; a file whose entry says "set": "utils" must not be there. utils: the Utils build (dist-utils/), only the files
-//                   whose entry says "set": "utils", gated on raw bytes, with gzip and brotli computed in memory (no siblings, no magic-card.js).
+//                   set "card" or "both"; a file whose entry says "set": "utils" must not be there. "both" marks a chunk the card and the Utils build
+//                   both emit (one cap, one ceiling, required in dist/, allowed but not required in dist-utils/). utils: the Utils build (dist-utils/), only the files
+//                   whose entry says "set": "utils" or "both", gated on raw bytes, with gzip and brotli computed in memory (no siblings, no magic-card.js).
 //   --base-file     compare with a file instead of a git ref (the self-test uses it).
 //   --require-base an unresolvable ref fails (CI); a ref that exists but has no caps file yet (first run) means no raises.
 //   --caps-only     check the caps file and the raises only, no dist (the quick CI job).
@@ -79,7 +80,7 @@ const capsPath = opt('--caps') ?? join(ROOT, 'tools', 'size-caps.json');
 const distDir = opt('--dist') ?? join(ROOT, 'dist');
 const baseRef = opt('--base-ref');
 const baseFile = opt('--base-file');
-const SETS = ['card', 'utils'];
+const SETS = ['card', 'utils', 'both'];
 const set = opt('--set') ?? 'card';
 const inCi = process.env.GITHUB_ACTIONS === 'true' || process.env.CI === 'true';
 
@@ -342,7 +343,7 @@ function checkDist(c, activeCap, authoritative) {
     else ok(`${file}: ${size} B <= ${f.raw} B (headroom ${f.raw - size} B)`);
   }
   for (const [name, f] of Object.entries(c.files)) {
-    if (!seen.has(name) && !f.optional && setOf(f) === 'card') fail(`${name}: missing from dist/`);
+    if (!seen.has(name) && !f.optional && setOf(f) !== 'utils') fail(`${name}: missing from dist/`);
   }
   checkSiblings(c, files, activeCap, tag);
 }
@@ -353,7 +354,7 @@ function checkUtilsDist(c, seen, tag) {
     const f = hasEntry(c, name) ? c.files[name] : undefined;
     const buf = readFileSync(join(distDir, file));
     if (!f) fail(`${file}: ${buf.length} B, no entry in tools/size-caps.json. Add one with "set": "utils" in the same PR`);
-    else if (setOf(f) !== 'utils') fail(`${file}: belongs to the card set and must not be in the utils dist`);
+    else if (setOf(f) === 'card') fail(`${file}: belongs to the card set and must not be in the utils dist (a chunk both builds emit needs "set": "both")`);
     else if (buf.length > f.raw) fail(`${file}: ${buf.length} B > cap ${f.raw} B (+${buf.length - f.raw} B)`);
     else {
       const gz = gzipSync(buf, { level: c.gzip.level }).length;
