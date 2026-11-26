@@ -1139,7 +1139,6 @@ export class McteEditorView extends LitElement {
               ? html`<button type="button" role="menuitem" @click=${() => this._copyMode('light', 'dark')}>${t('theme-editor.editor-view.copy-light-to-dark')}</button>
                   <button type="button" role="menuitem" @click=${() => this._copyMode('dark', 'light')}>${t('theme-editor.editor-view.copy-dark-to-light')}</button>`
               : nothing}
-            ${this._canPublish ? html`<button type="button" role="menuitem" data-publish @click=${() => void this._publishClick()}>${t('theme-editor.editor-view.save-to-themes-folder')}</button>` : nothing}
             ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => ((this._deleteFile = false), this._openDlg('delete'))}>${t('theme-editor.editor-view.delete-theme')}</button>` : nothing}
           </div>`
         : nothing}
@@ -1161,14 +1160,47 @@ export class McteEditorView extends LitElement {
         ? html`<span class="help saved" role="status">${t('theme-editor.editor-view.saved-time', { time: this._savedAt })}</span>
             ${!this.storage || this._folder === 'current'
               ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>${t('theme-editor.editor-view.use-this-theme')}</button>`
-              : this._canPublish
-                ? html`<button type="button" class="btn btn-text btn-sm" data-publish @click=${() => void this._publishClick()}>${t('theme-editor.editor-view.save-to-themes-folder')}</button>`
-                : nothing}`
+              : nothing}`
         : nothing}
       ${this._usedMsg
         ? html`<span class="help" role="status">${this._usedMsg}</span>${this._usedLink ? html`<a class="btn btn-text btn-sm" href="/profile">${t('theme-editor.editor-view.open-your-profile')}</a>` : nothing}`
         : nothing}
     </div>`;
+  }
+
+  /** Why the bar's Save to themes folder is off, or null. */
+  private get _publishOffReason(): string | null {
+    if (this.writesEnabled === false) return t('theme-editor.editor-view.theme-folder-off-message');
+    if (this._folder === 'foreign') return t('theme-editor.editor-view.another-file-in-the-themes-folder-uses');
+    return null;
+  }
+
+  /** Save to themes folder in the bar: aria-disabled while off, so it stays focusable and says why. */
+  private _publishButton(compact: boolean): TemplateResult | typeof nothing {
+    if (!this.storage || !this.draft?.editable) return nothing;
+    const name = t('theme-editor.editor-view.save-to-themes-folder');
+    const why = this._publishOffReason;
+    const off = why !== null || this._saving;
+    const press = () => {
+      if (why !== null) {
+        this._showBanner({ kind: 'warn', title: name, message: why, actions: [this._dismissAct] });
+        return;
+      }
+      void this._publishClick();
+    };
+    return html`<button
+        type="button"
+        class=${compact ? 'icon-btn publish' : 'btn btn-secondary btn-sm publish'}
+        data-publish
+        aria-disabled=${off ? 'true' : 'false'}
+        aria-busy=${this._saving ? 'true' : nothing}
+        aria-label=${ifDefined(compact ? name : undefined)}
+        title=${why ?? (compact ? name : nothing)}
+        aria-describedby=${ifDefined(why ? 'publish-why' : undefined)}
+        @click=${press}
+      >
+        ${compact ? glyph('folderOpenOutline') : name}
+      </button>${why ? html`<span class="sr-only" id="publish-why">${why}</span>` : nothing}`;
   }
 
   /** The bar of the frame: Back, the theme and its state, the trial and preset buttons, the drawer toggle, Save and the more menu. */
@@ -1190,6 +1222,7 @@ export class McteEditorView extends LitElement {
         ${this.backend?.presets && this._w >= 900 ? html`<button type="button" class="btn btn-secondary btn-sm savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
         ${compact ? nothing : this._tryButton()}
         <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
+        ${this._publishButton(compact)}
         <button
           type="button"
           class="icon-btn vars-toggle"
@@ -1222,7 +1255,7 @@ export class McteEditorView extends LitElement {
             @mcte-change=${(e: CustomEvent<{ value: ThemeMode }>) => (e.stopPropagation(), this._setMode(e.detail.value))}
           ></mcte-mode-switch>`
         : nothing}
-      ${compact ? nothing : html`<span class="previewing" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode: this._mode })}</span>`}
+      ${compact || !this._hasModes ? nothing : html`<span class="previewing" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode: this._mode })}</span>`}
     </div>`;
   }
 
@@ -1624,6 +1657,18 @@ export class McteEditorView extends LitElement {
         flex: none;
         align-items: center;
         gap: var(--bp-s-3);
+      }
+      .publish {
+        flex: none;
+        white-space: nowrap;
+      }
+      .publish[aria-disabled='true'] {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .publish:focus-visible {
+        outline: 2px solid var(--bp-acc, var(--primary-color));
+        outline-offset: 2px;
       }
       .vr {
         flex: none;
