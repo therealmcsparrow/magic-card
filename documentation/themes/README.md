@@ -21,7 +21,7 @@ The editor writes ordinary Home Assistant theme files. A saved theme works witho
 
 ## Sharing and importing themes
 
-Imported theme values are checked against the kind of value each key takes, and a value that points to another website is left out and listed. Fonts are limited, text contrast is checked in light and dark mode, and the Wall tablet preview shows how the text reads from across a room. See [Sharing safety](../sharing-safety/README.md).
+Imported theme values are checked against the kind of value each key takes, and a value that points to another website is left out and listed. Fonts are limited, text contrast is checked in light and dark mode, and the import preview has a Wall tablet view that shows how the text reads from across a room. See [Sharing safety](../sharing-safety/README.md).
 
 ## Hiding the Variables pane
 
@@ -29,6 +29,6 @@ At 1024 px wide and more, the Variables pane sits beside the preview. It is open
 
 Click a part of the preview, such as a button, the sidebar, the heading or an alert, to jump to its setting. The Variables pane opens on the right group, scrolls to the field and puts the cursor in it, even when **Only changed** is on. Click a card sample, such as the Magic Card, to open its whole group. Parts of the preview get an outline when the pointer is over them.
 
-The top bar holds the preview's Light and Dark switch, what the preview shows, and the **Wall tablet** button. The footer shows whether the theme can be saved (for example **No changes to save**, or the time it was saved) and how **Try on dashboard** works.
+The top bar holds the preview's Light and Dark switch, what the preview shows, and the **Save to themes folder** button. The Light and Dark switch changes the whole preview, including the sample cards, and a theme without light and dark modes is always shown in light. The footer shows whether the theme can be saved (for example **No changes to save**, or the time it was saved) and how **Try on dashboard** works.
 
 Related: [Magic Card Utils panel](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/README.md) and the [Magic Card Utils WebSocket API](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/api/README.md) for the commands the editor uses.
