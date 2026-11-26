@@ -4,6 +4,7 @@ import { TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
 import { previewVars, validateValue } from './model';
+import { baseKeys, modeDefault } from './mode-base';
 import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PARTY_SAMPLES } from './preview-cards';
 import type { SampleId } from './preview-cards';
 import './preview-cards';
@@ -76,7 +77,7 @@ const checkValue = (name: string, value: string): boolean => validateValue(kindO
 
 /**
  * Keeps one element's inline custom properties equal to a draft: the draft's valid values, plus a
- * reset for every key the page theme sets and the draft does not. Writes only what changed.
+ * reset for every key the mode's base covers and the draft does not. Writes only what changed.
  */
 export class ScopedVars {
   private readonly applied = new Map<string, string>();
@@ -85,9 +86,9 @@ export class ScopedVars {
   constructor(private readonly root: HTMLElement) {}
 
   /** Returns how many draft values were invalid and kept at their last valid value (or reset). */
-  apply(draft: Bag, pageKeys: string[] = pageThemeKeys(), defaults: Bag = readHaDefaults()): { skipped: number } {
+  apply(draft: Bag, pageKeys: string[] = pageThemeKeys(), defaults: Bag = readHaDefaults(), mode: ThemeMode = 'light'): { skipped: number } {
     const next = new Map<string, string>();
-    for (const key of pageKeys) if (!(key in draft)) next.set(key, defaults[key] || 'initial');
+    for (const key of baseKeys(mode, pageKeys)) if (!(key in draft)) next.set(key, modeDefault(key, mode, defaults));
     for (const [key, value] of Object.entries(draft)) {
       if (!key.startsWith('rgb-') && !checkValue(key, value)) continue;
       next.set(key, value);
@@ -99,7 +100,7 @@ export class ScopedVars {
       skipped++;
       const keep = this.lastGood.get(key);
       if (keep !== undefined) next.set(key, keep);
-      else if (!next.has(key)) next.set(key, defaults[key] || 'initial');
+      else if (!next.has(key)) next.set(key, modeDefault(key, mode, defaults));
     }
     for (const key of [...this.applied.keys()]) {
       if (!next.has(key)) {
@@ -162,6 +163,29 @@ export class McteThemePreview extends LitElement {
     return this.mode ?? browserMode(this.hass);
   }
 
+  private get _hasModes(): boolean {
+    return !!this.doc.modes && Object.keys(this.doc.modes).length > 0;
+  }
+
+  /** The mode the stage shows: a theme without modes is previewed on the light base. */
+  private get _effective(): ThemeMode {
+    return this._hasModes ? this._mode : 'light';
+  }
+
+  private _sampleHassFor?: { hass: unknown; dark: boolean; value: unknown };
+
+  /** The hass the sample cards get: HA's, with `themes.darkMode` set to the preview mode; one object per (hass, mode). */
+  private get _sampleHass(): unknown {
+    const hass = this.hass as { themes?: Record<string, unknown> } | undefined;
+    if (!hass) return undefined;
+    const dark = this._effective === 'dark';
+    const m = this._sampleHassFor;
+    if (m && m.hass === hass && m.dark === dark) return m.value;
+    const value = { ...hass, themes: { ...hass.themes, darkMode: dark } };
+    this._sampleHassFor = { hass, dark, value };
+    return value;
+  }
+
   connectedCallback(): void {
     super.connectedCallback();
     previewCardsEvents.addEventListener('change', this._onCards);
@@ -179,8 +203,11 @@ export class McteThemePreview extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
+    if (changed.has('hass') || changed.has('doc') || changed.has('mode')) {
+      const sampleHass = this._sampleHass;
+      for (const el of this._samples.values()) if (el instanceof HTMLElement && (el as HTMLElement & { hass?: unknown }).hass !== sampleHass) (el as HTMLElement & { hass?: unknown }).hass = sampleHass;
+    }
     if (changed.has('hass')) {
-      for (const el of this._samples.values()) if (el instanceof HTMLElement) (el as HTMLElement & { hass?: unknown }).hass = this.hass;
       if (this.hass && !this._created) void this._buildSamples();
     }
     if (changed.has('doc') || changed.has('mode') || changed.has('hass') || !this._applied) {
@@ -204,8 +231,10 @@ export class McteThemePreview extends LitElement {
     const stage = this.renderRoot.querySelector<HTMLElement>('.stage');
     if (!stage) return;
     this._scope ??= new ScopedVars(stage);
-    const vars = previewVars(this.doc, this._mode);
-    const { skipped } = this._scope.apply(vars);
+    const mode = this._effective;
+    const vars = previewVars(this.doc, mode);
+    const { skipped } = this._scope.apply(vars, undefined, undefined, mode);
+    stage.style.setProperty('color-scheme', mode);
     const fonts = FONT_VARS.map((k) => vars[k]).filter(Boolean);
     if (fonts.length) whenGoogleFontsAllowed(() => void googleFontsChunk().then((m) => m.loadFontsFor(fonts.flatMap(m.fontCandidates)), () => 0));
     this._applied = true;
@@ -232,7 +261,7 @@ export class McteThemePreview extends LitElement {
       }
       this._set(id, 'loading');
       try {
-        this._set(id, await createSample(config, this.hass));
+        this._set(id, await createSample(config, this._sampleHass));
       } catch {
         this._set(id, 'error');
       }
@@ -295,7 +324,7 @@ export class McteThemePreview extends LitElement {
 
   protected render(): TemplateResult {
     const mode = this._mode;
-    const hasModes = !!this.doc.modes && Object.keys(this.doc.modes).length > 0;
+    const hasModes = this._hasModes;
     const empty = Object.keys(previewVars(this.doc, mode)).length === 0;
     const count = 5 + this._third.length;
     return html`
@@ -312,6 +341,7 @@ export class McteThemePreview extends LitElement {
               : html`<span class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</span>`}
             <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode })}</span>
           </div>`}
+      ${this.hideToolbar && !hasModes ? html`<p class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</p>` : nothing}
       ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
       <div class="stage-wrap">
       <section
