@@ -325,7 +325,8 @@ export class McteThemePreview extends LitElement {
   protected render(): TemplateResult {
     const mode = this._mode;
     const hasModes = this._hasModes;
-    const empty = Object.keys(previewVars(this.doc, mode)).length === 0;
+    const shown = this._effective;
+    const empty = Object.keys(previewVars(this.doc, shown)).length === 0;
     const count = 5 + this._third.length;
     return html`
       ${this.hideToolbar
@@ -339,14 +340,14 @@ export class McteThemePreview extends LitElement {
                   @mcte-change=${(e: CustomEvent<{ value: ThemeMode }>) => (e.stopPropagation(), this._pick(e.detail.value))}
                 ></mcte-mode-switch>`
               : html`<span class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</span>`}
-            <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode })}</span>
+            <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode: shown })}</span>
           </div>`}
       ${this.hideToolbar && !hasModes ? html`<p class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</p>` : nothing}
       ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
       <div class="stage-wrap">
       <section
         class="stage ${this.pickable ? 'pickable' : ''} ${this._hover ? 'on-part' : ''}"
-        aria-label=${t('theme-editor.preview.theme-preview-mode', { mode })}
+        aria-label=${t('theme-editor.preview.theme-preview-mode', { mode: shown })}
         tabindex="0"
         data-var="primary-background-color"
         @pointermove=${this._onStageMove}
@@ -354,7 +355,7 @@ export class McteThemePreview extends LitElement {
         @click=${this._onStageClick}
         @scroll=${() => (this._hover = null)}
       >
-        <p class="sr">${mode === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
+        <p class="sr">${shown === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
         ${this._skipped > 0
           ? html`<p class="strip" role="status">${t('theme-editor.preview.showing-the-last-valid-value-for-c', { c: this._skipped })}</p>`
           : nothing}
