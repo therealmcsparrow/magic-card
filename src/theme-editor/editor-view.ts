@@ -384,6 +384,11 @@ export class McteEditorView extends LitElement {
     return !!this._doc.modes;
   }
 
+  /** A flat theme is drawn on the light base, so every readout names light. */
+  private get _effectiveMode(): ThemeMode {
+    return this._hasModes ? this._mode : 'light';
+  }
+
   private get _errors(): DocError[] {
     return docErrors(this._doc, kindOf);
   }
@@ -555,11 +560,11 @@ export class McteEditorView extends LitElement {
   }
 
   private _computeHints(_now = false): void {
-    const vars = resolveTheme(this._doc, this._mode);
+    const vars = resolveTheme(this._doc, this._effectiveMode);
     const hints = new Map<string, FieldHint>();
     const card = String(vars['ha-card-background'] ?? vars['card-background-color'] ?? '#ffffff');
     const stage = String(vars['lovelace-background'] ?? vars['primary-background-color'] ?? '');
-    const modeName = scopeLabel(this._mode);
+    const modeName = scopeLabel(this._effectiveMode);
     const one = new Intl.NumberFormat(locale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     for (const name of ['primary-text-color', 'secondary-text-color']) {
       const text = vars[name];
@@ -585,7 +590,7 @@ export class McteEditorView extends LitElement {
   private _syncStrip(): void {
     const el = this.renderRoot.querySelector<HTMLElement>('.strip-sample');
     if (!el) return;
-    const vars = previewVars(this._previewDoc, this._mode);
+    const vars = previewVars(this._previewDoc, this._effectiveMode);
     const next = new Set<string>();
     for (const [k, v] of Object.entries(vars)) {
       if (!k.startsWith('rgb-') && validateValue(kindOf(k) ?? 'text', v) !== null) continue;
@@ -1399,7 +1404,7 @@ export class McteEditorView extends LitElement {
           />
         </div>
       </div>
-      <p class="help status" role="status" aria-live="polite">${t('theme-editor.editor-view.editing-scope-previewing-mode', { scope: scopeLabel(this._scope), mode: scopeLabel(this._mode) })}</p>
+      <p class="help status" role="status" aria-live="polite">${t('theme-editor.editor-view.editing-scope-previewing-mode', { scope: scopeLabel(this._scope), mode: scopeLabel(this._effectiveMode) })}</p>
       ${this._scope === 'shared' && this._hasModes
         ? html`<p class="help">${t('theme-editor.editor-view.shared-applies-to-light-and-dark-unless')}</p>`
         : nothing}
