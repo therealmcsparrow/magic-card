@@ -4,7 +4,9 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.11.09 (2026-11-26)
+
+Install Magic Card Utils 2026.11.08 first, then update Magic Card.
 
 ### Fixed
 -   **A theme without light and dark modes follows Home Assistant.** The preview, labels, hints and status line use Home Assistant's current dark mode setting, also when it changes while the editor is open. This replaces the 2026.11.08 behaviour that always showed such a theme in light.
