@@ -33,9 +33,9 @@ const ITEMS: UiChoice[] = [
   { value: 'heat', label: 'Heat', description: 'Warm wave.' },
 ];
 
-describe('ui-kit 1.4.0 r7 definition', () => {
+describe('ui-kit 1.5.0 r7 definition', () => {
   it('has the new version and revision, and defines the three tags once', () => {
-    expect(UI_KIT_CONTRACT_VERSION).toBe('1.4.0');
+    expect(UI_KIT_CONTRACT_VERSION).toBe('1.5.0');
     expect(UI_KIT_CONTRACT_REVISION).toBe(7);
     for (const tag of [UI_DISCLOSURE_TAG, UI_TILE_GROUP_TAG, UI_CHIP_GROUP_TAG]) {
       const cls = customElements.get(tag) as unknown as { uiKitRevision: number };

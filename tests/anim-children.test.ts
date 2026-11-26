@@ -208,7 +208,7 @@ describe('sources', () => {
   });
 
   it('the contract numbers', async () => {
-    expect((await import('../src/contracts/lazy-module')).LAZY_MODULE_CONTRACT_REVISION).toBe(29);
+    expect((await import('../src/contracts/lazy-module')).LAZY_MODULE_CONTRACT_REVISION).toBe(30);
     expect((await import('../src/contracts/module-editor')).MODULE_EDITOR_CONTRACT_REVISION).toBe(3);
   });
 });

@@ -288,8 +288,6 @@ theme-editor	theme-editor.mushroom.secondary-text-colour	Secondary text color
 theme-editor	theme-editor.mushroom.subtitle-colour	Subtitle color
 theme-editor	theme-editor.mushroom.title-colour	Title color
 theme-editor	theme-editor.preview.body-text-in-the-primary-text-colour	Body text in the primary text color.
-theme-editor	theme-editor.preview.wall-tablet-caption	Drawn at one fifth size, as the text looks from 3 meters away.
-theme-editor	theme-editor.preview.wall-tablet-label	Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 meters.
 theme-editor	theme-editor.tile.colour-of-the-primary-text	Color of the primary text.
 theme-editor	theme-editor.tile.colour-of-the-secondary-text	Color of the secondary text.
 theme-editor	theme-editor.tile.primary-text-colour	Primary text color
