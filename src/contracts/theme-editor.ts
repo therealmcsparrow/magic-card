@@ -209,7 +209,7 @@ export const THEME_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
  * other mode. The preview stage resolves the draft over HA's base for the preview mode (light: the page
  * stylesheet defaults; dark: HA_DARK_DEFAULTS), sets `color-scheme` to the mode and gives its sample cards a
  * hass whose `themes.darkMode` follows the preview mode. A theme without `modes` is previewed on the base
- * of the profile mode (1.2.0), because HA applies its dark base to every theme in dark mode.
+ * of the live profile mode, read on every render (1.2.0), because HA applies its dark base to every theme in dark mode.
  */
 export const PREVIEW_RULES_VERSION = '1.2.0';
 export const TRIAL_STYLE_ID = 'mc-theme-trial';

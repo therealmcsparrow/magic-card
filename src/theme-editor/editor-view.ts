@@ -381,12 +381,12 @@ export class McteEditorView extends LitElement {
   }
 
   private get _hasModes(): boolean {
-    return !!this._doc.modes;
+    return !!this._doc.modes && Object.keys(this._doc.modes).length > 0;
   }
 
-  /** Every readout names the profile mode; a flat theme sits on the same base as a themed one. */
+  /** Every readout names the mode drawn: the switch for a themed doc, else the live Home Assistant mode. */
   private get _effectiveMode(): ThemeMode {
-    return this._mode;
+    return this._hasModes ? this._mode : browserMode(this.hass);
   }
 
   private get _errors(): DocError[] {

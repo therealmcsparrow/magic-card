@@ -167,9 +167,9 @@ export class McteThemePreview extends LitElement {
     return !!this.doc.modes && Object.keys(this.doc.modes).length > 0;
   }
 
-  /** The mode the stage shows: the profile mode, flat themes included, because HA applies its dark base to every theme. */
+  /** The mode the stage shows: the switch for a themed doc, else the live Home Assistant mode (HA applies its dark base to every theme). */
   private get _effective(): ThemeMode {
-    return this._mode;
+    return this._hasModes ? this._mode : browserMode(this.hass);
   }
 
   private _sampleHassFor?: { hass: unknown; dark: boolean; value: unknown };
