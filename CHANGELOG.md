@@ -4,13 +4,24 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.11.08 (2026-11-26)
+
+Install Magic Card Utils 2026.11.07 first, then update Magic Card.
+
+### Changed
+-   **Save to themes folder is in the theme editor's top bar.** The button replaces the Wall tablet preview there. While the themes folder option is off, or another file uses the theme's name, it stays visible, greyed out, and says why. The "..." menu and the status line no longer carry it. The import preview keeps its Wall tablet view. See [Theme files](documentation/themes/files.md).
+-   **Light and Dark preview covers the sample cards.** The switch now changes the whole preview, and the cards see the same mode. A theme without light and dark modes is shown in light, with a note.
+
+### Fixed
+-   **Theme editor canvas.** The outline that shows under the pointer no longer moves the canvas. The top bar wraps on narrow windows, so the variables and more buttons stay on screen.
+-   **Preview labels.** The labels, hints and status line name the mode that is drawn. A theme without light and dark modes reports light.
+-   **No Wall tablet preview in the theme editor.** Only the import preview has it.
+
 ## 2026.11.07 (2026-11-26)
 
 Install Magic Card Utils 2026.11.06 first, then update Magic Card.
 
 ### Changed
--   **Save to themes folder is in the theme editor's top bar.** The button replaces the Wall tablet preview there. While the themes folder option is off, or another file uses the theme's name, it stays visible, greyed out, and says why. The "..." menu and the status line no longer carry it. The import preview keeps its Wall tablet view. See [Theme files](documentation/themes/files.md).
--   **Light and Dark preview covers the sample cards.** The switch now changes the whole preview, and the cards see the same mode. A theme without light and dark modes is shown in light, with a note.
 -   **Theme editor and forum shot come with Magic Card Utils.** Both tools are now delivered by Magic Card Utils, so they no longer depend on the Magic Card version. If the theme editor fails to load, its message tells you to update Magic Card and Magic Card Utils together, and names no version. See [Magic Card Utils](documentation/magic-card-utils/README.md).
 -   **Fewer release files.** Releases no longer carry `magic-card.zip`. Nothing installed it, and the Marketplace downloads every file of a release one by one, so one file fewer is one fewer that can fail to download.
 
