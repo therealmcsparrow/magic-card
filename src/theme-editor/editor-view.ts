@@ -384,9 +384,9 @@ export class McteEditorView extends LitElement {
     return !!this._doc.modes;
   }
 
-  /** A flat theme is drawn on the light base, so every readout names light. */
+  /** Every readout names the profile mode; a flat theme sits on the same base as a themed one. */
   private get _effectiveMode(): ThemeMode {
-    return this._hasModes ? this._mode : 'light';
+    return this._mode;
   }
 
   private get _errors(): DocError[] {

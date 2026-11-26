@@ -167,9 +167,9 @@ export class McteThemePreview extends LitElement {
     return !!this.doc.modes && Object.keys(this.doc.modes).length > 0;
   }
 
-  /** The mode the stage shows: a theme without modes is previewed on the light base. */
+  /** The mode the stage shows: the profile mode, flat themes included, because HA applies its dark base to every theme. */
   private get _effective(): ThemeMode {
-    return this._hasModes ? this._mode : 'light';
+    return this._mode;
   }
 
   private _sampleHassFor?: { hass: unknown; dark: boolean; value: unknown };
