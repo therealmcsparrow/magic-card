@@ -4,9 +4,9 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.11.07 (2026-11-26)
 
-Update Magic Card and Magic Card Utils together.
+Install Magic Card Utils 2026.11.06 first, then update Magic Card.
 
 ### Changed
 -   **Save to themes folder is in the theme editor's top bar.** The button replaces the Wall tablet preview there. While the themes folder option is off, or another file uses the theme's name, it stays visible, greyed out, and says why. The "..." menu and the status line no longer carry it. The import preview keeps its Wall tablet view. See [Theme files](documentation/themes/files.md).
