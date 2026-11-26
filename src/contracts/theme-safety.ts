@@ -1,5 +1,5 @@
 // Contract: theme safety. Version 1.0.0 (THEME_SAFETY_VERSION). The text pairs whose contrast a theme must meet,
-// the lowest ratio and the Wall tablet preview frame, shared by share-kit and the theme editor.
+// the lowest ratio and the Wall tablet preview frame, shared by share-kit.
 
 import type { ThemeMode } from './theme-editor';
 

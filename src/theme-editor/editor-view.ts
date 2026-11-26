@@ -161,7 +161,6 @@ export class McteEditorView extends LitElement {
     _previewDoc: { state: true },
     _rawPending: { state: true },
     _usedLink: { state: true },
-    _tablet: { state: true },
     _reveal: { state: true },
   };
 
@@ -226,7 +225,6 @@ export class McteEditorView extends LitElement {
   private _previewDoc: ThemeDoc = {};
   private _rawPending = false;
   private _usedLink = false;
-  private _tablet = false;
   /** A variable a click on the preview showed: it stays listed while "Only changed" is on. */
   private _reveal = '';
   private _pinned = new Set<string>();
@@ -384,6 +382,11 @@ export class McteEditorView extends LitElement {
 
   private get _hasModes(): boolean {
     return !!this._doc.modes;
+  }
+
+  /** A flat theme is drawn on the light base, so every readout names light. */
+  private get _effectiveMode(): ThemeMode {
+    return this._hasModes ? this._mode : 'light';
   }
 
   private get _errors(): DocError[] {
@@ -557,11 +560,11 @@ export class McteEditorView extends LitElement {
   }
 
   private _computeHints(_now = false): void {
-    const vars = resolveTheme(this._doc, this._mode);
+    const vars = resolveTheme(this._doc, this._effectiveMode);
     const hints = new Map<string, FieldHint>();
     const card = String(vars['ha-card-background'] ?? vars['card-background-color'] ?? '#ffffff');
     const stage = String(vars['lovelace-background'] ?? vars['primary-background-color'] ?? '');
-    const modeName = scopeLabel(this._mode);
+    const modeName = scopeLabel(this._effectiveMode);
     const one = new Intl.NumberFormat(locale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     for (const name of ['primary-text-color', 'secondary-text-color']) {
       const text = vars[name];
@@ -587,7 +590,7 @@ export class McteEditorView extends LitElement {
   private _syncStrip(): void {
     const el = this.renderRoot.querySelector<HTMLElement>('.strip-sample');
     if (!el) return;
-    const vars = previewVars(this._previewDoc, this._mode);
+    const vars = previewVars(this._previewDoc, this._effectiveMode);
     const next = new Set<string>();
     for (const [k, v] of Object.entries(vars)) {
       if (!k.startsWith('rgb-') && validateValue(kindOf(k) ?? 'text', v) !== null) continue;
@@ -1141,7 +1144,6 @@ export class McteEditorView extends LitElement {
               ? html`<button type="button" role="menuitem" @click=${() => this._copyMode('light', 'dark')}>${t('theme-editor.editor-view.copy-light-to-dark')}</button>
                   <button type="button" role="menuitem" @click=${() => this._copyMode('dark', 'light')}>${t('theme-editor.editor-view.copy-dark-to-light')}</button>`
               : nothing}
-            ${this._canPublish ? html`<button type="button" role="menuitem" data-publish @click=${() => void this._publishClick()}>${t('theme-editor.editor-view.save-to-themes-folder')}</button>` : nothing}
             ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => ((this._deleteFile = false), this._openDlg('delete'))}>${t('theme-editor.editor-view.delete-theme')}</button>` : nothing}
           </div>`
         : nothing}
@@ -1163,14 +1165,47 @@ export class McteEditorView extends LitElement {
         ? html`<span class="help saved" role="status">${t('theme-editor.editor-view.saved-time', { time: this._savedAt })}</span>
             ${!this.storage || this._folder === 'current'
               ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>${t('theme-editor.editor-view.use-this-theme')}</button>`
-              : this._canPublish
-                ? html`<button type="button" class="btn btn-text btn-sm" data-publish @click=${() => void this._publishClick()}>${t('theme-editor.editor-view.save-to-themes-folder')}</button>`
-                : nothing}`
+              : nothing}`
         : nothing}
       ${this._usedMsg
         ? html`<span class="help" role="status">${this._usedMsg}</span>${this._usedLink ? html`<a class="btn btn-text btn-sm" href="/profile">${t('theme-editor.editor-view.open-your-profile')}</a>` : nothing}`
         : nothing}
     </div>`;
+  }
+
+  /** Why the bar's Save to themes folder is off, or null. */
+  private get _publishOffReason(): string | null {
+    if (this.writesEnabled === false) return t('theme-editor.editor-view.theme-folder-off-message');
+    if (this._folder === 'foreign') return t('theme-editor.editor-view.another-file-in-the-themes-folder-uses');
+    return null;
+  }
+
+  /** Save to themes folder in the bar: aria-disabled while off, so it stays focusable and says why. */
+  private _publishButton(compact: boolean): TemplateResult | typeof nothing {
+    if (!this.storage || !this.draft?.editable) return nothing;
+    const name = t('theme-editor.editor-view.save-to-themes-folder');
+    const why = this._publishOffReason;
+    const off = why !== null || this._saving;
+    const press = () => {
+      if (why !== null) {
+        this._showBanner({ kind: 'warn', title: name, message: why, actions: [this._dismissAct] });
+        return;
+      }
+      void this._publishClick();
+    };
+    return html`<button
+        type="button"
+        class=${compact ? 'icon-btn publish' : 'btn btn-secondary btn-sm publish'}
+        data-publish
+        aria-disabled=${off ? 'true' : 'false'}
+        aria-busy=${this._saving ? 'true' : nothing}
+        aria-label=${ifDefined(compact ? name : undefined)}
+        title=${why ?? (compact ? name : nothing)}
+        aria-describedby=${ifDefined(why ? 'publish-why' : undefined)}
+        @click=${press}
+      >
+        ${compact ? glyph('folderOpenOutline') : name}
+      </button>${why ? html`<span class="sr-only" id="publish-why">${why}</span>` : nothing}`;
   }
 
   /** The bar of the frame: Back, the theme and its state, the trial and preset buttons, the drawer toggle, Save and the more menu. */
@@ -1192,6 +1227,7 @@ export class McteEditorView extends LitElement {
         ${this.backend?.presets && this._w >= 900 ? html`<button type="button" class="btn btn-secondary btn-sm savepreset" @click=${() => this._presetDlg('save')}>${t('theme-editor.editor-view.save-as-my-preset')}</button>` : nothing}
         ${compact ? nothing : this._tryButton()}
         <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
+        ${this._publishButton(compact)}
         <button
           type="button"
           class="icon-btn vars-toggle"
@@ -1210,7 +1246,7 @@ export class McteEditorView extends LitElement {
     </header>`;
   }
 
-  /** The preview's mode switch, what it previews and the Wall tablet toggle, in the bar. */
+  /** The preview's mode switch, and what it previews, in the bar. */
   private _viewControls(compact: boolean): TemplateResult {
     return html`<div class="grp view">
       ${this._hasModes
@@ -1224,10 +1260,7 @@ export class McteEditorView extends LitElement {
             @mcte-change=${(e: CustomEvent<{ value: ThemeMode }>) => (e.stopPropagation(), this._setMode(e.detail.value))}
           ></mcte-mode-switch>`
         : nothing}
-      ${compact ? nothing : html`<span class="previewing" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode: this._mode })}</span>`}
-      <button type="button" class="btn btn-secondary btn-sm tablet-toggle" data-wall-tablet-toggle aria-pressed=${this._tablet ? 'true' : 'false'} @click=${() => (this._tablet = !this._tablet)}>
-        ${t('theme-editor.preview.wall-tablet')}
-      </button>
+      ${compact || !this._hasModes ? nothing : html`<span class="previewing" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode: this._mode })}</span>`}
     </div>`;
   }
 
@@ -1371,7 +1404,7 @@ export class McteEditorView extends LitElement {
           />
         </div>
       </div>
-      <p class="help status" role="status" aria-live="polite">${t('theme-editor.editor-view.editing-scope-previewing-mode', { scope: scopeLabel(this._scope), mode: scopeLabel(this._mode) })}</p>
+      <p class="help status" role="status" aria-live="polite">${t('theme-editor.editor-view.editing-scope-previewing-mode', { scope: scopeLabel(this._scope), mode: scopeLabel(this._effectiveMode) })}</p>
       ${this._scope === 'shared' && this._hasModes
         ? html`<p class="help">${t('theme-editor.editor-view.shared-applies-to-light-and-dark-unless')}</p>`
         : nothing}
@@ -1396,7 +1429,6 @@ export class McteEditorView extends LitElement {
       .doc=${this._previewDoc}
       .mode=${this._mode}
       .hass=${this.hass}
-      .tablet=${this._tablet}
       hide-toolbar
       pickable
       @mcte-preview-mode=${(e: CustomEvent) => this._setMode(e.detail.mode as ThemeMode)}
@@ -1618,6 +1650,7 @@ export class McteEditorView extends LitElement {
         display: flex;
         flex: 1;
         align-items: center;
+        flex-wrap: wrap;
         gap: var(--bp-s-3);
         min-inline-size: 0;
         block-size: 100%;
@@ -1630,6 +1663,18 @@ export class McteEditorView extends LitElement {
         flex: none;
         align-items: center;
         gap: var(--bp-s-3);
+      }
+      .publish {
+        flex: none;
+        white-space: nowrap;
+      }
+      .publish[aria-disabled='true'] {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .publish:focus-visible {
+        outline: 2px solid var(--bp-acc, var(--primary-color));
+        outline-offset: 2px;
       }
       .vr {
         flex: none;
@@ -1658,10 +1703,9 @@ export class McteEditorView extends LitElement {
         gap: var(--bp-s-3);
         white-space: nowrap;
       }
-      @media (max-width: 479px) {
+      @media (max-width: 679px) {
         /* the name, the chips and the buttons wrap onto a second row instead of pushing a control off the screen */
         .fr-bar {
-          flex-wrap: wrap;
           padding-block: var(--bp-s-3);
         }
         .tname {
@@ -1741,13 +1785,6 @@ export class McteEditorView extends LitElement {
         white-space: nowrap;
         font-size: var(--bp-t-label, 0.8125rem);
         color: var(--bp-mute);
-      }
-      .tablet-toggle[aria-pressed='true'] {
-        border-color: var(--bp-acc);
-        box-shadow: inset 0 0 0 1px var(--bp-acc);
-      }
-      .tablet-toggle[aria-pressed='true']::before {
-        content: '\\2713\\00a0';
       }
       .preview {
         display: block;

@@ -4,7 +4,7 @@
 
 The editor always saves a theme in Magic Card Utils, in Home Assistant's own storage. A saved theme is safe there, but Home Assistant does not load it as a theme yet.
 
-To use a theme in Home Assistant, choose **Save to themes folder**. The editor then also writes it to `/config/themes`, named after the theme: `my-theme` becomes `/config/themes/my-theme.yaml`. The file holds one top-level key, the theme's name, and the theme's variables under it:
+To use a theme in Home Assistant, press **Save to themes folder** in the top bar. The editor then also writes it to `/config/themes`, named after the theme: `my-theme` becomes `/config/themes/my-theme.yaml`. The file holds one top-level key, the theme's name, and the theme's variables under it:
 
 ```yaml
 my-theme:
@@ -36,7 +36,7 @@ If a name is already taken, Save refuses to overwrite it and offers to choose an
 
 ## Allow themes to be saved in the themes folder
 
-Saving to `/config/themes` is off until an administrator turns on **Allow themes to be saved in the themes folder** in Settings > Devices & services > Magic Card Utils > Configure. Turning it on shows a disclaimer first. While it is off, you can still create, edit and delete themes in Magic Card Utils, but **Save to themes folder** is not offered and the editor does not touch any file.
+Saving to `/config/themes` is off until an administrator turns on **Allow themes to be saved in the themes folder** in Settings > Devices & services > Magic Card Utils > Configure. Turning it on shows a disclaimer first. While it is off, you can still create, edit and delete themes in Magic Card Utils, but the editor does not touch any file. **Save to themes folder** stays in the top bar, greyed out, and tells you the option is off. It does the same when another file in the themes folder uses the theme's name.
 
 ## Themes from the themes folder
 

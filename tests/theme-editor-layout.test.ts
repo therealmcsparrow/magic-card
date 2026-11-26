@@ -142,19 +142,19 @@ describe('theme editor layout', () => {
     expect(deepAll(h.shadowRoot!, 'mc-ui-studio-frame')).toHaveLength(0);
   });
 
-  it('wide bar: title, previewing note, wall tablet and Save as my preset', async () => {
+  it('wide bar: title, previewing note and Save as my preset', async () => {
     const { root } = await openEditor({ width: 1280 });
     expect(root.querySelector('.studio-title')).not.toBeNull();
     expect(root.querySelector('.previewing')).not.toBeNull();
-    expect(root.querySelector('.tablet-toggle')).not.toBeNull();
+    expect(root.querySelector('.tablet-toggle')).toBeNull();
     expect(root.querySelector('.savepreset')).not.toBeNull();
   });
 
-  it('below 1100 px the title and previewing note go; wall tablet and Save as my preset stay', async () => {
+  it('below 1100 px the title and previewing note go; Save as my preset stays', async () => {
     const { root } = await openEditor({ width: 1000 });
     expect(root.querySelector('.studio-title')).toBeNull();
     expect(root.querySelector('.previewing')).toBeNull();
-    expect(root.querySelector('.tablet-toggle')).not.toBeNull();
+    expect(root.querySelector('.tablet-toggle')).toBeNull();
     expect(root.querySelector('.savepreset')).not.toBeNull();
   });
 

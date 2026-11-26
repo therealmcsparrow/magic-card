@@ -4,11 +4,10 @@ import { TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
 import { previewVars, validateValue } from './model';
+import { baseKeys, modeDefault } from './mode-base';
 import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PARTY_SAMPLES } from './preview-cards';
 import type { SampleId } from './preview-cards';
 import './preview-cards';
-import '../theme-safety/wall-tablet';
-import type { WallTabletLabels } from '../theme-safety/wall-tablet';
 import type { SwitchOption } from './mode-switch';
 import { t, tx } from './i18n';
 import { googleFontsChunk, whenGoogleFontsAllowed } from '../utils/google-fonts';
@@ -78,7 +77,7 @@ const checkValue = (name: string, value: string): boolean => validateValue(kindO
 
 /**
  * Keeps one element's inline custom properties equal to a draft: the draft's valid values, plus a
- * reset for every key the page theme sets and the draft does not. Writes only what changed.
+ * reset for every key the mode's base covers and the draft does not. Writes only what changed.
  */
 export class ScopedVars {
   private readonly applied = new Map<string, string>();
@@ -87,9 +86,9 @@ export class ScopedVars {
   constructor(private readonly root: HTMLElement) {}
 
   /** Returns how many draft values were invalid and kept at their last valid value (or reset). */
-  apply(draft: Bag, pageKeys: string[] = pageThemeKeys(), defaults: Bag = readHaDefaults()): { skipped: number } {
+  apply(draft: Bag, pageKeys: string[] = pageThemeKeys(), defaults: Bag = readHaDefaults(), mode: ThemeMode = 'light'): { skipped: number } {
     const next = new Map<string, string>();
-    for (const key of pageKeys) if (!(key in draft)) next.set(key, defaults[key] || 'initial');
+    for (const key of baseKeys(mode, pageKeys)) if (!(key in draft)) next.set(key, modeDefault(key, mode, defaults));
     for (const [key, value] of Object.entries(draft)) {
       if (!key.startsWith('rgb-') && !checkValue(key, value)) continue;
       next.set(key, value);
@@ -101,7 +100,7 @@ export class ScopedVars {
       skipped++;
       const keep = this.lastGood.get(key);
       if (keep !== undefined) next.set(key, keep);
-      else if (!next.has(key)) next.set(key, defaults[key] || 'initial');
+      else if (!next.has(key)) next.set(key, modeDefault(key, mode, defaults));
     }
     for (const key of [...this.applied.keys()]) {
       if (!next.has(key)) {
@@ -143,8 +142,6 @@ export class McteThemePreview extends LitElement {
   @property({ attribute: false }) hass: unknown;
   @property() mode: ThemeMode | undefined;
   @property({ type: Boolean, attribute: 'hide-toolbar' }) hideToolbar = false;
-  /** The Wall tablet preview is shown. With `hideToolbar` the host draws the toggle and sets this. */
-  @property({ type: Boolean }) tablet = false;
   /** Clicks on the stage name the variable under the pointer (`mcte-preview-pick`). */
   @property({ type: Boolean }) pickable = false;
 
@@ -166,6 +163,29 @@ export class McteThemePreview extends LitElement {
     return this.mode ?? browserMode(this.hass);
   }
 
+  private get _hasModes(): boolean {
+    return !!this.doc.modes && Object.keys(this.doc.modes).length > 0;
+  }
+
+  /** The mode the stage shows: a theme without modes is previewed on the light base. */
+  private get _effective(): ThemeMode {
+    return this._hasModes ? this._mode : 'light';
+  }
+
+  private _sampleHassFor?: { hass: unknown; dark: boolean; value: unknown };
+
+  /** The hass the sample cards get: HA's, with `themes.darkMode` set to the preview mode; one object per (hass, mode). */
+  private get _sampleHass(): unknown {
+    const hass = this.hass as { themes?: Record<string, unknown> } | undefined;
+    if (!hass) return undefined;
+    const dark = this._effective === 'dark';
+    const m = this._sampleHassFor;
+    if (m && m.hass === hass && m.dark === dark) return m.value;
+    const value = { ...hass, themes: { ...hass.themes, darkMode: dark } };
+    this._sampleHassFor = { hass, dark, value };
+    return value;
+  }
+
   connectedCallback(): void {
     super.connectedCallback();
     previewCardsEvents.addEventListener('change', this._onCards);
@@ -183,8 +203,11 @@ export class McteThemePreview extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
+    if (changed.has('hass') || changed.has('doc') || changed.has('mode')) {
+      const sampleHass = this._sampleHass;
+      for (const el of this._samples.values()) if (el instanceof HTMLElement && (el as HTMLElement & { hass?: unknown }).hass !== sampleHass) (el as HTMLElement & { hass?: unknown }).hass = sampleHass;
+    }
     if (changed.has('hass')) {
-      for (const el of this._samples.values()) if (el instanceof HTMLElement) (el as HTMLElement & { hass?: unknown }).hass = this.hass;
       if (this.hass && !this._created) void this._buildSamples();
     }
     if (changed.has('doc') || changed.has('mode') || changed.has('hass') || !this._applied) {
@@ -208,8 +231,10 @@ export class McteThemePreview extends LitElement {
     const stage = this.renderRoot.querySelector<HTMLElement>('.stage');
     if (!stage) return;
     this._scope ??= new ScopedVars(stage);
-    const vars = previewVars(this.doc, this._mode);
-    const { skipped } = this._scope.apply(vars);
+    const mode = this._effective;
+    const vars = previewVars(this.doc, mode);
+    const { skipped } = this._scope.apply(vars, undefined, undefined, mode);
+    stage.style.setProperty('color-scheme', mode);
     const fonts = FONT_VARS.map((k) => vars[k]).filter(Boolean);
     if (fonts.length) whenGoogleFontsAllowed(() => void googleFontsChunk().then((m) => m.loadFontsFor(fonts.flatMap(m.fontCandidates)), () => 0));
     this._applied = true;
@@ -236,7 +261,7 @@ export class McteThemePreview extends LitElement {
       }
       this._set(id, 'loading');
       try {
-        this._set(id, await createSample(config, this.hass));
+        this._set(id, await createSample(config, this._sampleHass));
       } catch {
         this._set(id, 'error');
       }
@@ -273,10 +298,11 @@ export class McteThemePreview extends LitElement {
       if (this._hover) this._hover = null;
       return;
     }
-    const stage = e.currentTarget as HTMLElement;
+    const wrap = this.renderRoot.querySelector<HTMLElement>('.stage-wrap');
+    if (!wrap) return;
     const r = hit.el.getBoundingClientRect();
-    const s = stage.getBoundingClientRect();
-    const next = { x: r.left - s.left + stage.scrollLeft - stage.clientLeft, y: r.top - s.top + stage.scrollTop - stage.clientTop, w: r.width, h: r.height };
+    const s = wrap.getBoundingClientRect();
+    const next = { x: r.left - s.left, y: r.top - s.top, w: r.width, h: r.height };
     const h = this._hover;
     if (!h || h.x !== next.x || h.y !== next.y || h.w !== next.w || h.h !== next.h) this._hover = next;
   }
@@ -298,8 +324,9 @@ export class McteThemePreview extends LitElement {
 
   protected render(): TemplateResult {
     const mode = this._mode;
-    const hasModes = !!this.doc.modes && Object.keys(this.doc.modes).length > 0;
-    const empty = Object.keys(previewVars(this.doc, mode)).length === 0;
+    const hasModes = this._hasModes;
+    const shown = this._effective;
+    const empty = Object.keys(previewVars(this.doc, shown)).length === 0;
     const count = 5 + this._third.length;
     return html`
       ${this.hideToolbar
@@ -313,22 +340,22 @@ export class McteThemePreview extends LitElement {
                   @mcte-change=${(e: CustomEvent<{ value: ThemeMode }>) => (e.stopPropagation(), this._pick(e.detail.value))}
                 ></mcte-mode-switch>`
               : html`<span class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</span>`}
-            <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode })}</span>
-            <button type="button" class="tablet-toggle" data-wall-tablet-toggle aria-pressed=${this.tablet ? 'true' : 'false'} @click=${() => (this.tablet = !this.tablet)}>${t('theme-editor.preview.wall-tablet')}</button>
+            <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode: shown })}</span>
           </div>`}
-      ${this.tablet ? html`<mc-wall-tablet .vars=${this._tabletVars(mode)} .labels=${this._tabletLabels(mode)}></mc-wall-tablet>` : nothing}
+      ${this.hideToolbar && !hasModes ? html`<p class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</p>` : nothing}
       ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
+      <div class="stage-wrap">
       <section
         class="stage ${this.pickable ? 'pickable' : ''} ${this._hover ? 'on-part' : ''}"
-        aria-label=${t('theme-editor.preview.theme-preview-mode', { mode })}
+        aria-label=${t('theme-editor.preview.theme-preview-mode', { mode: shown })}
         tabindex="0"
         data-var="primary-background-color"
         @pointermove=${this._onStageMove}
         @pointerleave=${() => (this._hover = null)}
         @click=${this._onStageClick}
+        @scroll=${() => (this._hover = null)}
       >
-        ${this._hover ? html`<div class="pick" aria-hidden="true" style="left:${this._hover.x}px;top:${this._hover.y}px;width:${this._hover.w}px;height:${this._hover.h}px"></div>` : nothing}
-        <p class="sr">${mode === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
+        <p class="sr">${shown === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
         ${this._skipped > 0
           ? html`<p class="strip" role="status">${t('theme-editor.preview.showing-the-last-valid-value-for-c', { c: this._skipped })}</p>`
           : nothing}
@@ -368,22 +395,9 @@ export class McteThemePreview extends LitElement {
           </p>
         </div>
       </section>
+      <div class="pick-layer" aria-hidden="true">${this._hover ? html`<div class="pick" style="left:${this._hover.x}px;top:${this._hover.y}px;width:${this._hover.w}px;height:${this._hover.h}px"></div>` : nothing}</div>
+      </div>
     `;
-  }
-
-  private _tabletVars(mode: ThemeMode): Record<string, string> {
-    return Object.fromEntries(Object.entries(previewVars(this.doc, mode)).map(([k, v]) => [`--${k}`, v]));
-  }
-
-  private _tabletLabels(mode: ThemeMode): WallTabletLabels {
-    return {
-      frame: t('theme-editor.preview.wall-tablet-label', { mode: scopeLabel(mode) }),
-      caption: t('theme-editor.preview.wall-tablet-caption'),
-      title: t('theme-editor.preview.wall-tablet-card-title'),
-      text: t('theme-editor.preview.wall-tablet-card-text'),
-      value: t('theme-editor.preview.wall-tablet-card-value'),
-      button: t('theme-editor.preview.wall-tablet-card-button'),
-    };
   }
 
   private _alerts(): TemplateResult {
@@ -408,29 +422,6 @@ export class McteThemePreview extends LitElement {
     :host {
       display: block;
       color: var(--primary-text-color);
-    }
-    .tablet-toggle {
-      min-height: 32px;
-      margin: 8px 0;
-      padding: 4px 12px;
-      border: 1px solid var(--divider-color);
-      border-radius: 16px;
-      background: transparent;
-      color: var(--primary-text-color);
-      font: inherit;
-      cursor: pointer;
-    }
-    .tablet-toggle[aria-pressed='true'] {
-      border-color: var(--primary-color);
-      box-shadow: inset 0 0 0 1px var(--primary-color);
-      font-weight: 600;
-    }
-    .tablet-toggle[aria-pressed='true']::before {
-      content: '\\2713\\00a0';
-    }
-    .tablet-toggle:focus-visible {
-      outline: 2px solid var(--primary-color);
-      outline-offset: 2px;
     }
     .toolbar {
       display: flex;
@@ -457,10 +448,25 @@ export class McteThemePreview extends LitElement {
       white-space: nowrap;
       margin: 0;
     }
+    .stage-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      max-height: 100%;
+      min-height: 0;
+    }
+    .pick-layer {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      border-radius: 8px;
+    }
     .stage {
       position: relative;
       overflow: auto;
-      max-height: 100%;
+      flex: 0 1 auto;
+      min-height: 0;
       padding: 12px;
       border: 1px solid var(--divider-color, #c9ced6);
       border-radius: 8px;

@@ -67,7 +67,7 @@ When a theme is imported, Magic Card checks that the main text on the card backg
 
 ## Wall tablet
 
-The Wall tablet view shows in the import preview for themes (a **Wall tablet** button above the preview) and in the theme editor preview. It draws a 1280 by 800 pixel tablet with one sample card at the width of a dashboard column. It is drawn at one fifth size, which shows how the text looks from 3 metres away. It is reached with Tab and has a name for screen readers. The [Wall tablet card](../gallery/flows-sliders.md#wall-tablet) in the gallery is a card for such a screen.
+The Wall tablet view shows in the import preview for themes (a **Wall tablet** button above the preview). The theme editor has no Wall tablet view. It draws a 1280 by 800 pixel tablet with one sample card at the width of a dashboard column. It is drawn at one fifth size, which shows how the text looks from 3 metres away. It is reached with Tab and has a name for screen readers. The [Wall tablet card](../gallery/flows-sliders.md#wall-tablet) in the gallery is a card for such a screen.
 
 ## CC0 and the author name
 
