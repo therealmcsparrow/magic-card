@@ -269,10 +269,11 @@ export class McteThemePreview extends LitElement {
       if (this._hover) this._hover = null;
       return;
     }
-    const stage = e.currentTarget as HTMLElement;
+    const wrap = this.renderRoot.querySelector<HTMLElement>('.stage-wrap');
+    if (!wrap) return;
     const r = hit.el.getBoundingClientRect();
-    const s = stage.getBoundingClientRect();
-    const next = { x: r.left - s.left + stage.scrollLeft - stage.clientLeft, y: r.top - s.top + stage.scrollTop - stage.clientTop, w: r.width, h: r.height };
+    const s = wrap.getBoundingClientRect();
+    const next = { x: r.left - s.left, y: r.top - s.top, w: r.width, h: r.height };
     const h = this._hover;
     if (!h || h.x !== next.x || h.y !== next.y || h.w !== next.w || h.h !== next.h) this._hover = next;
   }
@@ -312,6 +313,7 @@ export class McteThemePreview extends LitElement {
             <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode })}</span>
           </div>`}
       ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
+      <div class="stage-wrap">
       <section
         class="stage ${this.pickable ? 'pickable' : ''} ${this._hover ? 'on-part' : ''}"
         aria-label=${t('theme-editor.preview.theme-preview-mode', { mode })}
@@ -320,8 +322,8 @@ export class McteThemePreview extends LitElement {
         @pointermove=${this._onStageMove}
         @pointerleave=${() => (this._hover = null)}
         @click=${this._onStageClick}
+        @scroll=${() => (this._hover = null)}
       >
-        ${this._hover ? html`<div class="pick" aria-hidden="true" style="left:${this._hover.x}px;top:${this._hover.y}px;width:${this._hover.w}px;height:${this._hover.h}px"></div>` : nothing}
         <p class="sr">${mode === 'dark' ? t('theme-editor.preview.preview-of-count-sample-cards-dark', { count }) : t('theme-editor.preview.preview-of-count-sample-cards-light', { count })}</p>
         ${this._skipped > 0
           ? html`<p class="strip" role="status">${t('theme-editor.preview.showing-the-last-valid-value-for-c', { c: this._skipped })}</p>`
@@ -362,6 +364,8 @@ export class McteThemePreview extends LitElement {
           </p>
         </div>
       </section>
+      <div class="pick-layer" aria-hidden="true">${this._hover ? html`<div class="pick" style="left:${this._hover.x}px;top:${this._hover.y}px;width:${this._hover.w}px;height:${this._hover.h}px"></div>` : nothing}</div>
+      </div>
     `;
   }
 
@@ -413,10 +417,25 @@ export class McteThemePreview extends LitElement {
       white-space: nowrap;
       margin: 0;
     }
+    .stage-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      max-height: 100%;
+      min-height: 0;
+    }
+    .pick-layer {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      border-radius: 8px;
+    }
     .stage {
       position: relative;
       overflow: auto;
-      max-height: 100%;
+      flex: 0 1 auto;
+      min-height: 0;
       padding: 12px;
       border: 1px solid var(--divider-color, #c9ced6);
       border-radius: 8px;
