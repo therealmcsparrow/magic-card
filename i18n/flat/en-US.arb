@@ -53203,55 +53203,6 @@
     "x-max-length": 15,
     "x-source-hash": "7af533e6"
   },
-  "theme-editor.preview.wall-tablet": "Wall tablet",
-  "@theme-editor.preview.wall-tablet": {
-    "description": "Name of the button that shows the theme on a wall-mounted tablet seen from across the room. Max 20 characters.",
-    "source_text": "Wall tablet",
-    "x-max-length": 20,
-    "x-source-hash": "bedf15b0"
-  },
-  "theme-editor.preview.wall-tablet-caption": "Drawn at one fifth size, as the text looks from 3 meters away.",
-  "@theme-editor.preview.wall-tablet-caption": {
-    "description": "Short caption under the Wall tablet preview. Max 80 characters.",
-    "source_text": "Drawn at one fifth size, as the text looks from 3 metres away.",
-    "x-max-length": 80,
-    "x-source-hash": "61e7c62e"
-  },
-  "theme-editor.preview.wall-tablet-card-button": "Lights on",
-  "@theme-editor.preview.wall-tablet-card-button": {
-    "description": "Sample button text on the Wall tablet preview card. Max 30 characters.",
-    "source_text": "Lights on",
-    "x-max-length": 30,
-    "x-source-hash": "ab2323a5"
-  },
-  "theme-editor.preview.wall-tablet-card-text": "Temperature",
-  "@theme-editor.preview.wall-tablet-card-text": {
-    "description": "Label on the sample card on the Wall tablet preview. Max 30 characters.",
-    "source_text": "Temperature",
-    "x-max-length": 30,
-    "x-source-hash": "b958ce8b"
-  },
-  "theme-editor.preview.wall-tablet-card-title": "Living room",
-  "@theme-editor.preview.wall-tablet-card-title": {
-    "description": "Title of the sample card on the Wall tablet preview. Max 30 characters.",
-    "source_text": "Living room",
-    "x-max-length": 30,
-    "x-source-hash": "268d40ee"
-  },
-  "theme-editor.preview.wall-tablet-card-value": "21.5 °C",
-  "@theme-editor.preview.wall-tablet-card-value": {
-    "description": "Sample temperature shown on the Wall tablet preview card. Max 20 characters.",
-    "source_text": "21.5 °C",
-    "x-max-length": 20,
-    "x-source-hash": "a5db9bd8"
-  },
-  "theme-editor.preview.wall-tablet-label": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 meters.",
-  "@theme-editor.preview.wall-tablet-label": {
-    "description": "Accessible name of the Wall tablet preview frame. {mode} is the word light or dark. {mode}: The word for the mode: light or dark. Max 200 characters.",
-    "source_text": "Wall tablet preview, {mode} mode. A 1280 by 800 pixel tablet with one sample card, drawn at one fifth size to show how text looks from 3 metres.",
-    "x-max-length": 200,
-    "x-source-hash": "2f6e4db9"
-  },
   "theme-editor.preview.warning-message": "Warning message",
   "@theme-editor.preview.warning-message": {
     "description": "Sample alert in the preview that uses the warning colour. Max 25 characters.",

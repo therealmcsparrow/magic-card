@@ -7,8 +7,6 @@ import { previewVars, validateValue } from './model';
 import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PARTY_SAMPLES } from './preview-cards';
 import type { SampleId } from './preview-cards';
 import './preview-cards';
-import '../theme-safety/wall-tablet';
-import type { WallTabletLabels } from '../theme-safety/wall-tablet';
 import type { SwitchOption } from './mode-switch';
 import { t, tx } from './i18n';
 import { googleFontsChunk, whenGoogleFontsAllowed } from '../utils/google-fonts';
@@ -143,8 +141,6 @@ export class McteThemePreview extends LitElement {
   @property({ attribute: false }) hass: unknown;
   @property() mode: ThemeMode | undefined;
   @property({ type: Boolean, attribute: 'hide-toolbar' }) hideToolbar = false;
-  /** The Wall tablet preview is shown. With `hideToolbar` the host draws the toggle and sets this. */
-  @property({ type: Boolean }) tablet = false;
   /** Clicks on the stage name the variable under the pointer (`mcte-preview-pick`). */
   @property({ type: Boolean }) pickable = false;
 
@@ -314,9 +310,7 @@ export class McteThemePreview extends LitElement {
                 ></mcte-mode-switch>`
               : html`<span class="help">${t('theme-editor.preview.this-theme-has-no-light-or-dark-modes')}</span>`}
             <span class="chip" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode })}</span>
-            <button type="button" class="tablet-toggle" data-wall-tablet-toggle aria-pressed=${this.tablet ? 'true' : 'false'} @click=${() => (this.tablet = !this.tablet)}>${t('theme-editor.preview.wall-tablet')}</button>
           </div>`}
-      ${this.tablet ? html`<mc-wall-tablet .vars=${this._tabletVars(mode)} .labels=${this._tabletLabels(mode)}></mc-wall-tablet>` : nothing}
       ${empty ? html`<p class="help">${t("theme-editor.preview.nothing-set-yet-the-preview-shows-home")}</p>` : nothing}
       <section
         class="stage ${this.pickable ? 'pickable' : ''} ${this._hover ? 'on-part' : ''}"
@@ -371,21 +365,6 @@ export class McteThemePreview extends LitElement {
     `;
   }
 
-  private _tabletVars(mode: ThemeMode): Record<string, string> {
-    return Object.fromEntries(Object.entries(previewVars(this.doc, mode)).map(([k, v]) => [`--${k}`, v]));
-  }
-
-  private _tabletLabels(mode: ThemeMode): WallTabletLabels {
-    return {
-      frame: t('theme-editor.preview.wall-tablet-label', { mode: scopeLabel(mode) }),
-      caption: t('theme-editor.preview.wall-tablet-caption'),
-      title: t('theme-editor.preview.wall-tablet-card-title'),
-      text: t('theme-editor.preview.wall-tablet-card-text'),
-      value: t('theme-editor.preview.wall-tablet-card-value'),
-      button: t('theme-editor.preview.wall-tablet-card-button'),
-    };
-  }
-
   private _alerts(): TemplateResult {
     const types: Array<[string, string]> = [
       ['info', t('theme-editor.preview.info-message')],
@@ -408,29 +387,6 @@ export class McteThemePreview extends LitElement {
     :host {
       display: block;
       color: var(--primary-text-color);
-    }
-    .tablet-toggle {
-      min-height: 32px;
-      margin: 8px 0;
-      padding: 4px 12px;
-      border: 1px solid var(--divider-color);
-      border-radius: 16px;
-      background: transparent;
-      color: var(--primary-text-color);
-      font: inherit;
-      cursor: pointer;
-    }
-    .tablet-toggle[aria-pressed='true'] {
-      border-color: var(--primary-color);
-      box-shadow: inset 0 0 0 1px var(--primary-color);
-      font-weight: 600;
-    }
-    .tablet-toggle[aria-pressed='true']::before {
-      content: '\\2713\\00a0';
-    }
-    .tablet-toggle:focus-visible {
-      outline: 2px solid var(--primary-color);
-      outline-offset: 2px;
     }
     .toolbar {
       display: flex;

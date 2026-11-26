@@ -161,7 +161,6 @@ export class McteEditorView extends LitElement {
     _previewDoc: { state: true },
     _rawPending: { state: true },
     _usedLink: { state: true },
-    _tablet: { state: true },
     _reveal: { state: true },
   };
 
@@ -226,7 +225,6 @@ export class McteEditorView extends LitElement {
   private _previewDoc: ThemeDoc = {};
   private _rawPending = false;
   private _usedLink = false;
-  private _tablet = false;
   /** A variable a click on the preview showed: it stays listed while "Only changed" is on. */
   private _reveal = '';
   private _pinned = new Set<string>();
@@ -1210,7 +1208,7 @@ export class McteEditorView extends LitElement {
     </header>`;
   }
 
-  /** The preview's mode switch, what it previews and the Wall tablet toggle, in the bar. */
+  /** The preview's mode switch, and what it previews, in the bar. */
   private _viewControls(compact: boolean): TemplateResult {
     return html`<div class="grp view">
       ${this._hasModes
@@ -1225,9 +1223,6 @@ export class McteEditorView extends LitElement {
           ></mcte-mode-switch>`
         : nothing}
       ${compact ? nothing : html`<span class="previewing" aria-live="polite">${t('theme-editor.preview.previewing-mode', { mode: this._mode })}</span>`}
-      <button type="button" class="btn btn-secondary btn-sm tablet-toggle" data-wall-tablet-toggle aria-pressed=${this._tablet ? 'true' : 'false'} @click=${() => (this._tablet = !this._tablet)}>
-        ${t('theme-editor.preview.wall-tablet')}
-      </button>
     </div>`;
   }
 
@@ -1396,7 +1391,6 @@ export class McteEditorView extends LitElement {
       .doc=${this._previewDoc}
       .mode=${this._mode}
       .hass=${this.hass}
-      .tablet=${this._tablet}
       hide-toolbar
       pickable
       @mcte-preview-mode=${(e: CustomEvent) => this._setMode(e.detail.mode as ThemeMode)}
@@ -1741,13 +1735,6 @@ export class McteEditorView extends LitElement {
         white-space: nowrap;
         font-size: var(--bp-t-label, 0.8125rem);
         color: var(--bp-mute);
-      }
-      .tablet-toggle[aria-pressed='true'] {
-        border-color: var(--bp-acc);
-        box-shadow: inset 0 0 0 1px var(--bp-acc);
-      }
-      .tablet-toggle[aria-pressed='true']::before {
-        content: '\\2713\\00a0';
       }
       .preview {
         display: block;
