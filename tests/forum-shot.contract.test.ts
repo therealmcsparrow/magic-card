@@ -18,9 +18,9 @@ const unionOf = (name: string): string[] => {
   return [...body.matchAll(/'([^']+)'/g)].map((m) => m[1]);
 };
 
-describe('forum-shot 1.3.0 constants', () => {
+describe('forum-shot 1.4.0 constants', () => {
   it('holds the Contract values', () => {
-    expect(contract.FORUM_SHOT_CONTRACT_VERSION).toBe('1.3.0');
+    expect(contract.FORUM_SHOT_CONTRACT_VERSION).toBe('1.4.0');
     expect(contract.FORUM_SHOT_FILE).toBe('magic-card-forum-shot.js');
     expect(contract.FORUM_SHOT_TAG).toBe('magic-card-forum-shot');
     expect(contract.FORUM_SHOT_WIDTH).toBe(420);
@@ -74,7 +74,7 @@ describe('ha-dark-defaults 1.0.0', () => {
 
   it('left src/theme-editor, whose trial reads it from the Contract', () => {
     expect(existsSync(path.join(ROOT, 'src/theme-editor/dark-defaults.ts'))).toBe(false);
-    expect(read('src/theme-editor/trial.ts')).toContain("from '../contracts/ha-dark-defaults'");
+    expect(read('src/theme-editor/mode-base.ts')).toContain("from '../contracts/ha-dark-defaults'");
   });
 });
 
@@ -112,9 +112,10 @@ describe('build wiring', () => {
   });
 
   it('registers the namespace and the fixed-name entry', () => {
-    expect(I18N_CONTRACT_VERSION).toBe('2.1.0');
-    expect(I18N_MODULES['forum-shot'].bundle).toBe(contract.FORUM_SHOT_FILE);
-    expect(read('tools/check-manifest.mjs')).toContain(`'${contract.FORUM_SHOT_FILE}'`);
+    expect(I18N_CONTRACT_VERSION).toBe('2.2.0');
+    expect(I18N_MODULES['forum-shot'].bundle).toContain(contract.FORUM_SHOT_FILE);
+    // the entry belongs to the Magic Card Utils set: the card manifest check no longer lists it
+    expect(read('tools/check-manifest.mjs')).not.toContain(`'${contract.FORUM_SHOT_FILE}'`);
     expect(read('tools/i18n/placement.mjs')).toContain(`'${contract.FORUM_SHOT_FILE}'`);
   });
 
