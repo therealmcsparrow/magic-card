@@ -344,7 +344,12 @@ export class McteEditorView extends LitElement {
       if (this._dlg === 'rename') this._focus('#rename');
     }
     this._syncStrip();
-    if (changed.has('_doc') || changed.has('_mode')) this._queueHints();
+    let flipped = false;
+    if (changed.has('hass') && !this._hasModes) {
+      const before = changed.get('hass') as typeof this.hass | undefined;
+      flipped = !!before && browserMode(before) !== browserMode(this.hass);
+    }
+    if (changed.has('_doc') || changed.has('_mode') || flipped) this._queueHints();
     if (changed.has('_doc') || changed.has('_saved') || changed.has('_baseline') || changed.has('_rawPending')) {
       const dirty = this._needsPrompt;
       if (dirty !== this._wasDirty) {
