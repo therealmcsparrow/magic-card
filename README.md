@@ -95,6 +95,8 @@ HACS also downloads the other files of the release into the same folder. Magic C
 2.  Copy every file to `config/www/`, including the `.br` and `.gz` copies. Leave none out.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
+The theme editor and the forum shot are not part of this copy. They come with Magic Card Utils and live in `custom_components/magic_card_utils/www/`, next to its panel. A manual install of Magic Card Utils puts them there when you unpack its zip. Update Magic Card and Magic Card Utils together.
+
 Keep the three files of each name together: `magic-card.js`, `magic-card.js.br` and `magic-card.js.gz`, and the same for every other file. When you update by hand, copy the whole new release and replace or delete all three files of a name together. If an old `.br` or `.gz` file stays behind, Home Assistant can keep sending it in place of the new `.js`.
 
 Only `magic-card.js` is a resource. The other files load from the same folder when something needs them. A dashboard downloads only the files its cards use. Without a file, the feature it belongs to shows a message and the rest of the card still works.
@@ -124,8 +126,6 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-icon-library.js` | The animation studio, when you start an icon animation. |
 | `magic-card-icon-animator.js` | The card editor, when you open the icon picker's Animated icons tab. Dashboards never load it. |
 | `magic-card-preset-catalogue.js` | The card editor's Animations list and the animation studio's Customise a preset window. Dashboards never load it. |
-| `magic-card-theme-editor.js` | The Themes tab in the Magic Card Utils panel. Dashboards and the card editor never load it. |
-| `magic-card-theme-presets.js` | The Themes tab's create dialog, when it opens, for the 57 presets. Dashboards and the card editor never load it. |
 | `magic-card-flows.js` | Cards with flow lines. The card shows without the lines until this file has loaded. |
 | `magic-card-pause.js` | Cards that show the Pause motion button (`pause_button` set to auto or always). The card keeps room for the button and draws it when this file has loaded. |
 | `magic-card-popup.js` | Cards set up as a pop-up. The card stays out of the layout until this file has loaded, then opens if the page address already ends in its `#id`. |
@@ -1199,7 +1199,7 @@ Releases are built by a GitHub Actions workflow. You can check a download by loo
 -   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/local/community/magic-card/magic-card.js` (Marketplace), `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
 -   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
 -   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
--   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has 46 `.js` files, each with a `.br` and `.gz` copy. [Loading the other files](#loading-the-other-files) lists the main ones. With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` and `magic-card-theme-presets.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.
+-   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has 53 `.js` files, each with a `.br` and `.gz` copy. [Loading the other files](#loading-the-other-files) lists the main ones. With a manual install, copy all of them to the same folder, then hard refresh. The theme editor comes with Magic Card Utils and needs Magic Card's editor files too, so update both together. The icon library window has a Try again button once the file is there.
 -   Home Assistant shows its YAML editor in place of the Magic Card editor. `magic-card-editor.js` is missing or comes from another version than `magic-card.js`. The browser console says which. Copy the file next to `magic-card.js` and hard refresh.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 -   A card broke after an update. [MAINTAINING.md](MAINTAINING.md) has the steps to roll back to the version that worked, to see which version runs and to stay on one version.

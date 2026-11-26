@@ -13,11 +13,11 @@ const buildVersion = () => {
 };
 
 // { chunks: [{ id, parents, files, modules }] } with every module name (concatenated ones flattened)
-const writeI18nStats = (stats) => {
+const writeI18nStats = (stats, utils = false) => {
   const flat = (m) => (m.modules?.length ? m.modules.flatMap(flat) : [m.name]);
   const j = stats.toJson({ all: false, ids: true, chunks: true, chunkRelations: true, modules: true, chunkModules: true, nestedModules: true, dependentModules: true, orphanModules: true, modulesSpace: Infinity, chunkModulesSpace: Infinity, nestedModulesSpace: Infinity });
   const out = { chunks: j.chunks.map((c) => ({ id: c.id, parents: c.parents, files: c.files, modules: [...new Set((c.modules ?? []).flatMap(flat))].filter((n) => n?.startsWith('./src/')) })) };
-  const file = path.resolve(__dirname, 'node_modules/.cache/magic-card/i18n-stats.json');
+  const file = path.resolve(__dirname, utils ? 'node_modules/.cache/magic-card/i18n-stats.utils.json' : 'node_modules/.cache/magic-card/i18n-stats.json');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(out));
   // the same module lists, with the entry flag and names, for tools/check-entry-graph.mjs
@@ -27,13 +27,16 @@ const writeI18nStats = (stats) => {
   // `groups`: the chunk ids of every chunk group the chunk belongs to (one id list per group, itself included), for tools/check-svg-sinks.mjs
   const groupsOf = (id) => stats.compilation.chunkGroups.filter((g) => g.chunks.some((x) => x.id === id)).map((g) => g.chunks.map((x) => x.id));
   const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, groups: groupsOf(c.id), files: c.files, modules: out.chunks[i].modules, size: sizeOf(c) })) };
-  fs.writeFileSync(path.resolve(path.dirname(file), 'entry-graph.json'), JSON.stringify(graph));
+  fs.writeFileSync(path.resolve(path.dirname(file), utils ? 'entry-graph.utils.json' : 'entry-graph.json'), JSON.stringify(graph));
 };
 
-module.exports = (env, argv) => {
-  const isProduction = argv.mode === 'production';
+// `card`: the card and the animation studio (dist/). `utils`: the theme editor and the forum shot, with every chunk
+// only they load, for the magic-card-utils panel (dist-utils/, no manifest: the panel never consults the card's).
+const build = (kind, isProduction) => {
+  const isUtils = kind === 'utils';
 
   return {
+    name: kind,
     // The ES ceiling of the browser floor (Chromium 85): webpack writes its own runtime and chunk loader in ES2021
     // and Terser's `ecma` below follows it. tools/check-es-syntax.mjs parses every dist .js at 2021.
     target: ['web', 'es2021'],
@@ -45,12 +48,15 @@ module.exports = (env, argv) => {
     // (magic-card-icon-library.js, public path: src/anim-studio/public-path.ts). The path canvas of the
     // SVG and shape editors is a lazy chunk too (magic-card-path-canvas.js, src/path-canvas/loader.ts). The release uploads
     // dist/*.js and HACS installs them all.
-    entry: {
-      'magic-card': './src/index.ts',
-      'magic-card-animation-studio': './src/anim-studio/index.ts',
-      'magic-card-theme-editor': './src/theme-editor/index.ts',
-      'magic-card-forum-shot': './src/forum-shot/index.ts',
-    },
+    entry: isUtils
+      ? {
+          'magic-card-theme-editor': './src/theme-editor/index.ts',
+          'magic-card-forum-shot': './src/forum-shot/index.ts',
+        }
+      : {
+          'magic-card': './src/index.ts',
+          'magic-card-animation-studio': './src/anim-studio/index.ts',
+        },
     output: {
       filename: '[name].js',
       // the hash is in the file name: HA's file server ignores any query, so a changed chunk needs a new name
@@ -61,7 +67,7 @@ module.exports = (env, argv) => {
       // script HA loads magic-card.js as); the entries stay plain scripts
       chunkLoading: 'import',
       chunkFormat: 'module',
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, isUtils ? 'dist-utils' : 'dist'),
       clean: true,
       // Written out in full, next to `target`: a webpack minor upgrade cannot change the runtime syntax without a
       // config change. These are the flags `['web', 'es2021']` resolves to today. `hasOwn` stays false (Object.hasOwn is Chromium 93),
@@ -125,11 +131,11 @@ module.exports = (env, argv) => {
     plugins: [
       new webpack.DefinePlugin({ __MC_BUILD_VERSION__: JSON.stringify(buildVersion()) }),
       // dist/magic-card-manifest.js: the release and the logical -> hashed chunk file names (read by the card after a chunk failed)
-      new ManifestPlugin({ build: buildVersion() }),
+      ...(isUtils ? [] : [new ManifestPlugin({ build: buildVersion() })]),
       // the OFL 1.1 text and copyright lines of the studio fonts (fonts/OFL.txt), preserved in the two chunks that carry the font data; magic-card.js gets none
       new webpack.BannerPlugin({ raw: true, include: /^magic-card-(studio-fonts|editor)\.[0-9a-f]{8}\.js$/, banner: `/*!\n${fs.readFileSync(path.resolve(__dirname, 'fonts/OFL.txt'), 'utf8').replace(/\r\n/g, '\n').trimEnd().replace(/\*\//g, '* /')}\n*/\n` }),
       // the module list per built file for the i18n placement check (tools/i18n/placement.mjs, D7); git-ignored cache
-      ...(isProduction ? [{ apply: (compiler) => compiler.hooks.done.tap('mc-i18n-stats', writeI18nStats) }] : []),
+      ...(isProduction ? [{ apply: (compiler) => compiler.hooks.done.tap('mc-i18n-stats', (stats) => writeI18nStats(stats, isUtils)) }] : []),
     ],
     devtool: isProduction ? false : 'source-map',
     optimization: {
@@ -162,18 +168,6 @@ module.exports = (env, argv) => {
           default: false,
           defaultVendors: false,
           'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
-          // The modules only the forum shot and the icon-library chunk share. Two bundles load that chunk (the studio and the forum shot),
-          // so webpack no longer treats the studio's modules as already loaded and would copy them into the chunk; they get their own chunk instead (not src/i18n/labels/index.ts, which import()s its tables where a shared chunk loads nothing, nor src/icon-anim/icon-doc.ts, which reads those labels).
-          // Only the icon-library chunk is split: the editor, icon-animator, transfer and svg-editor chunks keep their own copies.
-          'icon-shared': {
-            test: (module, { chunkGraph }) => {
-              const names = Array.from(chunkGraph.getModuleChunks(module), (c) => c.name);
-              return names.includes('icon-library') && names.includes('magic-card-animation-studio') && !/[\\/](?:i18n[\\/]labels[\\/]index|icon-anim[\\/]icon-doc)\.ts$/.test(module.resource ?? '');
-            },
-            name: 'icon-shared',
-            chunks: (chunk) => chunk.name === 'icon-library',
-            enforce: true,
-          },
           // the one copy of the recorded-history cache that <mc-value-bg> (decor) and the graphs view (modules-extra) read
           history: { test: /[\\/]src[\\/]services[\\/]history-cache\.ts$/, name: 'history', chunks: 'async', enforce: true },
           // the one copy of the shape outline maths and its memo, read by decor, flows, seasonal, slider-look, shape-custom and the editor
@@ -191,3 +185,5 @@ module.exports = (env, argv) => {
     },
   };
 };
+
+module.exports = (env, argv) => ['card', 'utils'].map((kind) => build(kind, argv.mode === 'production'));

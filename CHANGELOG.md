@@ -6,7 +6,10 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+Update Magic Card and Magic Card Utils together.
+
 ### Changed
+-   **Theme editor and forum shot come with Magic Card Utils.** Both tools are now delivered by Magic Card Utils, so they no longer depend on the Magic Card version. If the theme editor fails to load, its message tells you to update Magic Card and Magic Card Utils together, and names no version. See [Magic Card Utils](documentation/magic-card-utils/README.md).
 -   **Fewer release files.** Releases no longer carry `magic-card.zip`. Nothing installed it, and the Marketplace downloads every file of a release one by one, so one file fewer is one fewer that can fail to download.
 
 ## 2026.11.06 (2026-11-24)

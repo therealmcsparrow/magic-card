@@ -2984,8 +2984,8 @@
     "hash": "dd97c780"
   },
   "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": {
-    "text": "De editoronderdelen van Magic Card konden niet worden geladen. De editor wordt met Magic Card meegeleverd als magic-card-theme-editor.js: werk Magic Card bij naar 2026.10.06 of nieuwer als dit blijft gebeuren.",
-    "hash": "e21f53cc"
+    "text": "De editoronderdelen van Magic Card konden niet worden geladen. De thema-editor heeft deze nodig: werk Magic Card en Magic Card Utils samen bij als dit blijft gebeuren.",
+    "hash": "692ab6fe"
   },
   "theme-editor.theme-editor.the-theme-editor-could-not-load-reload": {
     "text": "De thema-editor kon niet worden geladen. Laad de pagina opnieuw.",

@@ -41405,19 +41405,19 @@
     "x-max-length": 135,
     "x-source-hash": "dd90f518"
   },
-  "mcu-panel.panel.the-forum-shot-could-not-be-loaded-it": "The forum shot could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
-  "@mcu-panel.panel.the-forum-shot-could-not-be-loaded-it": {
-    "description": "Notice in the Forum shot tab when the forum shot file is missing or will not load. {file} is the name of that file, {version} the lowest Magic Card version that has it. {file}: The value that replaces file in the text. {version}: The value that replaces version in the text. Max 185 characters.",
-    "source_text": "The forum shot could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
+  "mcu-panel.panel.the-forum-shot-could-not-be-loaded-from": "The forum shot ({file}) could not be loaded from Magic Card Utils. Reload the page and try again.",
+  "@mcu-panel.panel.the-forum-shot-could-not-be-loaded-from": {
+    "description": "Notice in the Forum shot tab when the forum shot file will not load. {file} is the name of that file. {file}: The value that replaces file in the text. Max 185 characters.",
+    "source_text": "The forum shot ({file}) could not be loaded from Magic Card Utils. Reload the page and try again.",
     "x-max-length": 185,
-    "x-source-hash": "510fe6ba"
+    "x-source-hash": "8a69b290"
   },
-  "mcu-panel.panel.the-forum-shot-needs-magic-card-or": "The forum shot needs Magic Card {version} or newer. Update Magic Card.",
-  "@mcu-panel.panel.the-forum-shot-needs-magic-card-or": {
-    "description": "Notice in the Forum shot tab when the installed Magic Card is too old or does not work with this panel. {version} is the lowest Magic Card version that has the forum shot. {version}: The value that replaces version in the text. Max 100 characters.",
-    "source_text": "The forum shot needs Magic Card {version} or newer. Update Magic Card.",
-    "x-max-length": 100,
-    "x-source-hash": "2db60bfd"
+  "mcu-panel.panel.the-forum-shot-doesn-t-match-this-panel": "The forum shot doesn't match this Magic Card Utils panel. Reload the page; if that does not help, update Magic Card Utils.",
+  "@mcu-panel.panel.the-forum-shot-doesn-t-match-this-panel": {
+    "description": "Notice in the Forum shot tab when the forum shot and this panel are from versions that do not work together. Max 185 characters.",
+    "source_text": "The forum shot doesn't match this Magic Card Utils panel. Reload the page; if that does not help, update Magic Card Utils.",
+    "x-max-length": 185,
+    "x-source-hash": "0f6af518"
   },
   "mcu-panel.panel.the-magic-card-editor-could-not-be": "The Magic Card editor could not be loaded.",
   "@mcu-panel.panel.the-magic-card-editor-could-not-be": {
@@ -41447,12 +41447,12 @@
     "x-max-length": 50,
     "x-source-hash": "db0b645c"
   },
-  "mcu-panel.panel.the-theme-editor-could-not-be-loaded-it": "The theme editor could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
-  "@mcu-panel.panel.the-theme-editor-could-not-be-loaded-it": {
-    "description": "Notice in the Themes tab when the theme editor file is missing. {file} is the name of that file, {version} the lowest Magic Card version that has it. {file}: The value that replaces file in the text. {version}: The value that replaces version in the text. Max 185 characters.",
-    "source_text": "The theme editor could not be loaded. It ships with Magic Card as {file}: update Magic Card to {version} or newer.",
+  "mcu-panel.panel.the-theme-editor-could-not-be-loaded-from": "The theme editor ({file}) could not be loaded from Magic Card Utils. Reload the page and try again.",
+  "@mcu-panel.panel.the-theme-editor-could-not-be-loaded-from": {
+    "description": "Notice in the Themes tab when the theme editor file will not load. {file} is the name of that file. {file}: The value that replaces file in the text. Max 185 characters.",
+    "source_text": "The theme editor ({file}) could not be loaded from Magic Card Utils. Reload the page and try again.",
     "x-max-length": 185,
-    "x-source-hash": "beaf6a42"
+    "x-source-hash": "084d208e"
   },
   "mcu-panel.panel.the-theme-list-could-not-be-loaded": "The theme list could not be loaded.",
   "@mcu-panel.panel.the-theme-list-could-not-be-loaded": {
@@ -54007,12 +54007,12 @@
     "x-max-length": 45,
     "x-source-hash": "dd97c780"
   },
-  "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.",
+  "theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": "The editor parts of Magic Card could not be loaded. The theme editor needs them: update Magic Card and Magic Card Utils together if it keeps happening.",
   "@theme-editor.theme-editor.the-editor-parts-of-magic-card-could-not": {
-    "description": "Error in the theme editor when its script cannot be loaded. Names the file and says to update Magic Card to 2026.10.06 or newer if it persists. Max 290 characters.",
-    "source_text": "The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.",
+    "description": "Error in the theme editor when its script cannot be loaded. Says to update Magic Card and Magic Card Utils together if it persists. Names no version. Max 290 characters.",
+    "source_text": "The editor parts of Magic Card could not be loaded. The theme editor needs them: update Magic Card and Magic Card Utils together if it keeps happening.",
     "x-max-length": 290,
-    "x-source-hash": "e21f53cc"
+    "x-source-hash": "692ab6fe"
   },
   "theme-editor.theme-editor.the-theme-editor-could-not-load-reload": "The theme editor could not load. Reload the page.",
   "@theme-editor.theme-editor.the-theme-editor-could-not-load-reload": {

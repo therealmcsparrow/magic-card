@@ -295,6 +295,35 @@ expect('dist with no .br/.gz fails', r.code === 1 && /.js.br: missing/.test(r.ou
   expect('magic-card.js.br under entry.br.cap passes', r.code === 0 && /br cap 100000/.test(r.out), r.out);
 }
 
+// 9. the card set and the utils set
+{
+  const both = clone(here);
+  both.files['magic-card-u.js'] = { raw: 2048, ceiling: 2048, note: 'fixture', set: 'utils' };
+  r = run(fixture(both, dist));
+  expect('card set: a utils entry absent from dist is not required', r.code === 0, r.out);
+  r = run(fixture(both, { ...dist, 'magic-card-u.js': 'export {};\n' }));
+  expect('card set: a utils-only file in dist fails', r.code === 1 && /magic-card-u\.js.*utils set/.test(r.out), r.out);
+  const u = fixture(both, { 'magic-card-u.js': 'export {};\n' }, false);
+  r = run([...u, '--set', 'utils']);
+  expect('utils set: passes with no magic-card.js and no siblings, gz and br in memory', r.code === 0 && /gzip, \d+ B brotli/.test(r.out), r.out);
+  r = run(fixture(both, { 'magic-card-u.js': 'x'.repeat(3000) }, false).concat(['--set', 'utils']));
+  expect('utils set: over its raw cap fails', r.code === 1 && /> cap 2048/.test(r.out), r.out);
+  r = run(fixture(both, { 'magic-card-u.js': 'export {};\n', 'magic-card-a.js': 'export {};\n' }, false).concat(['--set', 'utils']));
+  expect('utils set: a card-set file fails', r.code === 1 && /card set/.test(r.out), r.out);
+  const shared = clone(both);
+  shared.files['magic-card-a.js'].set = 'both';
+  r = run(fixture(shared, { 'magic-card-u.js': 'export {};\n', 'magic-card-a.js': 'export {};\n' }, false).concat(['--set', 'utils']));
+  expect('utils set: a "both" chunk is accepted', r.code === 0 && /magic-card-a\.js/.test(r.out), r.out);
+  r = run(fixture(shared, dist));
+  expect('card set: a "both" chunk stays required and gated', r.code === 0, r.out);
+  r = run(fixture(shared, Object.fromEntries(Object.entries(dist).filter(([k]) => !k.startsWith('magic-card-a.')))));
+  expect('card set: a "both" chunk missing from dist fails', r.code === 1 && /magic-card-a\.js.*missing/.test(r.out), r.out);
+  const badSet = clone(both);
+  badSet.files['magic-card-u.js'].set = 'banana';
+  r = run(fixture(badSet, dist).concat(['--caps-only']));
+  expect('an unknown set value fails the shape check', r.code === 1 && /set must be/.test(r.out), r.out);
+}
+
 rmSync(tmp, { recursive: true, force: true });
 if (bad) {
   console.error(`${bad} self-test(s) failed`);

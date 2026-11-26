@@ -82,6 +82,7 @@
           "raw": { "type": "integer", "minimum": 1, "description": "Cap: measured + 5 %, rounded up to 1 KiB, never above `ceiling`." },
           "ceiling": { "type": "integer", "minimum": 1, "description": "Upper bound for the raw cap. A measured size above it means code was copied in. Raising it needs an approved_raises entry." },
           "optional": { "type": "boolean" },
+          "set": { "enum": ["card", "utils", "both"], "default": "card", "description": "Which build ships the file. card (default): dist/. utils: dist-utils/, checked with --set utils; the card set fails when such a file is in dist/. both: a chunk both builds emit; required in dist/, allowed in dist-utils/ under the same cap." },
           "note": { "type": "string", "description": "What is in the file and how its cap is derived." }
         }
       }

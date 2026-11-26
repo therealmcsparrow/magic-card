@@ -17,7 +17,11 @@
 // - siblings: every dist .js has a .js.br and a .js.gz next to it (tools/compress-dist.mjs writes them), each unpacks to that
 //   .js byte for byte, and a .br or .gz with no .js fails (an orphan, or a stale copy HA would keep serving). Siblings have no size cap of
 //   their own, except magic-card.js.br: <= entry.br.cap when set, and always <= the active stage gzip cap.
-// Usage: node tools/check-dist-size.mjs [--caps <file>] [--dist <dir>] [--base-ref <git ref> | --base-file <file>] [--require-base] [--caps-only] [--committed] [--digest]
+// Usage: node tools/check-dist-size.mjs [--caps <file>] [--dist <dir>] [--base-ref <git ref> | --base-file <file>] [--require-base] [--caps-only] [--committed] [--digest] [--set card|utils]
+//   --set           which files the dist holds. card (default): dist/, with magic-card.js, siblings and every file whose entry has no "set" or
+//                   set "card" or "both"; a file whose entry says "set": "utils" must not be there. "both" marks a chunk the card and the Utils build
+//                   both emit (one cap, one ceiling, required in dist/, allowed but not required in dist-utils/). utils: the Utils build (dist-utils/), only the files
+//                   whose entry says "set": "utils" or "both", gated on raw bytes, with gzip and brotli computed in memory (no siblings, no magic-card.js).
 //   --base-file     compare with a file instead of a git ref (the self-test uses it).
 //   --require-base an unresolvable ref fails (CI); a ref that exists but has no caps file yet (first run) means no raises.
 //   --caps-only     check the caps file and the raises only, no dist (the quick CI job).
@@ -29,7 +33,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { brotliDecompressSync, gunzipSync, gzipSync } from 'node:zlib';
+import { brotliCompressSync, brotliDecompressSync, constants, gunzipSync, gzipSync } from 'node:zlib';
 
 /** 60 KiB. Held here as well, so editing the JSON cannot move it. */
 const FINAL_CAP = 61_440;
@@ -76,6 +80,8 @@ const capsPath = opt('--caps') ?? join(ROOT, 'tools', 'size-caps.json');
 const distDir = opt('--dist') ?? join(ROOT, 'dist');
 const baseRef = opt('--base-ref');
 const baseFile = opt('--base-file');
+const SETS = ['card', 'utils', 'both'];
+const set = opt('--set') ?? 'card';
 const inCi = process.env.GITHUB_ACTIONS === 'true' || process.env.CI === 'true';
 
 let failed = false;
@@ -89,6 +95,15 @@ const note = (msg) => console.log(`note ${msg}`);
 const isObj = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
 const isInt = (v) => Number.isInteger(v) && v >= 1;
 const COMMIT = /^[0-9a-f]{7,40}$/;
+
+/** Caps JSON with `files` on a prototype-less object, so a dist file named like an Object member never finds an entry. */
+const parseCaps = (text) => {
+  const c = JSON.parse(text);
+  if (isObj(c) && isObj(c.files)) c.files = Object.assign(Object.create(null), c.files);
+  return c;
+};
+const hasEntry = (c, name) => Object.hasOwn(c.files, name);
+const setOf = (f) => f.set ?? 'card';
 
 /** Hand-written check of the parts of tools/size-caps.schema.json the gate relies on (no validator dependency). */
 function validateShape(c) {
@@ -142,7 +157,8 @@ function validateShape(c) {
         errs.push(`${w} must be an object`);
         continue;
       }
-      keys(f, ['raw', 'ceiling', 'optional', 'note'], w);
+      keys(f, ['raw', 'ceiling', 'optional', 'note', 'set'], w);
+      need(f.set === undefined || SETS.includes(f.set), `${w}: set must be ${SETS.join(' or ')}`);
       need(isInt(f.raw) && isInt(f.ceiling), `${w}: raw and ceiling must be integers`);
       need(typeof f.note === 'string' && f.note !== '', `${w}: note must say what the file holds`);
       need(f.optional === undefined || typeof f.optional === 'boolean', `${w}.optional must be a boolean`);
@@ -213,7 +229,7 @@ const baseRaises = (b) => Object.values(b).find(Array.isArray) ?? [];
 
 function loadBase(ref) {
   let blob;
-  if (baseFile) return existsSync(baseFile) ? { caps: JSON.parse(readFileSync(baseFile, 'utf8')) } : { missingFile: true };
+  if (baseFile) return existsSync(baseFile) ? { caps: parseCaps(readFileSync(baseFile, 'utf8')) } : { missingFile: true };
   try {
     execFileSync('git', ['rev-parse', '--verify', '--quiet', `${ref}^{commit}`], { cwd: ROOT, stdio: 'pipe' });
   } catch {
@@ -224,7 +240,7 @@ function loadBase(ref) {
   } catch {
     return { missingFile: true };
   }
-  return { caps: JSON.parse(blob) };
+  return { caps: parseCaps(blob) };
 }
 
 function checkRaises(c, ref) {
@@ -262,7 +278,7 @@ function checkRaises(c, ref) {
     else fail(`${ptr} was raised from ${was} to ${now} with no approved_raises entry (field "${ptr}", from ${was}, to ${now})`);
   }
   for (const [name, f] of Object.entries(c.files)) {
-    if (!b.files[name]) note(`new size entry ${name}: raw ${f.raw} B, ceiling ${f.ceiling} B (review the ceiling)`);
+    if (!hasEntry(b, name)) note(`new size entry ${name}: raw ${f.raw} B, ceiling ${f.ceiling} B (review the ceiling)`);
   }
   if (raises === 0) ok(`no cap or ceiling went up against ${ref}`);
 }
@@ -294,7 +310,7 @@ function checkNvmrc(c) {
 const logicalName = (f) => f.replace(/\.[0-9a-f]{8}\.(m?js)$/, '.$1');
 
 function checkDist(c, activeCap, authoritative) {
-  if (!existsSync(distDir)) return fail(`${distDir} does not exist: run npm run build first`);
+  if (!existsSync(distDir) || !statSync(distDir).isDirectory()) return fail(`${distDir} is not a directory: run npm run build first`);
   const files = readdirSync(distDir).filter((f) => f.endsWith('.js')).sort();
   const gated = readdirSync(distDir).filter((f) => f.endsWith('.js') || f.endsWith('.mjs')).sort();
   const seen = new Map();
@@ -304,7 +320,11 @@ function checkDist(c, activeCap, authoritative) {
     seen.set(name, f);
   }
   const tag = authoritative ? '' : ' (not authoritative)';
+  if (set === 'utils') return checkUtilsDist(c, seen, tag);
   const entry = c.entry.file;
+  for (const [name, file] of seen) {
+    if (hasEntry(c, name) && setOf(c.files[name]) === 'utils') fail(`${file}: belongs to the utils set (set "utils" in tools/size-caps.json) and must not be in the card dist`);
+  }
   if (!seen.has(entry)) fail(`${entry}: missing from dist/`);
   else {
     const buf = readFileSync(join(distDir, entry));
@@ -316,15 +336,42 @@ function checkDist(c, activeCap, authoritative) {
   for (const [name, file] of seen) {
     if (name === entry) continue;
     const size = statSync(join(distDir, file)).size;
-    const f = c.files[name];
+    const f = hasEntry(c, name) ? c.files[name] : undefined;
+    if (f && setOf(f) === 'utils') continue;
     if (!f) fail(`${file}: ${size} B, new file with no entry in tools/size-caps.json. Add one (raw = its production size + 5 %, rounded up to 1 KiB, under a ceiling) in the same PR`);
     else if (size > f.raw) fail(`${file}: ${size} B > cap ${f.raw} B (+${size - f.raw} B)`);
     else ok(`${file}: ${size} B <= ${f.raw} B (headroom ${f.raw - size} B)`);
   }
   for (const [name, f] of Object.entries(c.files)) {
-    if (!seen.has(name) && !f.optional) fail(`${name}: missing from dist/`);
+    if (!seen.has(name) && !f.optional && setOf(f) !== 'utils') fail(`${name}: missing from dist/`);
   }
   checkSiblings(c, files, activeCap, tag);
+}
+
+/** The Utils build: only the utils-set entries, raw-gated; gzip and brotli are worked out in memory for the report. */
+function checkUtilsDist(c, seen, tag) {
+  for (const [name, file] of seen) {
+    const f = hasEntry(c, name) ? c.files[name] : undefined;
+    const buf = readFileSync(join(distDir, file));
+    if (!f) fail(`${file}: ${buf.length} B, no entry in tools/size-caps.json. Add one with "set": "utils" in the same PR`);
+    else if (setOf(f) === 'card') fail(`${file}: belongs to the card set and must not be in the utils dist (a chunk both builds emit needs "set": "both")`);
+    else if (buf.length > f.raw) fail(`${file}: ${buf.length} B > cap ${f.raw} B (+${buf.length - f.raw} B)`);
+    else {
+      const gz = gzipSync(buf, { level: c.gzip.level }).length;
+      const br = brotliCompressSync(buf, {
+        params: {
+          [constants.BROTLI_PARAM_QUALITY]: c.entry.br.quality,
+          [constants.BROTLI_PARAM_LGWIN]: 22,
+          [constants.BROTLI_PARAM_MODE]: constants.BROTLI_MODE_TEXT,
+          [constants.BROTLI_PARAM_SIZE_HINT]: buf.length,
+        },
+      }).length;
+      ok(`${file}: ${buf.length} B <= ${f.raw} B (headroom ${f.raw - buf.length} B), ${gz} B gzip, ${br} B brotli${tag}`);
+    }
+  }
+  for (const [name, f] of Object.entries(c.files)) {
+    if (setOf(f) === 'utils' && !seen.has(name) && !f.optional) fail(`${name}: missing from the utils dist`);
+  }
 }
 
 /** .js.br and .js.gz next to every .js, each unpacking to it byte for byte; no copy without its .js. */
@@ -368,9 +415,13 @@ function checkSiblings(c, files, activeCap, tag) {
 function main() {
   let caps;
   try {
-    caps = JSON.parse(readFileSync(capsPath, 'utf8'));
+    caps = parseCaps(readFileSync(capsPath, 'utf8'));
   } catch (e) {
     console.error(`FAIL cannot read ${capsPath}: ${e.message}`);
+    process.exit(1);
+  }
+  if (!SETS.includes(set)) {
+    console.error(`FAIL --set must be ${SETS.join(' or ')}, got "${set}"`);
     process.exit(1);
   }
   const errs = validateShape(caps);

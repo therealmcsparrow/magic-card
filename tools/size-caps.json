@@ -69,14 +69,10 @@
       "note": "226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-icon-library.js": {
+      "set": "both",
       "raw": 175104,
       "ceiling": 175104,
       "note": "171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB."
-    },
-    "magic-card-icon-shared.js": {
-      "raw": 10240,
-      "ceiling": 10240,
-      "note": "10 KiB. The studio modules the icon-library chunk reuses (src/i18n/fold.ts, src/icon-anim/part-presets.ts), kept out of that chunk because the forum shot also loads it. Measured 7,808 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-particles.js": {
       "raw": 38912,
@@ -89,16 +85,19 @@
       "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-forum-shot.js": {
+      "set": "utils",
       "raw": 110592,
       "ceiling": 110592,
       "note": "108 KiB; it holds the font fetch, the card table with its search field and the static members a host can call, and bundles its own copy of the icon style derivation. Measured 108,443 (Linux build, docker node 24.22.0); + 5 % would pass the ceiling, so the cap is the ceiling 110,592."
     },
     "magic-card-theme-editor.js": {
+      "set": "utils",
       "raw": 307456,
       "ceiling": 307456,
       "note": "Theme editor in the studio frame, with storage-first themes and the Save to themes folder action. 300 KiB, measured 307,087 (Windows build), rounded up to 1 KiB."
     },
     "magic-card-theme-presets.js": {
+      "set": "utils",
       "raw": 31744,
       "ceiling": 31744,
       "note": "31 KiB, measured 29,584 + 5 %, rounded up to 1 KiB."
@@ -284,11 +283,13 @@
       "note": "Shared recorded-history cache (src/services/history-cache.ts only), read by the decor and modules-extra chunks. 2 KiB, measured 1,929 + 5 %, rounded up to 1 KiB. The contract ceiling is 4,096 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
     },
     "magic-card-i18n-labels.js": {
+      "set": "both",
       "raw": 25600,
       "ceiling": 25600,
       "note": "i18n labels table chunk (contract i18n 1.0.0). 25 KiB, measured 24,589."
     },
     "magic-card-i18n-icons.js": {
+      "set": "both",
       "raw": 17408,
       "ceiling": 17408,
       "note": "i18n icon-library table chunk (contract i18n 1.0.0). 17 KiB, measured 16,482 + 5 %, rounded up to 1 KiB."
@@ -315,6 +316,7 @@
       "note": "Image animator (editor-only chunk, contract image-animator 1.0.0). 83 KiB, measured 79,930 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The contract ceiling is 131,072 B (IMAGE_ANIMATOR_CHUNK_CEILING)."
     },
     "magic-card-google-fonts.js": {
+      "set": "both",
       "raw": 46080,
       "ceiling": 46080,
       "note": "Google Fonts catalogue, loaded only when a font name needs checking and Magic Card Utils allows Google Fonts (lazy-module 1.13.0). 45 KiB, measured 43,760 (Windows build) + 5 %, rounded up to 1 KiB."
@@ -330,6 +332,7 @@
       "note": "Look kit module shipped next to the card for the Looks gallery (36 KiB). Gated on raw size only; it has no .br or .gz copy."
     },
     "magic-card-studio-fonts.js": {
+      "set": "both",
       "raw": 74752,
       "ceiling": 98304,
       "note": "Studio fonts: subset Space Grotesk and Space Mono faces as one lazy chunk, loaded by the animation studio and the theme editor only. 73 KiB, measured 70,948 (Linux build, docker node 24.22.0) + 5 %, rounded up to 1 KiB (studio-frame 1.0.0)."

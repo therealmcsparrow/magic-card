@@ -45,7 +45,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const { THEME_PRESET_LIBRARY } = await import(pathToFileURL(path.join(ROOT, 'src/theme-editor/presets/library.ts')).href);
 const presets = THEME_PRESET_LIBRARY.presets.filter((p) => !ids.length || ids.includes(p.id));
 if (!presets.length) throw new Error(`No preset matches ${ids.join(', ')}`);
-if (!fs.existsSync(path.join(ROOT, '.harness-build/magic-card-theme-presets.js'))) throw new Error('Run "npm run build:harness" first (.harness-build is missing the preset chunk).');
+if (!fs.existsSync(path.join(ROOT, '.harness-build/utils/magic-card-theme-presets.js'))) throw new Error('Run "npm run build:harness" first (.harness-build is missing the preset chunk).');
 fs.mkdirSync(OUT, { recursive: true });
 
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: true, args: ['--allow-file-access-from-files'] });
