@@ -77,8 +77,11 @@ jobs:
           npm run syntax:selftest
           node tools/check-es-syntax.mjs --no-base
 
+      - name: Build the Utils set (dist-utils is not released; the placement check reads its module list)
+        run: npm run build:utils
+
       - name: i18n placement (runtime, tables and call sites per built file)
-        # reads the module list of the build above (contract i18n, D7)
+        # reads the module lists of the card build and the Utils build above (contract i18n, D7)
         run: node tools/check-i18n.mjs --ci --placement
 
       - name: Generate CycloneDX SBOM (production dependencies)
