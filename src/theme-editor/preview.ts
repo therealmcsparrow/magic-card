@@ -167,9 +167,9 @@ export class McteThemePreview extends LitElement {
     return !!this.doc.modes && Object.keys(this.doc.modes).length > 0;
   }
 
-  /** The mode the stage shows: a theme without modes is previewed on the light base. */
+  /** The mode the stage shows: the switch for a themed doc, else the live Home Assistant mode (HA applies its dark base to every theme). */
   private get _effective(): ThemeMode {
-    return this._hasModes ? this._mode : 'light';
+    return this._hasModes ? this._mode : browserMode(this.hass);
   }
 
   private _sampleHassFor?: { hass: unknown; dark: boolean; value: unknown };
