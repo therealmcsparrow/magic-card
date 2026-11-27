@@ -60,7 +60,7 @@ The gallery groups its cards in eight families, shown above. Nothing in the pict
 
 ## Installation
 
-The current release is 2026.11.09.
+The current release is 2026.11.10.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=therealmcsparrow&repository=magic-card&category=plugin)
 
