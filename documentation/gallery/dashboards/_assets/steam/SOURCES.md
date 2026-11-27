@@ -22,3 +22,7 @@ All colour maps are CC0 1.0. Poly Haven states that all its assets are CC0 (<htt
 ## Baked parts
 
 `parts/` uses no new downloads. Everything comes from the CC0 textures above, graded while baking: `iron-soot` for the surface and recess grime on the iron, `iron-rusted` for rust and the wear mask, `brass-worn` for brass, and the green areas of `copper-verdigris` for corrosion. The blue-black and grey come from the drawn fitting colours, which the soot photo is multiplied and overlaid onto.
+
+## SVG drawings
+
+`svg/` holds the bolt heads and background plates of dashboards 37, 38 and 40 (`locomotive-cab-*`, `flooded-pump-house-*`, `boiler-house-*`). They are our own drawings, made for these dashboards, and are released as CC0 1.0. They use no third-party artwork. The dashboards load them as `/local/steam/svg/<file>.svg`.
