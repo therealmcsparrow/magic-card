@@ -578,6 +578,11 @@
       "name": "The value that replaces name in the text."
     }
   },
+  "theme-editor.editor-view.delete-refused-edited-by-hand": {
+    "text": "The editor cannot confirm that the file is unchanged since it last wrote it: it may have been edited by hand, or written by an earlier version. Nothing was deleted. Save the theme under a new name instead.",
+    "note": "Reason shown in the delete dialog after Could not delete {name}, when the theme file has no stored record or differs from the one the editor wrote. Keep the phrases by hand and new name.",
+    "max": 280
+  },
   "theme-editor.editor-view.delete-theme": {
     "text": "Delete theme",
     "note": "Menu item that starts deleting the open theme; a confirmation follows.",
@@ -605,6 +610,14 @@
     "text": "Edit variables for",
     "note": "Accessible label of the Shared / Light / Dark switch; the chosen tab says which values the user is editing.",
     "max": 30
+  },
+  "theme-editor.editor-view.edited-by-hand-message": {
+    "text": "The editor cannot confirm that the file for {name} is unchanged since it last wrote it: it may have been edited by hand, or written by an earlier version. Nothing was changed. Save the theme under a new name instead.",
+    "note": "Message of a failed save or publish when the theme file in the themes folder has no stored record or differs from the one the editor wrote (edited by hand, or written by an earlier version). Keep the phrases by hand and new name; the file is never replaced. {name} is the theme name.",
+    "max": 280,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
   },
   "theme-editor.editor-view.editing": {
     "text": "Editing",
@@ -889,6 +902,11 @@
     "text": "Save to themes folder",
     "note": "Menu item and button: also write the theme to /config/themes so Home Assistant loads it.",
     "max": 40
+  },
+  "theme-editor.editor-view.save-under-a-new-name": {
+    "text": "Save under a new name",
+    "note": "Button in the failed-save message for a hand-edited theme file; it opens the name dialog.",
+    "max": 30
   },
   "theme-editor.editor-view.save-without-it": {
     "text": "Save without it",

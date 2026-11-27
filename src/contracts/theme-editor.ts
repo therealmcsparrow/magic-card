@@ -1,11 +1,12 @@
 import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
 import type { MessageIndex } from './i18n';
 
-// Contract: theme editor host. Version 1.7.0. The chunk may import `src/i18n/` (runtime message copy and search fold),
+// Contract: theme editor host. Version 1.8.0. The chunk may import `src/i18n/` (runtime message copy and search fold),
 // `src/ui-kit/` and `src/utils/google-fonts` (the Google fonts gate and lazy loader).
 
-export const THEME_EDITOR_CONTRACT_VERSION = '1.7.0';
+export const THEME_EDITOR_CONTRACT_VERSION = '1.8.0';
 /**
+ * (1.8.0) ThemeErrorCode gains edited_by_hand (theme-files 2.1.0): the file was changed by hand after the editor wrote it.
  * (1.7.0) The entry ships with Magic Card Utils and loads from its static path; its chunks load from next to it, never
  * from the card's path. It feature-detects loadEditor and loadTransfer on window.MagicCard and fails cleanly without them.
  */
@@ -146,7 +147,7 @@ export interface ThemeRemoveOptions {
   file?: boolean;
 }
 
-/** Error codes (theme-files 1.0.0; 1.1.0 adds mcu-library's library_full; theme-files 1.1.0 adds theme_files_off). The adapter rejects with an Error carrying `code` and optional `errors`. */
+/** Error codes (theme-files 1.0.0; 1.1.0 adds mcu-library's library_full; theme-files 1.1.0 adds theme_files_off; theme-files 2.1.0 adds edited_by_hand). The adapter rejects with an Error carrying `code` and optional `errors`. */
 export type ThemeErrorCode =
   | 'invalid_format'
   | 'not_found'
@@ -159,6 +160,7 @@ export type ThemeErrorCode =
   | 'read_failed'
   | 'library_full'
   | 'theme_files_off'
+  | 'edited_by_hand'
   | 'unauthorized';
 
 export interface ThemeBackendError extends Error {

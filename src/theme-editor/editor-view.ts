@@ -911,6 +911,13 @@ export class McteEditorView extends LitElement {
             { label: t('theme-editor.editor-view.save-anyway'), run: () => void this._doSave(true, publish) },
           ],
         };
+      case 'edited_by_hand':
+        return {
+          kind: 'error',
+          title: failed,
+          message: t('theme-editor.editor-view.edited-by-hand-message', { name }),
+          actions: [{ label: t('theme-editor.editor-view.save-under-a-new-name'), run: () => this._openRename() }, dismiss],
+        };
       case 'name_taken':
         return {
           kind: 'error',
@@ -986,6 +993,15 @@ export class McteEditorView extends LitElement {
       this._renameError = t('theme-editor.editor-view.use-lowercase-letters-numbers-hyphens');
       return;
     }
+    if (v !== this._name && !this._isNew) {
+      // A copy under a new name is a new theme: no stored file, no file time to conflict with, nothing to overwrite.
+      this._saved = null;
+      this._file = undefined;
+      this._mtime = undefined;
+      this._stored = false;
+      this._folder = undefined;
+      this._rewriteAck = false;
+    }
     this._name = v;
     this._closeDlg();
     this._banner = null;
@@ -1007,7 +1023,8 @@ export class McteEditorView extends LitElement {
       const file = this.storage && (!this._stored || (this._deleteFileOffered && this._deleteFile));
       await this.backend.remove(this._name, file ? { file: true } : undefined);
     } catch (e) {
-      this._dlgError = t('theme-editor.editor-view.could-not-delete-name-reason', { name: this._name, reason: (e as Error).message ?? '' }).trim();
+      const reason = (e as { code?: string }).code === 'edited_by_hand' ? t('theme-editor.editor-view.delete-refused-edited-by-hand') : ((e as Error).message ?? '');
+      this._dlgError = t('theme-editor.editor-view.could-not-delete-name-reason', { name: this._name, reason }).trim();
       return;
     }
     if (isTrialActive() && getTrial()?.name === this._name) stopTrial('discard');

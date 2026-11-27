@@ -41454,6 +41454,13 @@
     "x-max-length": 185,
     "x-source-hash": "084d208e"
   },
+  "mcu-panel.panel.the-theme-file-was-edited-by-hand": "De editor kan niet bevestigen dat het themabestand ongewijzigd is sinds hij het voor het laatst schreef: het kan met de hand zijn aangepast of door een eerdere versie zijn geschreven. Er is niets gewijzigd. Open het thema en sla het op onder een nieuwe naam.",
+  "@mcu-panel.panel.the-theme-file-was-edited-by-hand": {
+    "description": "Error above the theme list when deleting a theme is refused because its file in the themes folder has no stored record or differs from the one the editor wrote (edited by hand, or written by an earlier version). Keep the phrases by hand and new name. Max 260 characters.",
+    "source_text": "The editor cannot confirm that the theme file is unchanged since it last wrote it: it may have been edited by hand, or written by an earlier version. Nothing was changed. Open the theme and save it under a new name.",
+    "x-max-length": 260,
+    "x-source-hash": "8127f388"
+  },
   "mcu-panel.panel.the-theme-list-could-not-be-loaded": "De themalijst kon niet worden geladen.",
   "@mcu-panel.panel.the-theme-list-could-not-be-loaded": {
     "description": "Error above the theme list when the list of theme files cannot be read. Max 60 characters.",
@@ -49487,6 +49494,13 @@
     "x-max-length": 25,
     "x-source-hash": "a4b982a9"
   },
+  "theme-editor.editor-view.delete-refused-edited-by-hand": "De editor kan niet bevestigen dat het bestand ongewijzigd is sinds hij het voor het laatst schreef: het kan met de hand zijn aangepast of door een eerdere versie zijn geschreven. Er is niets verwijderd. Sla het thema op onder een nieuwe naam.",
+  "@theme-editor.editor-view.delete-refused-edited-by-hand": {
+    "description": "Reason shown in the delete dialog after Could not delete {name}, when the theme file has no stored record or differs from the one the editor wrote. Keep the phrases by hand and new name. Max 280 characters.",
+    "source_text": "The editor cannot confirm that the file is unchanged since it last wrote it: it may have been edited by hand, or written by an earlier version. Nothing was deleted. Save the theme under a new name instead.",
+    "x-max-length": 280,
+    "x-source-hash": "8c4ed398"
+  },
   "theme-editor.editor-view.delete-theme": "Thema verwijderen",
   "@theme-editor.editor-view.delete-theme": {
     "description": "Menu item that starts deleting the open theme; a confirmation follows. Max 20 characters.",
@@ -49521,6 +49535,13 @@
     "source_text": "Edit variables for",
     "x-max-length": 30,
     "x-source-hash": "abd22f47"
+  },
+  "theme-editor.editor-view.edited-by-hand-message": "De editor kan niet bevestigen dat het bestand van {name} ongewijzigd is sinds hij het voor het laatst schreef: het kan met de hand zijn aangepast of door een eerdere versie zijn geschreven. Er is niets gewijzigd. Sla het thema op onder een nieuwe naam.",
+  "@theme-editor.editor-view.edited-by-hand-message": {
+    "description": "Message of a failed save or publish when the theme file in the themes folder has no stored record or differs from the one the editor wrote (edited by hand, or written by an earlier version). Keep the phrases by hand and new name; the file is never replaced. {name} is the theme name. {name}: The value that replaces name in the text. Max 280 characters.",
+    "source_text": "The editor cannot confirm that the file for {name} is unchanged since it last wrote it: it may have been edited by hand, or written by an earlier version. Nothing was changed. Save the theme under a new name instead.",
+    "x-max-length": 280,
+    "x-source-hash": "ae09e45c"
   },
   "theme-editor.editor-view.editing": "Bewerken",
   "@theme-editor.editor-view.editing": {
@@ -49864,6 +49885,13 @@
     "source_text": "Save to themes folder",
     "x-max-length": 40,
     "x-source-hash": "f871e1e3"
+  },
+  "theme-editor.editor-view.save-under-a-new-name": "Opslaan onder een nieuwe naam",
+  "@theme-editor.editor-view.save-under-a-new-name": {
+    "description": "Button in the failed-save message for a hand-edited theme file; it opens the name dialog. Max 30 characters.",
+    "source_text": "Save under a new name",
+    "x-max-length": 30,
+    "x-source-hash": "524fd242"
   },
   "theme-editor.editor-view.save-without-it": "Opslaan zonder",
   "@theme-editor.editor-view.save-without-it": {
