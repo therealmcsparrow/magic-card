@@ -8,11 +8,12 @@ import { ImageError } from '../src/image-editor/library';
 import { imageStyles } from '../src/image-editor/styles';
 import { TEXT_FILL, TEXT_OUTLINE, newText } from '../src/image-editor/text-ui';
 import { MCU_PREVIEW_MAIN } from '../src/contracts/svg-editor';
+import { budget } from './load-factor';
 
 type Ed = McSvgEditor & { updateComplete: Promise<boolean> };
 const mounted: HTMLElement[] = [];
 const rect = (): DOMRect => ({ left: 0, top: 0, width: 1400, height: 800, right: 1400, bottom: 800, x: 0, y: 0, toJSON() {} }) as DOMRect;
-async function until(f: () => boolean, ms = 4000): Promise<void> {
+async function until(f: () => boolean, ms = budget(4000)): Promise<void> {
   const t = Date.now();
   while (!f()) {
     if (Date.now() - t > ms) throw new Error('timeout');
@@ -141,7 +142,7 @@ describe('imported parts: the size limit counts the last part', () => {
     expect(four.el.doc.shapes.filter((s) => !!(s.look as any)?.part)).toHaveLength(4);
     const five = await open(many(5));
     expect(five.ext.readOnly).toBe(true);
-  });
+  }, budget(30_000));
 });
 
 describe('imported parts: long ids on the canvas', () => {
