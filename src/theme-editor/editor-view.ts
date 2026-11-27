@@ -911,6 +911,13 @@ export class McteEditorView extends LitElement {
             { label: t('theme-editor.editor-view.save-anyway'), run: () => void this._doSave(true, publish) },
           ],
         };
+      case 'edited_by_hand':
+        return {
+          kind: 'error',
+          title: failed,
+          message: t('theme-editor.editor-view.edited-by-hand-message', { name }),
+          actions: [{ label: t('theme-editor.editor-view.save-under-a-new-name'), run: () => this._openRename() }, dismiss],
+        };
       case 'name_taken':
         return {
           kind: 'error',
@@ -985,6 +992,15 @@ export class McteEditorView extends LitElement {
     if (!/^[a-z0-9][a-z0-9_-]{0,63}$/.test(v) || v === 'default' || v === 'backend-selected') {
       this._renameError = t('theme-editor.editor-view.use-lowercase-letters-numbers-hyphens');
       return;
+    }
+    if (v !== this._name && !this._isNew) {
+      // A copy under a new name is a new theme: no stored file, no file time to conflict with, nothing to overwrite.
+      this._saved = null;
+      this._file = undefined;
+      this._mtime = undefined;
+      this._stored = false;
+      this._folder = undefined;
+      this._rewriteAck = false;
     }
     this._name = v;
     this._closeDlg();

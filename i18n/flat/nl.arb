@@ -41454,6 +41454,13 @@
     "x-max-length": 185,
     "x-source-hash": "084d208e"
   },
+  "mcu-panel.panel.the-theme-file-was-edited-by-hand": "Het themabestand is met de hand aangepast en daarom niet gewijzigd. Open het thema en sla het op onder een nieuwe naam.",
+  "@mcu-panel.panel.the-theme-file-was-edited-by-hand": {
+    "description": "Error above the theme list when deleting a theme is refused because its file in the themes folder was edited by hand. Keep the phrase by hand. Max 120 characters.",
+    "source_text": "The theme file was edited by hand, so it was not changed. Open the theme and save it under a new name.",
+    "x-max-length": 120,
+    "x-source-hash": "3f1c35ad"
+  },
   "mcu-panel.panel.the-theme-list-could-not-be-loaded": "De themalijst kon niet worden geladen.",
   "@mcu-panel.panel.the-theme-list-could-not-be-loaded": {
     "description": "Error above the theme list when the list of theme files cannot be read. Max 60 characters.",
@@ -49522,6 +49529,13 @@
     "x-max-length": 30,
     "x-source-hash": "abd22f47"
   },
+  "theme-editor.editor-view.edited-by-hand-message": "Het bestand van {name} is buiten de editor met de hand aangepast, dus er is niets overschreven. Sla het thema op onder een nieuwe naam.",
+  "@theme-editor.editor-view.edited-by-hand-message": {
+    "description": "Message of a failed save or publish when the theme file in the themes folder was edited by hand after the editor wrote it. Keep the phrase by hand; the file is never replaced. {name} is the theme name. {name}: The value that replaces name in the text. Max 150 characters.",
+    "source_text": "The file for {name} was edited by hand outside the editor, so nothing was overwritten. Save the theme under a new name.",
+    "x-max-length": 150,
+    "x-source-hash": "d35419e3"
+  },
   "theme-editor.editor-view.editing": "Bewerken",
   "@theme-editor.editor-view.editing": {
     "description": "Small label before the name of the theme that is open for editing. Max 15 characters.",
@@ -49864,6 +49878,13 @@
     "source_text": "Save to themes folder",
     "x-max-length": 40,
     "x-source-hash": "f871e1e3"
+  },
+  "theme-editor.editor-view.save-under-a-new-name": "Opslaan onder een nieuwe naam",
+  "@theme-editor.editor-view.save-under-a-new-name": {
+    "description": "Button in the failed-save message for a hand-edited theme file; it opens the name dialog. Max 30 characters.",
+    "source_text": "Save under a new name",
+    "x-max-length": 30,
+    "x-source-hash": "524fd242"
   },
   "theme-editor.editor-view.save-without-it": "Opslaan zonder",
   "@theme-editor.editor-view.save-without-it": {

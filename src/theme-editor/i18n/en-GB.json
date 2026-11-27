@@ -606,6 +606,14 @@
     "note": "Accessible label of the Shared / Light / Dark switch; the chosen tab says which values the user is editing.",
     "max": 30
   },
+  "theme-editor.editor-view.edited-by-hand-message": {
+    "text": "The file for {name} was edited by hand outside the editor, so nothing was overwritten. Save the theme under a new name.",
+    "note": "Message of a failed save or publish when the theme file in the themes folder was edited by hand after the editor wrote it. Keep the phrase by hand; the file is never replaced. {name} is the theme name.",
+    "max": 150,
+    "vars": {
+      "name": "The value that replaces name in the text."
+    }
+  },
   "theme-editor.editor-view.editing": {
     "text": "Editing",
     "note": "Small label before the name of the theme that is open for editing.",
@@ -889,6 +897,11 @@
     "text": "Save to themes folder",
     "note": "Menu item and button: also write the theme to /config/themes so Home Assistant loads it.",
     "max": 40
+  },
+  "theme-editor.editor-view.save-under-a-new-name": {
+    "text": "Save under a new name",
+    "note": "Button in the failed-save message for a hand-edited theme file; it opens the name dialog.",
+    "max": 30
   },
   "theme-editor.editor-view.save-without-it": {
     "text": "Save without it",

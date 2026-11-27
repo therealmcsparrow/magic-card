@@ -447,6 +447,10 @@
     "text": "Variabelen bewerken voor",
     "hash": "abd22f47"
   },
+  "theme-editor.editor-view.edited-by-hand-message": {
+    "text": "Het bestand van {name} is buiten de editor met de hand aangepast, dus er is niets overschreven. Sla het thema op onder een nieuwe naam.",
+    "hash": "d35419e3"
+  },
   "theme-editor.editor-view.editing": {
     "text": "Bewerken",
     "hash": "fab4539d"
@@ -638,6 +642,10 @@
   "theme-editor.editor-view.save-to-themes-folder": {
     "text": "Opslaan in themamap",
     "hash": "f871e1e3"
+  },
+  "theme-editor.editor-view.save-under-a-new-name": {
+    "text": "Opslaan onder een nieuwe naam",
+    "hash": "524fd242"
   },
   "theme-editor.editor-view.save-without-it": {
     "text": "Opslaan zonder",
