@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Fixed
+-   **Gallery dashboards 37, 38 and 40 import cleanly.** Their SVG backgrounds now load from shared files instead of inline images. If you paste one of these dashboards, also copy the `_assets/steam/svg` folder to `/config/www/steam/svg`.
+
 ## 2026.11.09 (2026-11-26)
 
 Install Magic Card Utils 2026.11.08 first, then update Magic Card.
