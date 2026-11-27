@@ -427,6 +427,10 @@
     "text": "{name} verwijderen?",
     "hash": "a4b982a9"
   },
+  "theme-editor.editor-view.delete-refused-edited-by-hand": {
+    "text": "De editor kan niet bevestigen dat het bestand ongewijzigd is sinds hij het voor het laatst schreef: het kan met de hand zijn aangepast of door een eerdere versie zijn geschreven. Er is niets verwijderd. Sla het thema op onder een nieuwe naam.",
+    "hash": "8c4ed398"
+  },
   "theme-editor.editor-view.delete-theme": {
     "text": "Thema verwijderen",
     "hash": "e29a2b87"
@@ -448,8 +452,8 @@
     "hash": "abd22f47"
   },
   "theme-editor.editor-view.edited-by-hand-message": {
-    "text": "Het bestand van {name} is buiten de editor met de hand aangepast, dus er is niets overschreven. Sla het thema op onder een nieuwe naam.",
-    "hash": "d35419e3"
+    "text": "De editor kan niet bevestigen dat het bestand van {name} ongewijzigd is sinds hij het voor het laatst schreef: het kan met de hand zijn aangepast of door een eerdere versie zijn geschreven. Er is niets gewijzigd. Sla het thema op onder een nieuwe naam.",
+    "hash": "ae09e45c"
   },
   "theme-editor.editor-view.editing": {
     "text": "Bewerken",

@@ -72,7 +72,7 @@ afterEach(() => {
   document.querySelectorAll('mc-theme-trial-bar').forEach((n) => n.remove());
 });
 
-/** Opens the one theme with an unsaved change and a save that will fail with too_large, at the given width. */
+/** Opens the one theme with an unsaved change and a save that will fail with edited_by_hand, at the given width. */
 async function setup(width: number): Promise<{ h: AnyEl; ed: AnyEl; frame: AnyEl }> {
   const { backend, state } = fakeBackend();
   host = document.createElement('magic-card-theme-editor') as AnyEl;

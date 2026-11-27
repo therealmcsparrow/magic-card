@@ -427,6 +427,10 @@
     "text": "Delete {name}?",
     "hash": "a4b982a9"
   },
+  "theme-editor.editor-view.delete-refused-edited-by-hand": {
+    "text": "The editor cannot confirm that the file is unchanged since it last wrote it: it may have been edited by hand, or written by an earlier version. Nothing was deleted. Save the theme under a new name instead.",
+    "hash": "8c4ed398"
+  },
   "theme-editor.editor-view.delete-theme": {
     "text": "Delete theme",
     "hash": "e29a2b87"
@@ -448,8 +452,8 @@
     "hash": "abd22f47"
   },
   "theme-editor.editor-view.edited-by-hand-message": {
-    "text": "The file for {name} was edited by hand outside the editor, so nothing was overwritten. Save the theme under a new name.",
-    "hash": "d35419e3"
+    "text": "The editor cannot confirm that the file for {name} is unchanged since it last wrote it: it may have been edited by hand, or written by an earlier version. Nothing was changed. Save the theme under a new name instead.",
+    "hash": "ae09e45c"
   },
   "theme-editor.editor-view.editing": {
     "text": "Editing",

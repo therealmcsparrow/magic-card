@@ -1023,7 +1023,8 @@ export class McteEditorView extends LitElement {
       const file = this.storage && (!this._stored || (this._deleteFileOffered && this._deleteFile));
       await this.backend.remove(this._name, file ? { file: true } : undefined);
     } catch (e) {
-      this._dlgError = t('theme-editor.editor-view.could-not-delete-name-reason', { name: this._name, reason: (e as Error).message ?? '' }).trim();
+      const reason = (e as { code?: string }).code === 'edited_by_hand' ? t('theme-editor.editor-view.delete-refused-edited-by-hand') : ((e as Error).message ?? '');
+      this._dlgError = t('theme-editor.editor-view.could-not-delete-name-reason', { name: this._name, reason }).trim();
       return;
     }
     if (isTrialActive() && getTrial()?.name === this._name) stopTrial('discard');
