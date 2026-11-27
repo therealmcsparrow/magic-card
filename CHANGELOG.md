@@ -6,7 +6,15 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+## 2026.11.10 (2026-11-27)
+
+Install Magic Card Utils 2026.11.09 first, then update Magic Card.
+
+### Changed
+-   **A theme file edited by hand is no longer replaced or deleted.** Magic Card Utils now remembers the file it last wrote. If the file in `/config/themes` differs from that, or was written by an earlier version, **Save to themes folder** and **Delete** refuse and leave it as it is. The theme editor explains why and offers **Save under a new name**. A refused delete shows the same reason in your language. See [Theme files](documentation/themes/files.md).
+
 ### Fixed
+-   **Save an existing theme under a new name.** The name dialog now turns an existing theme into a new one, so the save creates a new theme instead of trying to overwrite the old one.
 -   **Gallery dashboards 37, 38 and 40 import cleanly.** Their SVG backgrounds now load from shared files instead of inline images. If you paste one of these dashboards, also copy the `_assets/steam/svg` folder to `/config/www/steam/svg`.
 
 ## 2026.11.09 (2026-11-26)

@@ -82,5 +82,6 @@ The editor refuses a save it cannot complete, and then writes nothing. The usual
 -   **Allow themes to be saved in the themes folder** is off in Magic Card Utils, for **Save to themes folder**. The theme is still saved in Magic Card Utils. An administrator can turn the option on under Configure.
 -   A file in the themes folder that the editor did not write uses the name. Save the theme under another name.
 -   The include lines are missing from `configuration.yaml`, for **Save to themes folder**. Add them, then check again.
+-   The file in the themes folder was edited by hand, or written by an earlier version, so the editor cannot confirm it is unchanged since it last wrote it. The editor leaves the file as it is, and **Delete** refuses too. Choose **Save under a new name** in the message to save the theme under another name.
 -   Someone saved the theme after you opened it. Reload it and make your change once more.
 -   Home Assistant could not write or read the file. The message does not show the file path. The details are in Home Assistant's log.
