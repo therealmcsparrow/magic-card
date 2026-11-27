@@ -25,4 +25,4 @@ All colour maps are CC0 1.0. Poly Haven states that all its assets are CC0 (<htt
 
 ## SVG drawings
 
-`svg/` holds the bolt heads and background plates of dashboards 37, 38 and 40 (`locomotive-cab-*`, `flooded-pump-house-*`, `boiler-house-*`). They are our own drawings, made for these dashboards, and are released as CC0 1.0. They use no third-party artwork. The dashboards load them as `/local/steam/svg/<file>.svg`.
+`svg/` holds the bolt heads and background plates of dashboards 37, 38 and 40 (`background-*`, `locomotive-cab-bolt-*`, `boiler-house-bolt-*`). They are our own drawings, made for these dashboards, and are released as CC0 1.0. They use no third-party artwork. The dashboards load them as `/local/steam/svg/<file>.svg`.
