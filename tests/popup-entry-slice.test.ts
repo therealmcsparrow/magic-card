@@ -7,6 +7,7 @@ import { api } from '../src/card/popup-chunk';
 import { __setLazyImporterForTests, lazyChunks } from '../src/utils/lazy-chunks';
 import { failedChunkNames } from '../src/utils/lazy-chunk';
 import type { HomeAssistant, MagicCardConfig } from '../src/types';
+import { budget } from './load-factor';
 
 /*
  * What magic-card.js keeps of the pop-up code: the config tests and the out-of-flow hold. The hash helpers, the defaults
@@ -100,7 +101,7 @@ describe('"Open pop-up" action', () => {
     el._handleAction(new Event('x'), { actions: { tap_action: { action: 'popup', hash: '#kitchen' } } }, 'tap');
     expect(location.hash).toBe('');
     release();
-    await vi.waitFor(() => expect(location.hash).toBe('#kitchen'));
+    await vi.waitFor(() => expect(location.hash).toBe('#kitchen'), { timeout: budget(1000) });
   });
 
   it('navigates at once when the chunk is installed', async () => {
@@ -118,7 +119,7 @@ describe('"Open pop-up" tap when the popup chunk cannot load', () => {
     const el = await mount();
     expect(el.shadowRoot!.querySelector('.mc-n')).toBeNull();
     el._handleAction(new Event('x'), { actions: { tap_action: { action: 'popup', hash: '#kitchen' } } }, 'tap');
-    await vi.waitFor(() => expect(failedChunkNames().has('popup')).toBe(true));
+    await vi.waitFor(() => expect(failedChunkNames().has('popup')).toBe(true), { timeout: budget(1000) });
     await el.updateComplete;
     const notice = el.shadowRoot!.querySelector('.mc-n');
     expect(notice).not.toBeNull();
@@ -131,7 +132,7 @@ describe('"Open pop-up" tap when the popup chunk cannot load', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     const first = await mount();
     first._handleAction(new Event('x'), { actions: { tap_action: { action: 'popup', hash: '#kitchen' } } }, 'tap');
-    await vi.waitFor(() => expect(failedChunkNames().has('popup')).toBe(true));
+    await vi.waitFor(() => expect(failedChunkNames().has('popup')).toBe(true), { timeout: budget(1000) });
     const second = await mount();
     expect(second.shadowRoot!.querySelector('.mc-n')).toBeNull();
     second._handleAction(new Event('x'), { actions: { tap_action: { action: 'popup', hash: '#kitchen' } } }, 'tap');

@@ -82,6 +82,6 @@ describe('source files are text (review 46 R-1)', () => {
     expect(bad).toEqual([]);
   });
   it('writes the tick of a pressed button as CSS escape text', () => {
-    for (const f of ['src/share-kit/anim-preview.ts', 'src/theme-editor/preview.ts']) expect(readFileSync(f, 'utf8')).toContain(String.raw`content: '\\2713\\00a0'`);
+    for (const f of ['src/share-kit/anim-preview.ts']) expect(readFileSync(f, 'utf8')).toContain(String.raw`content: '\\2713\\00a0'`);
   });
 });

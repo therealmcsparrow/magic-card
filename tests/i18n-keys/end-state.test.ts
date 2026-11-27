@@ -8,6 +8,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { I18N_CONTRACT_VERSION } from '../../src/contracts/i18n';
 import { EXCHANGE_DIR, KEY_PATTERN, NOTE_MIN_CHARS } from '../../src/contracts/i18n-keys';
+import { budget } from '../load-factor';
 import { REPO, sourceHash } from './harness';
 
 const read = (rel: string) => fs.readFileSync(path.join(REPO, rel), 'utf8');
@@ -16,7 +17,7 @@ const MCU = process.env.MCU_REPO ? path.resolve(process.env.MCU_REPO) : path.res
 const MCU_WWW = path.join(MCU, 'custom_components/magic_card_utils/www');
 const namespaces = (): Array<[string, string]> => Object.entries(json('tools/i18n/config.json').namespaces as Record<string, { dir: string }>).map(([ns, c]) => [ns, c.dir]);
 const run = (args: string[], cwd = REPO) => {
-  const r = spawnSync(process.execPath, args, { cwd, encoding: 'utf8', timeout: 180_000 });
+  const r = spawnSync(process.execPath, args, { cwd, encoding: 'utf8', timeout: budget(180_000) });
   return { code: r.status ?? -1, all: `${r.stdout}\n${r.stderr}` };
 };
 
