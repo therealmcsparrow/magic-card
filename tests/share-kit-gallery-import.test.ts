@@ -25,7 +25,7 @@ const collect = (v: unknown, file: string): void => {
     else Object.values(v).forEach((e) => collect(e, file));
   }
 };
-for (const d of readdirSync(join(GALLERY, 'dashboards'), { withFileTypes: true }).filter((e) => e.isDirectory())) {
+for (const d of readdirSync(join(GALLERY, 'dashboards'), { withFileTypes: true }).filter((e) => e.isDirectory() && !e.name.startsWith('_'))) {
   collect(jsYaml.load(readFileSync(join(GALLERY, 'dashboards', d.name, 'dashboard.yaml'), 'utf8')), `dashboards/${d.name}/dashboard.yaml`);
 }
 

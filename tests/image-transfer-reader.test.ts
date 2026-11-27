@@ -145,7 +145,7 @@ describe('image kind: reading', () => {
   it('counts bindings in the size limit', () => {
     const rules = Array.from({ length: 16 }, (_, i) => ({ state: `s${i}`, value: '#ffffff' }));
     const ids = Array.from({ length: 64 }, (_, i) => `p${i}`);
-    const filler = '<path d="M0 0L5 5L6 6L7 7"/>'.repeat(8800);
+    const filler = `<path d="M0 0${'L5 5'.repeat(Math.floor((IMAGE_MAX_BYTES - 12_000) / 4))}"/>`;
     const svg = `<svg viewBox="0 0 10 10">${ids.map((id) => `<path id="${id}" d="M0 0L5 5"/>`).join('')}${filler}</svg>`;
     const bindings = ids.map((target) => ({ target, entity: 'light.a', set: 'fill', rules }));
     expect(new TextEncoder().encode(svg).length).toBeLessThan(IMAGE_MAX_BYTES);

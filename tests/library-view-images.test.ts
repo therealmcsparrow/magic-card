@@ -156,11 +156,11 @@ describe('<mc-library-view kinds=["image"]>', () => {
     expect((be.of('images_save')[0].image as Stored).id).toBe('ground-floor-copy-2');
   });
 
-  it('Duplicate is disabled at 200 images, with the reason in view', async () => {
+  it('Duplicate stays enabled at 200 images, and no library-full note shows (the Utils cap rules)', async () => {
     const be = backend(Array.from({ length: 200 }, (_, i) => make(`img-${i}`, `Image ${i}`)));
     const el = await mount(be);
-    expect(btn(el, 'Duplicate Image 1')!.disabled).toBe(true);
-    expect(el.shadowRoot!.textContent).toContain('The library is full.');
+    expect(btn(el, 'Duplicate Image 1')!.disabled).toBe(false);
+    expect(el.shadowRoot!.textContent).not.toContain('The library is full.');
   });
 
   it('Rename keeps the id and sends base_updated_at', async () => {
