@@ -15,6 +15,10 @@ const loaderFiles = [
   join(import.meta.dirname, 'lib.cjs'),
   join(import.meta.dirname, 'keys.cjs'),
   join(import.meta.dirname, 'config.json'),
+  join(import.meta.dirname, 'legal-labels.json'),
+  join(import.meta.dirname, 'en-US-exceptions.json'),
+  join(import.meta.dirname, '..', '..', 'src', 'contracts', 'i18n.ts'),
+  join(import.meta.dirname, '..', '..', 'src', 'contracts', 'i18n-keys.ts'),
 ];
 
 // What a rewritten key depends on besides its own source file: the loader and the catalogues that map keys to indices.
